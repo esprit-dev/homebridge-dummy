@@ -7,6 +7,7 @@ import { PLATFORM_NAME } from '../homebridge/settings.js';
 
 import { AccessoryConfig, DummyPlatformConfig, LegacyAccessoryConfig, PlatformConfig } from '../model/types.js';
 
+// TODO need to handle child bridge case
 export async function migrateAccessories(log: Log, configPath: string): Promise<LegacyAccessoryConfig[] | undefined> {
 
   try {
