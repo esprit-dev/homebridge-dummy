@@ -13,3 +13,7 @@ Please report any issues you encounte here: https://github.com/mpatfield/homebri
 
 ### Changed
 - Migrated to typescript
+
+## 0.9.0 (2023-01-23)
+
+- Last stable release by @nfarina before transfer of ownership to @mpatfield
