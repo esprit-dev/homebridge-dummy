@@ -118,3 +118,8 @@ A random period within one hour is defined as follows in your config.json:
 
 ```
 
+## Credits
+
+Special thanks to [@nfarina](https://github.com/nfarina) for creating the original version of this plugin and maintaining it for almost 10\(!!!\) years
+
+And to the amazing creators/contributors of [Homebridge](https://homebridge.io) who made this plugin possible!
