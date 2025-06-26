@@ -88,12 +88,8 @@ class DummySwitch implements AccessoryPlugin {
     }
 
     if (this.isStateful) {
-      const state = await storageGet(this.persistPath, this.storageKey(SUFFIX_STATE));
-      if(!state) {
-        this.service.setCharacteristic(this.Characteristic.On, false);
-      } else {
-        this.service.setCharacteristic(this.Characteristic.On, true);
-      }
+      const state = await storageGet(this.persistPath, this.storageKey(SUFFIX_STATE)) === 'true';
+      this.service.setCharacteristic(this.Characteristic.On, state);
     }
 
     if (this.isDimmer) {
