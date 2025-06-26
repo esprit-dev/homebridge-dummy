@@ -1,12 +1,15 @@
-
 import { IHomebridgePluginUi } from '@homebridge/plugin-ui-utils/ui.interface';
+
 import { Translation } from '../i18n/i18n.js';
+
+import { MigrationState } from '../model/types.js';
 
 declare const homebridge: IHomebridgePluginUi;
 
-const i18n_replacements: Record<string, string> = {
-  arrow: '&rarr;',
+const i18n_replacements = {
   github: '<a target="_blank" href="https://github.com/mpatfield/homebridge-dummy/">GitHub</a>',
+  migration: '<a target="_blank" href="https://github.com/mpatfield/homebridge-dummy/#migration">GitHub</a>',
+  dummy: 'Homebridge Dummy',
 };
 
 const translateHtml = (strings: Translation) => {
@@ -24,7 +27,6 @@ const translateHtml = (strings: Translation) => {
 };
 
 const translateSchema = (strings: Translation) => {
-
   const tags = ['span', 'label', 'legend', 'option', 'p'];
   const elements = Array.from(
     window.parent.document.querySelectorAll(tags.join(',')),
@@ -53,28 +55,33 @@ const translateSchema = (strings: Translation) => {
   });
 };
 
-const updateLegacyAccessoryNames = () => {
+const updateAccessoryNames = (strings: Translation) => {
 
-  const legend = Array.from(window.parent.document.querySelectorAll('fieldset legend'))
-    .find(el => el.textContent?.includes('Legacy Accessory'));
+  const legends = Array.from(window.parent.document.querySelectorAll('fieldset legend'))
+    .filter(el => !el.textContent?.includes(strings.config.title.legacyAccessories));
 
-  if (legend) {
+  for(const legend of legends) {
     const fieldset = legend.closest('fieldset');
     const input = fieldset?.querySelector('input[type="text"][name="name"]') as HTMLInputElement | null;
-    if (input && input.value) {
-      legend.textContent = input.value;
+    if (input && legend.textContent !== (input.value || strings.config.title.legacyAccessory)) {
+      legend.textContent = input.value !== '' ? input.value : strings.config.title.legacyAccessory;
+    }
+
+    if (input && !input.dataset.accessoryNameListener) {
+      input.addEventListener('input', () => updateAccessoryNames(strings));
+      input.dataset.accessoryNameListener = 'true';
     }
   }
 };
 
 const showSettings = async (strings: Translation) => {
   homebridge.showSpinner();
-  document.getElementById('pageIntro')!.style.display = 'none';
+  document.getElementById('intro')!.style.display = 'none';
   document.getElementById('support')!.style.display = 'block';
 
   const observer = new MutationObserver(() => {
-    updateLegacyAccessoryNames();
     translateSchema(strings);
+    updateAccessoryNames(strings);
   });
 
   observer.observe(
@@ -86,30 +93,44 @@ const showSettings = async (strings: Translation) => {
   homebridge.hideSpinner();
 };
 
+const showMigration = () => {
+    document.getElementById('intro')!.style.display = 'none';
+    document.getElementById('migration')!.style.display = 'block';
+};
+
 const showIntro = (strings: Translation) => {
-  const introContinue = document.getElementById('introContinue') as HTMLButtonElement;
-  introContinue.addEventListener('click', async () => {
+
+  const noButton = document.getElementById('buttonNo') as HTMLButtonElement;
+  noButton.addEventListener('click', async () => {
+    homebridge.showSpinner();
+    await homebridge.updatePluginConfig([{ name: i18n_replacements.dummy, migration: MigrationState.SKIPPED }]);
+    await homebridge.savePluginConfig();
     showSettings(strings);
   });
-  document.getElementById('pageIntro')!.style.display = 'block';
+
+  const yesButton = document.getElementById('buttonYes') as HTMLButtonElement;
+  yesButton.addEventListener('click', async () => {
+    await homebridge.updatePluginConfig([{ name: i18n_replacements.dummy, migration: MigrationState.NEEDED }]);
+    await homebridge.savePluginConfig();
+    showMigration();
+  });
+
+  document.getElementById('intro')!.style.display = 'block';
+
   homebridge.hideSpinner();
 };
 
 (async () => {
   homebridge.showSpinner();
-  try {
-    const language = await homebridge.i18nCurrentLang();
-    const strings = await homebridge.request('i18n', language);
-    translateHtml(strings);
 
-    const config = await homebridge.getPluginConfig();
-    if (config.length) {
-      await showSettings(strings);
-    } else {
-      showIntro(strings);
-    }
-  } catch (err) {
-    homebridge.toast.error((err as Error).message);
-    homebridge.hideSpinner();
+  const language = await homebridge.i18nCurrentLang();
+  const strings = await homebridge.request('i18n', language);
+  translateHtml(strings);
+
+  const config = await homebridge.getPluginConfig();
+  if (config.length) {
+    await showSettings(strings);
+  } else {
+    showIntro(strings);
   }
 })();

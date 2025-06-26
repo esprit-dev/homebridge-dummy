@@ -5,7 +5,15 @@ const en = {
   },
 
   config: {
+
     continue: 'Continue %s',
+    migrate: 'Are you upgrading from an earlier version?',
+    migrationDetails1: 'Please restart Homebridge and we will attempt to migrate your plugins.',
+    migrationDetails2: 'For more details, please visit %s.',
+    support: 'For documentation and support please visit %s',
+    thankYou: 'Thank you for installing %s',
+    yes: 'Yes',
+    no: 'No',
 
     description: {
       brightness: 'Starting brightness',
@@ -20,15 +28,13 @@ const en = {
       time: 'The switch will turn off after this number of milliseconds',
     },
 
-    support: 'For help and support please visit %s',
-    thankYou: 'Thank you for installing Homebridge Dummy',
-
     title: {
       brightness: 'Brightness',
       dimmer: 'Dimmer',
       disableLogging: 'Disable Logging',
       name: 'Name',
       legacyAccessories: 'Legacy Accessories',
+      legacyAccessory: 'Legacy Accessory',
       random: 'Random',
       resettable: 'Resettable',
       reverse: 'Reverse',

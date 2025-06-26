@@ -1,3 +1,9 @@
+export enum MigrationState {
+  NEEDED = 'NEEDED',
+  SKIPPED = 'SKIPPED',
+  DONE = 'DONE',
+}
+
 export type AccessoryConfig = {
   accessory: string;
 }
@@ -20,5 +26,5 @@ export type PlatformConfig = {
 
 export type DummyPlatformConfig = PlatformConfig & {
   legacyAccessories: LegacyAccessoryConfig[];
-  migrate?: boolean;
+  migration: MigrationState;
 }

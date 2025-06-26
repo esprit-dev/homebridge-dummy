@@ -5,16 +5,25 @@
     style="width: 60%;"
   />
 </p> -->
+
 <div id="support" class="text-center" style="display: none;">
   <p i18n="support" i18n_replace="github"></p>
 </div>
-<div id="migration" class="text-center" style="display: none;">
-  <p class="lead" i18n="migrate"></p>
-  </br><button type="button" class="btn btn-primary" id="migrateContinue" i18n="continue", i18n_replace="arrow"></button>
-</div>
-<div id="pageIntro" class="text-center" style="display: none;">
-  <p class="lead" i18n="thankYou"></p>
-  </br><button type="button" class="btn btn-primary" id="introContinue" i18n="continue", i18n_replace="arrow"></button>
+
+<div id="intro" class="text-center" style="display: none;">
+  <p class="lead" i18n="thankYou" i18n_replace="dummy"></p></br>
+  <p class="lead" i18n="migrate"></p></br>
+  <button type="button" class="btn btn-primary" id="buttonNo" i18n="no"></button>&nbsp;&nbsp;
+  <button type="button" class="btn btn-primary" id="buttonYes" i18n="yes"></button>
 </div>
 
-<script src="ui.js"></script>
+<div id="migration" class="text-center" style="display: none;">
+  <p class="lead" i18n="migrationDetails1"></p></br>
+  <p class="lead" i18n="migrationDetails2" i18n_replace="migration"></p></br>
+</div>
+
+<script>
+  var script = document.createElement('script');
+  script.src = 'ui.js?v=' + Date.now();
+  document.body.appendChild(script);
+</script>
