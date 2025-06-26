@@ -18,12 +18,8 @@
 </div>
 
 <div id="migration" class="text-center" style="display: none;">
-  <p class="lead" i18n="migrationDetails1"></p></br>
+  <p class="lead" i18n="migrationDetails1" i18n_replace="dummy"></p></br>
   <p class="lead" i18n="migrationDetails2" i18n_replace="migration"></p></br>
 </div>
 
-<script>
-  var script = document.createElement('script');
-  script.src = 'ui.js?v=' + Date.now();
-  document.body.appendChild(script);
-</script>
+<script src="ui.js"></script>

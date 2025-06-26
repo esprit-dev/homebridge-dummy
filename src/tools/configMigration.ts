@@ -3,9 +3,12 @@ import fs from 'fs';
 import { Log } from './log.js';
 
 import { LEGACY_ACCESSORY_NAME } from '../accessory/legacy.js';
+
+import { strings } from '../i18n/i18n.js';
+
 import { PLATFORM_NAME } from '../homebridge/settings.js';
 
-import { AccessoryConfig, DummyPlatformConfig, LegacyAccessoryConfig, PlatformConfig } from '../model/types.js';
+import { AccessoryConfig, DummyPlatformConfig, LegacyAccessoryConfig, MigrationState, PlatformConfig } from '../model/types.js';
 
 // TODO need to handle child bridge case
 export async function migrateAccessories(log: Log, configPath: string): Promise<LegacyAccessoryConfig[] | undefined> {
@@ -32,20 +35,21 @@ export async function migrateAccessories(log: Log, configPath: string): Promise<
       if (platformConfig.platform === PLATFORM_NAME) {
         const dummyPlatformConfig = platformConfig as DummyPlatformConfig;
         dummyPlatformConfig.legacyAccessories = toMigrate;
-        delete dummyPlatformConfig.migrate;
+        dummyPlatformConfig.migration = MigrationState.COMPLETE;
       }
     });
 
-    delete config.migrate;
+    config.migrate = MigrationState.COMPLETE;
 
     fs.writeFileSync(configPath, JSON.stringify(config, null, 4));
 
-    // TODO inform user of migrated accessories and that if something went wrong there is a backup at configPath.bak
+    log.success(strings.startup.migrationComplete, 'Homebridge Dummy');
+    log.always(strings.startup.migrationRevert);
 
     return toMigrate;
 
   } catch (err) {
-    log.error((err as Error).message); // TODO alert that config migration failed
+    log.error(strings.startup.migrationFailed, err);
     return undefined;
   }
 }

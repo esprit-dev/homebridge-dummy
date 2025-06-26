@@ -26,6 +26,10 @@ export class Log {
     this.logger.error(message, ...parameters);
   }
 
+  public success(message: string, ...parameters: any[]) {
+    this.logger.success(message, ...parameters);
+  }
+
   public ifVerbose(message: string, ...parameters: any[]): void;
   public ifVerbose(level: LogType, message: string, ...parameters: any[]): void;
   public ifVerbose(levelOrMessage: LogType | string, ...rest: any[]) {

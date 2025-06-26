@@ -7,7 +7,7 @@ import { setLanguage, strings } from '../i18n/i18n.js';
 import getVersion from '../tools/version.js';
 import { Log } from '../tools/log.js';
 import { migrateAccessories } from '../tools/configMigration.js';
-import { LegacyAccessoryConfig } from '../model/types.js';
+import { LegacyAccessoryConfig, MigrationState } from '../model/types.js';
 import { LegacyAccessory } from '../accessory/legacy.js';
 
 export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
@@ -16,7 +16,8 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
 
   public readonly log: Log;
 
-  private readonly accessories: Map<string, PlatformAccessory> = new Map();
+  private readonly cachedAccessories: Map<string, PlatformAccessory> = new Map();
+  private readonly dummyAccessories: (LegacyAccessory)[] = [];
 
   constructor(
     logger: Logger,
@@ -51,12 +52,14 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
   }
 
   configureAccessory(accessory: PlatformAccessory): void {
-    this.log.always(strings.startup.restoringDevice, accessory.displayName);
-    this.accessories.set(accessory.context.identifier, accessory);
+    this.log.always(strings.startup.restoringAccessory, accessory.displayName);
+    this.cachedAccessories.set(accessory.context.identifier, accessory);
   }
 
   private teardown() {
-    // TODO stop timers?
+    this.dummyAccessories.forEach( accessory => {
+      accessory.teardown();
+    });
   }
 
   private async setup(): Promise<void> {
@@ -64,7 +67,7 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
     const keepIdentifiers = new Set<string>();
 
     let legacyAccessories: LegacyAccessoryConfig[] | undefined = undefined;
-    if (this.config.migrate) {
+    if (this.config.migrate === MigrationState.NEEDED) {
       legacyAccessories = await migrateAccessories(this.log, this.api.user.configPath());
     } else {
       legacyAccessories = this.config.legacyAccessories;
@@ -74,7 +77,7 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
       const id = LegacyAccessory.identifier(legacyConfig);
       keepIdentifiers.add(id);
 
-      let accessory = this.accessories.get(id);
+      let accessory = this.cachedAccessories.get(id);
       if (!accessory) {
 
         const name = legacyConfig.name;
@@ -87,15 +90,16 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
 
         this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
 
-        this.accessories.set(id, accessory);
+        this.cachedAccessories.set(id, accessory);
       }
 
-      new LegacyAccessory(this.log, accessory, legacyConfig, this.api.hap.Service, this.api.hap.Characteristic, this.api.user.persistPath());
+      const dummyAccessory = new LegacyAccessory(this.log, accessory, legacyConfig, this.Service, this.Characteristic, this.api.user.persistPath());
+      this.dummyAccessories.push(dummyAccessory);
     });
 
-    this.accessories.forEach(accessory => {
+    this.cachedAccessories.forEach(accessory => {
       if (!keepIdentifiers.has(accessory.context.identifier)) {
-        this.removeAccessory(accessory);
+        this.removeCachedAccessory(accessory);
       }
     });
 
@@ -103,9 +107,9 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
     this.log.always(strings.startup.setupComplete, strings.startup.welcome[randIndex]);
   }
   
-  private removeAccessory(accessory: PlatformAccessory) {
+  private removeCachedAccessory(accessory: PlatformAccessory) {
     this.log.always(strings.startup.removeAccessory, accessory.displayName);
     this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
-    this.accessories.delete(accessory.context.identifier);
+    this.cachedAccessories.delete(accessory.context.identifier);
   }
 }

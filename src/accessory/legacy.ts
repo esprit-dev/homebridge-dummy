@@ -73,6 +73,11 @@ export class LegacyAccessory {
     return `DummySwitch:${config.name}`;
   }
 
+  public teardown() {
+    clearTimeout(this.timer);
+    this.timer = undefined;
+  }
+
   private async finishSetup() {
 
     if (this.isReverse) {

@@ -1,7 +1,7 @@
 export enum MigrationState {
   NEEDED = 'NEEDED',
   SKIPPED = 'SKIPPED',
-  DONE = 'DONE',
+  COMPLETE = 'COMPLETE',
 }
 
 export type AccessoryConfig = {

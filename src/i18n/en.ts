@@ -8,7 +8,7 @@ const en = {
 
     continue: 'Continue %s',
     migrate: 'Are you upgrading from an earlier version?',
-    migrationDetails1: 'Please restart Homebridge and we will attempt to migrate your plugins.',
+    migrationDetails1: 'Please restart %s TWICE and we will try to migrate your plugins.',
     migrationDetails2: 'For more details, please visit %s.',
     support: 'For documentation and support please visit %s',
     thankYou: 'Thank you for installing %s',
@@ -49,9 +49,12 @@ const en = {
   },
 
   startup: {
+    migrationComplete: 'Legacy accessories have been successfully migrated! Please restart %s now to see your accessories.',
+    migrationFailed: 'Sorry, something went wrong with the migration of legacy accessories.',
+    migrationRevert: 'If you encounter problems, you can find a backup config.json.bak in your Homebridge directory.',
     newAccessory: 'Adding new accessory:',
     removeAccessory: 'Removing accessory:',
-    restoringDevice: 'Restoring accessory:',
+    restoringAccessory: 'Restoring accessory:',
     setupComplete: '✓ Setup complete',
     welcome: [
       'Please ★ this plugin on GitHub if you\'re finding it useful! https://github.com/mpatfield/homebridge-dummy',
