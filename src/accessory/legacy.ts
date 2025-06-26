@@ -80,12 +80,8 @@ export class LegacyAccessory {
     }
 
     if (this.isStateful) {
-      const state = await storageGet(this.persistPath, this.storageKey(SUFFIX_STATE));
-      if(!state) {
-        this.accessoryService.setCharacteristic(this.Characteristic.On, false);
-      } else {
-        this.accessoryService.setCharacteristic(this.Characteristic.On, true);
-      }
+      const state = await storageGet(this.persistPath, this.storageKey(SUFFIX_STATE)) === 'true';
+      this.accessoryService.setCharacteristic(this.Characteristic.On, state);
     }
 
     if (this.isDimmer) {
