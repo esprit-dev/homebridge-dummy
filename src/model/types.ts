@@ -4,8 +4,15 @@ export enum MigrationState {
   COMPLETE = 'COMPLETE',
 }
 
+export type ChildBridge = {
+  username: string;
+  port?: number;
+  name?: string;
+}
+
 export type AccessoryConfig = {
   accessory: string;
+  _bridge?: ChildBridge;
 }
 
 export type LegacyAccessoryConfig = AccessoryConfig & {
@@ -27,4 +34,6 @@ export type PlatformConfig = {
 export type DummyPlatformConfig = PlatformConfig & {
   legacyAccessories: LegacyAccessoryConfig[];
   migration: MigrationState;
+  _bridge?: ChildBridge;
+  verbose: boolean;
 }

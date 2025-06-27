@@ -7,29 +7,33 @@ import { setLanguage, strings } from '../i18n/i18n.js';
 import getVersion from '../tools/version.js';
 import { Log } from '../tools/log.js';
 import { migrateAccessories } from '../tools/configMigration.js';
-import { LegacyAccessoryConfig, MigrationState } from '../model/types.js';
+import { DummyPlatformConfig, LegacyAccessoryConfig, MigrationState } from '../model/types.js';
 import { LegacyAccessory } from '../accessory/legacy.js';
 
 export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
-  public readonly Service;
-  public readonly Characteristic;
+  private readonly Service;
+  private readonly Characteristic;
 
-  public readonly log: Log;
+  private readonly config: DummyPlatformConfig;
+
+  private readonly log: Log;
 
   private readonly cachedAccessories: Map<string, PlatformAccessory> = new Map();
   private readonly dummyAccessories: (LegacyAccessory)[] = [];
 
   constructor(
     logger: Logger,
-    public readonly config: PlatformConfig,
-    public readonly api: API,
+    config: PlatformConfig,
+    private readonly api: API,
   ) {
+
+    this.config = config as DummyPlatformConfig;
 
     const userLang = Intl.DateTimeFormat().resolvedOptions().locale.split('-')[0];
     setLanguage(userLang);
 
-    this.Service = this.api.hap.Service;
-    this.Characteristic = this.api.hap.Characteristic;
+    this.Service = api.hap.Service;
+    this.Characteristic = api.hap.Characteristic;
 
     this.log = new Log(logger, config.verbose);
 
@@ -42,11 +46,11 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
       api.hap.HAPLibraryVersion(),
     );
 
-    this.api.on('didFinishLaunching', () => {
+    api.on('didFinishLaunching', () => {
       this.setup();
     });
 
-    this.api.on('shutdown', () => {
+    api.on('shutdown', () => {
       this.teardown();
     });
   }
@@ -67,7 +71,7 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
     const keepIdentifiers = new Set<string>();
 
     let legacyAccessories: LegacyAccessoryConfig[] | undefined = undefined;
-    if (this.config.migrate === MigrationState.NEEDED) {
+    if (this.config.migration === MigrationState.NEEDED) {
       legacyAccessories = await migrateAccessories(this.log, this.api.user.configPath());
     } else {
       legacyAccessories = this.config.legacyAccessories;

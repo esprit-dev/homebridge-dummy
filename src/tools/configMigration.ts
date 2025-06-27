@@ -8,9 +8,8 @@ import { strings } from '../i18n/i18n.js';
 
 import { PLATFORM_NAME } from '../homebridge/settings.js';
 
-import { AccessoryConfig, DummyPlatformConfig, LegacyAccessoryConfig, MigrationState, PlatformConfig } from '../model/types.js';
+import { AccessoryConfig, ChildBridge, DummyPlatformConfig, LegacyAccessoryConfig, MigrationState, PlatformConfig } from '../model/types.js';
 
-// TODO need to handle child bridge case
 export async function migrateAccessories(log: Log, configPath: string): Promise<LegacyAccessoryConfig[] | undefined> {
 
   try {
@@ -19,11 +18,15 @@ export async function migrateAccessories(log: Log, configPath: string): Promise<
     fs.writeFileSync(configPath + '.bak', JSON.stringify(config, null, 4));
 
     const toMigrate: LegacyAccessoryConfig[] = [];
+    let childBridge: ChildBridge;
     const others: AccessoryConfig[] = [];
 
     config.accessories.forEach( (accessoryConfig: AccessoryConfig) => {
       if (accessoryConfig.accessory === LEGACY_ACCESSORY_NAME) {
         toMigrate.push(accessoryConfig as LegacyAccessoryConfig);
+        if (accessoryConfig._bridge?.port) {
+          childBridge = accessoryConfig._bridge;
+        }
       } else {
         others.push(accessoryConfig);
       }
@@ -35,11 +38,12 @@ export async function migrateAccessories(log: Log, configPath: string): Promise<
       if (platformConfig.platform === PLATFORM_NAME) {
         const dummyPlatformConfig = platformConfig as DummyPlatformConfig;
         dummyPlatformConfig.legacyAccessories = toMigrate;
+        if (!dummyPlatformConfig._bridge) {
+          dummyPlatformConfig._bridge = childBridge;
+        }
         dummyPlatformConfig.migration = MigrationState.COMPLETE;
       }
     });
-
-    config.migrate = MigrationState.COMPLETE;
 
     fs.writeFileSync(configPath, JSON.stringify(config, null, 4));
 

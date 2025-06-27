@@ -8,7 +8,7 @@ const en = {
 
     continue: 'Continue %s',
     migrate: 'Are you upgrading from an earlier version?',
-    migrationDetails1: 'Please restart %s TWICE and we will try to migrate your plugins.',
+    migrationDetails1: 'Please restart %s TWICE and we will try to migrate your existing accessories.',
     migrationDetails2: 'For more details, please visit %s.',
     support: 'For documentation and support please visit %s',
     thankYou: 'Thank you for installing %s',
