@@ -1,18 +1,27 @@
+<!--
+<p align="center">
+<img src="https://github.com/mpatfield/homebridge-dummy/blob/latest/img/banner.png?raw=true" width="600">
+</p>
+-->
 
-# "Dummy Switches" Plugin
+<span align="center">
 
-Example config.json:
+# homebridge-dummy
 
-```
-    "accessories": [
-        {
-          "accessory": "DummySwitch",
-          "name": "My Switch 1",
-          "disableLogging": false
-        }   
-    ]
+Homebridge plugin to create fake switches for assisting with advanced Apple HomeKit automations
 
-```
+[![verified-by-homebridge](https://badgen.net/badge/homebridge/verified/purple)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins)
+[![hoobs-certified](https://badgen.net/badge/HOOBS/certified/yellow)](https://plugins.hoobs.org/plugin/homebridge-dummy)
+[![npm](https://img.shields.io/npm/dw/homebridge-dummy)](https://www.npmjs.com/package/homebridge-dummy)
+[![npm](https://img.shields.io/npm/dt/homebridge-dummy)](https://www.npmjs.com/package/homebridge-dummy)
+
+</span>
+
+## Disclaimer
+
+Any issues or damage resulting from use of this plugin are not the fault of the developer. Use at your own risk.
+
+## About
 
 With this plugin, you can create any number of fake switches that will do nothing when turned on (and will automatically turn off right afterward, simulating a stateless switch). This can be very useful for advanced automation with HomeKit scenes.
 
@@ -21,6 +30,8 @@ For instance, the Philips Hue app will automatically create HomeKit scenes for y
 Instead, you can link scenes using these dummy switches. Let's say you have a Hue Scene called "Rise and Shine" that you want to activate in the morning. And you have also setup the system HomeKit scene "Good Morning" to turn on your coffee maker and disarm your security system. You can add a single dummy switch to your Good Morning scene, then create a Trigger based on the switching-on of the dummy switch that also activates Rise And Shine.
 
 If the disableLogging option is true, state changes (On/Off) will not be logged. The disableLogging option is per switch, so you can choose which ones will get log entries. If not supplied, the default value is false and state changes will be logged.
+
+Using the Homebridge Config UI is the easiest way to set up this plugin. However, if you wish to do things manually then you will need to add the following to your Homebridge `config.json`:
 
 ## Stateful Switches
 
