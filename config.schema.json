@@ -6,123 +6,120 @@
   "customUiPath": "./dist/homebridge-ui",
   "schema": {
     "type": "object",
+    "definitions": {
+      "timer": {
+        "type": "object",
+        "properties": {
+          "delay": {
+            "type": "integer",
+            "title": "${config.title.delay}", 
+            "minimum": 1
+          },
+          "units": {
+            "type": "string",
+            "title": "${config.title.units}", 
+            "enum": [ "SECONDS", "MINUTES", "HOURS"],
+            "enumNames": ["${config.enumNames.seconds}", "${config.enumNames.minutes}", "${config.enumNames.hours}"]
+          }
+        }
+      }
+    },
     "properties": {
       "name": {
         "type": "string",
         "default": "Homebridge Dummy"
       },
-      "legacyAccessories": {
+      "accessories": {
         "type": "array",
         "items": {
           "type": "object",
           "properties": {
             "name": {
-                "title": "${config.title.name}",
-                "type": "string",
-                "required": true
+              "type": "string",
+              "title": "${config.title.name}" ,         
+              "required": true
             },
-            "stateful": {
-                "title": "${config.title.stateful}",
-                "type": "boolean",
-                "default": false,
-                "description": "${config.description.stateful}"
+            "type": {
+              "type": "string",
+              "title": "${config.title.type}", 
+              "enum": ["Switch"],
+              "enumNames": ["${config.enumNames.switch}"],
+              "required": true
             },
-            "dimmer": {
-                "title": "${config.title.dimmer}",
-                "type": "boolean",
-                "default": false,
-                "description": "${config.description.dimmer}"
-            },
-            "reverse": {
-                "title": "${config.title.reverse}",
-                "type": "boolean",
-                "default": false,
-                "description": "${config.description.reverse}"
-            },
-            "time": {
-                "title": "${config.title.time}",
-                "type": "number",
-                "default": 1000,
-                "description": "${config.description.time}"
-            },
-            "random": {
-                "title": "${config.title.random}",
-                "type": "boolean",
-                "default": false,
-                "description": "${config.description.random}"
-            },
-            "resettable": {
-                "title": "${config.title.resettable}",
-                "type": "boolean",
-                "default": false,
-                "description": "${config.description.resettable}"
-            },
-            "brightness": {
-                "title": "${config.title.brightness}",
-                "type": "integer",
-                "default": 0,
-                "placeholder": 0,
-                "maximum": 100,
-                "description": "${config.description.brightness}"
+            "timer": { "$ref": "#/definitions/timer" },
+            "defaultOn": {
+              "type": "boolean",
+              "title": "${config.title.defaultOn}"
             },
             "disableLogging": {
-                "title": "${config.title.disableLogging}",
-                "type": "boolean",
-                "default": false,
-                "description": "${config.description.resettable}"
+              "title": "${config.title.disableLogging}",
+              "type": "boolean"
             }
           }
-        }
+        }        
       }
     }
   },
-  "layout": [
+    "layout": [
     {
-      "key": "legacyAccessories",
-      "expandable": true,
-      "title": "${config.title.legacyAccessories}",
-      "description": "${config.description.legacyAccessories}",
       "type": "array",
+      "key": "accessories",
+      "title": "${config.title.accessories}",
       "items": [
         {
           "type": "fieldset",
+          "expandable": true,
+          "title": "${config.title.accessory}",
           "items": [
             {
-              "expandable": true,
-              "title": "Legacy Accessory",
-              "type": "fieldset",
+              "type": "div",
+              "displayFlex": true,
+              "flex-direction": "row",
               "items": [
-                "legacyAccessories[].name",
-                "legacyAccessories[].dimmer",
                 {
-                  "key": "legacyAccessories[].brightness",
-                  "condition": {
-                    "functionBody": "const index = arguments[1]; return model.legacyAccessories[index].dimmer === true;"
-                  }
-                },
-                "legacyAccessories[].reverse",
-                "legacyAccessories[].stateful",
-                {
-                  "key": "legacyAccessories[].time",
-                  "condition": {
-                    "functionBody": "const index = arguments[1]; return model.legacyAccessories[index].stateful !== true;"
-                  }
+                  "key": "accessories[].name",
+                  "flex": "1 1 0"
                 },
                 {
-                  "key": "legacyAccessories[].resettable",
-                  "condition": {
-                    "functionBody": "const index = arguments[1]; return model.legacyAccessories[index].stateful !== true;"
-                  }
-                },
-                {
-                  "key": "legacyAccessories[].random",
-                  "condition": {
-                    "functionBody": "const index = arguments[1]; return model.legacyAccessories[index].stateful !== true;"
-                  }
-                },
-                "legacyAccessories[].disableLogging"
+                  "key": "accessories[].type",
+                  "flex": "1 1 0"
+                }
               ]
-            }
+            },
+            {
+              "type": "fieldset",
+              "title": "${config.title.timer}",
+              "expandable": true,
+              "items": [
+                {
+                  "type": "div",
+                  "displayFlex": true,
+                  "flex-direction": "row",
+                  "items": [
+                    {
+                      "key": "accessories[].timer.delay",
+                      "flex": "1 1 0"
+                    },
+                    {
+                      "key": "accessories[].timer.units",
+                      "flex": "1 1 0"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "fieldset",
+              "title": "${config.title.options}",
+              "expandable": true,
+              "condition": {
+                "functionBody": "return ['Switch'].includes(model.accessories?.[arguments[1]]?.type);"
+              },
+              "items": [
+                "accessories[].defaultOn"
+              ]
+            },            
+            "accessories[].disableLogging"
           ]
         }
       ]

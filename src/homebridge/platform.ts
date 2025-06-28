@@ -2,13 +2,15 @@ import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig }
 
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings.js';
 
+import { DummyAccessory } from '../accessory/base.js';
+import { SwitchAccessory } from '../accessory/switch.js';
+
 import { setLanguage, strings } from '../i18n/i18n.js';
+
+import { DummyAccessoryConfig, DummyPlatformConfig, MigrationState, SwitchConfig } from '../model/types.js';
 
 import getVersion from '../tools/version.js';
 import { Log } from '../tools/log.js';
-import { migrateAccessories } from '../tools/configMigration.js';
-import { DummyPlatformConfig, LegacyAccessoryConfig, MigrationState } from '../model/types.js';
-import { LegacyAccessory } from '../accessory/legacy.js';
 
 export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
   private readonly Service;
@@ -19,7 +21,7 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
   private readonly log: Log;
 
   private readonly cachedAccessories: Map<string, PlatformAccessory> = new Map();
-  private readonly dummyAccessories: (LegacyAccessory)[] = [];
+  private readonly dummyAccessories: (DummyAccessory)[] = [];
 
   constructor(
     logger: Logger,
@@ -70,21 +72,24 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
    
     const keepIdentifiers = new Set<string>();
 
-    let legacyAccessories: LegacyAccessoryConfig[] | undefined = undefined;
+    const accessories: DummyAccessoryConfig[] = this.config.accessories || [];
     if (this.config.migration === MigrationState.NEEDED) {
-      legacyAccessories = await migrateAccessories(this.log, this.api.user.configPath());
-    } else {
-      legacyAccessories = this.config.legacyAccessories;
+      // TODO
+      // const migratedAccessories = await migrateAccessories(this.log, this.api.user.configPath());
+      // accessories.push(migratedAccessories);
     }
     
-    legacyAccessories?.forEach( (legacyConfig: LegacyAccessoryConfig) => {
-      const id = LegacyAccessory.identifier(legacyConfig);
+    const newAccessories: PlatformAccessory[] = [];
+
+    for (const accessoryConfig of accessories) {
+
+      const id = DummyAccessory.identifier(accessoryConfig);
       keepIdentifiers.add(id);
 
       let accessory = this.cachedAccessories.get(id);
       if (!accessory) {
 
-        const name = legacyConfig.name;
+        const name = accessoryConfig.name;
         this.log.always(strings.startup.newAccessory, name);
 
         const uuid = this.api.hap.uuid.generate(id);
@@ -92,14 +97,26 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
         accessory = new this.api.platformAccessory(name, uuid);
         accessory.context.identifier = id;
 
-        this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
-
+        newAccessories.push(accessory);
         this.cachedAccessories.set(id, accessory);
       }
 
-      const dummyAccessory = new LegacyAccessory(this.log, accessory, legacyConfig, this.Service, this.Characteristic, this.api.user.persistPath());
+      let dummyAccessory: DummyAccessory;
+      switch(accessoryConfig.type) {
+      case this.Service.Switch.name:
+        dummyAccessory = new SwitchAccessory(this.Service, this.Characteristic, accessory, accessoryConfig as SwitchConfig, this.log);
+        break;
+      default:
+        this.log.error(strings.startup.unsupportedType, `'${accessoryConfig.type}'`);
+        continue;
+      }
+
       this.dummyAccessories.push(dummyAccessory);
-    });
+    };
+
+    if (newAccessories.length) {
+      this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, newAccessories);
+    }
 
     this.cachedAccessories.forEach(accessory => {
       if (!keepIdentifiers.has(accessory.context.identifier)) {

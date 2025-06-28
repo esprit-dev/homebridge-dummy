@@ -58,13 +58,13 @@ const translateSchema = (strings: Translation) => {
 const updateAccessoryNames = (strings: Translation) => {
 
   const legends = Array.from(window.parent.document.querySelectorAll('fieldset legend'))
-    .filter(el => !el.textContent?.includes(strings.config.title.legacyAccessories));
+    .filter(el => !el.textContent?.includes(strings.config.title.accessories));
 
   for(const legend of legends) {
     const fieldset = legend.closest('fieldset');
     const input = fieldset?.querySelector('input[type="text"][name="name"]') as HTMLInputElement | null;
-    if (input && legend.textContent !== (input.value || strings.config.title.legacyAccessory)) {
-      legend.textContent = input.value !== '' ? input.value : strings.config.title.legacyAccessory;
+    if (input && legend.textContent !== (input.value || strings.config.title.accessory)) {
+      legend.textContent = input.value !== '' ? input.value : strings.config.title.accessory;
     }
 
     if (input && !input.dataset.accessoryNameListener) {

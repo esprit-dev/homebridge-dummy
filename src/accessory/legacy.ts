@@ -1,8 +1,6 @@
 import { CharacteristicValue, PlatformAccessory, Service } from 'homebridge';
 
-import { strings } from '../i18n/i18n.js';
-
-import { LegacyAccessoryConfig } from '../model/types.js';
+import { CharacteristicType, LegacyAccessoryConfig, ServiceType } from '../model/types.js';
 
 import { Log } from '../tools/log.js';
 import { storageGet, storageSet } from '../tools/storage.js';
@@ -35,8 +33,8 @@ export class LegacyAccessory {
     log: Log,
     accessory: PlatformAccessory,
     config: LegacyAccessoryConfig,
-    readonly Service: typeof import('homebridge').Service,
-    readonly Characteristic: typeof import('homebridge').Characteristic,
+    readonly Service: ServiceType,
+    readonly Characteristic: CharacteristicType,
     readonly persistPath: string,
   ) {
     this.log = config.disableLogging ? undefined : log;
@@ -53,7 +51,7 @@ export class LegacyAccessory {
     this.isResettable = config.resettable ?? false;
     this.isRandom = config.random ?? false;
 
-    const model = this.isDimmer ? strings.info.dimmer : strings.info.switch;
+    const model = this.isDimmer ? 'Dummy Dimmer' : 'Dummy Switch';
     const serviceType = this.isDimmer ? Service.Lightbulb : Service.Switch;
 
     this.accessoryService = accessory.getService(serviceType) || accessory.addService(serviceType);
@@ -121,7 +119,7 @@ export class LegacyAccessory {
   }
 
   private async _setBrightness(brightness: CharacteristicValue): Promise<void> {
-    this.log?.always(strings.brightness.set, brightness);
+    this.log?.always('Brightness = %s', brightness);
     this.brightness = brightness;
     await storageSet(this.persistPath, this.storageKey(SUFFIX_BRIGHTNESS), brightness.toString());
   };
@@ -129,9 +127,9 @@ export class LegacyAccessory {
   private async _setOn(value: CharacteristicValue): Promise<void> {
 
     if (this.isDimmer) {
-      this.log?.always('%s / %s', value ? strings.switch.on : strings.switch.off, this.brightness);
+      this.log?.always('%s / %s', value ? 'On' : 'Off', this.brightness);
     } else {
-      this.log?.always(value ? strings.switch.on : strings.switch.off);
+      this.log?.always(value ? 'On' : 'Off');
     }
 
     if (this.isStateful) {
@@ -154,9 +152,9 @@ export class LegacyAccessory {
     }
 
     if (delay % 1000 === 0) {
-      this.log?.always(strings.switch.delay_s, delay / 1000);
+      this.log?.always('Delaying %ss…', delay / 1000);
     } else {
-      this.log?.always(strings.switch.delay_ms, delay);
+      this.log?.always('Delaying %sms…', delay);
     }
 
     this.timer = setTimeout(() => {

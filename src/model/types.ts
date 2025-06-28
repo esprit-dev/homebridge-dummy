@@ -1,3 +1,8 @@
+export type ServiceType = typeof import('homebridge').Service;
+export type CharacteristicType = typeof import('homebridge').Characteristic;
+
+type AccessoryType = 'Switch';
+
 export enum MigrationState {
   NEEDED = 'NEEDED',
   SKIPPED = 'SKIPPED',
@@ -15,6 +20,7 @@ export type AccessoryConfig = {
   _bridge?: ChildBridge;
 }
 
+// TODO remove
 export type LegacyAccessoryConfig = AccessoryConfig & {
   name: string;
   dimmer?: boolean;
@@ -32,8 +38,39 @@ export type PlatformConfig = {
 }
 
 export type DummyPlatformConfig = PlatformConfig & {
+  accessories: DummyAccessoryConfig[];
   legacyAccessories: LegacyAccessoryConfig[];
   migration: MigrationState;
   _bridge?: ChildBridge;
   verbose: boolean;
+}
+
+export enum TimeUnits {
+  SECONDS = 'SECONDS',
+  MINUTES = 'MINUTES',
+  HOURS = 'HOURS',
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export type Assertable = {
+}
+
+export type TimerConfig = Assertable & {
+  delay: number,
+  units: TimeUnits,
+}
+
+export type DummyAccessoryConfig = {
+  name: string,
+  type: AccessoryType,
+  legacy?: boolean,
+  timer?: TimerConfig,
+  disableLogging: boolean,
+}
+
+export type OnOffConfig = DummyAccessoryConfig & {
+  defaultOn: boolean,
+}
+
+export type SwitchConfig = OnOffConfig & {
 }
