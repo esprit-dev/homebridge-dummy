@@ -21,11 +21,11 @@ Homebridge plugin to create fake accessories for assisting with advanced Apple H
 
 Any issues or damage resulting from use of this plugin are not the fault of the developer. Use at your own risk.
 
-## v1.0.0 Migration
+## v1.0 Migration
 
 ### tl;dr
 
-‼️ There are significant code changes between v0.9 and v1.0 which means you will need to reconfigure HomeKit automations after upgrading. Homebridge Dummy can help migrate old accessories in Homebridge so you don't need to recreate everything.
+‼️ There are significant code changes between v0.9 and v1.0 which means you will need to reconfigure HomeKit automations after upgrading. Homebridge Dummy will try to migrate old accessories in Homebridge so you don't need to recreate everything.
 
 ### Why?
 
@@ -39,11 +39,11 @@ v1.0 doesn't include any new features but will make it much easier to improve an
 
 Unfortunately, there is no built-in way to migrate existing accessory plugins to platform plugins. This means that all accessories will be considered "new" by HomeKit, so any existing automations or room setups will be lost.
 
-However, Homebridge Dummy can try to migrate the accessory configurations to the new system to prevent you having to set them all up again in Homebridge.
+However, Homebridge Dummy will try to migrate the accessory configurations to the new system to prevent you having to set them all up again in Homebridge.
 
 ### Migration Flow
 
-Once you have installed v1.0, click on the icon to configure the Homebridge Dummy plugin in the Homebridge UI and it will walk you through the necessary questionaire.
+Once you have installed v1.0, click on the icon to configure the Homebridge Dummy plugin in the Homebridge UI and it will walk you through the necessary questionnaire.
 
 Alternatively, you can add the following to "platforms" in your config.json
 
@@ -51,7 +51,7 @@ Alternatively, you can add the following to "platforms" in your config.json
 {
     "name": "Homebridge Dummy",
     "platform": "HomebridgeDummy",
-    "migrationNeeded": true,
+    "migrationNeeded": true
 }
 ```
 
@@ -63,9 +63,9 @@ You may safely ignore any "No plugin was found…" errors you see in the Homebri
 
 ### Problems?
 
-This is a highly experimental flow and may not work as intended. If you see, "Sorry, something went wrong with the accessory migration" or encounter other issues, please [create an issue](https://github.com/mpatfield/homebridge-dummy/issues/new?template=new-issue.md).
+This is a highly experimental flow and may not work as intended. If you see "Sorry, something went wrong with the accessory migration" or encounter other issues, please [create an issue](https://github.com/mpatfield/homebridge-dummy/issues/new?template=new-issue.md).
 
-The first thing the flow does is create a backup called `config.json.bak` in your Homebridge directory. If all else fails, you can replace your `config.json` with the backup and downgrade to Homebridge Dummy v0.9 to return everything back to normal.
+The first thing the flow does is create a backup called `config.json.bak` in your Homebridge directory. If all else fails, you can replace your `config.json` with the backup and downgrade to Homebridge Dummy v0.9 to restore everything back to normal.
 
 ## 
 
@@ -77,9 +77,8 @@ Example config.json:
           "accessory": "DummySwitch",
           "name": "My Switch 1",
           "disableLogging": false
-        }   
+        }
     ]
-
 ```
 
 ## About
@@ -102,24 +101,24 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
             "timer": {
                 "delay": 1,
                 "units": "SECONDS | MINUTES | HOURS",
-                "random": false,
+                "random": false
             },
             "defaultOn": false,
-            "disableLogging": false,
-        },
-        ...
-    ]
+            "disableLogging": false
+        }
+        // ...additional accessories...
+    ],
     "platform": "HomebridgeDummy"
 }
 ```
 
-All fields are optional unless noted with an asterix (*)
+All fields are optional unless noted with an asterisk (*)
 
 - `name`* - The display name for the accessory in HomeKit
 - `type`* - The type of accessory, currently `Lightbulb` and `Switch` are supported
 
 - `timer.delay` — If defined, the switch will automatically toggle after this many seconds/minutes/hours
-- `timer.units` — The units to use for delay above (`SECONDS`, `MINUTES`, of `HOURS`). *Required if delay is set.
+- `timer.units` — The units to use for delay above (`SECONDS`, `MINUTES`, or `HOURS`). *Required if delay is set.
 - `timer.random` — If true, the delay will be randomized with a maximum value of `timer.delay`
 
 - `defaultOn` — If true, the states are reversed so that the default state is _on_. Only applicable to Switches.
@@ -180,7 +179,7 @@ All fields are optional unless noted with an asterix (*)
 {
     "name": "Dimmer",
     "type": "Lightbulb",
-    "defaultBrightness": 42,
+    "defaultBrightness": 42
 }
 ```
 
@@ -199,6 +198,6 @@ All fields are optional unless noted with an asterix (*)
 
 ## Credits
 
-Special thanks to [@nfarina](https://github.com/nfarina) for creating the original version of this plugin and maintaining it for almost 10\(!!!\) years
+Special thanks to [@nfarina](https://github.com/nfarina) for creating the original version of this plugin and maintaining it for almost 10 (!!!) years
 
 And to the amazing creators/contributors of [Homebridge](https://homebridge.io) who made this plugin possible!
