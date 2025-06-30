@@ -6,17 +6,6 @@ const SECONDS = 1000;
 const MINUTES = 60 * SECONDS;
 const HOURS = 60 * MINUTES;
 
-function delayMillis(config: TimerConfig): number {
-  switch(config.units) {
-  case TimeUnits.SECONDS:
-    return config.delay * SECONDS;
-  case TimeUnits.MINUTES:
-    return config.delay * MINUTES;
-  case TimeUnits.HOURS:
-    return config.delay * HOURS; 
-  }
-}
-
 export class Timer {
   
   private timer: NodeJS.Timeout | undefined = undefined;
@@ -33,14 +22,29 @@ export class Timer {
       this.reset();
     }
 
-    const delay = delayMillis(config);
+    let delay: number;
+    switch(config.units) {
+    case TimeUnits.SECONDS:
+      delay = config.delay * SECONDS;
+      break;
+    case TimeUnits.MINUTES:
+      delay = config.delay * MINUTES;
+      break;
+    case TimeUnits.HOURS:
+      delay = config.delay * HOURS; 
+      break;
+    }
+
+    if (config.random) {
+      delay = Math.floor(Math.max(SECONDS, Math.random() * delay));
+    }
 
     if (delay < MINUTES) {
-      this.log?.always(strings.accessory.timer.setSeconds, this.caller, delay / SECONDS);
+      this.log?.always(strings.accessory.timer.setSeconds, this.caller, Math.round(delay / SECONDS));
     } else if (delay < HOURS) {
-      this.log?.always(strings.accessory.timer.setMinutes, this.caller, delay / MINUTES);
+      this.log?.always(strings.accessory.timer.setMinutes, this.caller, Math.round(delay / MINUTES));
     } else {
-      this.log?.always(strings.accessory.timer.setSeconds, this.caller, delay / HOURS);
+      this.log?.always(strings.accessory.timer.setSeconds, this.caller, Math.round(delay / HOURS));
     }
 
     this.timer = setTimeout(async () => {

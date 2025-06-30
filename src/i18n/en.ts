@@ -15,8 +15,8 @@ const en = {
     },
 
     timer: {
-      cancel: '%s cancelled the timer',
-      reset: '%s reset the timer',
+      cancel: 'Cancelled the timer for %s',
+      reset: 'Reset the timer for %s',
       setSeconds: '%s is waiting %s seconds',
       setMinutes: '%s is waiting %s minutes',
       setHours: '%s is waiting %s hours',

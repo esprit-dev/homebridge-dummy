@@ -20,6 +20,11 @@
             "title": "${config.title.units}", 
             "enum": [ "SECONDS", "MINUTES", "HOURS"],
             "enumNames": ["${config.enumNames.seconds}", "${config.enumNames.minutes}", "${config.enumNames.hours}"]
+          },
+          "random": {
+            "type": "boolean",
+            "title": "${config.title.random}",
+            "description": "${config.description.random}"
           }
         }
       }
@@ -95,7 +100,7 @@
             {
               "type": "fieldset",
               "title": "${config.title.timer}",
-              "expandable": true,
+              "description": "${config.description.timer}",
               "condition": {
                 "functionBody": "return model.accessories?.[arguments[1]]?.type;"
               },
@@ -114,27 +119,41 @@
                       "flex": "1 1 0"
                     }
                   ]
-                }
+                },
+                "accessories[].timer.random"
               ]
             },
             {
               "type": "fieldset",
               "title": "${config.title.options}",
-              "expandable": true,
               "condition": {
                 "functionBody": "return ['Lightbulb','Switch'].includes(model.accessories?.[arguments[1]]?.type);"
               },
               "items": [
-                "accessories[].defaultOn",
+                {
+                  "type": "div",
+                  "displayFlex": true,
+                  "flex-direction": "row",
+                  "items": [
+                    {
+                      "key": "accessories[].defaultOn",
+                      "flex": "1 1 0"
+                    },
+                    {
+                      "key": "accessories[].disableLogging",
+                      "flex": "1 1 0"
+                    }                    
+                  ]
+                },
                 {
                   "key": "accessories[].defaultBrightness",
+                  "flex": "1 1 0",
                   "condition": {
                     "functionBody": "return ['Lightbulb'].includes(model.accessories?.[arguments[1]]?.type);"
                   }
                 }
               ]
-            },            
-            "accessories[].disableLogging"
+            }           
           ]
         }
       ]

@@ -58,6 +58,7 @@ export type Assertable = {
 export type TimerConfig = Assertable & {
   delay: number,
   units: TimeUnits,
+  random?: boolean,
 }
 
 export type DummyAccessoryConfig = {
