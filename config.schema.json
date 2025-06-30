@@ -1,66 +1,162 @@
 {
-    "pluginAlias": "DummySwitch",
-    "pluginType": "accessory",
-    "singular": false,
-    "schema": {
+  "pluginAlias": "HomebridgeDummy",
+  "pluginType": "platform",
+  "singular": true,
+  "customUi": true,
+  "customUiPath": "./dist/homebridge-ui",
+  "schema": {
+    "type": "object",
+    "definitions": {
+      "timer": {
         "type": "object",
         "properties": {
+          "delay": {
+            "type": "integer",
+            "title": "${config.title.delay}", 
+            "minimum": 1
+          },
+          "units": {
+            "type": "string",
+            "title": "${config.title.units}", 
+            "enum": [ "SECONDS", "MINUTES", "HOURS"],
+            "enumNames": ["${config.enumNames.seconds}", "${config.enumNames.minutes}", "${config.enumNames.hours}"]
+          },
+          "random": {
+            "type": "boolean",
+            "title": "${config.title.random}",
+            "description": "${config.description.random}"
+          }
+        }
+      }
+    },
+    "properties": {
+      "name": {
+        "type": "string",
+        "default": "Homebridge Dummy"
+      },
+      "accessories": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
             "name": {
-                "title": "Name",
-                "type": "string",
-                "required": true
+              "type": "string",
+              "title": "${config.title.name}" ,         
+              "required": true
             },
-            "stateful": {
-                "title": "Stateful",
-                "type": "boolean",
-                "default": false,
-                "description": "The switch remains on instead of being automatically turned off."
+            "type": {
+              "type": "string",
+              "title": "${config.title.type}", 
+              "enum": ["Lightbulb", "Switch"],
+              "enumNames": ["${config.enumNames.lightbulb}", "${config.enumNames.switch}"],
+              "required": true
             },
-            "dimmer": {
-                "title": "Dimmer",
-                "type": "boolean",
-                "default": false,
-                "description": "Make the switch a dimmer instead of a toggle (on/off) switch"
+            "timer": { "$ref": "#/definitions/timer" },
+            "defaultBrightness": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "title": "${config.title.defaultBrightness}"
             },
-            "reverse": {
-                "title": "Reverse",
-                "type": "boolean",
-                "default": false,
-                "description": "The switch's default state is on."
-            },
-            "time": {
-                "title": "Time",
-                "type": "number",
-                "default": 1000,
-                "description": "The switch will turn off after this number of milliseconds. Not used if the switch is stateful."
-            },
-            "random": {
-                "title": "Random",
-                "type": "boolean",
-                "default": false,
-                "description": "Randomize the time until a switch turns off. Not used if the switch is stateful."
-            },
-            "resettable": {
-                "title": "Resettable",
-                "type": "boolean",
-                "default": false,
-                "description": "The timer will reset each time the switch is turned on. "
-            },
-            "brightness": {
-                "title": "Brightness",
-                "type": "integer",
-                "default": 0,
-                "placeholder": 0,
-                "maximum": 100,
-                "description": "Starting brightness (dimmer only)"
+            "defaultOn": {
+              "type": "boolean",
+              "title": "${config.title.defaultOn}"
             },
             "disableLogging": {
-                "title": "DisableLogging",
-                "type": "boolean",
-                "default": false,
-                "description": "No state change information (On/Off) will be logged. "
+              "title": "${config.title.disableLogging}",
+              "type": "boolean"
             }
-
-        }
+          }
+        }        
+      }
     }
+  },
+    "layout": [
+    {
+      "type": "array",
+      "key": "accessories",
+      "notitle": true,
+      "items": [
+        {
+          "type": "fieldset",
+          "expandable": true,
+          "title": "${config.title.accessory}",
+          "items": [
+            {
+              "type": "div",
+              "displayFlex": true,
+              "flex-direction": "row",
+              "items": [
+                {
+                  "key": "accessories[].name",
+                  "flex": "1 1 0"
+                },
+                {
+                  "key": "accessories[].type",
+                  "flex": "1 1 0"
+                }
+              ]
+            },
+            {
+              "type": "fieldset",
+              "title": "${config.title.timer}",
+              "description": "${config.description.timer}",
+              "condition": {
+                "functionBody": "return model.accessories?.[arguments[1]]?.type;"
+              },
+              "items": [
+                {
+                  "type": "div",
+                  "displayFlex": true,
+                  "flex-direction": "row",
+                  "items": [
+                    {
+                      "key": "accessories[].timer.delay",
+                      "flex": "1 1 0"
+                    },
+                    {
+                      "key": "accessories[].timer.units",
+                      "flex": "1 1 0"
+                    }
+                  ]
+                },
+                "accessories[].timer.random"
+              ]
+            },
+            {
+              "type": "fieldset",
+              "title": "${config.title.options}",
+              "condition": {
+                "functionBody": "return ['Lightbulb','Switch'].includes(model.accessories?.[arguments[1]]?.type);"
+              },
+              "items": [
+                {
+                  "type": "div",
+                  "displayFlex": true,
+                  "flex-direction": "row",
+                  "items": [
+                    {
+                      "key": "accessories[].defaultOn",
+                      "flex": "1 1 0"
+                    },
+                    {
+                      "key": "accessories[].disableLogging",
+                      "flex": "1 1 0"
+                    }                    
+                  ]
+                },
+                {
+                  "key": "accessories[].defaultBrightness",
+                  "flex": "1 1 0",
+                  "condition": {
+                    "functionBody": "return ['Lightbulb'].includes(model.accessories?.[arguments[1]]?.type);"
+                  }
+                }
+              ]
+            }           
+          ]
+        }
+      ]
+    }
+  ]
 }

@@ -8,7 +8,7 @@
 
 # homebridge-dummy
 
-Homebridge plugin to create fake switches for assisting with advanced Apple HomeKit automations
+Homebridge plugin to create fake accessories for assisting with advanced Apple HomeKit automations
 
 [![verified-by-homebridge](https://badgen.net/badge/homebridge/verified/purple)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins)
 [![hoobs-certified](https://badgen.net/badge/HOOBS/certified/yellow)](https://plugins.hoobs.org/plugin/homebridge-dummy)
@@ -21,112 +21,180 @@ Homebridge plugin to create fake switches for assisting with advanced Apple Home
 
 Any issues or damage resulting from use of this plugin are not the fault of the developer. Use at your own risk.
 
+## v1.0.0 Migration
+
+### tl;dr
+
+‼️ There are significant code changes between v0.9 and v1.0 which means you will need to reconfigure HomeKit automations after upgrading. Homebridge Dummy can help migrate old accessories in Homebridge so you don't need to recreate everything.
+
+### Why?
+
+The original HomebridgeDummy was written almost 10 years ago and uses the now deprecated [Accessory Plugin](https://developers.homebridge.io/#/api/accessory-plugins) architecture.
+
+While this still works okay for now, migrating the code to use [Platform Plugins](https://developers.homebridge.io/#/api/platform-plugins) will future-proof Homebridge Dummy and allow for more modern and robust design patterns.
+
+v1.0 doesn't include any new features but will make it much easier to improve and extend this plugin going forward.
+
+### Drawbacks
+
+Unfortunately, there is no built-in way to migrate existing accessory plugins to platform plugins. This means that all accessories will be considered "new" by HomeKit, so any existing automations or room setups will be lost.
+
+However, Homebridge Dummy can try to migrate the accessory configurations to the new system to prevent you having to set them all up again in Homebridge.
+
+### Migration Flow
+
+Once you have installed v1.0, click on the icon to configure the Homebridge Dummy plugin in the Homebridge UI and it will walk you through the necessary questionaire.
+
+Alternatively, you can add the following to "platforms" in your config.json
+
+```json
+{
+    "name": "Homebridge Dummy",
+    "platform": "HomebridgeDummy",
+    "migrationNeeded": true,
+}
+```
+
+You will need to restart Homebridge after completing the flow for changes to take effect.
+
+⚠️ If you are using child bridges with v0.9, you will need to restart Homebridge _twice_ for migrated accessories to show up correctly.
+
+You may safely ignore any "No plugin was found…" errors you see in the Homebridge logs. These should go away after a few Homebridge restarts.
+
+### Problems?
+
+This is a highly experimental flow and may not work as intended. If you see, "Sorry, something went wrong with the accessory migration" or encounter other issues, please [create an issue](https://github.com/mpatfield/homebridge-dummy/issues/new?template=new-issue.md).
+
+The first thing the flow does is create a backup called `config.json.bak` in your Homebridge directory. If all else fails, you can replace your `config.json` with the backup and downgrade to Homebridge Dummy v0.9 to return everything back to normal.
+
+## 
+
+Example config.json:
+
+```
+    "accessories": [
+        {
+          "accessory": "DummySwitch",
+          "name": "My Switch 1",
+          "disableLogging": false
+        }   
+    ]
+
+```
+
 ## About
 
-With this plugin, you can create any number of fake switches that will do nothing when turned on (and will automatically turn off right afterward, simulating a stateless switch). This can be very useful for advanced automation with HomeKit scenes.
+With this plugin, you can create any number of fake accessories that will do nothing when triggered. This can be very useful for advanced automation with HomeKit scenes.
 
-For instance, the Philips Hue app will automatically create HomeKit scenes for you based on Hue Scenes you create. But what if you want to create a scene that contains both Philips Hue actions and other actions (like turning on the coffee maker with a WeMo outlet)? You are forced to either modify the Hue-created scene (which can be a HUGE list of actions if you have lots of lights) or build your own HomeKit lighting scenes.
+Currently, only Lightbulbs and Switches are supported but we plan to add more options over the coming months.
 
-Instead, you can link scenes using these dummy switches. Let's say you have a Hue Scene called "Rise and Shine" that you want to activate in the morning. And you have also setup the system HomeKit scene "Good Morning" to turn on your coffee maker and disarm your security system. You can add a single dummy switch to your Good Morning scene, then create a Trigger based on the switching-on of the dummy switch that also activates Rise And Shine.
-
-If the disableLogging option is true, state changes (On/Off) will not be logged. The disableLogging option is per switch, so you can choose which ones will get log entries. If not supplied, the default value is false and state changes will be logged.
+## Configuration
 
 Using the Homebridge Config UI is the easiest way to set up this plugin. However, if you wish to do things manually then you will need to add the following to your Homebridge `config.json`:
 
-## Stateful Switches
-
-The default behavior of a dummy switch is to turn itself off one second after being turned on. However you may want to create a dummy switch that remains on and must be manually turned off. You can do this by passing an argument in your config.json:
-
-```
+```json
+{
+    "name": "Homebridge Dummy",
     "accessories": [
         {
-          "accessory": "DummySwitch",
-          "name": "My Stateful Switch 1",
-          "stateful": true
-        }   
+            "name": "string",
+            "type": "Lightbulb | Switch",
+            "timer": {
+                "delay": 1,
+                "units": "SECONDS | MINUTES | HOURS",
+                "random": false,
+            },
+            "defaultOn": false,
+            "disableLogging": false,
+        },
+        ...
     ]
-
+    "platform": "HomebridgeDummy"
+}
 ```
 
-## Dimmer Switches
+All fields are optional unless noted with an asterix (*)
 
-By default, switches are toggle switches (on/off). You can configure your switch to be a dimmer switch, instead, storing a brightness value between 0 and 100. This can be done by passing the 'dimmer' argument in your config.json:
+- `name`* - The display name for the accessory in HomeKit
+- `type`* - The type of accessory, currently `Lightbulb` and `Switch` are supported
 
-```
-    "accessories": [
-        {
-          "accessory": "DummySwitch",
-          "name": "My Stateful Switch 1",
-          "dimmer": true
-        }
-    ]
+- `timer.delay` — If defined, the switch will automatically toggle after this many seconds/minutes/hours
+- `timer.units` — The units to use for delay above (`SECONDS`, `MINUTES`, of `HOURS`). *Required if delay is set.
+- `timer.random` — If true, the delay will be randomized with a maximum value of `timer.delay`
 
-```
+- `defaultOn` — If true, the states are reversed so that the default state is _on_. Only applicable to Switches.
 
-## Reverse Switches
+- `defaultBrightness` — If set, lightbulb will have additional dimmer settings with this default brightness percentage
 
-You may also want to create a dummy switch that turns itself on one second after being turned off. This can be done by passing the 'reverse' argument in your config.json:
+- `disableLogging` — If true, state changes will not be logged
 
-```
-    "accessories": [
-        {
-          "accessory": "DummySwitch",
-          "name": "My Stateful Switch 1",
-          "reverse": true
-        }   
-    ]
+## Examples
 
+### Stateful Switch
+```json
+{
+    "name": "Stateful",
+    "type": "Switch"
+}
 ```
 
-## Timed Switches
-
-You may also want to create a timed switch that turns itself off after being on for a given time (for example, five seconds). This can be done by passing the 'time' argument in your config.json:
-
-```
-    "accessories": [
-        {
-          "accessory": "DummySwitch",
-          "name": "My Stateful Switch 1",
-          "time": 5000
-        }   
-    ]
-
+### Timer Switch
+```json
+{
+    "name": "Timer",
+    "type": "Switch",
+    "timer": {
+        "delay": 10,
+        "units": "SECONDS"
+    }
+}
 ```
 
-## Resettable Timed Switches
-
-You may also want to create a timed switch that is reset each time it is activated. This way, the original timer is reset instead of creating a new timer. 
-This can be done by passing the 'resettable' argument in your config.json:
-
-```
-    "accessories": [
-        {
-          "accessory": "DummySwitch",
-          "name": "My Stateful Switch 1",
-          "time": 5000,
-          "resettable": true
-        }   
-    ]
-
+### "Reversed" Switch (i.e. Default On)
+```json
+{
+    "name": "Default On",
+    "type": "Switch",
+    "timer": {
+        "delay": 5,
+        "units": "SECONDS"
+    },
+    "defaultOn": true
+}
 ```
 
-## Random Timed Switches
-
-You might want to create a switch that given a random time turns itself off.
-This can be achieved by enabling 'random'.
-Each time a non-stateful, random timed switch is triggered, the time is set to a random value between 0 and 'time' milliseconds.
-A random period within one hour is defined as follows in your config.json:
-
+### Timer Lightbulb
+```json
+{
+    "name": "Lightbulb",
+    "type": "Lightbulb",
+    "timer": {
+        "delay": 5,
+        "units": "SECONDS"
+    }
+}
 ```
-    "accessories": [
-        {
-          "accessory": "DummySwitch",
-          "name": "My Stateful Random Switch 1",
-          "time": 3600000,
-          "random": true
-        }
-    ]
 
+### Stateful Dimmer Lightbulb
+```json
+{
+    "name": "Dimmer",
+    "type": "Lightbulb",
+    "defaultBrightness": 42,
+}
+```
+
+### Random Timer Switch
+```json
+{
+    "name": "Random",
+    "type": "Switch",
+    "timer": {
+        "delay": 2,
+        "units": "MINUTES",
+        "random": true
+    }
+}
 ```
 
 ## Credits
