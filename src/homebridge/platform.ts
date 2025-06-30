@@ -79,6 +79,8 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
       // accessories.push(migratedAccessories);
     }
     
+    const persistPath = this.api.user.persistPath();
+
     const newAccessories: PlatformAccessory[] = [];
 
     for (const accessoryConfig of accessories) {
@@ -104,7 +106,7 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
       let dummyAccessory: DummyAccessory;
       switch(accessoryConfig.type) {
       case this.Service.Switch.name:
-        dummyAccessory = new SwitchAccessory(this.Service, this.Characteristic, accessory, accessoryConfig as SwitchConfig, this.log);
+        dummyAccessory = new SwitchAccessory(this.Service, this.Characteristic, accessory, accessoryConfig as SwitchConfig, this.log, persistPath);
         break;
       default:
         this.log.error(strings.startup.unsupportedType, `'${accessoryConfig.type}'`);

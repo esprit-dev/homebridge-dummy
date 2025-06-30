@@ -18,9 +18,10 @@ export abstract class OnOffAccessory extends DummyAccessory {
     accessory: PlatformAccessory,
     private readonly onOffConfig: OnOffConfig,
     log: Log,
+    persistPath: string,
     className: string,
   ) {
-    super(Service, Characteristic, accessory, onOffConfig, log, className);
+    super(Service, Characteristic, accessory, onOffConfig, log, persistPath, className);
 
     this.on = onOffConfig.defaultOn ? true : false;
 

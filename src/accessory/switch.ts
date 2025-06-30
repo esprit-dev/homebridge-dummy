@@ -14,8 +14,9 @@ export class SwitchAccessory extends OnOffAccessory {
     accessory: PlatformAccessory,
     switchConfig: SwitchConfig,
     log: Log,
+    persistPath: string,
   ) {
-    super(Service, Characteristic, accessory, switchConfig, log, SwitchAccessory.name);
+    super(Service, Characteristic, accessory, switchConfig, log, persistPath, SwitchAccessory.name);
   }
 
   protected getAccessoryService(): Service {

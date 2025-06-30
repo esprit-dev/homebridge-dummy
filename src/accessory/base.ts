@@ -17,7 +17,7 @@ export abstract class DummyAccessory {
       return `DummySwitch:${config.name}`; 
     };
 
-    return `${PLATFORM_NAME}:${config.type}:${config.name}`;
+    return `${PLATFORM_NAME}:${config.type}:${config.name.replace(/\s+/g,'')}`;
   }
 
   protected readonly accessoryService: Service;
@@ -29,7 +29,8 @@ export abstract class DummyAccessory {
     protected readonly Characteristic: CharacteristicType,
     protected readonly accessory: PlatformAccessory,
     protected readonly config: DummyAccessoryConfig,
-    protected readonly log: Log,    
+    protected readonly log: Log,
+    protected readonly persistPath: string,
     private readonly caller: string,
   ) {
    
@@ -50,6 +51,10 @@ export abstract class DummyAccessory {
 
   public teardown() {
     this.timer.teardown();
+  }
+
+  protected get identifier(): string {
+    return DummyAccessory.identifier(this.config);
   }
 
   protected startTimer(callback: () => Promise<void>) {
