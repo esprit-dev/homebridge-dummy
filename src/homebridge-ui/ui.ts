@@ -2,8 +2,6 @@ import { IHomebridgePluginUi } from '@homebridge/plugin-ui-utils/ui.interface';
 
 import { Translation } from '../i18n/i18n.js';
 
-import { MigrationState } from '../model/types.js';
-
 import { PLUGIN_ALIAS } from '../homebridge/settings.js';
 
 declare const homebridge: IHomebridgePluginUi;
@@ -109,7 +107,7 @@ const showMigration = (strings: Translation) => {
 
     const yesButton = document.getElementById('doMigration') as HTMLButtonElement;
     yesButton.addEventListener('click', async () => {
-      await homebridge.updatePluginConfig([{ name: PLUGIN_ALIAS, migration: MigrationState.NEEDED }]);
+      await homebridge.updatePluginConfig([{ name: PLUGIN_ALIAS, migrationNeeded: true }]);
       await homebridge.savePluginConfig();
       homebridge.closeSettings();
       homebridge.toast.info(strings.config.migrationRestartDescription.replace('%s', PLUGIN_ALIAS), strings.config.migrationRestartTitle);

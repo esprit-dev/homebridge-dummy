@@ -8,7 +8,7 @@ import { SwitchAccessory } from '../accessory/switch.js';
 
 import { setLanguage, strings } from '../i18n/i18n.js';
 
-import { AccessoryType, DummyAccessoryConfig, DummyPlatformConfig, LightbulbConfig, MigrationState, SwitchConfig } from '../model/types.js';
+import { AccessoryType, DummyAccessoryConfig, DummyPlatformConfig, LightbulbConfig, SwitchConfig } from '../model/types.js';
 
 import getVersion from '../tools/version.js';
 import { Log } from '../tools/log.js';
@@ -75,7 +75,7 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
     const keepIdentifiers = new Set<string>();
 
     const accessories: DummyAccessoryConfig[] = this.config.accessories || [];
-    if (this.config.migration === MigrationState.NEEDED) {
+    if (this.config.migrationNeeded) {
       const migratedAccessories = await migrateAccessories(this.log, this.api.user.configPath()) ?? [];
       accessories.push(...migratedAccessories);
     }

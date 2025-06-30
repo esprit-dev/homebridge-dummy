@@ -6,11 +6,6 @@ export enum AccessoryType {
   Switch = 'Switch'
 }
 
-export enum MigrationState {
-  NEEDED = 'NEEDED',
-  COMPLETE = 'COMPLETE',
-}
-
 export type ChildBridge = {
   username: string;
   port?: number;
@@ -39,11 +34,10 @@ export type PlatformConfig = {
 }
 
 export type DummyPlatformConfig = PlatformConfig & {
-  accessories: DummyAccessoryConfig[];
-  legacyAccessories: LegacyAccessoryConfig[];
-  migration: MigrationState;
+  accessories?: DummyAccessoryConfig[];
   _bridge?: ChildBridge;
-  verbose: boolean;
+  verbose?: boolean;
+  migrationNeeded?: boolean;
 }
 
 export enum TimeUnits {

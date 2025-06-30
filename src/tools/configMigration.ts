@@ -8,7 +8,7 @@ import { LEGACY_ALIAS, PLATFORM_NAME } from '../homebridge/settings.js';
 
 import {
   AccessoryConfig, DummyAccessoryConfig, DummyPlatformConfig, LegacyAccessoryConfig, LightbulbConfig, OnOffConfig, PlatformConfig,
-  AccessoryType, ChildBridge, MigrationState, TimeUnits,
+  AccessoryType, ChildBridge, TimeUnits,
 } from '../model/types.js';
 
 function migrateAccessory(legacyConfig: LegacyAccessoryConfig): DummyAccessoryConfig {
@@ -90,20 +90,20 @@ export async function migrateAccessories(log: Log, configPath: string): Promise<
       }
     }
 
-    if (migrated.length === 0) {
-      log.warning(strings.startup.migrationNoAccessories);
-      return;
-    }
-
-    dummyPlatformConfig.migration = MigrationState.COMPLETE;
+    config.accessories = others;
 
     if (!dummyPlatformConfig._bridge) {
       dummyPlatformConfig._bridge = childBridge;
     }
 
-    config.accessories = others;
+    delete dummyPlatformConfig.migrationNeeded;
 
     fs.writeFileSync(configPath, JSON.stringify(config, null, 4));
+
+    if (migrated.length === 0) {
+      log.warning(strings.startup.migrationNoAccessories);
+      return;
+    }
 
     log.success(strings.startup.migrationComplete, migrated.length);
     log.warning(strings.startup.migrationRevert);
