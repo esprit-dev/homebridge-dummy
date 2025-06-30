@@ -49,6 +49,7 @@ const en = {
   },
 
   startup: {
+    migrationBridge: '‼️ Please restart Homebridge one more time for migration to take full effect ‼️',
     migrationComplete: 'Successfully migrated %s accessories!',
     migrationNoAccessories: 'Unable to find any accessories to migrate',
     migrationIgnore: 'You may safely ignore \'No plugin was found…\' errors — they should go away the next time you restart Homebridge',

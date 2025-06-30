@@ -106,8 +106,13 @@ export async function migrateAccessories(log: Log, configPath: string): Promise<
     fs.writeFileSync(configPath, JSON.stringify(config, null, 4));
 
     log.success(strings.startup.migrationComplete, migrated.length);
-    log.warning(strings.startup.migrationIgnore);
     log.warning(strings.startup.migrationRevert);
+
+    if (childBridge) {
+      log.error(strings.startup.migrationBridge);
+    } else {
+      log.warning(strings.startup.migrationIgnore);
+    }
 
     return migrated;
 
