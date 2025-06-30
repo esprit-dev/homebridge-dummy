@@ -17,7 +17,6 @@ export class LegacyAccessory {
 
   private readonly name: string;
 
-  private readonly isStateful: boolean;
   private readonly isRandom: boolean;
   private readonly isResettable: boolean;
 
@@ -32,8 +31,6 @@ export class LegacyAccessory {
     this.log = config.disableLogging ? undefined : log;
 
     this.name = config.name;
-
-    this.isStateful = config.stateful ?? false;
 
     this.isResettable = config.resettable ?? false;
     this.isRandom = config.random ?? false;
@@ -58,11 +55,6 @@ export class LegacyAccessory {
 
   private async finishSetup() {
 
-    if (this.isStateful) {
-      const state = await storageGet(this.persistPath, this.storageKey(SUFFIX_STATE)) === 'true';
-      this.accessoryService.setCharacteristic(this.Characteristic.On, state);
-    }
-
     this.accessoryService.getCharacteristic(this.Characteristic.On)
       .onSet(this._setOn.bind(this));
   }
@@ -76,11 +68,6 @@ export class LegacyAccessory {
   }
 
   private async _setOn(value: CharacteristicValue): Promise<void> {
-
-    if (this.isStateful) {
-      await storageSet(this.persistPath, this.storageKey(SUFFIX_STATE), value.toString());
-      return;
-    }
 
     // const delay = this.isRandom ? this.randomize(this.timeout) : this.timeout;
     // if (!delay) {

@@ -7,6 +7,7 @@ import { strings } from '../i18n/i18n.js';
 import { CharacteristicType, OnOffConfig, ServiceType } from '../model/types.js';
 
 import { Log } from '../tools/log.js';
+import { STORAGE_KEY_SUFFIX_ON, storageGet, storageSet } from '../tools/storage.js';
 
 export abstract class OnOffAccessory extends DummyAccessory {
 
@@ -29,14 +30,31 @@ export abstract class OnOffAccessory extends DummyAccessory {
       .onGet(this.getOn.bind(this))
       .onSet(this.setOn.bind(this));
 
-    this.accessoryService.updateCharacteristic(Characteristic.On, this.on);
+    this.initializeOn();
+  }
+
+  private get isStateful(): boolean {
+    return this.config.timer?.delay === undefined;
+  }
+
+  private get onStorageKey(): string {
+    return `${this.identifier}:${STORAGE_KEY_SUFFIX_ON}`;
+  }
+  
+  private async initializeOn() {
+
+    if (this.isStateful) {
+      this.on = await storageGet(this.persistPath, this.onStorageKey) ?? this.on;
+    }
+
+    this.accessoryService.updateCharacteristic(this.Characteristic.On, this.on);
   }
 
   protected async getOn(): Promise<CharacteristicValue> {
     return this.on;
   }
 
-  protected async setOn(value: CharacteristicValue) {
+  protected async setOn(value: CharacteristicValue): Promise<void> {
 
     if (this.on === value) {
       return;
@@ -46,13 +64,17 @@ export abstract class OnOffAccessory extends DummyAccessory {
 
     this.logOnState(this.on);
 
-    this.accessoryService.updateCharacteristic(this.Characteristic.On, this.on);
-
-    if (this.on === !this.onOffConfig.defaultOn) {
-      this.startTimer(this.flip.bind(this));
+    if (this.isStateful) {
+      await storageSet(this.persistPath, this.onStorageKey, this.on);
     } else {
-      this.cancelTimer();
+      if (this.on === !this.onOffConfig.defaultOn) {
+        this.startTimer(this.flip.bind(this));
+      } else {
+        this.cancelTimer();
+      }
     }
+
+    this.accessoryService.updateCharacteristic(this.Characteristic.On, this.on);
   }
 
   private async flip(): Promise<void> {

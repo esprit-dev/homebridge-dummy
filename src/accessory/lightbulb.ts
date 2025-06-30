@@ -37,7 +37,7 @@ export class LightbulbAccessory extends OnOffAccessory {
         .onGet(this.getBrightness.bind(this))
         .onSet(this.setBrightness.bind(this));
 
-      this.finishSetup();
+      this.initializeBrightness();
     }
   }
 
@@ -45,13 +45,8 @@ export class LightbulbAccessory extends OnOffAccessory {
     return `${this.identifier}:${STORAGE_KEY_SUFFIX_BRIGHTNESS}`;
   }
 
-  private async finishSetup() {
-
-    const brightness = await storageGet(this.persistPath, this.brightnessStorageKey);
-    if (brightness) {
-      this.brightness = Number(brightness);
-    }
-
+  private async initializeBrightness() {
+    this.brightness = await storageGet(this.persistPath, this.brightnessStorageKey) ?? this.brightness;
     this.accessoryService.updateCharacteristic(this.Characteristic.Brightness, this.brightness);
   }
 
@@ -81,7 +76,7 @@ export class LightbulbAccessory extends OnOffAccessory {
 
     this.logIfDesired(strings.accessory.lightbulb.brightness,  this.config.name, this.brightness.toString());
 
-    await storageSet(this.persistPath, this.brightnessStorageKey, this.brightness.toString());
+    await storageSet(this.persistPath, this.brightnessStorageKey, this.brightness);
 
     this.accessoryService.updateCharacteristic(this.Characteristic.Brightness, this.brightness);
   }
