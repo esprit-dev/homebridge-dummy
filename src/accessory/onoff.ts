@@ -56,13 +56,11 @@ export abstract class OnOffAccessory extends DummyAccessory {
 
   protected async setOn(value: CharacteristicValue): Promise<void> {
 
-    if (this.on === value) {
-      return;
+    if (this.on !== value) {
+      this.logOnState(value);
     }
 
     this.on = value;
-
-    this.logOnState(this.on);
 
     if (this.isStateful) {
       await storageSet(this.persistPath, this.onStorageKey, this.on);
