@@ -6,7 +6,7 @@ const en = {
 
     lightbulb: {
       brightness: '%s brightness is %s',
-      stateOn: '%s is on with brightness %s%',
+      stateOn: '%s is on %s%',
     },
 
     onOff: {

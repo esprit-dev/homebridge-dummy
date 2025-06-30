@@ -17,6 +17,7 @@ function migrateAccessory(legacyConfig: LegacyAccessoryConfig): DummyAccessoryCo
     name: legacyConfig.name,
     type: AccessoryType.Switch,
     disableLogging: legacyConfig.disableLogging,
+    legacy: true,
   };
 
   if (legacyConfig.reverse) {
