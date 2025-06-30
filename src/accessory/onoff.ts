@@ -44,7 +44,7 @@ export abstract class OnOffAccessory extends DummyAccessory {
 
     this.on = value;
 
-    this.logIfDesired(this.on ? strings.accessory.onOff.stateOn : strings.accessory.onOff.stateOff, this.config.name);
+    this.logOnState(this.on);
 
     this.accessoryService.updateCharacteristic(this.Characteristic.On, this.on);
 
@@ -57,5 +57,9 @@ export abstract class OnOffAccessory extends DummyAccessory {
 
   private async flip(): Promise<void> {
     await this.setOn(!this.on);
+  }
+
+  protected logOnState(value: CharacteristicValue) {
+    this.logIfDesired(value ? strings.accessory.onOff.stateOn : strings.accessory.onOff.stateOff, this.config.name);
   }
 }

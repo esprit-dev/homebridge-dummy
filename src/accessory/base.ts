@@ -34,7 +34,7 @@ export abstract class DummyAccessory {
     private readonly caller: string,
   ) {
    
-    this.timer = new Timer(caller, config.disableLogging ? undefined : log);
+    this.timer = new Timer(config.name, config.disableLogging ? undefined : log);
 
     accessory.getService(Service.AccessoryInformation)!
       .setCharacteristic(Characteristic.Name, config.name)

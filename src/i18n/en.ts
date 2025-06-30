@@ -4,6 +4,11 @@ const en = {
 
     missingRequired: '%s is missing required config variable %s',
 
+    lightbulb: {
+      brightness: '%s brightness is %s',
+      stateOn: '%s is on with brightness %s%',
+    },
+
     onOff: {
       stateOn: '%s is on',
       stateOff: '%s is off',

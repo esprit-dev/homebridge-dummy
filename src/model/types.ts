@@ -74,3 +74,7 @@ export type OnOffConfig = DummyAccessoryConfig & {
 
 export type SwitchConfig = OnOffConfig & {
 }
+
+export type LightbulbConfig = OnOffConfig & {
+  defaultBrightness: number,
+}

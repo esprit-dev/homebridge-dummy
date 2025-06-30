@@ -3,11 +3,12 @@ import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig }
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings.js';
 
 import { DummyAccessory } from '../accessory/base.js';
+import { LightbulbAccessory } from '../accessory/lightbulb.js';
 import { SwitchAccessory } from '../accessory/switch.js';
 
 import { setLanguage, strings } from '../i18n/i18n.js';
 
-import { DummyAccessoryConfig, DummyPlatformConfig, MigrationState, SwitchConfig } from '../model/types.js';
+import { DummyAccessoryConfig, DummyPlatformConfig, LightbulbConfig, MigrationState, SwitchConfig } from '../model/types.js';
 
 import getVersion from '../tools/version.js';
 import { Log } from '../tools/log.js';
@@ -105,6 +106,9 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
 
       let dummyAccessory: DummyAccessory;
       switch(accessoryConfig.type) {
+      case this.Service.Lightbulb.name:
+        dummyAccessory = new LightbulbAccessory(this.Service, this.Characteristic, accessory, accessoryConfig as LightbulbConfig, this.log, persistPath);
+        break;
       case this.Service.Switch.name:
         dummyAccessory = new SwitchAccessory(this.Service, this.Characteristic, accessory, accessoryConfig as SwitchConfig, this.log, persistPath);
         break;

@@ -42,11 +42,17 @@
             "type": {
               "type": "string",
               "title": "${config.title.type}", 
-              "enum": ["Switch"],
-              "enumNames": ["${config.enumNames.switch}"],
+              "enum": ["Lightbulb", "Switch"],
+              "enumNames": ["${config.enumNames.lightbulb}", "${config.enumNames.switch}"],
               "required": true
             },
             "timer": { "$ref": "#/definitions/timer" },
+            "defaultBrightness": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "title": "${config.title.defaultBrightness}"
+            },
             "defaultOn": {
               "type": "boolean",
               "title": "${config.title.defaultOn}"
@@ -90,6 +96,9 @@
               "type": "fieldset",
               "title": "${config.title.timer}",
               "expandable": true,
+              "condition": {
+                "functionBody": "return model.accessories?.[arguments[1]]?.type;"
+              },
               "items": [
                 {
                   "type": "div",
@@ -113,10 +122,16 @@
               "title": "${config.title.options}",
               "expandable": true,
               "condition": {
-                "functionBody": "return ['Switch'].includes(model.accessories?.[arguments[1]]?.type);"
+                "functionBody": "return ['Lightbulb','Switch'].includes(model.accessories?.[arguments[1]]?.type);"
               },
               "items": [
-                "accessories[].defaultOn"
+                "accessories[].defaultOn",
+                {
+                  "key": "accessories[].defaultBrightness",
+                  "condition": {
+                    "functionBody": "return ['Lightbulb'].includes(model.accessories?.[arguments[1]]?.type);"
+                  }
+                }
               ]
             },            
             "accessories[].disableLogging"
