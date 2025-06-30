@@ -39,7 +39,7 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
     this.Service = api.hap.Service;
     this.Characteristic = api.hap.Characteristic;
 
-    this.log = new Log(logger, config.verbose);
+    this.log = new Log(logger);
 
     this.log.always(
       'v%s | System %s | Node %s | HB v%s | HAPNodeJS v%s',

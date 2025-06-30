@@ -36,7 +36,6 @@ export type PlatformConfig = {
 export type DummyPlatformConfig = PlatformConfig & {
   accessories?: DummyAccessoryConfig[];
   _bridge?: ChildBridge;
-  verbose?: boolean;
   migrationNeeded?: boolean;
 }
 

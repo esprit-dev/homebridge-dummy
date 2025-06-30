@@ -75,7 +75,7 @@
     {
       "type": "array",
       "key": "accessories",
-      "title": "${config.title.accessories}",
+      "notitle": true,
       "items": [
         {
           "type": "fieldset",

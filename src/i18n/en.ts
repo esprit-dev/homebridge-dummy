@@ -41,7 +41,6 @@ const en = {
     },
 
     title: {
-      accessories: 'Accessories',
       accessory: 'Accessory',
       disableLogging: 'Disable Logging',
       name: 'Name',
