@@ -1,6 +1,12 @@
 
 # "Dummy Switches" Plugin
 
+## v1.0.0 Migration
+
+_Details coming soon..._
+
+## 
+
 Example config.json:
 
 ```

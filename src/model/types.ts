@@ -1,7 +1,10 @@
 export type ServiceType = typeof import('homebridge').Service;
 export type CharacteristicType = typeof import('homebridge').Characteristic;
 
-type AccessoryType = 'Switch';
+export enum AccessoryType {
+  Lightbulb = 'Lightbulb',
+  Switch = 'Switch'
+}
 
 export enum MigrationState {
   NEEDED = 'NEEDED',
@@ -20,7 +23,6 @@ export type AccessoryConfig = {
   _bridge?: ChildBridge;
 }
 
-// TODO remove
 export type LegacyAccessoryConfig = AccessoryConfig & {
   name: string;
   dimmer?: boolean;
@@ -46,6 +48,7 @@ export type DummyPlatformConfig = PlatformConfig & {
 }
 
 export enum TimeUnits {
+  MILLIS = 'MILLIS',
   SECONDS = 'SECONDS',
   MINUTES = 'MINUTES',
   HOURS = 'HOURS',
@@ -66,7 +69,7 @@ export type DummyAccessoryConfig = {
   type: AccessoryType,
   legacy?: boolean,
   timer?: TimerConfig,
-  disableLogging: boolean,
+  disableLogging?: boolean,
 }
 
 export type OnOffConfig = DummyAccessoryConfig & {
