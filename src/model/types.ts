@@ -8,7 +8,6 @@ export enum AccessoryType {
 
 export enum MigrationState {
   NEEDED = 'NEEDED',
-  SKIPPED = 'SKIPPED',
   COMPLETE = 'COMPLETE',
 }
 

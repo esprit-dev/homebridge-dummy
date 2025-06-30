@@ -4,12 +4,14 @@ import { Translation } from '../i18n/i18n.js';
 
 import { MigrationState } from '../model/types.js';
 
+import { PLUGIN_ALIAS } from '../homebridge/settings.js';
+
 declare const homebridge: IHomebridgePluginUi;
 
 const i18n_replacements = {
   github: '<a target="_blank" href="https://github.com/mpatfield/homebridge-dummy/">GitHub</a>',
-  migration: '<a target="_blank" href="https://github.com/mpatfield/homebridge-dummy/#migration">GitHub</a>',
-  dummy: 'Homebridge Dummy',
+  migration: '<a target="_blank" href="https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#v100-migration">GitHub</a>',
+  dummy: PLUGIN_ALIAS,
 };
 
 const translateHtml = (strings: Translation) => {
@@ -74,9 +76,9 @@ const updateAccessoryNames = (strings: Translation) => {
   }
 };
 
-const showSettings = async (strings: Translation) => {
-  homebridge.showSpinner();
+const showSettings = (strings: Translation) => {
   document.getElementById('intro')!.style.display = 'none';
+  document.getElementById('migration')!.style.display = 'none';
   document.getElementById('support')!.style.display = 'block';
 
   const observer = new MutationObserver(() => {
@@ -90,29 +92,43 @@ const showSettings = async (strings: Translation) => {
   );
 
   homebridge.showSchemaForm();
+  homebridge.enableSaveButton();
   homebridge.hideSpinner();
 };
 
-const showMigration = () => {
+const showMigration = (strings: Translation) => {
     document.getElementById('intro')!.style.display = 'none';
     document.getElementById('migration')!.style.display = 'block';
+
+    const noButton = document.getElementById('skipMigration') as HTMLButtonElement;
+    noButton.addEventListener('click', async () => {
+      await homebridge.updatePluginConfig([{ name: PLUGIN_ALIAS }]);
+      await homebridge.savePluginConfig();
+      showSettings(strings);
+    });
+
+    const yesButton = document.getElementById('doMigration') as HTMLButtonElement;
+    yesButton.addEventListener('click', async () => {
+      await homebridge.updatePluginConfig([{ name: PLUGIN_ALIAS, migration: MigrationState.NEEDED }]);
+      await homebridge.savePluginConfig();
+      homebridge.closeSettings();
+      homebridge.toast.info(strings.config.migrationRestartDescription.replace('%s', PLUGIN_ALIAS), strings.config.migrationRestartTitle);
+    });
 };
 
 const showIntro = (strings: Translation) => {
 
-  const noButton = document.getElementById('buttonNo') as HTMLButtonElement;
+  homebridge.disableSaveButton();
+
+  const noButton = document.getElementById('showSettings') as HTMLButtonElement;
   noButton.addEventListener('click', async () => {
-    homebridge.showSpinner();
-    await homebridge.updatePluginConfig([{ name: i18n_replacements.dummy, migration: MigrationState.SKIPPED }]);
-    await homebridge.savePluginConfig();
+    await homebridge.updatePluginConfig([{ name: PLUGIN_ALIAS }]);
     showSettings(strings);
   });
 
-  const yesButton = document.getElementById('buttonYes') as HTMLButtonElement;
-  yesButton.addEventListener('click', async () => {
-    await homebridge.updatePluginConfig([{ name: i18n_replacements.dummy, migration: MigrationState.NEEDED }]);
-    await homebridge.savePluginConfig();
-    showMigration();
+  const yesButton = document.getElementById('showMigration') as HTMLButtonElement;
+  yesButton.addEventListener('click', () => {
+    showMigration(strings);
   });
 
   document.getElementById('intro')!.style.display = 'block';
@@ -129,7 +145,7 @@ const showIntro = (strings: Translation) => {
 
   const config = await homebridge.getPluginConfig();
   if (config.length) {
-    await showSettings(strings);
+    showSettings(strings);
   } else {
     showIntro(strings);
   }

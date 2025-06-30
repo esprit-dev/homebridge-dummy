@@ -88,21 +88,25 @@ export async function migrateAccessories(log: Log, configPath: string): Promise<
         childBridge = accessoryConfig._bridge;
       }
     }
-  
-    if (!dummyPlatformConfig._bridge) {
-      dummyPlatformConfig._bridge = childBridge;
+
+    if (migrated.length === 0) {
+      log.warning(strings.startup.migrationNoAccessories);
+      return;
     }
 
     dummyPlatformConfig.migration = MigrationState.COMPLETE;
 
+    if (!dummyPlatformConfig._bridge) {
+      dummyPlatformConfig._bridge = childBridge;
+    }
+
     config.accessories = others;
 
-    log.error(JSON.stringify(config, null, 4)); // TODO remove
+    fs.writeFileSync(configPath, JSON.stringify(config, null, 4));
 
-    // TODO fs.writeFileSync(configPath, JSON.stringify(config, null, 4));
-
-    log.success(strings.startup.migrationComplete, 'Homebridge Dummy');
-    log.always(strings.startup.migrationRevert);
+    log.success(strings.startup.migrationComplete, migrated.length);
+    log.warning(strings.startup.migrationIgnore);
+    log.warning(strings.startup.migrationRevert);
 
     return migrated;
 

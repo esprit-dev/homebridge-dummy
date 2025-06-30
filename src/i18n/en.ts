@@ -25,8 +25,13 @@ const en = {
 
   config: {
     migrate: 'Are you upgrading from an earlier version?',
-    migrationDetails1: 'Please restart %s TWICE and we will try to migrate your existing accessories.',
-    migrationDetails2: 'For more details, please visit %s.',
+    migrationDetails1: 'There have been some major code changes in this version',
+    migrationDetails2: 'HomeKit automations using %s accessories will need to be reconfigured!',
+    migrationDetails3: '%s can try to migrate your accessories so they won\'t need to be recreated in Homebridge',
+    migrationDetails4: 'Would you like to migrate now?',
+    migrationDetails5: 'For more details, please visit %s',
+    migrationRestartTitle: 'Restart Homebridge',
+    migrationRestartDescription: 'Please restart Homebridge to begin %s migration',
     support: 'For documentation and support please visit %s',
     thankYou: 'Thank you for installing %s',
     yes: 'Yes',
@@ -44,9 +49,11 @@ const en = {
   },
 
   startup: {
-    migrationComplete: 'Accessories have been successfully migrated!',
-    migrationFailed: 'Sorry, something went wrong with the accessory migration.',
-    migrationRevert: 'If you encounter problems, you can find a backup config.json.bak in your Homebridge directory.',
+    migrationComplete: 'Successfully migrated %s accessories!',
+    migrationNoAccessories: 'Unable to find any accessories to migrate',
+    migrationIgnore: 'You may safely ignore \'No plugin was found…\' errors — they should go away the next time you restart Homebridge',
+    migrationFailed: 'Sorry, something went wrong with the accessory migration',
+    migrationRevert: 'If you encounter problems, you can find a backup config.json.bak in your Homebridge directory',
     newAccessory: 'Adding new accessory:',
     removeAccessory: 'Removing accessory:',
     restoringAccessory: 'Restoring accessory:',
