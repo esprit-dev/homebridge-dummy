@@ -6,7 +6,7 @@ All notable changes to homebridge-dummy will be documented in this file.
 
 Please report any issues you encounter here: https://github.com/mpatfield/homebridge-dummy/issues
 
-## 1.0.0-alpha.1 (2025-07-01)
+## 1.0.0-alpha.2 (2025-07-01)
 
 ### ‼️ BREAKING This version is a complete code rewrite. Automations using Homebridge Dummy accessories will need to be reconfigured.
 
