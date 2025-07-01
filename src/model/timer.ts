@@ -24,8 +24,6 @@ export class Timer {
 
     let delay: number = config.delay;
     switch(config.units) {
-    case TimeUnits.MILLIS:
-      break;
     case TimeUnits.SECONDS:
       delay *= SECOND;
       break;

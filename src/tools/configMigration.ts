@@ -17,7 +17,6 @@ function migrateAccessory(legacyConfig: LegacyAccessoryConfig): DummyAccessoryCo
     name: legacyConfig.name,
     type: AccessoryType.Switch,
     disableLogging: legacyConfig.disableLogging,
-    legacy: true,
   };
 
   if (legacyConfig.reverse) {
@@ -33,8 +32,8 @@ function migrateAccessory(legacyConfig: LegacyAccessoryConfig): DummyAccessoryCo
 
   if (!legacyConfig.stateful && legacyConfig.time) {
     dummyConfig.timer = {
-      delay: legacyConfig.time,
-      units: TimeUnits.MILLIS,
+      delay: Math.min(1, legacyConfig.time / 1000),
+      units: TimeUnits.SECONDS,
       random: legacyConfig.random,
     };
   }

@@ -40,7 +40,6 @@ export type DummyPlatformConfig = PlatformConfig & {
 }
 
 export enum TimeUnits {
-  MILLIS = 'MILLIS',
   SECONDS = 'SECONDS',
   MINUTES = 'MINUTES',
   HOURS = 'HOURS',
@@ -59,7 +58,6 @@ export type TimerConfig = Assertable & {
 export type DummyAccessoryConfig = {
   name: string,
   type: AccessoryType,
-  legacy?: boolean,
   timer?: TimerConfig,
   disableLogging?: boolean,
 }

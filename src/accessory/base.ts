@@ -1,6 +1,6 @@
 import { PlatformAccessory, Service } from 'homebridge';
 
-import { LEGACY_ALIAS, PLATFORM_NAME, PLUGIN_ALIAS } from '../homebridge/settings.js';
+import { PLATFORM_NAME, PLUGIN_ALIAS } from '../homebridge/settings.js';
 
 import { CharacteristicType, DummyAccessoryConfig, ServiceType } from '../model/types.js';
 
@@ -12,11 +12,6 @@ import { assert } from '../tools/validation.js';
 export abstract class DummyAccessory {
 
   public static identifier(config: DummyAccessoryConfig): string {
-
-    if (config.legacy) {
-      return `${LEGACY_ALIAS}:${config.name}`;
-    };
-
     return `${PLATFORM_NAME}:${config.type}:${config.name.replace(/\s+/g,'')}`;
   }
 
