@@ -1,13 +1,16 @@
 # Ignore source code
 src/**/*.ts
+scripts/**/*.ts
 
 # ------------- Defaults ------------- #
 
-# gitHub actions
+# git
 .github
+.gitattributes
 
 # eslint
 eslint.config.js
+eslint.config.ts
 
 # typescript
 tsconfig.json
