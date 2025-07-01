@@ -67,20 +67,6 @@ This is a highly experimental flow and may not work as intended. If you see "Sor
 
 The first thing the flow does is create a backup called `config.json.bak` in your Homebridge directory. If all else fails, you can replace your `config.json` with the backup and downgrade to Homebridge Dummy v0.9 to restore everything back to normal.
 
-## 
-
-Example config.json:
-
-```
-    "accessories": [
-        {
-          "accessory": "DummySwitch",
-          "name": "My Switch 1",
-          "disableLogging": false
-        }
-    ]
-```
-
 ## About
 
 With this plugin, you can create any number of fake accessories that will do nothing when triggered. This can be very useful for advanced automation with HomeKit scenes.
@@ -104,6 +90,7 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
                 "random": false
             },
             "defaultOn": false,
+            "defaultBrightness": 100,
             "disableLogging": false
         }
         // ...additional accessories...
