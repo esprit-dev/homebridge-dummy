@@ -25,7 +25,7 @@ const en = {
 
   config: {
     migrate: 'Are you upgrading from an earlier version?',
-    migrationDetails1: 'There have been some major code changes in this version',
+    migrationDetails1: 'There are significant code changes in this version',
     migrationDetails2: 'HomeKit automations using %s accessories will need to be reconfigured!',
     migrationDetails3: '%s will try to migrate your accessories so they won\'t need to be recreated in Homebridge',
     migrationDetails4: 'Would you like to migrate now?',

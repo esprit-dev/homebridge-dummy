@@ -8,7 +8,7 @@ declare const homebridge: IHomebridgePluginUi;
 
 const i18n_replacements = {
   github: '<a target="_blank" href="https://github.com/mpatfield/homebridge-dummy/">GitHub</a>',
-  migration: '<a target="_blank" href="https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#v100-migration">GitHub</a>',
+  migration: '<a target="_blank" href="https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#v10-migration">GitHub</a>',
   dummy: PLUGIN_ALIAS,
 };
 
