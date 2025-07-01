@@ -1,6 +1,6 @@
 import { PlatformAccessory, Service } from 'homebridge';
 
-import { LEGACY_ALIAS, PLATFORM_NAME } from '../homebridge/settings.js';
+import { LEGACY_ALIAS, PLATFORM_NAME, PLUGIN_ALIAS } from '../homebridge/settings.js';
 
 import { CharacteristicType, DummyAccessoryConfig, ServiceType } from '../model/types.js';
 
@@ -39,8 +39,7 @@ export abstract class DummyAccessory {
     accessory.getService(Service.AccessoryInformation)!
       .setCharacteristic(Characteristic.Name, config.name)
       .setCharacteristic(Characteristic.ConfiguredName, config.name)
-      .setCharacteristic(Characteristic.Manufacturer, 'Homebridge')
-      .setCharacteristic(Characteristic.SerialNumber, accessory.UUID)
+      .setCharacteristic(Characteristic.Manufacturer, PLUGIN_ALIAS)
       .setCharacteristic(Characteristic.Model, caller)
       .setCharacteristic(Characteristic.FirmwareRevision, getVersion());
 
