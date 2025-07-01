@@ -1,0 +1,35 @@
+<!-- <p class="text-center">
+  <img
+    src="https://github.com/mpatfield/homebridge-dummy/blob/latest/img/banner.png?raw=true"
+    alt="Homebridge Dummy"
+    style="width: 60%;"
+  />
+</p> -->
+
+<div id="support" class="text-center" style="display: none;">
+  <p i18n="support" i18n_replace="github"></p>
+</div>
+
+<div id="intro" class="text-center" style="display: none;">
+  <p class="lead" i18n="thankYou" i18n_replace="dummy"></p></br>
+  <p i18n="migrate"></p></br>
+  <button type="button" class="btn btn-primary" id="showSettings" i18n="no"></button>&nbsp;&nbsp;
+  <button type="button" class="btn btn-primary" id="showMigration" i18n="yes"></button>
+</div>
+
+<div id="migration" class="text-center" style="display: none;">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Warning.svg/156px-Warning.svg.png"/>
+  </br></br>
+  <p class="lead" i18n="migrationDetails1"></p>
+  <p class="lead" i18n="migrationDetails2" i18n_replace="dummy"></p>
+  </br>
+  <p i18n="migrationDetails3" i18n_replace="dummy"></p>
+  <p i18n="migrationDetails4"></p>
+  </br>
+  <button type="button" class="btn btn-primary" id="skipMigration" i18n="no"></button>&nbsp;&nbsp;
+  <button type="button" class="btn btn-primary" id="doMigration" i18n="yes"></button>
+  </br></br></br>
+  <em><p i18n="migrationDetails5" i18n_replace="migration"></p></em></br>
+</div>
+
+<script src="ui.js"></script>

@@ -1,24 +1,27 @@
 import storage from 'node-persist';
 
-import { PLUGIN_NAME } from '../homebridge/settings.js';
+export const STORAGE_KEY_SUFFIX_BRIGHTNESS = 'Brightness';
+export const STORAGE_KEY_SUFFIX_ON = 'On';
 
 async function init(dir: string) {
   await storage.init({ dir: dir, forgiveParseErrors: true });
 }
 
-export async function storageGet(dir: string, key: string): Promise<string | null> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function storageGet(dir: string, key: string): Promise<any> {
   try {
     await init(dir);
-    return await storage.get(`${PLUGIN_NAME}:${key}`);
+    return await storage.get(key);
   } catch (err) {
-    return null;
+    // Nothing
   }
 }
 
-export async function storageSet(dir: string, key: string, value: string): Promise<void> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function storageSet(dir: string, key: string, value: any): Promise<void> {
   try {
     await init(dir);
-    storage.set(`${PLUGIN_NAME}:${key}`, value);
+    storage.set(key, value);
   } catch {
     // Nothing
   }
