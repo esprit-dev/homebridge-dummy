@@ -4,7 +4,7 @@
   "displayName": "Homebridge Dummy",
   "description": "Dummy devices for Homebridge",
   "type": "module",
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-alpha.3",
   "homepage": "https://github.com/mpatfield/homebridge-dummy#readme",
   "repository": {
     "type": "git",
