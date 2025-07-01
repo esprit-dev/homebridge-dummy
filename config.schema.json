@@ -120,7 +120,12 @@
                     }
                   ]
                 },
-                "accessories[].timer.random"
+                {
+                  "key": "accessories[].timer.random",
+                  "condition": {
+                    "functionBody": "return model.accessories?.[arguments[1]]?.timer?.delay !== undefined;"
+                  }
+                }
               ]
             },
             {
