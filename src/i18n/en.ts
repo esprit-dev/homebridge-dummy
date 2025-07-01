@@ -38,12 +38,30 @@ const en = {
     no: 'No',
 
     description: {
+      random: 'Delay will be randomized with the above value as a maximum',
+      timer: 'Optional settings to automatically toggle the accessory',
+    },
+
+    enumNames: {
+      hours: 'Hours',
+      lightbulb: 'Lightbulb',
+      minutes: 'Minutes',
+      seconds: 'Seconds',
+      switch: 'Switch',
     },
 
     title: {
       accessory: 'Accessory',
+      defaultBrightness: 'Default Brightness',
+      defaultOn: 'Default to On',
+      delay: 'Delay',
       disableLogging: 'Disable Logging',
       name: 'Name',
+      options: 'Additional Settings',
+      timer: 'Timer',
+      type: 'Type',
+      units: 'Units',
+      random: 'Random',
     },
   },
 
