@@ -2,7 +2,7 @@ import { PlatformAccessory, Service } from 'homebridge';
 
 import { PLATFORM_NAME, PLUGIN_ALIAS } from '../homebridge/settings.js';
 
-import { CharacteristicType, DummyAccessoryConfig, ServiceType } from '../model/types.js';
+import { AccessoryType, CharacteristicType, DummyAccessoryConfig, ServiceType } from '../model/types.js';
 
 import { Log } from '../tools/log.js';
 import getVersion from '../tools/version.js';
@@ -38,10 +38,11 @@ export abstract class DummyAccessory {
       .setCharacteristic(Characteristic.Model, caller)
       .setCharacteristic(Characteristic.FirmwareRevision, getVersion());
 
-    this.accessoryService = this.getAccessoryService();
+    const serviceInstance = this.Service[this.getAccessoryType()];
+    this.accessoryService = this.accessory.getService(serviceInstance) || this.accessory.addService(serviceInstance);
   }
 
-  protected abstract getAccessoryService(): Service;
+  protected abstract getAccessoryType(): AccessoryType;
 
   public teardown() {
     this.timer.teardown();

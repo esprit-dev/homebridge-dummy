@@ -1,8 +1,8 @@
-import { PlatformAccessory, Service } from 'homebridge';
+import { PlatformAccessory } from 'homebridge';
 
 import { OnOffAccessory } from './onoff.js';
 
-import { CharacteristicType, ServiceType, OutletConfig } from '../model/types.js';
+import { CharacteristicType, ServiceType, OutletConfig, AccessoryType } from '../model/types.js';
 
 import { Log } from '../tools/log.js';
 
@@ -19,7 +19,7 @@ export class OutletAccessory extends OnOffAccessory {
     super(Service, Characteristic, accessory, outletConfig, log, persistPath, OutletAccessory.name);
   }
 
-  protected getAccessoryService(): Service {
-    return this.accessory.getService(this.Service.Outlet) || this.accessory.addService(this.Service.Outlet);
+  protected getAccessoryType(): AccessoryType {
+    return AccessoryType.Outlet;
   }
 }

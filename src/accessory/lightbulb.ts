@@ -1,10 +1,10 @@
-import { CharacteristicValue, PlatformAccessory, Service } from 'homebridge';
+import { CharacteristicValue, PlatformAccessory } from 'homebridge';
 
 import { OnOffAccessory } from './onoff.js';
 
 import { strings } from '../i18n/i18n.js';
 
-import { CharacteristicType, LightbulbConfig, ServiceType } from '../model/types.js';
+import { AccessoryType, CharacteristicType, LightbulbConfig, ServiceType } from '../model/types.js';
 
 import { Log } from '../tools/log.js';
 import { STORAGE_KEY_SUFFIX_BRIGHTNESS, storageGet, storageSet } from '../tools/storage.js';
@@ -41,6 +41,10 @@ export class LightbulbAccessory extends OnOffAccessory {
     }
   }
 
+  protected getAccessoryType(): AccessoryType {
+    return AccessoryType.Lightbulb;
+  }
+
   private get brightnessStorageKey(): string {
     return `${this.identifier}:${STORAGE_KEY_SUFFIX_BRIGHTNESS}`;
   }
@@ -52,10 +56,6 @@ export class LightbulbAccessory extends OnOffAccessory {
     }
 
     this.accessoryService.updateCharacteristic(this.Characteristic.Brightness, this.brightness);
-  }
-
-  protected getAccessoryService(): Service {
-    return this.accessory.getService(this.Service.Lightbulb) || this.accessory.addService(this.Service.Lightbulb);
   }
 
   override logOnState(value: CharacteristicValue) {
