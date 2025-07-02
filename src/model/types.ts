@@ -59,6 +59,7 @@ export type DummyAccessoryConfig = {
   name: string,
   type: AccessoryType,
   timer?: TimerConfig,
+  resetOnRestart?: boolean,
   disableLogging?: boolean,
 }
 

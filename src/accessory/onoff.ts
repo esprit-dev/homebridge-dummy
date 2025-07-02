@@ -33,10 +33,6 @@ export abstract class OnOffAccessory extends DummyAccessory {
     this.initializeOn();
   }
 
-  private get isStateful(): boolean {
-    return this.config.timer?.delay === undefined;
-  }
-
   private get onStorageKey(): string {
     return `${this.identifier}:${STORAGE_KEY_SUFFIX_ON}`;
   }

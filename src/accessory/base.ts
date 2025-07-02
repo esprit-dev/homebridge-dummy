@@ -51,6 +51,10 @@ export abstract class DummyAccessory {
     return DummyAccessory.identifier(this.config);
   }
 
+  protected get isStateful(): boolean {
+    return this.config.timer?.delay === undefined && !this.config.resetOnRestart;
+  }
+
   protected startTimer(callback: () => Promise<void>) {
 
     if (!this.config.timer?.delay) {

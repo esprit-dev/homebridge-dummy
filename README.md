@@ -91,6 +91,7 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
             },
             "defaultOn": false,
             "defaultBrightness": 100,
+            "resetOnRestart": false,
             "disableLogging": false
         }
         // ...additional accessories...
@@ -111,6 +112,8 @@ All fields are optional unless noted with an asterisk (*)
 - `defaultOn` — If true, the states are reversed so that the default state is _on_. Only applicable to Switches.
 
 - `defaultBrightness` — If set, lightbulb will have additional dimmer settings with this default brightness percentage
+
+- `resetOnRestart` _ If true, all values return to defaults when Homebridge restarts. Ignored when timer is defined.
 
 - `disableLogging` — If true, state changes will not be logged
 

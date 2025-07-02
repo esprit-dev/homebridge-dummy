@@ -58,6 +58,7 @@ const en = {
       disableLogging: 'Disable Logging',
       name: 'Name',
       options: 'Additional Settings',
+      resetOnRestart: 'Reset on Restart',
       timer: 'Timer',
       type: 'Type',
       units: 'Units',
