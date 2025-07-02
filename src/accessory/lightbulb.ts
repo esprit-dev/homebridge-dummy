@@ -22,8 +22,9 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
     config: LightbulbConfig,
     log: Log,
     persistPath: string,
+    isGrouped: boolean,
   ) {
-    super(Service, Characteristic, accessory, config, log, persistPath);
+    super(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
 
     this.brightness = this.config.defaultBrightness ?? NO_BRIGHTNESS;
 

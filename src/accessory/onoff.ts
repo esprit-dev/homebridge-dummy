@@ -20,8 +20,9 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
     config: C,
     log: Log,
     persistPath: string,
+    isGrouped: boolean,
   ) {
-    super(Service, Characteristic, accessory, config, log, persistPath);
+    super(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
 
     this.on = config.defaultOn ? true : false;
 

@@ -26,10 +26,20 @@ export abstract class DummyAccessory<C extends DummyConfig> {
     protected readonly config: C,
     protected readonly log: Log,
     protected readonly persistPath: string,
+    isGrouped: boolean,
   ) {
    
     this.timer = new Timer(config.name, config.disableLogging ? undefined : log);
 
+    const serviceInstance = this.Service[this.getAccessoryType()];
+
+    if (isGrouped) {
+      this.accessoryService =
+      this.accessory.getServiceById(serviceInstance, this.identifier) ||
+      this.accessory.addService(serviceInstance, config.name, this.identifier);
+      return;
+    }
+    
     accessory.getService(Service.AccessoryInformation)!
       .setCharacteristic(Characteristic.Name, config.name)
       .setCharacteristic(Characteristic.ConfiguredName, config.name)
@@ -38,7 +48,6 @@ export abstract class DummyAccessory<C extends DummyConfig> {
       .setCharacteristic(Characteristic.SerialNumber, accessory.UUID)
       .setCharacteristic(Characteristic.FirmwareRevision, getVersion());
 
-    const serviceInstance = this.Service[this.getAccessoryType()];
     this.accessoryService = this.accessory.getService(serviceInstance) || this.accessory.addService(serviceInstance);
   }
 

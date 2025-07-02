@@ -65,7 +65,7 @@ export type DummyConfig = {
 }
 
 export type OnOffConfig = DummyConfig & {
-  defaultOn: boolean,
+  defaultOn?: boolean,
 }
 
 export type OutletConfig = OnOffConfig & {
@@ -76,4 +76,8 @@ export type LightbulbConfig = OnOffConfig & {
 }
 
 export type SwitchConfig = OnOffConfig & {
+}
+
+export type GroupConfig = {
+  accessories: DummyConfig[];
 }
