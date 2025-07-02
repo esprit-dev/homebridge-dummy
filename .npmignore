@@ -1,6 +1,6 @@
 # Ignore source code
-src/**/*.ts
-scripts/**/*.ts
+src/
+scripts/
 
 # ------------- Defaults ------------- #
 
