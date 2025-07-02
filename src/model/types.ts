@@ -35,7 +35,7 @@ export type PlatformConfig = {
 }
 
 export type DummyPlatformConfig = PlatformConfig & {
-  accessories?: DummyAccessoryConfig[];
+  accessories?: DummyConfig[];
   _bridge?: ChildBridge;
   migrationNeeded?: boolean;
 }
@@ -56,7 +56,7 @@ export type TimerConfig = Assertable & {
   random?: boolean,
 }
 
-export type DummyAccessoryConfig = {
+export type DummyConfig = {
   name: string,
   type: AccessoryType,
   timer?: TimerConfig,
@@ -64,7 +64,7 @@ export type DummyAccessoryConfig = {
   disableLogging?: boolean,
 }
 
-export type OnOffConfig = DummyAccessoryConfig & {
+export type OnOffConfig = DummyConfig & {
   defaultOn: boolean,
 }
 

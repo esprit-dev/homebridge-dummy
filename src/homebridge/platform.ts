@@ -9,7 +9,7 @@ import { SwitchAccessory } from '../accessory/switch.js';
 
 import { setLanguage, strings } from '../i18n/i18n.js';
 
-import { AccessoryType, DummyAccessoryConfig, DummyPlatformConfig, LightbulbConfig, OutletConfig, SwitchConfig } from '../model/types.js';
+import { AccessoryType, DummyConfig, DummyPlatformConfig, LightbulbConfig, OutletConfig, SwitchConfig } from '../model/types.js';
 
 import getVersion from '../tools/version.js';
 import { Log } from '../tools/log.js';
@@ -24,7 +24,7 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
   private readonly log: Log;
 
   private readonly cachedAccessories: Map<string, PlatformAccessory> = new Map();
-  private readonly dummyAccessories: (DummyAccessory)[] = [];
+  private readonly dummyAccessories: (DummyAccessory<DummyConfig>)[] = [];
 
   constructor(
     logger: Logger,
@@ -75,7 +75,7 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
    
     const keepIdentifiers = new Set<string>();
 
-    const accessories: DummyAccessoryConfig[] = this.config.accessories || [];
+    const accessories: DummyConfig[] = this.config.accessories || [];
     if (this.config.migrationNeeded) {
       const migratedAccessories = await migrateAccessories(this.log, this.api.user.configPath()) ?? [];
       accessories.push(...migratedAccessories);
@@ -105,7 +105,7 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
         this.cachedAccessories.set(id, accessory);
       }
 
-      let dummyAccessory: DummyAccessory;
+      let dummyAccessory: DummyAccessory<DummyConfig>;
       switch(accessoryConfig.type) {
       case AccessoryType.Lightbulb:
         dummyAccessory = new LightbulbAccessory(this.Service, this.Characteristic, accessory, accessoryConfig as LightbulbConfig, this.log, persistPath);

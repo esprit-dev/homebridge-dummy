@@ -9,7 +9,7 @@ import { CharacteristicType, OnOffConfig, ServiceType } from '../model/types.js'
 import { Log } from '../tools/log.js';
 import { STORAGE_KEY_SUFFIX_ON, storageGet, storageSet } from '../tools/storage.js';
 
-export abstract class OnOffAccessory extends DummyAccessory {
+export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extends DummyAccessory<C> {
 
   private on: CharacteristicValue;
 
@@ -17,14 +17,13 @@ export abstract class OnOffAccessory extends DummyAccessory {
     Service: ServiceType,
     Characteristic: CharacteristicType,
     accessory: PlatformAccessory,
-    private readonly onOffConfig: OnOffConfig,
+    config: C,
     log: Log,
     persistPath: string,
-    className: string,
   ) {
-    super(Service, Characteristic, accessory, onOffConfig, log, persistPath, className);
+    super(Service, Characteristic, accessory, config, log, persistPath);
 
-    this.on = onOffConfig.defaultOn ? true : false;
+    this.on = config.defaultOn ? true : false;
 
     this.accessoryService.getCharacteristic(Characteristic.On)
       .onGet(this.getOn.bind(this))
@@ -33,19 +32,20 @@ export abstract class OnOffAccessory extends DummyAccessory {
     this.initializeOn();
   }
 
-  private get onStorageKey(): string {
-    return `${this.identifier}:${STORAGE_KEY_SUFFIX_ON}`;
-  }
-  
+
   private async initializeOn() {
 
     if (this.isStateful) {
       this.on = await storageGet(this.persistPath, this.onStorageKey) ?? this.on;
     }
 
-    this.accessoryService.updateCharacteristic(this.Characteristic.On, this.on);
+    this.accessoryService.updateCharacteristic(this.Characteristic.On, this.on);  
   }
 
+  private get onStorageKey(): string {
+    return `${this.identifier}:${STORAGE_KEY_SUFFIX_ON}`;
+  }
+  
   protected async getOn(): Promise<CharacteristicValue> {
     return this.on;
   }
@@ -61,7 +61,7 @@ export abstract class OnOffAccessory extends DummyAccessory {
     if (this.isStateful) {
       await storageSet(this.persistPath, this.onStorageKey, this.on);
     } else {
-      if (this.on === !this.onOffConfig.defaultOn) {
+      if (this.on === !this.config.defaultOn) {
         this.startTimer(this.flip.bind(this));
       } else {
         this.cancelTimer();

@@ -2,16 +2,16 @@ import { PlatformAccessory, Service } from 'homebridge';
 
 import { PLATFORM_NAME, PLUGIN_ALIAS } from '../homebridge/settings.js';
 
-import { AccessoryType, CharacteristicType, DummyAccessoryConfig, ServiceType } from '../model/types.js';
+import { AccessoryType, CharacteristicType, DummyConfig, ServiceType } from '../model/types.js';
 
 import { Log } from '../tools/log.js';
 import getVersion from '../tools/version.js';
 import { Timer } from '../model/timer.js';
 import { assert } from '../tools/validation.js';
 
-export abstract class DummyAccessory {
+export abstract class DummyAccessory<C extends DummyConfig> {
 
-  public static identifier(config: DummyAccessoryConfig): string {
+  public static identifier(config: DummyConfig): string {
     return `${PLATFORM_NAME}:${config.type}:${config.name.replace(/\s+/g,'')}`;
   }
 
@@ -23,10 +23,9 @@ export abstract class DummyAccessory {
     protected readonly Service: ServiceType,
     protected readonly Characteristic: CharacteristicType,
     protected readonly accessory: PlatformAccessory,
-    protected readonly config: DummyAccessoryConfig,
+    protected readonly config: C,
     protected readonly log: Log,
     protected readonly persistPath: string,
-    private readonly caller: string,
   ) {
    
     this.timer = new Timer(config.name, config.disableLogging ? undefined : log);
@@ -35,7 +34,8 @@ export abstract class DummyAccessory {
       .setCharacteristic(Characteristic.Name, config.name)
       .setCharacteristic(Characteristic.ConfiguredName, config.name)
       .setCharacteristic(Characteristic.Manufacturer, PLUGIN_ALIAS)
-      .setCharacteristic(Characteristic.Model, caller)
+      .setCharacteristic(Characteristic.Model, config.type)
+      .setCharacteristic(Characteristic.SerialNumber, accessory.UUID)
       .setCharacteristic(Characteristic.FirmwareRevision, getVersion());
 
     const serviceInstance = this.Service[this.getAccessoryType()];
@@ -62,7 +62,7 @@ export abstract class DummyAccessory {
       return;
     }
 
-    if (!assert(this.log, this.caller, this.config.timer, 'units')) {
+    if (!assert(this.log, this.config.name, this.config.timer, 'units')) {
       return;
     }
 
@@ -73,8 +73,7 @@ export abstract class DummyAccessory {
     this.timer.cancel();
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  protected assert(...keys: (keyof any)[]): boolean {
+  protected assert(...keys: (keyof C)[]): boolean {
     return assert(this.log, this.config.name, this.config, ...keys);
   }
 
