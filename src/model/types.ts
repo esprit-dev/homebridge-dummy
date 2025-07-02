@@ -3,6 +3,7 @@ export type CharacteristicType = typeof import('homebridge').Characteristic;
 
 export enum AccessoryType {
   Lightbulb = 'Lightbulb',
+  Outlet = 'Outlet',
   Switch = 'Switch'
 }
 
@@ -67,9 +68,12 @@ export type OnOffConfig = DummyAccessoryConfig & {
   defaultOn: boolean,
 }
 
-export type SwitchConfig = OnOffConfig & {
+export type OutletConfig = OnOffConfig & {
 }
 
 export type LightbulbConfig = OnOffConfig & {
   defaultBrightness: number,
+}
+
+export type SwitchConfig = OnOffConfig & {
 }

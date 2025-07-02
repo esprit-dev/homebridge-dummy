@@ -71,7 +71,7 @@ The first thing the flow does is create a backup called `config.json.bak` in you
 
 With this plugin, you can create any number of fake accessories that will do nothing when triggered. This can be very useful for advanced automation with HomeKit scenes.
 
-Currently, only Lightbulbs and Switches are supported but we plan to add more options over the coming months.
+Currently, only Lightbulbs, Outlets, and Switches are supported but we plan to add more options over the coming months.
 
 ## Configuration
 
@@ -83,7 +83,7 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
     "accessories": [
         {
             "name": "string",
-            "type": "Lightbulb | Switch",
+            "type": "Lightbulb | Outlet | Switch",
             "timer": {
                 "delay": 1,
                 "units": "SECONDS | MINUTES | HOURS",
@@ -103,7 +103,7 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
 All fields are optional unless noted with an asterisk (*)
 
 - `name`* - The display name for the accessory in HomeKit
-- `type`* - The type of accessory, currently `Lightbulb` and `Switch` are supported
+- `type`* - The type of accessory, currently `Lightbulb`, `Outlet`, and `Switch` are supported
 
 - `timer.delay` — If defined, the switch will automatically toggle after this many seconds/minutes/hours
 - `timer.units` — The units to use for delay above (`SECONDS`, `MINUTES`, or `HOURS`). *Required if delay is set.

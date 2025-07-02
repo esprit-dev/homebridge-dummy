@@ -47,8 +47,8 @@
             "type": {
               "type": "string",
               "title": "${config.title.type}", 
-              "enum": ["Lightbulb", "Switch"],
-              "enumNames": ["${config.enumNames.lightbulb}", "${config.enumNames.switch}"],
+              "enum": ["Lightbulb", "Outlet", "Switch"],
+              "enumNames": ["${config.enumNames.lightbulb}", "${config.enumNames.outlet}", "${config.enumNames.switch}"],
               "required": true
             },
             "timer": { "$ref": "#/definitions/timer" },
@@ -136,7 +136,7 @@
               "type": "fieldset",
               "title": "${config.title.options}",
               "condition": {
-                "functionBody": "return ['Lightbulb','Switch'].includes(model.accessories?.[arguments[1]]?.type);"
+                "functionBody": "return ['Lightbulb','Outlet','Switch'].includes(model.accessories?.[arguments[1]]?.type);"
               },
               "items": [
                 {

@@ -45,6 +45,7 @@ const en = {
     enumNames: {
       hours: 'Hours',
       lightbulb: 'Lightbulb',
+      outlet: 'Outlet',
       minutes: 'Minutes',
       seconds: 'Seconds',
       switch: 'Switch',
