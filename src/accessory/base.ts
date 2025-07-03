@@ -36,8 +36,8 @@ export abstract class DummyAccessory<C extends DummyConfig> {
 
     if (isGrouped) {
       this.accessoryService =
-      this.accessory.getServiceById(serviceInstance, this.identifier) ||
-      this.accessory.addService(serviceInstance, config.name, this.identifier);
+      accessory.getServiceById(serviceInstance, this.identifier) ||
+      accessory.addService(serviceInstance, config.name, this.identifier);
       return;
     }
     
@@ -49,7 +49,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
       .setCharacteristic(Characteristic.SerialNumber, accessory.UUID)
       .setCharacteristic(Characteristic.FirmwareRevision, getVersion());
 
-    this.accessoryService = this.accessory.getService(serviceInstance) || this.accessory.addService(serviceInstance);
+    this.accessoryService = accessory.getService(serviceInstance) || accessory.addService(serviceInstance);
   }
 
   protected abstract getAccessoryType(): AccessoryType;

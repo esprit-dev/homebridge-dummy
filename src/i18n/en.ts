@@ -55,6 +55,7 @@ const en = {
       on: 'On',
       outlet: 'Outlet',
       minutes: 'Minutes',
+      motionSensor: 'Motion',
       seconds: 'Seconds',
       secured: 'Locked',
       switch: 'Switch',
@@ -71,10 +72,20 @@ const en = {
       options: 'Additional Settings',
       resetOnRestart: 'Reset on Restart',
       timer: 'Timer',
+      sensor: 'Attach Sensor',
       type: 'Type',
       units: 'Units',
       random: 'Random',
     },
+  },
+
+  sensor: {
+
+    motion: {
+      active: '%s detected motion',
+      inactive: '%s stopped detecting motion',
+    },
+
   },
 
   startup: {

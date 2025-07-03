@@ -10,6 +10,14 @@ export enum AccessoryType {
   Switch = 'Switch'
 }
 
+export enum SensorType {
+  MotionSensor = 'MotionSensor',
+}
+
+export enum SensorCharacteristic {
+  MotionDetected = 'MotionDetected'
+}
+
 export type ChildBridge = {
   username: string;
   port?: number;
@@ -69,13 +77,14 @@ export type DummyConfig = {
 
 export type OnOffConfig = DummyConfig & {
   defaultOnOff?: CharacteristicValue,
+  sensor?: SensorType,
 }
 
 export type OutletConfig = OnOffConfig & {
 }
 
 export type LightbulbConfig = OnOffConfig & {
-  defaultBrightness: CharacteristicValue,
+  defaultBrightness?: CharacteristicValue,
 }
 
 export type SwitchConfig = OnOffConfig & {
