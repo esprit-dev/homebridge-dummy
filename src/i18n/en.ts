@@ -9,6 +9,11 @@ const en = {
       stateOn: '%s is on %s%',
     },
 
+    lock: {
+      secured: '%s is locked',
+      unsecured: '%s is unlocked',
+    },
+
     onOff: {
       stateOn: '%s is on',
       stateOff: '%s is off',
@@ -45,16 +50,20 @@ const en = {
     enumNames: {
       hours: 'Hours',
       lightbulb: 'Lightbulb',
+      lockMechanism: 'Lock',
       outlet: 'Outlet',
       minutes: 'Minutes',
       seconds: 'Seconds',
+      secured: 'Locked',
       switch: 'Switch',
+      unsecured: 'Unlocked',
     },
 
     title: {
       accessory: 'Accessory',
       defaultBrightness: 'Default Brightness',
       defaultOn: 'Default to On',
+      defaultLockState: 'Default Lock State',
       delay: 'Delay',
       disableLogging: 'Disable Logging',
       name: 'Name',

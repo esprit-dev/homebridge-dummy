@@ -47,8 +47,8 @@
             "type": {
               "type": "string",
               "title": "${config.title.type}", 
-              "enum": ["Lightbulb", "Outlet", "Switch"],
-              "enumNames": ["${config.enumNames.lightbulb}", "${config.enumNames.outlet}", "${config.enumNames.switch}"],
+              "enum": ["Lightbulb", "LockMechanism", "Outlet", "Switch"],
+              "enumNames": ["${config.enumNames.lightbulb}", "${config.enumNames.lockMechanism}", "${config.enumNames.outlet}", "${config.enumNames.switch}"],
               "required": true
             },
             "timer": { "$ref": "#/definitions/timer" },
@@ -61,6 +61,12 @@
             "defaultOn": {
               "type": "boolean",
               "title": "${config.title.defaultOn}"
+            },
+            "defaultLockState": {
+              "type": "number",
+              "enum": [1, 0],
+              "enumNames": ["${config.enumNames.secured}", "${config.enumNames.unsecured}"],
+              "title": "${config.title.defaultLockState}"
             },
             "resetOnRestart": {
               "type": "boolean",
@@ -106,7 +112,7 @@
               "title": "${config.title.timer}",
               "description": "${config.description.timer}",
               "condition": {
-                "functionBody": "return model.accessories?.[arguments[1]]?.type;"
+                "functionBody": "return model.accessories?.[arguments[1]]?.type !== undefined;"
               },
               "items": [
                 {
@@ -136,16 +142,51 @@
               "type": "fieldset",
               "title": "${config.title.options}",
               "condition": {
-                "functionBody": "return ['Lightbulb','Outlet','Switch'].includes(model.accessories?.[arguments[1]]?.type);"
+                "functionBody": "return model.accessories?.[arguments[1]]?.type !== undefined;"
               },
               "items": [
                 {
                   "type": "div",
                   "displayFlex": true,
                   "flex-direction": "row",
+                  "condition": {
+                    "functionBody": "return ['Lightbulb','Outlet','Switch'].includes(model.accessories?.[arguments[1]]?.type);"
+                  },
                   "items": [
                     {
                       "key": "accessories[].defaultOn",
+                      "flex": "0 0 25%"
+                    },
+                    {
+                      "key": "accessories[].defaultBrightness",
+                      "flex": "0 0 25%",
+                      "condition": {
+                        "functionBody": "return ['Lightbulb'].includes(model.accessories?.[arguments[1]]?.type);"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "div",
+                  "displayFlex": true,
+                  "flex-direction": "row",
+                  "condition": {
+                    "functionBody": "return ['LockMechanism'].includes(model.accessories?.[arguments[1]]?.type);"
+                  },
+                  "items": [
+                    {
+                      "key": "accessories[].defaultLockState",
+                      "flex": "0 0 25%"
+                    }
+                  ]
+                },                
+                {
+                  "type": "div",
+                  "displayFlex": true,
+                  "flex-direction": "row",
+                  "items": [
+                    {
+                      "key": "accessories[].disableLogging",
                       "flex": "0 1 25%"
                     },
                     {
@@ -154,25 +195,7 @@
                       "condition": {
                         "functionBody": "return model.accessories?.[arguments[1]]?.timer?.delay === undefined;"
                       }
-                    },
-                    {
-                      "key": "accessories[].disableLogging",
-                      "flex": "0 1 25%"
-                    }
-                  ]
-                },
-                {
-                  "type": "div",
-                  "displayFlex": true,
-                  "flex-direction": "row",
-                  "items": [
-                    {
-                      "key": "accessories[].defaultBrightness",
-                      "flex": "0 0 25%",
-                      "condition": {
-                        "functionBody": "return ['Lightbulb'].includes(model.accessories?.[arguments[1]]?.type);"
-                      }
-                    }
+                    }                  
                   ]
                 }
               ]
