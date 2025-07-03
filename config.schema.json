@@ -58,15 +58,17 @@
               "maximum": 100,
               "title": "${config.title.defaultBrightness}"
             },
-            "defaultOn": {
-              "type": "boolean",
-              "title": "${config.title.defaultOn}"
+            "defaultOnOff": {
+              "type": "number",
+              "title": "${config.title.defaultState}",
+              "enum": [1, 0],
+              "enumNames": ["${config.enumNames.on}", "${config.enumNames.off}"]
             },
             "defaultLockState": {
               "type": "number",
+              "title": "${config.title.defaultState}",
               "enum": [1, 0],
-              "enumNames": ["${config.enumNames.secured}", "${config.enumNames.unsecured}"],
-              "title": "${config.title.defaultLockState}"
+              "enumNames": ["${config.enumNames.secured}", "${config.enumNames.unsecured}"]
             },
             "resetOnRestart": {
               "type": "boolean",
@@ -154,7 +156,7 @@
                   },
                   "items": [
                     {
-                      "key": "accessories[].defaultOn",
+                      "key": "accessories[].defaultOnOff",
                       "flex": "0 0 25%"
                     },
                     {

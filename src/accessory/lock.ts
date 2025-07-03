@@ -24,7 +24,7 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
   ) {
     super(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
 
-    this.state = config.defaultLockState ?? Characteristic.LockTargetState.SECURED;
+    this.state = this.defaultState;
 
     this.accessoryService.getCharacteristic(Characteristic.LockTargetState)
       .onGet(this.getState.bind(this))

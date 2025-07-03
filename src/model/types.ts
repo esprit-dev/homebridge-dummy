@@ -1,3 +1,5 @@
+import { CharacteristicValue } from 'homebridge';
+
 export type ServiceType = typeof import('homebridge').Service;
 export type CharacteristicType = typeof import('homebridge').Characteristic;
 
@@ -66,21 +68,21 @@ export type DummyConfig = {
 }
 
 export type OnOffConfig = DummyConfig & {
-  defaultOn?: boolean,
+  defaultOnOff?: CharacteristicValue,
 }
 
 export type OutletConfig = OnOffConfig & {
 }
 
 export type LightbulbConfig = OnOffConfig & {
-  defaultBrightness: number,
+  defaultBrightness: CharacteristicValue,
 }
 
 export type SwitchConfig = OnOffConfig & {
 }
 
 export type LockConfig = DummyConfig & {
-  defaultLockState?: number;
+  defaultLockState?: CharacteristicValue;
 }
 
 export type GroupConfig = {

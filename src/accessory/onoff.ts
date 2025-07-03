@@ -24,7 +24,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
   ) {
     super(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
 
-    this.on = config.defaultOn ? true : false;
+    this.on = this.defaultOnOff;
 
     this.accessoryService.getCharacteristic(Characteristic.On)
       .onGet(this.getOn.bind(this))
@@ -32,7 +32,6 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
 
     this.initializeOn();
   }
-
 
   private async initializeOn() {
 
@@ -47,6 +46,10 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
     return `${this.identifier}:${STORAGE_KEY_SUFFIX_ON}`;
   }
   
+  private get defaultOnOff(): CharacteristicValue {
+    return this.config.defaultOnOff === 1 ? true : false;
+  }
+
   protected async getOn(): Promise<CharacteristicValue> {
     return this.on;
   }
@@ -62,7 +65,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
     if (this.isStateful) {
       await storageSet(this.persistPath, this.onStorageKey, this.on);
     } else {
-      if (this.on === !this.config.defaultOn) {
+      if (this.on !== this.defaultOnOff) {
         this.startTimer(this.flip.bind(this));
       } else {
         this.cancelTimer();

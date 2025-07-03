@@ -51,6 +51,8 @@ const en = {
       hours: 'Hours',
       lightbulb: 'Lightbulb',
       lockMechanism: 'Lock',
+      off: 'Off',
+      on: 'On',
       outlet: 'Outlet',
       minutes: 'Minutes',
       seconds: 'Seconds',
@@ -62,8 +64,7 @@ const en = {
     title: {
       accessory: 'Accessory',
       defaultBrightness: 'Default Brightness',
-      defaultOn: 'Default to On',
-      defaultLockState: 'Default Lock State',
+      defaultState: 'Default State',
       delay: 'Delay',
       disableLogging: 'Disable Logging',
       name: 'Name',
