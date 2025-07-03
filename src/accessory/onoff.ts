@@ -1,7 +1,7 @@
 import { CharacteristicValue, PlatformAccessory } from 'homebridge';
 
 import { DummyAccessory } from './base.js';
-import { SensorAccessory } from './sensor/sensor.js';
+import { SensorAccessory } from './sensor.js';
 
 import { strings } from '../i18n/i18n.js';
 

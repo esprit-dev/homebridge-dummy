@@ -1,10 +1,10 @@
 import { CharacteristicValue, PlatformAccessory, Service } from 'homebridge';
 
-import { strings } from '../../i18n/i18n.js';
+import { strings } from '../i18n/i18n.js';
 
-import { CharacteristicType, SensorType as Type, SensorCharacteristic as Char, ServiceType } from '../../model/types.js';
+import { CharacteristicType, SensorType as Type, SensorCharacteristic as Char, ServiceType } from '../model/types.js';
 
-import { Log } from '../../tools/log.js';
+import { Log } from '../tools/log.js';
 
 type SensorStrings = { active: string, inactive: string };
 type SensorInfo = { characteristic: Char, strings: SensorStrings };
