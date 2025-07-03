@@ -7,7 +7,7 @@ import { strings } from '../i18n/i18n.js';
 import { CharacteristicType, OnOffConfig, ServiceType } from '../model/types.js';
 
 import { Log } from '../tools/log.js';
-import { STORAGE_KEY_SUFFIX_ON, storageGet, storageSet } from '../tools/storage.js';
+import { storageGet, storageSet } from '../tools/storage.js';
 
 export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extends DummyAccessory<C> {
 
@@ -36,16 +36,12 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
   private async initializeOn() {
 
     if (this.isStateful) {
-      this.on = await storageGet(this.persistPath, this.onStorageKey) ?? this.on;
+      this.on = await storageGet(this.persistPath, this.defaultStateStorageKey) ?? this.on;
     }
 
     this.accessoryService.updateCharacteristic(this.Characteristic.On, this.on);  
   }
 
-  private get onStorageKey(): string {
-    return `${this.identifier}:${STORAGE_KEY_SUFFIX_ON}`;
-  }
-  
   private get defaultOnOff(): CharacteristicValue {
     return this.config.defaultOnOff === 1 ? true : false;
   }
@@ -63,7 +59,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
     this.on = value;
 
     if (this.isStateful) {
-      await storageSet(this.persistPath, this.onStorageKey, this.on);
+      await storageSet(this.persistPath, this.defaultStateStorageKey, this.on);
     } else {
       if (this.on !== this.defaultOnOff) {
         this.startTimer(this.flip.bind(this));

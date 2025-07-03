@@ -8,6 +8,7 @@ import { Log } from '../tools/log.js';
 import getVersion from '../tools/version.js';
 import { Timer } from '../model/timer.js';
 import { assert } from '../tools/validation.js';
+import { STORAGE_KEY_SUFFIX_DEFAULT_STATE } from '../tools/storage.js';
 
 export abstract class DummyAccessory<C extends DummyConfig> {
 
@@ -31,7 +32,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
    
     this.timer = new Timer(config.name, config.disableLogging ? undefined : log);
 
-    const serviceInstance = this.Service[this.getAccessoryType()];
+    const serviceInstance = Service[this.getAccessoryType()];
 
     if (isGrouped) {
       this.accessoryService =
@@ -63,6 +64,10 @@ export abstract class DummyAccessory<C extends DummyConfig> {
 
   protected get isStateful(): boolean {
     return this.config.timer?.delay === undefined && !this.config.resetOnRestart;
+  }
+
+  protected get defaultStateStorageKey(): string {
+    return `${this.identifier}:${STORAGE_KEY_SUFFIX_DEFAULT_STATE}`;
   }
 
   protected startTimer(callback: () => Promise<void>) {
