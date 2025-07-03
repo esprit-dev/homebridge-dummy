@@ -3,16 +3,15 @@ import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig }
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings.js';
 
 import { DummyAccessory } from '../accessory/base.js';
-import { LightbulbAccessory } from '../accessory/lightbulb.js';
-import { SwitchAccessory } from '../accessory/switch.js';
+import { createAccessory } from '../accessory/helpers.js';
 
 import { setLanguage, strings } from '../i18n/i18n.js';
 
-import { AccessoryType, DummyAccessoryConfig, DummyPlatformConfig, LightbulbConfig, SwitchConfig } from '../model/types.js';
+import { DummyConfig, DummyPlatformConfig } from '../model/types.js';
 
-import getVersion from '../tools/version.js';
-import { Log } from '../tools/log.js';
 import { migrateAccessories } from '../tools/configMigration.js';
+import { Log } from '../tools/log.js';
+import getVersion from '../tools/version.js';
 
 export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
   private readonly Service;
@@ -23,7 +22,7 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
   private readonly log: Log;
 
   private readonly cachedAccessories: Map<string, PlatformAccessory> = new Map();
-  private readonly dummyAccessories: (DummyAccessory)[] = [];
+  private readonly dummyAccessories: (DummyAccessory<DummyConfig>)[] = [];
 
   constructor(
     logger: Logger,
@@ -74,7 +73,7 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
    
     const keepIdentifiers = new Set<string>();
 
-    const accessories: DummyAccessoryConfig[] = this.config.accessories || [];
+    const accessories: DummyConfig[] = this.config.accessories || [];
     if (this.config.migrationNeeded) {
       const migratedAccessories = await migrateAccessories(this.log, this.api.user.configPath()) ?? [];
       accessories.push(...migratedAccessories);
@@ -99,21 +98,13 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
 
         accessory = new this.api.platformAccessory(name, uuid);
         accessory.context.identifier = id;
-
+    
         newAccessories.push(accessory);
         this.cachedAccessories.set(id, accessory);
       }
 
-      let dummyAccessory: DummyAccessory;
-      switch(accessoryConfig.type) {
-      case AccessoryType.Lightbulb:
-        dummyAccessory = new LightbulbAccessory(this.Service, this.Characteristic, accessory, accessoryConfig as LightbulbConfig, this.log, persistPath);
-        break;
-      case AccessoryType.Switch:
-        dummyAccessory = new SwitchAccessory(this.Service, this.Characteristic, accessory, accessoryConfig as SwitchConfig, this.log, persistPath);
-        break;
-      default:
-        this.log.error(strings.startup.unsupportedType, `'${accessoryConfig.type}'`);
+      const dummyAccessory = createAccessory(this.Service, this.Characteristic, accessory, accessoryConfig, this.log, persistPath);
+      if (!dummyAccessory) {
         continue;
       }
 

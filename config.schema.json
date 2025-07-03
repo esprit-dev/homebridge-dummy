@@ -47,8 +47,8 @@
             "type": {
               "type": "string",
               "title": "${config.title.type}", 
-              "enum": ["Lightbulb", "Switch"],
-              "enumNames": ["${config.enumNames.lightbulb}", "${config.enumNames.switch}"],
+              "enum": ["Lightbulb", "LockMechanism", "Outlet", "Switch"],
+              "enumNames": ["${config.enumNames.lightbulb}", "${config.enumNames.lockMechanism}", "${config.enumNames.outlet}", "${config.enumNames.switch}"],
               "required": true
             },
             "timer": { "$ref": "#/definitions/timer" },
@@ -58,9 +58,27 @@
               "maximum": 100,
               "title": "${config.title.defaultBrightness}"
             },
-            "defaultOn": {
+            "defaultOnOff": {
+              "type": "number",
+              "title": "${config.title.defaultState}",
+              "enum": [1, 0],
+              "enumNames": ["${config.enumNames.on}", "${config.enumNames.off}"]
+            },
+            "defaultLockState": {
+              "type": "number",
+              "title": "${config.title.defaultState}",
+              "enum": [1, 0],
+              "enumNames": ["${config.enumNames.secured}", "${config.enumNames.unsecured}"]
+            },
+            "sensor": {
+              "type": "string",
+              "title": "${config.title.sensor}",
+              "enum": ["CarbonDioxideSensor", "CarbonMonoxideSensor", "ContactSensor", "LeakSensor", "MotionSensor", "OccupancySensor", "SmokeSensor"],
+              "enumNames": ["${config.enumNames.carbonDioxideSensor}", "${config.enumNames.carbonMonoxideSensor}", "${config.enumNames.contactSensor}", "${config.enumNames.leakSensor}", "${config.enumNames.motionSensor}", "${config.enumNames.occupancySensor}", "${config.enumNames.smokeSensor}"]
+            },
+            "resetOnRestart": {
               "type": "boolean",
-              "title": "${config.title.defaultOn}"
+              "title": "${config.title.resetOnRestart}"
             },
             "disableLogging": {
               "title": "${config.title.disableLogging}",
@@ -102,7 +120,7 @@
               "title": "${config.title.timer}",
               "description": "${config.description.timer}",
               "condition": {
-                "functionBody": "return model.accessories?.[arguments[1]]?.type;"
+                "functionBody": "return model.accessories?.[arguments[1]]?.type !== undefined;"
               },
               "items": [
                 {
@@ -132,30 +150,65 @@
               "type": "fieldset",
               "title": "${config.title.options}",
               "condition": {
-                "functionBody": "return ['Lightbulb','Switch'].includes(model.accessories?.[arguments[1]]?.type);"
+                "functionBody": "return model.accessories?.[arguments[1]]?.type !== undefined;"
               },
               "items": [
                 {
                   "type": "div",
                   "displayFlex": true,
                   "flex-direction": "row",
+                  "condition": {
+                    "functionBody": "return ['Lightbulb','Outlet','Switch'].includes(model.accessories?.[arguments[1]]?.type);"
+                  },
                   "items": [
                     {
-                      "key": "accessories[].defaultOn",
-                      "flex": "1 1 0"
+                      "key": "accessories[].defaultOnOff",
+                      "flex": "0 0 25%"
                     },
                     {
-                      "key": "accessories[].disableLogging",
-                      "flex": "1 1 0"
-                    }                    
+                      "key": "accessories[].sensor",
+                      "flex": "0 0 25%"
+                    },
+                    {
+                      "key": "accessories[].defaultBrightness",
+                      "flex": "0 0 25%",
+                      "condition": {
+                        "functionBody": "return ['Lightbulb'].includes(model.accessories?.[arguments[1]]?.type);"
+                      }
+                    }
                   ]
                 },
                 {
-                  "key": "accessories[].defaultBrightness",
-                  "flex": "1 1 0",
+                  "type": "div",
+                  "displayFlex": true,
+                  "flex-direction": "row",
                   "condition": {
-                    "functionBody": "return ['Lightbulb'].includes(model.accessories?.[arguments[1]]?.type);"
-                  }
+                    "functionBody": "return ['LockMechanism'].includes(model.accessories?.[arguments[1]]?.type);"
+                  },
+                  "items": [
+                    {
+                      "key": "accessories[].defaultLockState",
+                      "flex": "0 0 25%"
+                    }
+                  ]
+                },                
+                {
+                  "type": "div",
+                  "displayFlex": true,
+                  "flex-direction": "row",
+                  "items": [
+                    {
+                      "key": "accessories[].disableLogging",
+                      "flex": "0 1 25%"
+                    },
+                    {
+                      "key": "accessories[].resetOnRestart",
+                      "flex": "0 1 25%",
+                      "condition": {
+                        "functionBody": "return model.accessories?.[arguments[1]]?.timer?.delay === undefined;"
+                      }
+                    }                  
+                  ]
                 }
               ]
             }           

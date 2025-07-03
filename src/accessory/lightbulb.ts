@@ -1,37 +1,34 @@
-import { CharacteristicValue, PlatformAccessory, Service } from 'homebridge';
+import { CharacteristicValue, PlatformAccessory } from 'homebridge';
 
 import { OnOffAccessory } from './onoff.js';
 
 import { strings } from '../i18n/i18n.js';
 
-import { CharacteristicType, LightbulbConfig, ServiceType } from '../model/types.js';
+import { AccessoryType, CharacteristicType, LightbulbConfig, ServiceType } from '../model/types.js';
 
 import { Log } from '../tools/log.js';
-import { STORAGE_KEY_SUFFIX_BRIGHTNESS, storageGet, storageSet } from '../tools/storage.js';
+import { STORAGE_KEY_SUFFIX_DEFAULT_BRIGHTNESS, storageGet, storageSet } from '../tools/storage.js';
 
-const DEFAULT_BRIGHTNESS = 0;
+const NO_BRIGHTNESS = -1;
 
-export class LightbulbAccessory extends OnOffAccessory {
+export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
 
-  private isDimmer: boolean;
-
-  private brightness: CharacteristicValue = DEFAULT_BRIGHTNESS;
+  private brightness: CharacteristicValue;
 
   constructor(
     Service: ServiceType,
     Characteristic: CharacteristicType,
     accessory: PlatformAccessory,
-    lightbulbConfig: LightbulbConfig,
+    config: LightbulbConfig,
     log: Log,
     persistPath: string,
+    isGrouped: boolean,
   ) {
-    super(Service, Characteristic, accessory, lightbulbConfig, log, persistPath, LightbulbAccessory.name);
+    super(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
 
-    this.isDimmer = lightbulbConfig.defaultBrightness !== undefined;
+    this.brightness = this.config.defaultBrightness ?? NO_BRIGHTNESS;
 
     if (this.isDimmer) {
-
-      this.brightness = lightbulbConfig.defaultBrightness;
 
       this.accessoryService.getCharacteristic(this.Characteristic.Brightness)
         .onGet(this.getBrightness.bind(this))
@@ -41,17 +38,25 @@ export class LightbulbAccessory extends OnOffAccessory {
     }
   }
 
-  private get brightnessStorageKey(): string {
-    return `${this.identifier}:${STORAGE_KEY_SUFFIX_BRIGHTNESS}`;
+  private get isDimmer(): boolean {
+    return this.brightness !== NO_BRIGHTNESS;
+  }
+
+  private get defaultBrightnessStorageKey(): string {
+    return `${this.identifier}:${STORAGE_KEY_SUFFIX_DEFAULT_BRIGHTNESS}`;
+  }
+
+  protected getAccessoryType(): AccessoryType {
+    return AccessoryType.Lightbulb;
   }
 
   private async initializeBrightness() {
-    this.brightness = await storageGet(this.persistPath, this.brightnessStorageKey) ?? this.brightness;
-    this.accessoryService.updateCharacteristic(this.Characteristic.Brightness, this.brightness);
-  }
 
-  protected getAccessoryService(): Service {
-    return this.accessory.getService(this.Service.Lightbulb) || this.accessory.addService(this.Service.Lightbulb);
+    if (this.isStateful) {
+      this.brightness = await storageGet(this.persistPath, this.defaultBrightnessStorageKey) ?? this.brightness;
+    }
+
+    this.accessoryService.updateCharacteristic(this.Characteristic.Brightness, this.brightness);
   }
 
   override logOnState(value: CharacteristicValue) {
@@ -76,7 +81,9 @@ export class LightbulbAccessory extends OnOffAccessory {
 
     this.logIfDesired(strings.accessory.lightbulb.brightness,  this.config.name, this.brightness.toString());
 
-    await storageSet(this.persistPath, this.brightnessStorageKey, this.brightness);
+    if (this.isStateful) {
+      await storageSet(this.persistPath, this.defaultBrightnessStorageKey, this.brightness);
+    }
 
     this.accessoryService.updateCharacteristic(this.Characteristic.Brightness, this.brightness);
   }

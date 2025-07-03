@@ -7,13 +7,13 @@ import { strings } from '../i18n/i18n.js';
 import { LEGACY_ALIAS, PLATFORM_NAME } from '../homebridge/settings.js';
 
 import {
-  AccessoryConfig, DummyAccessoryConfig, DummyPlatformConfig, LegacyAccessoryConfig, LightbulbConfig, OnOffConfig, PlatformConfig,
+  AccessoryConfig, DummyConfig, DummyPlatformConfig, LegacyAccessoryConfig, LightbulbConfig, OnOffConfig, PlatformConfig,
   AccessoryType, ChildBridge, TimeUnits,
 } from '../model/types.js';
 
-function migrateAccessory(legacyConfig: LegacyAccessoryConfig): DummyAccessoryConfig {
+function migrateAccessory(legacyConfig: LegacyAccessoryConfig): DummyConfig {
 
-  const dummyConfig: DummyAccessoryConfig = {
+  const dummyConfig: DummyConfig = {
     name: legacyConfig.name,
     type: AccessoryType.Switch,
     disableLogging: legacyConfig.disableLogging,
@@ -21,7 +21,7 @@ function migrateAccessory(legacyConfig: LegacyAccessoryConfig): DummyAccessoryCo
 
   if (legacyConfig.reverse) {
     const onOffConfig = dummyConfig as OnOffConfig;
-    onOffConfig.defaultOn = true;
+    onOffConfig.defaultOnOff = 1;
   }
 
   if (legacyConfig.dimmer) {
@@ -41,7 +41,7 @@ function migrateAccessory(legacyConfig: LegacyAccessoryConfig): DummyAccessoryCo
   return dummyConfig;
 }
 
-export async function migrateAccessories(log: Log, configPath: string): Promise<DummyAccessoryConfig[] | undefined> {
+export async function migrateAccessories(log: Log, configPath: string): Promise<DummyConfig[] | undefined> {
 
   try {
     const config = JSON.parse(fs.readFileSync(configPath, { encoding: 'utf8' }));
@@ -67,7 +67,7 @@ export async function migrateAccessories(log: Log, configPath: string): Promise<
 
     dummyPlatformConfig.accessories = dummyPlatformConfig.accessories?.length ? dummyPlatformConfig.accessories : [];
 
-    const migrated: DummyAccessoryConfig[] = [];
+    const migrated: DummyConfig[] = [];
     const others: AccessoryConfig[] = [];
 
     let childBridge: ChildBridge | undefined;

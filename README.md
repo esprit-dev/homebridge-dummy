@@ -71,7 +71,7 @@ The first thing the flow does is create a backup called `config.json.bak` in you
 
 With this plugin, you can create any number of fake accessories that will do nothing when triggered. This can be very useful for advanced automation with HomeKit scenes.
 
-Currently, only Lightbulbs and Switches are supported but we plan to add more options over the coming months.
+Currently, only Lightbulbs, Locks, Outlets, and Switches are supported. If there is a particular device you'd like to see supported, please [create an issue](https://github.com/mpatfield/homebridge-dummy/issues/new?template=new-issue.md).
 
 ## Configuration
 
@@ -83,15 +83,18 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
     "accessories": [
         {
             "name": "string",
-            "type": "Lightbulb | Switch",
+            "type": "Lightbulb | LockMechanism | Outlet | Switch",
             "timer": {
-                "delay": 1,
+                "delay": number,
                 "units": "SECONDS | MINUTES | HOURS",
-                "random": false
+                "random": true | false
             },
-            "defaultOn": false,
-            "defaultBrightness": 100,
-            "disableLogging": false
+            "defaultOnOff": 1 | 0,
+            "defaultBrightness": 0-100,
+            "defaultLockState": 0 | 1,
+            "sensor": "CarbonDioxideSensor | CarbonMonoxideSensor | ContactSensor | LeakSensor | MotionSensor | OccupancySensor | SmokeSensor",
+            "resetOnRestart": true | false,
+            "disableLogging": true | false
         }
         // ...additional accessories...
     ],
@@ -102,15 +105,23 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
 All fields are optional unless noted with an asterisk (*)
 
 - `name`* - The display name for the accessory in HomeKit
-- `type`* - The type of accessory, currently `Lightbulb` and `Switch` are supported
+- `type`* - The type of accessory, currently `Lightbulb`, `LockMechanism`, `Outlet`, and `Switch` are supported
 
 - `timer.delay` — If defined, the switch will automatically toggle after this many seconds/minutes/hours
 - `timer.units` — The units to use for delay above (`SECONDS`, `MINUTES`, or `HOURS`). *Required if delay is set.
 - `timer.random` — If true, the delay will be randomized with a maximum value of `timer.delay`
 
-- `defaultOn` — If true, the states are reversed so that the default state is _on_. Only applicable to Switches.
+- `defaultOnOff` — Initial value. Default _ON_ = 1, default _OFF_ = 0
 
 - `defaultBrightness` — If set, lightbulb will have additional dimmer settings with this default brightness percentage
+
+- `defaultLockState` - The initial value for the lock. UNSECURED (Unlocked) = 0, SECURED (Locked) = 1
+
+- `sensor` - Optionally attach a sensor that mirrors the state of the parent accessory
+    - Only works with `Lightbulb`, `Outlet`, and `Switch`
+    - Valid values are `CarbonDioxideSensor`, `CarbonMonoxideSensor`, `ContactSensor`, `LeakSensor`, `MotionSensor`, `OccupancySensor`, or `SmokeSensor`
+
+- `resetOnRestart` _ If true, all values return to defaults when Homebridge restarts. Ignored when timer is defined.
 
 - `disableLogging` — If true, state changes will not be logged
 
@@ -145,7 +156,7 @@ All fields are optional unless noted with an asterisk (*)
         "delay": 5,
         "units": "SECONDS"
     },
-    "defaultOn": true
+    "defaultOnOff": true
 }
 ```
 
@@ -180,6 +191,32 @@ All fields are optional unless noted with an asterisk (*)
         "units": "MINUTES",
         "random": true
     }
+}
+```
+
+### Lock
+```json
+{
+    "name": "Lock",
+    "type": "LockMechanism",
+    "timer": {
+        "delay": 10,
+        "units": "MINUTES"
+    },
+    "defaultLockState": 0
+}
+```
+
+### Motion Sensor Switch
+```json
+{
+    "name": "Motion Switch",
+    "type": "Switch",
+    "timer": {
+        "delay": 3,
+        "units": "MINUTES"
+    },
+    "sensor": "MotionSensor"
 }
 ```
 

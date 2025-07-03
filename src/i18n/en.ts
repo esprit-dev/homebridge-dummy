@@ -9,6 +9,11 @@ const en = {
       stateOn: '%s is on %s%',
     },
 
+    lock: {
+      secured: '%s is locked',
+      unsecured: '%s is unlocked',
+    },
+
     onOff: {
       stateOn: '%s is on',
       stateOff: '%s is off',
@@ -43,25 +48,78 @@ const en = {
     },
 
     enumNames: {
+      carbonDioxideSensor:'Carbon Dioxide',
+      carbonMonoxideSensor: 'Carbon Monoxide',
+      contactSensor: 'Contact',
       hours: 'Hours',
+      leakSensor: 'Leak',
       lightbulb: 'Lightbulb',
+      lockMechanism: 'Lock',
+      off: 'Off',
+      occupancySensor: 'Occupancy',
+      on: 'On',
+      outlet: 'Outlet',
       minutes: 'Minutes',
+      motionSensor: 'Motion',
       seconds: 'Seconds',
+      secured: 'Locked',
+      smokeSensor: 'Smoke',
       switch: 'Switch',
+      unsecured: 'Unlocked',
     },
 
     title: {
       accessory: 'Accessory',
       defaultBrightness: 'Default Brightness',
-      defaultOn: 'Default to On',
+      defaultState: 'Default State',
       delay: 'Delay',
       disableLogging: 'Disable Logging',
       name: 'Name',
       options: 'Additional Settings',
+      resetOnRestart: 'Reset on Restart',
       timer: 'Timer',
+      sensor: 'Attach Sensor',
       type: 'Type',
       units: 'Units',
       random: 'Random',
+    },
+  },
+
+  sensor: {
+
+    carbonDioxide: {
+      active: '%s detected carbon dioxide',
+      inactive: '%s stopped detecting carbon dioxide',
+    },
+
+    carbonMonoxide: {
+      active: '%s detected carbon monoxide',
+      inactive: '%s stopped detecting carbon monoxide',
+    },
+
+    contact: {
+      active: '%s detected contact',
+      inactive: '%s stopped detecting contact',
+    },
+
+    leak: {
+      active: '%s detected a leak',
+      inactive: '%s stopped detecting leaks',
+    },
+
+    motion: {
+      active: '%s detected motion',
+      inactive: '%s stopped detecting motion',
+    },
+
+    occupancy: {
+      active: '%s detected occupancy',
+      inactive: '%s stopped detecting occupancy',
+    },
+
+    smoke: {
+      active: '%s detected smoke',
+      inactive: '%s stopped detecting smoke',
     },
   },
 

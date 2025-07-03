@@ -1,30 +1,35 @@
 import { CharacteristicValue, PlatformAccessory } from 'homebridge';
 
 import { DummyAccessory } from './base.js';
+import { SensorAccessory } from './sensor/sensor.js';
 
 import { strings } from '../i18n/i18n.js';
 
 import { CharacteristicType, OnOffConfig, ServiceType } from '../model/types.js';
 
 import { Log } from '../tools/log.js';
-import { STORAGE_KEY_SUFFIX_ON, storageGet, storageSet } from '../tools/storage.js';
+import { storageGet, storageSet } from '../tools/storage.js';
 
-export abstract class OnOffAccessory extends DummyAccessory {
+export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extends DummyAccessory<C> {
 
   private on: CharacteristicValue;
+
+  private sensor?: SensorAccessory;
 
   constructor(
     Service: ServiceType,
     Characteristic: CharacteristicType,
     accessory: PlatformAccessory,
-    private readonly onOffConfig: OnOffConfig,
+    config: C,
     log: Log,
     persistPath: string,
-    className: string,
+    isGrouped: boolean,
   ) {
-    super(Service, Characteristic, accessory, onOffConfig, log, persistPath, className);
+    super(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
 
-    this.on = onOffConfig.defaultOn ? true : false;
+    this.on = this.defaultOnOff;
+
+    this.sensor = SensorAccessory.init(Service, Characteristic, accessory, this.config.name, log, this.config.disableLogging, config.sensor);
 
     this.accessoryService.getCharacteristic(Characteristic.On)
       .onGet(this.getOn.bind(this))
@@ -33,21 +38,17 @@ export abstract class OnOffAccessory extends DummyAccessory {
     this.initializeOn();
   }
 
-  private get isStateful(): boolean {
-    return this.config.timer?.delay === undefined;
-  }
-
-  private get onStorageKey(): string {
-    return `${this.identifier}:${STORAGE_KEY_SUFFIX_ON}`;
-  }
-  
   private async initializeOn() {
 
     if (this.isStateful) {
-      this.on = await storageGet(this.persistPath, this.onStorageKey) ?? this.on;
+      this.on = await storageGet(this.persistPath, this.defaultStateStorageKey) ?? this.on;
     }
 
-    this.accessoryService.updateCharacteristic(this.Characteristic.On, this.on);
+    this.accessoryService.updateCharacteristic(this.Characteristic.On, this.on);  
+  }
+
+  private get defaultOnOff(): CharacteristicValue {
+    return this.config.defaultOnOff === 1 ? true : false;
   }
 
   protected async getOn(): Promise<CharacteristicValue> {
@@ -63,13 +64,17 @@ export abstract class OnOffAccessory extends DummyAccessory {
     this.on = value;
 
     if (this.isStateful) {
-      await storageSet(this.persistPath, this.onStorageKey, this.on);
+      await storageSet(this.persistPath, this.defaultStateStorageKey, this.on);
     } else {
-      if (this.on === !this.onOffConfig.defaultOn) {
+      if (this.on !== this.defaultOnOff) {
         this.startTimer(this.flip.bind(this));
       } else {
         this.cancelTimer();
       }
+    }
+
+    if (this.sensor) {
+      this.sensor.active = this.on !== this.defaultOnOff;
     }
 
     this.accessoryService.updateCharacteristic(this.Characteristic.On, this.on);

@@ -1,7 +1,7 @@
 import storage from 'node-persist';
 
-export const STORAGE_KEY_SUFFIX_BRIGHTNESS = 'Brightness';
-export const STORAGE_KEY_SUFFIX_ON = 'On';
+export const STORAGE_KEY_SUFFIX_DEFAULT_STATE = 'DefaultState';
+export const STORAGE_KEY_SUFFIX_DEFAULT_BRIGHTNESS = 'Brightness';
 
 async function init(dir: string) {
   await storage.init({ dir: dir, forgiveParseErrors: true });

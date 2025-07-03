@@ -1,9 +1,33 @@
+import { CharacteristicValue } from 'homebridge';
+
 export type ServiceType = typeof import('homebridge').Service;
 export type CharacteristicType = typeof import('homebridge').Characteristic;
 
 export enum AccessoryType {
   Lightbulb = 'Lightbulb',
+  LockMechanism = 'LockMechanism',
+  Outlet = 'Outlet',
   Switch = 'Switch'
+}
+
+export enum SensorType {
+  CarbonDioxideSensor = 'CarbonDioxideSensor',
+  CarbonMonoxideSensor = 'CarbonMonoxideSensor',
+  ContactSensor = 'ContactSensor',
+  LeakSensor = 'LeakSensor',
+  MotionSensor = 'MotionSensor',
+  OccupancySensor = 'OccupancySensor',
+  SmokeSensor = 'SmokeSensor',
+}
+
+export enum SensorCharacteristic {
+  CarbonDioxideDetected = 'CarbonDioxideDetected',
+  CarbonMonoxideDetected = 'CarbonMonoxideDetected',
+  ContactSensorState = 'ContactSensorState',
+  LeakDetected = 'LeakDetected',
+  MotionDetected = 'MotionDetected',
+  OccupancyDetected = 'OccupancyDetected',
+  SmokeDetected = 'SmokeDetected',
 }
 
 export type ChildBridge = {
@@ -34,7 +58,7 @@ export type PlatformConfig = {
 }
 
 export type DummyPlatformConfig = PlatformConfig & {
-  accessories?: DummyAccessoryConfig[];
+  accessories?: DummyConfig[];
   _bridge?: ChildBridge;
   migrationNeeded?: boolean;
 }
@@ -55,20 +79,33 @@ export type TimerConfig = Assertable & {
   random?: boolean,
 }
 
-export type DummyAccessoryConfig = {
+export type DummyConfig = {
   name: string,
   type: AccessoryType,
   timer?: TimerConfig,
+  resetOnRestart?: boolean,
   disableLogging?: boolean,
 }
 
-export type OnOffConfig = DummyAccessoryConfig & {
-  defaultOn: boolean,
+export type OnOffConfig = DummyConfig & {
+  defaultOnOff?: CharacteristicValue,
+  sensor?: SensorType,
+}
+
+export type OutletConfig = OnOffConfig & {
+}
+
+export type LightbulbConfig = OnOffConfig & {
+  defaultBrightness?: CharacteristicValue,
 }
 
 export type SwitchConfig = OnOffConfig & {
 }
 
-export type LightbulbConfig = OnOffConfig & {
-  defaultBrightness: number,
+export type LockConfig = DummyConfig & {
+  defaultLockState?: CharacteristicValue;
+}
+
+export type GroupConfig = {
+  accessories: DummyConfig[];
 }
