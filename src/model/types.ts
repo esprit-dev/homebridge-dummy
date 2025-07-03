@@ -11,11 +11,23 @@ export enum AccessoryType {
 }
 
 export enum SensorType {
+  CarbonDioxideSensor = 'CarbonDioxideSensor',
+  CarbonMonoxideSensor = 'CarbonMonoxideSensor',
+  ContactSensor = 'ContactSensor',
+  LeakSensor = 'LeakSensor',
   MotionSensor = 'MotionSensor',
+  OccupancySensor = 'OccupancySensor',
+  SmokeSensor = 'SmokeSensor',
 }
 
 export enum SensorCharacteristic {
-  MotionDetected = 'MotionDetected'
+  CarbonDioxideDetected = 'CarbonDioxideDetected',
+  CarbonMonoxideDetected = 'CarbonMonoxideDetected',
+  ContactSensorState = 'ContactSensorState',
+  LeakDetected = 'LeakDetected',
+  MotionDetected = 'MotionDetected',
+  OccupancyDetected = 'OccupancyDetected',
+  SmokeDetected = 'SmokeDetected',
 }
 
 export type ChildBridge = {

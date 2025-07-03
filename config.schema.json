@@ -73,8 +73,8 @@
             "sensor": {
               "type": "string",
               "title": "${config.title.sensor}",
-              "enum": ["MotionSensor"],
-              "enumNames": ["${config.enumNames.motionSensor}"]
+              "enum": ["CarbonDioxideSensor", "CarbonMonoxideSensor", "ContactSensor", "LeakSensor", "MotionSensor", "OccupancySensor", "SmokeSensor"],
+              "enumNames": ["${config.enumNames.carbonDioxideSensor}", "${config.enumNames.carbonMonoxideSensor}", "${config.enumNames.contactSensor}", "${config.enumNames.leakSensor}", "${config.enumNames.motionSensor}", "${config.enumNames.occupancySensor}", "${config.enumNames.smokeSensor}"]
             },
             "resetOnRestart": {
               "type": "boolean",

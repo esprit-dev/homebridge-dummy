@@ -48,16 +48,22 @@ const en = {
     },
 
     enumNames: {
+      carbonDioxideSensor:'Carbon Dioxide',
+      carbonMonoxideSensor: 'Carbon Monoxide',
+      contactSensor: 'Contact',
       hours: 'Hours',
+      leakSensor: 'Leak',
       lightbulb: 'Lightbulb',
       lockMechanism: 'Lock',
       off: 'Off',
+      occupancySensor: 'Occupancy',
       on: 'On',
       outlet: 'Outlet',
       minutes: 'Minutes',
       motionSensor: 'Motion',
       seconds: 'Seconds',
       secured: 'Locked',
+      smokeSensor: 'Smoke',
       switch: 'Switch',
       unsecured: 'Unlocked',
     },
@@ -81,11 +87,40 @@ const en = {
 
   sensor: {
 
+    carbonDioxide: {
+      active: '%s detected carbon dioxide',
+      inactive: '%s stopped detecting carbon dioxide',
+    },
+
+    carbonMonoxide: {
+      active: '%s detected carbon monoxide',
+      inactive: '%s stopped detecting carbon monoxide',
+    },
+
+    contact: {
+      active: '%s detected contact',
+      inactive: '%s stopped detecting contact',
+    },
+
+    leak: {
+      active: '%s detected a leak',
+      inactive: '%s stopped detecting leaks',
+    },
+
     motion: {
       active: '%s detected motion',
       inactive: '%s stopped detecting motion',
     },
 
+    occupancy: {
+      active: '%s detected occupancy',
+      inactive: '%s stopped detecting occupancy',
+    },
+
+    smoke: {
+      active: '%s detected smoke',
+      inactive: '%s stopped detecting smoke',
+    },
   },
 
   startup: {

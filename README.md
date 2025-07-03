@@ -92,7 +92,7 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
             "defaultOnOff": 1 | 0,
             "defaultBrightness": 0-100,
             "defaultLockState": 0 | 1,
-            "sensor": "MotionSensor",
+            "sensor": "CarbonDioxideSensor | CarbonMonoxideSensor | ContactSensor | LeakSensor | MotionSensor | OccupancySensor | SmokeSensor",
             "resetOnRestart": true | false,
             "disableLogging": true | false
         }
@@ -119,7 +119,7 @@ All fields are optional unless noted with an asterisk (*)
 
 - `sensor` - Optionally attach a sensor that mirrors the state of the parent accessory
     - Only works with `Lightbulb`, `Outlet`, and `Switch`
-    - Valid values are `MotionSensor`
+    - Valid values are `CarbonDioxideSensor`, `CarbonMonoxideSensor`, `ContactSensor`, `LeakSensor`, `MotionSensor`, `OccupancySensor`, or `SmokeSensor`
 
 - `resetOnRestart` _ If true, all values return to defaults when Homebridge restarts. Ignored when timer is defined.
 
