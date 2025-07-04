@@ -50,8 +50,8 @@
             "type": {
               "type": "string",
               "title": "${config.title.type}", 
-              "enum": ["Door", "Lightbulb", "LockMechanism", "Outlet", "Switch"],
-              "enumNames": ["${config.enumNames.door}", "${config.enumNames.lightbulb}", "${config.enumNames.lockMechanism}", "${config.enumNames.outlet}", "${config.enumNames.switch}"]
+              "enum": ["Door", "Lightbulb", "LockMechanism", "Outlet", "Switch", "Window", "WindowCovering"],
+              "enumNames": ["${config.enumNames.door}", "${config.enumNames.lightbulb}", "${config.enumNames.lockMechanism}", "${config.enumNames.outlet}", "${config.enumNames.switch}", "${config.enumNames.window}", "${config.enumNames.windowCovering}"]
             },
             "timer": { "$ref": "#/definitions/timer" },
             "sensor": {
@@ -207,7 +207,7 @@
               "title": "${config.title.commands}",
               "description": "${config.description.commands}",
               "condition": {
-                "functionBody": "return ['Door'].includes(model.accessories?.[arguments[1]]?.type);"
+                "functionBody": "return ['Door', 'Window', 'WindowCovering'].includes(model.accessories?.[arguments[1]]?.type);"
               },
               "items": [
                 "accessories[].commandOpen",
@@ -265,7 +265,7 @@
                   "displayFlex": true,
                   "flex-direction": "row",
                   "condition": {
-                    "functionBody": "return ['Door'].includes(model.accessories?.[arguments[1]]?.type);"
+                    "functionBody": "return ['Door', 'Window', 'WindowCovering'].includes(model.accessories?.[arguments[1]]?.type);"
                   },
                   "items": [
                     {

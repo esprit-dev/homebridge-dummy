@@ -8,7 +8,9 @@ export enum AccessoryType {
   Lightbulb = 'Lightbulb',
   LockMechanism = 'LockMechanism',
   Outlet = 'Outlet',
-  Switch = 'Switch'
+  Switch = 'Switch',
+  Window = 'Window',
+  WindowCovering = 'WindowCovering'
 }
 
 export enum SensorType {
@@ -96,10 +98,19 @@ export type LockConfig = DummyConfig & {
   commandUnlock?: string,
 }
 
-export type DoorConfig = DummyConfig & {
+export type PositionConfig = DummyConfig & {
   defaultPosition?: number
   commandOpen?: string,
   commandClose?: string,
+}
+
+export type DoorConfig = PositionConfig & {
+}
+
+export type WindowConfig = PositionConfig & {
+}
+
+export type BlindConfig = PositionConfig & {
 }
 
 export type GroupConfig = {

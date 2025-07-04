@@ -17,7 +17,7 @@ Please report any issues you encounter here: https://github.com/mpatfield/homebr
 ### Added
 - Drastically improved config UI
 - resetOnRestart option for stateful accessories to return to defaults on Homebridge restart
-- Support for Door, Outlet, and Lock Mechanism
+- Support for Door, Outlet, and Lock Mechanism, Window, and Window Covering
 - Sensor support (CO2, CO, Contact, Leak, Motion, Occupancy, and Smoke)
 - Execute arbitraty commands when accessory state changes
 

@@ -9,11 +9,6 @@ const en = {
       error: '%s failed to execute command',
     },
 
-    door: {
-      closed: '%s door is closed',
-      open: '%s door is open',
-    },
-
     lightbulb: {
       brightness: '%s brightness is %s',
       stateOn: '%s is on %s%',
@@ -27,6 +22,11 @@ const en = {
     onOff: {
       stateOn: '%s is on',
       stateOff: '%s is off',
+    },
+
+    position: {
+      closed: '%s is closed',
+      open: '%s is open',
     },
 
     timer: {
@@ -80,6 +80,8 @@ const en = {
       smokeSensor: 'Smoke',
       switch: 'Switch',
       unsecured: 'Unlocked',
+      window: 'Window',
+      windowCovering: 'Window Convering (Blinds)',
     },
 
     title: {
