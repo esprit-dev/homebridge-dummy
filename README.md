@@ -82,6 +82,7 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
     "name": "Homebridge Dummy",
     "accessories": [
         {
+            "id": "string",
             "name": "string",
             "type": "Lightbulb | LockMechanism | Outlet | Switch",
             "timer": {
@@ -103,6 +104,8 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
 ```
 
 All fields are optional unless noted with an asterisk (*)
+
+- `id`* - A unique identifier for the accessory. Changing this value will create a new accessory.
 
 - `name`* - The display name for the accessory in HomeKit
 - `type`* - The type of accessory, currently `Lightbulb`, `LockMechanism`, `Outlet`, and `Switch` are supported

@@ -4,6 +4,8 @@ import { Translation } from '../i18n/i18n.js';
 
 import { PLUGIN_ALIAS } from '../homebridge/settings.js';
 
+import { DummyPlatformConfig } from '../model/types.js';
+
 declare const homebridge: IHomebridgePluginUi;
 
 const i18n_replacements = {
@@ -73,6 +75,24 @@ const updateAccessoryNames = (strings: Translation) => {
   }
 };
 
+const updateConfigWithUUIDs = (config: DummyPlatformConfig) => {
+
+  let changed = false;
+
+  config.accessories?.forEach( (accessoryConfig) => {
+    if (accessoryConfig.id === undefined) {
+      const id = crypto.randomUUID();
+      accessoryConfig.id = id;
+      changed = true;
+    }
+  });
+
+  if (changed) {
+    homebridge.updatePluginConfig([config]);
+    console.error('config updated');
+  }
+};
+
 const showSettings = (strings: Translation) => {
   document.getElementById('intro')!.style.display = 'none';
   document.getElementById('migration')!.style.display = 'none';
@@ -89,6 +109,14 @@ const showSettings = (strings: Translation) => {
   );
 
   homebridge.showSchemaForm();
+
+  homebridge.addEventListener('configChanged', (evt: Event) => {
+    const configs = (evt as MessageEvent).data as DummyPlatformConfig[];
+    if (configs.length) {
+      updateConfigWithUUIDs(configs[0]);
+    }
+  });
+
   homebridge.enableSaveButton();
   homebridge.hideSpinner();
 };

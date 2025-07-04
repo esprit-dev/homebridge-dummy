@@ -1,3 +1,7 @@
+### ‼️ BREAKING v1.0 is a complete code rewrite and automations using Homebridge Dummy accessories will need to be reconfigured.
+
+### Full details [here](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#v10-migration).
+
 # Change Log
 
 All notable changes to homebridge-dummy will be documented in this file.
@@ -6,11 +10,16 @@ All notable changes to homebridge-dummy will be documented in this file.
 
 Please report any issues you encounter here: https://github.com/mpatfield/homebridge-dummy/issues
 
-## 1.0.0-alpha.4 (2025-07-03)
+## 1.0.0-alpha.5 (2025-07-03)
 
-### ‼️ BREAKING This version is a complete code rewrite. Automations using Homebridge Dummy accessories will need to be reconfigured.
+### Added
+- Drastically improved config UI
+- resetOnRestart option for stateful accessories to return to defaults on Homebridge restart
+- Support for Outlet and Lock Mechanism
+- Sensor support (CO2, CO, Contact, Leak, Motion, Occupancy, and Smoke)
 
-### Full details [here](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#v10-migration).
+### Changed
+- Complete code re-write to use [Platform Plugin](https://developers.homebridge.io/#/api/platform-plugins) instead of [Accessory Plugin](https://developers.homebridge.io/#/api/accessory-plugins)
 
 ## 0.9.2 (2025-06-26)
 

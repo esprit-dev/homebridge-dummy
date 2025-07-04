@@ -38,18 +38,20 @@
         "type": "array",
         "items": {
           "type": "object",
+          "required": ["name", "type"],
           "properties": {
+            "id": {
+              "type": "string"
+            },
             "name": {
               "type": "string",
-              "title": "${config.title.name}" ,         
-              "required": true
+              "title": "${config.title.name}"
             },
             "type": {
               "type": "string",
               "title": "${config.title.type}", 
               "enum": ["Lightbulb", "LockMechanism", "Outlet", "Switch"],
-              "enumNames": ["${config.enumNames.lightbulb}", "${config.enumNames.lockMechanism}", "${config.enumNames.outlet}", "${config.enumNames.switch}"],
-              "required": true
+              "enumNames": ["${config.enumNames.lightbulb}", "${config.enumNames.lockMechanism}", "${config.enumNames.outlet}", "${config.enumNames.switch}"]
             },
             "timer": { "$ref": "#/definitions/timer" },
             "defaultBrightness": {

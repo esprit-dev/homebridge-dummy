@@ -80,6 +80,7 @@ export type TimerConfig = Assertable & {
 }
 
 export type DummyConfig = {
+  id: string,
   name: string,
   type: AccessoryType,
   timer?: TimerConfig,

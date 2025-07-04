@@ -13,7 +13,7 @@ import { STORAGE_KEY_SUFFIX_DEFAULT_STATE } from '../tools/storage.js';
 export abstract class DummyAccessory<C extends DummyConfig> {
 
   public static identifier(config: DummyConfig): string {
-    return `${PLATFORM_NAME}:${config.type}:${config.name.replace(/\s+/g,'')}`;
+    return config.id ?? `${PLATFORM_NAME}:${config.type}:${config.name.replace(/\s+/g,'')}`;
   }
 
   protected readonly accessoryService: Service;
@@ -46,7 +46,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
       .setCharacteristic(Characteristic.ConfiguredName, config.name)
       .setCharacteristic(Characteristic.Manufacturer, PLUGIN_ALIAS)
       .setCharacteristic(Characteristic.Model, config.type)
-      .setCharacteristic(Characteristic.SerialNumber, accessory.UUID)
+      .setCharacteristic(Characteristic.SerialNumber, this.identifier)
       .setCharacteristic(Characteristic.FirmwareRevision, getVersion());
 
     this.accessoryService = accessory.getService(serviceInstance) || accessory.addService(serviceInstance);

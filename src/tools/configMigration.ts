@@ -14,6 +14,7 @@ import {
 function migrateAccessory(legacyConfig: LegacyAccessoryConfig): DummyConfig {
 
   const dummyConfig: DummyConfig = {
+    id: crypto.randomUUID(),
     name: legacyConfig.name,
     type: AccessoryType.Switch,
     disableLogging: legacyConfig.disableLogging,
