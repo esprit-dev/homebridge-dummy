@@ -1,14 +1,17 @@
+import { exec } from 'child_process';
 import { PlatformAccessory, Service } from 'homebridge';
 
 import { PLATFORM_NAME, PLUGIN_ALIAS } from '../homebridge/settings.js';
 
+import { strings } from '../i18n/i18n.js';
+
 import { AccessoryType, CharacteristicType, DummyConfig, ServiceType } from '../model/types.js';
 
 import { Log } from '../tools/log.js';
-import getVersion from '../tools/version.js';
+import { STORAGE_KEY_SUFFIX_DEFAULT_STATE } from '../tools/storage.js';
 import { Timer } from '../model/timer.js';
 import { assert } from '../tools/validation.js';
-import { STORAGE_KEY_SUFFIX_DEFAULT_STATE } from '../tools/storage.js';
+import getVersion from '../tools/version.js';
 
 export abstract class DummyAccessory<C extends DummyConfig> {
 
@@ -85,6 +88,16 @@ export abstract class DummyAccessory<C extends DummyConfig> {
 
   protected cancelTimer() {
     this.timer.cancel();
+  }
+
+  protected executeCommand(command: string) {
+    exec(command, (_error, stdout, stderr) => {
+      if (stderr) {
+        this.log.error(`${strings.accessory.command.error}: %s\n%s`, this.config.name, command, stderr);
+      } else {
+        this.logIfDesired(`${strings.accessory.command.executed}: %s\n%s`, this.config.name, command, stdout);
+      }
+    });
   }
 
   protected assert(...keys: (keyof C)[]): boolean {

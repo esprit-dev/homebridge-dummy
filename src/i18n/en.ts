@@ -4,6 +4,11 @@ const en = {
 
     missingRequired: '%s is missing required config variable %s',
 
+    command: {
+      executed: '%s executed command',
+      error: '%s failed to execute command',
+    },
+
     lightbulb: {
       brightness: '%s brightness is %s',
       stateOn: '%s is on %s%',
@@ -43,6 +48,7 @@ const en = {
     no: 'No',
 
     description: {
+      commands: 'Execute arbitration commands when the accessory changes state',
       random: 'Delay will be randomized with the above value as a maximum',
       timer: 'Optional settings to automatically toggle the accessory',
     },
@@ -70,6 +76,11 @@ const en = {
 
     title: {
       accessory: 'Accessory',
+      commands: 'Commands',
+      commandOn: 'On Command',
+      commandOff: 'Off Command',
+      commandLock: 'Lock Command',
+      commandUnlock: 'Unlock Command',
       defaultBrightness: 'Default Brightness',
       defaultState: 'Default State',
       delay: 'Delay',

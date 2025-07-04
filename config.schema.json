@@ -54,6 +54,12 @@
               "enumNames": ["${config.enumNames.lightbulb}", "${config.enumNames.lockMechanism}", "${config.enumNames.outlet}", "${config.enumNames.switch}"]
             },
             "timer": { "$ref": "#/definitions/timer" },
+            "sensor": {
+              "type": "string",
+              "title": "${config.title.sensor}",
+              "enum": ["CarbonDioxideSensor", "CarbonMonoxideSensor", "ContactSensor", "LeakSensor", "MotionSensor", "OccupancySensor", "SmokeSensor"],
+              "enumNames": ["${config.enumNames.carbonDioxideSensor}", "${config.enumNames.carbonMonoxideSensor}", "${config.enumNames.contactSensor}", "${config.enumNames.leakSensor}", "${config.enumNames.motionSensor}", "${config.enumNames.occupancySensor}", "${config.enumNames.smokeSensor}"]
+            },
             "defaultBrightness": {
               "type": "number",
               "minimum": 0,
@@ -72,11 +78,21 @@
               "enum": [1, 0],
               "enumNames": ["${config.enumNames.secured}", "${config.enumNames.unsecured}"]
             },
-            "sensor": {
+            "commandOn": {
               "type": "string",
-              "title": "${config.title.sensor}",
-              "enum": ["CarbonDioxideSensor", "CarbonMonoxideSensor", "ContactSensor", "LeakSensor", "MotionSensor", "OccupancySensor", "SmokeSensor"],
-              "enumNames": ["${config.enumNames.carbonDioxideSensor}", "${config.enumNames.carbonMonoxideSensor}", "${config.enumNames.contactSensor}", "${config.enumNames.leakSensor}", "${config.enumNames.motionSensor}", "${config.enumNames.occupancySensor}", "${config.enumNames.smokeSensor}"]
+              "title": "${config.title.commandOn}"
+            },
+            "commandOff": {
+              "type": "string",
+              "title": "${config.title.commandOff}"
+            },
+            "commandLock": {
+              "type": "string",
+              "title": "${config.title.commandLock}"
+            },
+            "commandUnlock": {
+              "type": "string",
+              "title": "${config.title.commandUnlock}"
             },
             "resetOnRestart": {
               "type": "boolean",
@@ -148,6 +164,30 @@
                 }
               ]
             },
+            {
+              "type": "fieldset",
+              "title": "${config.title.commands}",
+              "description": "${config.description.commands}",
+              "condition": {
+                "functionBody": "return ['Lightbulb','Outlet','Switch'].includes(model.accessories?.[arguments[1]]?.type);"
+              },
+              "items": [
+                "accessories[].commandOn",
+                "accessories[].commandOff"
+              ]
+            },
+            {
+              "type": "fieldset",
+              "title": "${config.title.commands}",
+              "description": "${config.description.commands}",
+              "condition": {
+                "functionBody": "return ['LockMechanism'].includes(model.accessories?.[arguments[1]]?.type);"
+              },
+              "items": [
+                "accessories[].commandLock",
+                "accessories[].commandUnlock"
+              ]
+            },            
             {
               "type": "fieldset",
               "title": "${config.title.options}",

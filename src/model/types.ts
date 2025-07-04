@@ -75,6 +75,8 @@ export type DummyConfig = {
 export type OnOffConfig = DummyConfig & {
   defaultOnOff?: CharacteristicValue,
   sensor?: SensorType,
+  commandOn?: string,
+  commandOff?: string,
 }
 
 export type OutletConfig = OnOffConfig & {
@@ -89,6 +91,8 @@ export type SwitchConfig = OnOffConfig & {
 
 export type LockConfig = DummyConfig & {
   defaultLockState?: CharacteristicValue;
+  commandLock?: string,
+  commandUnlock?: string,
 }
 
 export type GroupConfig = {

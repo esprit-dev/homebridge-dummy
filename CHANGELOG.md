@@ -19,6 +19,7 @@ Please report any issues you encounter here: https://github.com/mpatfield/homebr
 - resetOnRestart option for stateful accessories to return to defaults on Homebridge restart
 - Support for Outlet and Lock Mechanism
 - Sensor support (CO2, CO, Contact, Leak, Motion, Occupancy, and Smoke)
+- Execute arbitraty commands when accessory state changes
 
 ### Changed
 - Complete code re-write to use [Platform Plugin](https://developers.homebridge.io/#/api/platform-plugins) instead of [Accessory Plugin](https://developers.homebridge.io/#/api/accessory-plugins)

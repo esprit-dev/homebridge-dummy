@@ -90,10 +90,14 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
                 "units": "SECONDS | MINUTES | HOURS",
                 "random": true | false
             },
+            "sensor": "CarbonDioxideSensor | CarbonMonoxideSensor | ContactSensor | LeakSensor | MotionSensor | OccupancySensor | SmokeSensor",
             "defaultOnOff": 1 | 0,
             "defaultBrightness": 0-100,
             "defaultLockState": 0 | 1,
-            "sensor": "CarbonDioxideSensor | CarbonMonoxideSensor | ContactSensor | LeakSensor | MotionSensor | OccupancySensor | SmokeSensor",
+            "onCommand": "string",
+            "offCommand": "string",
+            "lockCommand": "string",
+            "unlockCommand": "string",
             "resetOnRestart": true | false,
             "disableLogging": true | false
         }
@@ -114,15 +118,21 @@ All fields are optional unless noted with an asterisk (*)
 - `timer.units` — The units to use for delay above (`SECONDS`, `MINUTES`, or `HOURS`). *Required if delay is set.
 - `timer.random` — If true, the delay will be randomized with a maximum value of `timer.delay`
 
+- `sensor` - Optionally attach a sensor that mirrors the state of the parent accessory
+    - Only works with `Lightbulb`, `Outlet`, and `Switch`
+    - Valid values are `CarbonDioxideSensor`, `CarbonMonoxideSensor`, `ContactSensor`, `LeakSensor`, `MotionSensor`, `OccupancySensor`, or `SmokeSensor`
+
 - `defaultOnOff` — Initial value. Default _ON_ = 1, default _OFF_ = 0
 
 - `defaultBrightness` — If set, lightbulb will have additional dimmer settings with this default brightness percentage
 
 - `defaultLockState` - The initial value for the lock. UNSECURED (Unlocked) = 0, SECURED (Locked) = 1
 
-- `sensor` - Optionally attach a sensor that mirrors the state of the parent accessory
-    - Only works with `Lightbulb`, `Outlet`, and `Switch`
-    - Valid values are `CarbonDioxideSensor`, `CarbonMonoxideSensor`, `ContactSensor`, `LeakSensor`, `MotionSensor`, `OccupancySensor`, or `SmokeSensor`
+- `onCommand` - Arbitraty command to execute when lightbulb/outlet/switch turns on
+- `offCommand` - Arbitraty command to execute when lightbulb/outlet/switch turns off
+
+- `lockCommand` - Arbitraty command to execute when lock mechanism is locked
+- `unlockCommand` - Arbitraty command to execute when lock mechanism is unlocked
 
 - `resetOnRestart` _ If true, all values return to defaults when Homebridge restarts. Ignored when timer is defined.
 

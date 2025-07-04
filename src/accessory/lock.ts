@@ -62,6 +62,12 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
 
     if (this.state !== value) {
       this.logLockStateState(value);
+
+      if (this.config.commandLock && value === this.Characteristic.LockTargetState.SECURED) {
+        this.executeCommand(this.config.commandLock);
+      } else if (this.config.commandUnlock && value === this.Characteristic.LockTargetState.UNSECURED) {
+        this.executeCommand(this.config.commandUnlock);
+      }
     }
 
     this.state = value;

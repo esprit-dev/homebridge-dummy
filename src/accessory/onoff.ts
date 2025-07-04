@@ -59,6 +59,12 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
 
     if (this.on !== value) {
       this.logOnState(value);
+
+      if (this.config.commandOn && value) {
+        this.executeCommand(this.config.commandOn);
+      } else if (this.config.commandOff && !value) {
+        this.executeCommand(this.config.commandOff);
+      }
     }
 
     this.on = value;
