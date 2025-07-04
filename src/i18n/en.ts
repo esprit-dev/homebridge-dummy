@@ -9,6 +9,11 @@ const en = {
       error: '%s failed to execute command',
     },
 
+    door: {
+      closed: '%s door is closed',
+      open: '%s door is open',
+    },
+
     lightbulb: {
       brightness: '%s brightness is %s',
       stateOn: '%s is on %s%',
@@ -56,7 +61,9 @@ const en = {
     enumNames: {
       carbonDioxideSensor:'Carbon Dioxide',
       carbonMonoxideSensor: 'Carbon Monoxide',
+      closed: 'Closed',
       contactSensor: 'Contact',
+      door: 'Door',
       hours: 'Hours',
       leakSensor: 'Leak',
       lightbulb: 'Lightbulb',
@@ -64,6 +71,7 @@ const en = {
       off: 'Off',
       occupancySensor: 'Occupancy',
       on: 'On',
+      open: 'Open',
       outlet: 'Outlet',
       minutes: 'Minutes',
       motionSensor: 'Motion',
@@ -77,11 +85,14 @@ const en = {
     title: {
       accessory: 'Accessory',
       commands: 'Commands',
+      commandClose: 'Close Command',
       commandOn: 'On Command',
       commandOff: 'Off Command',
+      commandOpen: 'Open Command',
       commandLock: 'Lock Command',
       commandUnlock: 'Unlock Command',
       defaultBrightness: 'Default Brightness',
+      defaultPosition: 'Default Position',
       defaultState: 'Default State',
       delay: 'Delay',
       disableLogging: 'Disable Logging',

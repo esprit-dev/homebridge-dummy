@@ -4,6 +4,7 @@ export type ServiceType = typeof import('homebridge').Service;
 export type CharacteristicType = typeof import('homebridge').Characteristic;
 
 export enum AccessoryType {
+  Door = 'Door',
   Lightbulb = 'Lightbulb',
   LockMechanism = 'LockMechanism',
   Outlet = 'Outlet',
@@ -93,6 +94,12 @@ export type LockConfig = DummyConfig & {
   defaultLockState?: CharacteristicValue;
   commandLock?: string,
   commandUnlock?: string,
+}
+
+export type DoorConfig = DummyConfig & {
+  defaultPosition?: number
+  commandOpen?: string,
+  commandClose?: string,
 }
 
 export type GroupConfig = {

@@ -50,8 +50,8 @@
             "type": {
               "type": "string",
               "title": "${config.title.type}", 
-              "enum": ["Lightbulb", "LockMechanism", "Outlet", "Switch"],
-              "enumNames": ["${config.enumNames.lightbulb}", "${config.enumNames.lockMechanism}", "${config.enumNames.outlet}", "${config.enumNames.switch}"]
+              "enum": ["Door", "Lightbulb", "LockMechanism", "Outlet", "Switch"],
+              "enumNames": ["${config.enumNames.door}", "${config.enumNames.lightbulb}", "${config.enumNames.lockMechanism}", "${config.enumNames.outlet}", "${config.enumNames.switch}"]
             },
             "timer": { "$ref": "#/definitions/timer" },
             "sensor": {
@@ -78,6 +78,12 @@
               "enum": [1, 0],
               "enumNames": ["${config.enumNames.secured}", "${config.enumNames.unsecured}"]
             },
+            "defaultPosition": {
+              "type": "number",
+              "title": "${config.title.defaultPosition}",
+              "enum": [100, 0],
+              "enumNames": ["${config.enumNames.open}", "${config.enumNames.closed}"]
+            },
             "commandOn": {
               "type": "string",
               "title": "${config.title.commandOn}"
@@ -93,6 +99,14 @@
             "commandUnlock": {
               "type": "string",
               "title": "${config.title.commandUnlock}"
+            },
+            "commandOpen": {
+              "type": "string",
+              "title": "${config.title.commandOpen}"
+            },
+            "commandClose": {
+              "type": "string",
+              "title": "${config.title.commandClose}"
             },
             "resetOnRestart": {
               "type": "boolean",
@@ -190,6 +204,18 @@
             },            
             {
               "type": "fieldset",
+              "title": "${config.title.commands}",
+              "description": "${config.description.commands}",
+              "condition": {
+                "functionBody": "return ['Door'].includes(model.accessories?.[arguments[1]]?.type);"
+              },
+              "items": [
+                "accessories[].commandOpen",
+                "accessories[].commandClose"
+              ]
+            },
+            {
+              "type": "fieldset",
               "title": "${config.title.options}",
               "condition": {
                 "functionBody": "return model.accessories?.[arguments[1]]?.type !== undefined;"
@@ -230,6 +256,20 @@
                   "items": [
                     {
                       "key": "accessories[].defaultLockState",
+                      "flex": "0 0 25%"
+                    }
+                  ]
+                },
+                {
+                  "type": "div",
+                  "displayFlex": true,
+                  "flex-direction": "row",
+                  "condition": {
+                    "functionBody": "return ['Door'].includes(model.accessories?.[arguments[1]]?.type);"
+                  },
+                  "items": [
+                    {
+                      "key": "accessories[].defaultPosition",
                       "flex": "0 0 25%"
                     }
                   ]

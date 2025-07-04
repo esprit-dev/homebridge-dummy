@@ -84,7 +84,7 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
         {
             "id": "string",
             "name": "string",
-            "type": "Lightbulb | LockMechanism | Outlet | Switch",
+            "type": "Door | Lightbulb | LockMechanism | Outlet | Switch",
             "timer": {
                 "delay": number,
                 "units": "SECONDS | MINUTES | HOURS",
@@ -94,6 +94,7 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
             "defaultOnOff": 1 | 0,
             "defaultBrightness": 0-100,
             "defaultLockState": 0 | 1,
+            "defaultPosition": 0 | 100,
             "onCommand": "string",
             "offCommand": "string",
             "lockCommand": "string",
@@ -112,7 +113,7 @@ All fields are optional unless noted with an asterisk (*)
 - `id`* - A unique identifier for the accessory. Changing this value will create a new accessory.
 
 - `name`* - The display name for the accessory in HomeKit
-- `type`* - The type of accessory, currently `Lightbulb`, `LockMechanism`, `Outlet`, and `Switch` are supported
+- `type`* - The type of accessory: `Door`, `Lightbulb`, `LockMechanism`, `Outlet`, and `Switch` are supported
 
 - `timer.delay` — If defined, the switch will automatically toggle after this many seconds/minutes/hours
 - `timer.units` — The units to use for delay above (`SECONDS`, `MINUTES`, or `HOURS`). *Required if delay is set.
@@ -127,6 +128,8 @@ All fields are optional unless noted with an asterisk (*)
 - `defaultBrightness` — If set, lightbulb will have additional dimmer settings with this default brightness percentage
 
 - `defaultLockState` - The initial value for the lock. UNSECURED (Unlocked) = 0, SECURED (Locked) = 1
+
+- `defaultPosition` — Initial position for the door, closed = 0, open = 100
 
 - `onCommand` - Arbitraty command to execute when lightbulb/outlet/switch turns on
 - `offCommand` - Arbitraty command to execute when lightbulb/outlet/switch turns off
@@ -230,6 +233,19 @@ All fields are optional unless noted with an asterisk (*)
         "units": "MINUTES"
     },
     "sensor": "MotionSensor"
+}
+```
+
+### Door
+```json
+{
+    "name": "Door",
+    "type": "Door",
+    "timer": {
+        "delay": 20,
+        "units": "SECONDS"
+    },
+    "defaultPosition": 0
 }
 ```
 

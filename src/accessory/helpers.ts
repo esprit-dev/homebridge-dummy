@@ -1,6 +1,7 @@
 import { PlatformAccessory } from 'homebridge';
 
 import { DummyAccessory } from './base.js';
+import { DoorAccessory } from './door.js';
 import { LightbulbAccessory } from './lightbulb.js';
 import { LockAccessory } from './lock.js';
 import { OutletAccessory } from './outlet.js';
@@ -23,14 +24,16 @@ export function createAccessory(
 ): DummyAccessory<Types.DummyConfig> | null {
 
   switch(config.type) {
+  case Types.AccessoryType.Door:
+    return new DoorAccessory(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
   case Types.AccessoryType.Lightbulb:
-    return new LightbulbAccessory(Service, Characteristic, accessory, config as Types.LightbulbConfig, log, persistPath, isGrouped);
+    return new LightbulbAccessory(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
   case Types.AccessoryType.LockMechanism:
-    return new LockAccessory(Service, Characteristic, accessory, config as Types.LockConfig, log, persistPath, isGrouped);
+    return new LockAccessory(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
   case Types.AccessoryType.Outlet:
-    return new OutletAccessory(Service, Characteristic, accessory, config as Types.OutletConfig, log, persistPath, isGrouped);
+    return new OutletAccessory(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
   case Types.AccessoryType.Switch:
-    return new SwitchAccessory(Service, Characteristic, accessory, config as Types.SwitchConfig, log, persistPath, isGrouped);
+    return new SwitchAccessory(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
   default:
     log.error(strings.startup.unsupportedType, `'${config.type}'`);
     return null;
