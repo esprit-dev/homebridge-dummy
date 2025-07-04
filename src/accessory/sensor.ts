@@ -71,8 +71,6 @@ export class SensorAccessory {
     this.sensorService.getCharacteristic(characteristicInstance)
       .onGet(this.onGet.bind(this));
 
-    // TODO set starting state as inactive?
-
     SensorAccessory.removeUnwantedServices(Service, accessory, type);
   }
 
