@@ -61,7 +61,7 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
   protected async setState(value: CharacteristicValue): Promise<void> {
 
     if (this.state !== value) {
-      this.logLockStateState(value);
+      this.logLockState(value);
 
       if (this.config.commandLock && value === this.Characteristic.LockTargetState.SECURED) {
         this.executeCommand(this.config.commandLock);
@@ -92,7 +92,7 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
     await this.setState(opposite);
   }
 
-  protected logLockStateState(value: CharacteristicValue) {
+  protected logLockState(value: CharacteristicValue) {
     const message = value === this.Characteristic.LockTargetState.SECURED ?
       strings.accessory.lock.secured : strings.accessory.lock.unsecured;
     this.logIfDesired(message, this.config.name);
