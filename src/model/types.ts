@@ -1,4 +1,4 @@
-import { CharacteristicValue } from 'homebridge';
+import { AccessoryConfig, CharacteristicValue, PlatformConfig } from 'homebridge';
 
 export type ServiceType = typeof import('homebridge').Service;
 export type CharacteristicType = typeof import('homebridge').Characteristic;
@@ -30,17 +30,6 @@ export enum SensorCharacteristic {
   SmokeDetected = 'SmokeDetected',
 }
 
-export type ChildBridge = {
-  username: string;
-  port?: number;
-  name?: string;
-}
-
-export type AccessoryConfig = {
-  accessory: string;
-  _bridge?: ChildBridge;
-}
-
 export type LegacyAccessoryConfig = AccessoryConfig & {
   name: string;
   dimmer?: boolean;
@@ -53,13 +42,8 @@ export type LegacyAccessoryConfig = AccessoryConfig & {
   disableLogging?: boolean;
 }
 
-export type PlatformConfig = {
-  platform: string;
-}
-
 export type DummyPlatformConfig = PlatformConfig & {
   accessories?: DummyConfig[];
-  _bridge?: ChildBridge;
   migrationNeeded?: boolean;
 }
 

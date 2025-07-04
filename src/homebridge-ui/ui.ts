@@ -114,7 +114,6 @@ const updateConfigWithUUIDs = (config: DummyPlatformConfig) => {
 
   if (changed) {
     homebridge.updatePluginConfig([config]);
-    console.error('config updated');
   }
 };
 

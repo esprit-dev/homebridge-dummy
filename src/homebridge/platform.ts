@@ -1,4 +1,4 @@
-import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig } from 'homebridge';
+import { API, DynamicPlatformPlugin, Logger, PlatformAccessory } from 'homebridge';
 
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings.js';
 
@@ -17,8 +17,6 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
   private readonly Service;
   private readonly Characteristic;
 
-  private readonly config: DummyPlatformConfig;
-
   private readonly log: Log;
 
   private readonly cachedAccessories: Map<string, PlatformAccessory> = new Map();
@@ -26,11 +24,9 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
 
   constructor(
     logger: Logger,
-    config: PlatformConfig,
+    private readonly config: DummyPlatformConfig,
     private readonly api: API,
   ) {
-
-    this.config = config as DummyPlatformConfig;
 
     const userLang = Intl.DateTimeFormat().resolvedOptions().locale.split('-')[0];
     setLanguage(userLang);

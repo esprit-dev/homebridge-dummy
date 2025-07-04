@@ -1,15 +1,14 @@
 import fs from 'fs';
 
+import { AccessoryConfig, BridgeConfiguration, PlatformConfig } from 'homebridge';
+
 import { Log } from './log.js';
 
 import { strings } from '../i18n/i18n.js';
 
 import { LEGACY_ALIAS, PLATFORM_NAME } from '../homebridge/settings.js';
 
-import {
-  AccessoryConfig, DummyConfig, DummyPlatformConfig, LegacyAccessoryConfig, LightbulbConfig, OnOffConfig, PlatformConfig,
-  AccessoryType, ChildBridge, TimeUnits,
-} from '../model/types.js';
+import { DummyConfig, DummyPlatformConfig, LegacyAccessoryConfig, LightbulbConfig, OnOffConfig, AccessoryType, TimeUnits } from '../model/types.js';
 
 function migrateAccessory(legacyConfig: LegacyAccessoryConfig): DummyConfig {
 
@@ -71,7 +70,7 @@ export async function migrateAccessories(log: Log, configPath: string): Promise<
     const migrated: DummyConfig[] = [];
     const others: AccessoryConfig[] = [];
 
-    let childBridge: ChildBridge | undefined;
+    let childBridge: BridgeConfiguration | undefined;
 
     for (const accessoryConfig of config.accessories as AccessoryConfig[]) {
 

@@ -1,4 +1,6 @@
-### ‼️ BREAKING v1.0 is a complete code rewrite and automations using Homebridge Dummy accessories will need to be reconfigured.
+### ‼️ BREAKING CHANGES ‼️
+
+### v1.0 is a complete code rewrite and automations using Homebridge Dummy accessories will need to be reconfigured.
 
 ### Full details [here](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#v10-migration).
 
