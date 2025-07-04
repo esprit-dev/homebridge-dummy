@@ -1,13 +1,13 @@
 import { PlatformAccessory } from 'homebridge';
 
 import { DummyAccessory } from './base.js';
-import { BlindAccessory } from './blind.js';
-import { DoorAccessory } from './door.js';
-import { LightbulbAccessory } from './lightbulb.js';
+import { BlindAccessory } from './position/blind.js';
+import { DoorAccessory } from './position/door.js';
+import { LightbulbAccessory } from './onoff/lightbulb.js';
 import { LockAccessory } from './lock.js';
-import { OutletAccessory } from './outlet.js';
-import { SwitchAccessory } from './switch.js';
-import { WindowAccessory } from './window.js';
+import { OutletAccessory } from './onoff/outlet.js';
+import { SwitchAccessory } from './onoff/switch.js';
+import { WindowAccessory } from './position/window.js';
 
 import { strings } from '../i18n/i18n.js';
 

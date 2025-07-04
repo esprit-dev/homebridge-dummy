@@ -1,6 +1,6 @@
 import { OnOffAccessory } from './onoff.js';
 
-import { AccessoryType, SwitchConfig } from '../model/types.js';
+import { AccessoryType, SwitchConfig } from '../../model/types.js';
 
 export class SwitchAccessory extends OnOffAccessory<SwitchConfig> {
 

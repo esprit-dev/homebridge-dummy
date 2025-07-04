@@ -1,14 +1,14 @@
 import { CharacteristicValue, PlatformAccessory } from 'homebridge';
 
-import { DummyAccessory } from './base.js';
-import { SensorAccessory } from './sensor.js';
+import { DummyAccessory } from '../base.js';
+import { SensorAccessory } from '../sensor.js';
 
-import { strings } from '../i18n/i18n.js';
+import { strings } from '../../i18n/i18n.js';
 
-import { CharacteristicType, OnOffConfig, ServiceType } from '../model/types.js';
+import { CharacteristicType, OnOffConfig, ServiceType } from '../../model/types.js';
 
-import { Log } from '../tools/log.js';
-import { storageGet, storageSet } from '../tools/storage.js';
+import { Log } from '../../tools/log.js';
+import { storageGet, storageSet } from '../../tools/storage.js';
 
 export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extends DummyAccessory<C> {
 

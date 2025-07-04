@@ -2,12 +2,12 @@ import { CharacteristicValue, PlatformAccessory } from 'homebridge';
 
 import { OnOffAccessory } from './onoff.js';
 
-import { strings } from '../i18n/i18n.js';
+import { strings } from '../../i18n/i18n.js';
 
-import { AccessoryType, CharacteristicType, LightbulbConfig, ServiceType } from '../model/types.js';
+import { AccessoryType, CharacteristicType, LightbulbConfig, ServiceType } from '../../model/types.js';
 
-import { Log } from '../tools/log.js';
-import { STORAGE_KEY_SUFFIX_DEFAULT_BRIGHTNESS, storageGet, storageSet } from '../tools/storage.js';
+import { Log } from '../../tools/log.js';
+import { STORAGE_KEY_SUFFIX_DEFAULT_BRIGHTNESS, storageGet, storageSet } from '../../tools/storage.js';
 
 const NO_BRIGHTNESS = -1;
 

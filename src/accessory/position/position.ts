@@ -1,13 +1,13 @@
 import { CharacteristicValue, PlatformAccessory } from 'homebridge';
 
-import { DummyAccessory } from './base.js';
+import { DummyAccessory } from '../base.js';
 
-import { strings } from '../i18n/i18n.js';
+import { strings } from '../../i18n/i18n.js';
 
-import { CharacteristicType, PositionConfig, ServiceType } from '../model/types.js';
+import { CharacteristicType, PositionConfig, ServiceType } from '../../model/types.js';
 
-import { Log } from '../tools/log.js';
-import { storageGet, storageSet } from '../tools/storage.js';
+import { Log } from '../../tools/log.js';
+import { storageGet, storageSet } from '../../tools/storage.js';
 
 const POSITION_OPEN = 100;
 const POSITION_CLOSED = 0;

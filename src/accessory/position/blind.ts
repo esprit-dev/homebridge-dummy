@@ -1,6 +1,6 @@
 import { PositionAccessory } from './position.js';
 
-import { AccessoryType, BlindConfig } from '../model/types.js';
+import { AccessoryType, BlindConfig } from '../../model/types.js';
 
 export class BlindAccessory extends PositionAccessory<BlindConfig> {
 
