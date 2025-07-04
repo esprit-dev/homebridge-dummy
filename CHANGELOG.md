@@ -12,7 +12,7 @@ All notable changes to homebridge-dummy will be documented in this file.
 
 Please report any issues you encounter here: https://github.com/mpatfield/homebridge-dummy/issues
 
-## 1.0.0-alpha.7 (2025-07-03)
+## 1.0.0-alpha.8 (2025-07-03)
 
 ### Added
 - Drastically improved config UI
