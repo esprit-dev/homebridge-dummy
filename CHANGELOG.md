@@ -12,12 +12,12 @@ All notable changes to homebridge-dummy will be documented in this file.
 
 Please report any issues you encounter here: https://github.com/mpatfield/homebridge-dummy/issues
 
-## 1.0.0-alpha.5 (2025-07-03)
+## 1.0.0-alpha.7 (2025-07-03)
 
 ### Added
 - Drastically improved config UI
 - resetOnRestart option for stateful accessories to return to defaults on Homebridge restart
-- Support for Outlet and Lock Mechanism
+- Support for Door, Outlet, and Lock Mechanism
 - Sensor support (CO2, CO, Contact, Leak, Motion, Occupancy, and Smoke)
 - Execute arbitraty commands when accessory state changes
 
