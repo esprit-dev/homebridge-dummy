@@ -79,9 +79,9 @@
               "enumNames": ["${config.enumNames.secured}", "${config.enumNames.unsecured}"]
             },
             "defaultPosition": {
-              "type": "number",
+              "type": "string",
               "title": "${config.title.defaultPosition}",
-              "enum": [100, 0],
+              "enum": ["open", "closed"],
               "enumNames": ["${config.enumNames.open}", "${config.enumNames.closed}"]
             },
             "commandOn": {

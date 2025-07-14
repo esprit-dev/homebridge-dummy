@@ -33,6 +33,11 @@ export enum SensorCharacteristic {
   SmokeDetected = 'SmokeDetected',
 }
 
+export enum DefaultPosition {
+  OPEN = 'open',
+  CLOSED = 'closed',
+}
+
 export type LegacyAccessoryConfig = AccessoryConfig & {
   name: string;
   dimmer?: boolean;
@@ -99,7 +104,7 @@ export type LockConfig = DummyConfig & {
 }
 
 export type PositionConfig = DummyConfig & {
-  defaultPosition?: number
+  defaultPosition?: string,
   commandOpen?: string,
   commandClose?: string,
 }

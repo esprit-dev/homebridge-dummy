@@ -1,6 +1,12 @@
-### ‼️ BREAKING CHANGES ‼️
+<!-- ⚠️ Plugin has a new owner/maintainer and will undergo significant cleanup and modernization in the near term. If you experience issues you can always downgrade to the last stable version v0.9.0
 
-### v1.0 is a complete code rewrite and automations using Homebridge Dummy accessories will need to be reconfigured.
+Please report any issues you encounter here: https://github.com/mpatfield/homebridge-dummy/issues -->
+
+# ‼️ BREAKING CHANGES ‼️
+
+### If upgrading from v0.9.2, Homebridge Dummy accessories will need to be reconfigured!!
+
+### Please downgrade to v0.9.2 or earlier now if you want to keep your current setup
 
 ### Full details [here](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#v10-migration).
 
@@ -8,11 +14,7 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-⚠️ Plugin has a new owner/maintainer and will undergo significant cleanup and modernization in the near term. If you experience issues you can always downgrade to the last stable version v0.9.0
-
-Please report any issues you encounter here: https://github.com/mpatfield/homebridge-dummy/issues
-
-## 1.0.0-alpha.8 (2025-07-03)
+## 1.0.0-beta.0 (2025-07-14)
 
 ### Added
 - Drastically improved config UI

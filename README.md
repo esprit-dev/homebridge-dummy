@@ -94,7 +94,7 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
             "defaultOnOff": 1 | 0,
             "defaultBrightness": 0-100,
             "defaultLockState": 0 | 1,
-            "defaultPosition": 0 | 100,
+            "defaultPosition": "open" | "closed",
             "onCommand": "string",
             "offCommand": "string",
             "lockCommand": "string",
@@ -129,7 +129,7 @@ All fields are optional unless noted with an asterisk (*)
 
 - `defaultLockState` - The initial value for the lock. UNSECURED (Unlocked) = 0, SECURED (Locked) = 1
 
-- `defaultPosition` — Initial position for the door/window/blinds, closed = 0, open = 100
+- `defaultPosition` — Initial position for the door/window/blinds, "open" or "closed"
 
 - `onCommand` - Arbitraty command to execute when lightbulb/outlet/switch turns on
 - `offCommand` - Arbitraty command to execute when lightbulb/outlet/switch turns off
@@ -245,7 +245,7 @@ All fields are optional unless noted with an asterisk (*)
         "delay": 20,
         "units": "SECONDS"
     },
-    "defaultPosition": 0
+    "defaultPosition": "closed"
 }
 ```
 

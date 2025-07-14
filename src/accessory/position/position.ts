@@ -4,7 +4,7 @@ import { DummyAccessory } from '../base.js';
 
 import { strings } from '../../i18n/i18n.js';
 
-import { CharacteristicType, PositionConfig, ServiceType } from '../../model/types.js';
+import { CharacteristicType, DefaultPosition, PositionConfig, ServiceType } from '../../model/types.js';
 
 import { Log } from '../../tools/log.js';
 import { storageGet, storageSet } from '../../tools/storage.js';
@@ -53,7 +53,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
   }
 
   private get defaultPosition(): CharacteristicValue {
-    return this.config.defaultPosition === undefined ? POSITION_CLOSED : this.config.defaultPosition;
+    return this.config.defaultPosition === DefaultPosition.OPEN ? POSITION_OPEN : POSITION_CLOSED;
   }
 
   protected async getState(): Promise<CharacteristicValue> {
