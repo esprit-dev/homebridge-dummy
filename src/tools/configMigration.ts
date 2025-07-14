@@ -21,7 +21,7 @@ function migrateAccessory(legacyConfig: LegacyAccessoryConfig): DummyConfig {
 
   if (legacyConfig.reverse) {
     const onOffConfig = dummyConfig as OnOffConfig;
-    onOffConfig.defaultOnOff = 1;
+    onOffConfig.defaultOn = 1;
   }
 
   if (legacyConfig.dimmer) {

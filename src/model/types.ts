@@ -86,7 +86,7 @@ export type DummyConfig = {
 }
 
 export type OnOffConfig = DummyConfig & {
-  defaultOnOff?: CharacteristicValue,
+  defaultOn?: CharacteristicValue,
   sensor?: SensorType,
   commandOn?: string,
   commandOff?: string,

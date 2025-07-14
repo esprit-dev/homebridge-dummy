@@ -27,7 +27,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
   ) {
     super(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
 
-    this.on = this.defaultOnOff;
+    this.on = this.defaultOn;
 
     this.sensor = SensorAccessory.init(Service, Characteristic, accessory, this.config.name, log, this.config.disableLogging, config.sensor);
 
@@ -47,8 +47,8 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
     this.accessoryService.updateCharacteristic(this.Characteristic.On, this.on);  
   }
 
-  private get defaultOnOff(): CharacteristicValue {
-    return this.config.defaultOnOff === 1 ? true : false;
+  private get defaultOn(): CharacteristicValue {
+    return this.config.defaultOn ? 1 : 0;
   }
 
   protected async getOn(): Promise<CharacteristicValue> {
@@ -72,7 +72,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
     if (this.isStateful) {
       await storageSet(this.persistPath, this.defaultStateStorageKey, this.on);
     } else {
-      if (this.on !== this.defaultOnOff) {
+      if (this.on !== this.defaultOn) {
         this.startTimer(this.flip.bind(this));
       } else {
         this.cancelTimer();
@@ -80,7 +80,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
     }
 
     if (this.sensor) {
-      this.sensor.active = this.on !== this.defaultOnOff;
+      this.sensor.active = this.on !== this.defaultOn;
     }
 
     this.accessoryService.updateCharacteristic(this.Characteristic.On, this.on);

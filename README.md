@@ -91,7 +91,7 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
                 "random": true | false
             },
             "sensor": "CarbonDioxideSensor | CarbonMonoxideSensor | ContactSensor | LeakSensor | MotionSensor | OccupancySensor | SmokeSensor",
-            "defaultOnOff": 1 | 0,
+            "defaultOn": true | false,
             "defaultBrightness": 0-100,
             "defaultLockState": "locked" | "unlocked",
             "defaultPosition": "open" | "closed",
@@ -123,7 +123,7 @@ All fields are optional unless noted with an asterisk (*)
     - Only works with `Lightbulb`, `Outlet`, and `Switch`
     - Valid values are `CarbonDioxideSensor`, `CarbonMonoxideSensor`, `ContactSensor`, `LeakSensor`, `MotionSensor`, `OccupancySensor`, or `SmokeSensor`
 
-- `defaultOnOff` — Initial value. Default _ON_ = 1, default _OFF_ = 0
+- `defaultOn` — Initial value. Default _ON_ = true, default _OFF_ = false
 
 - `defaultBrightness` — If set, lightbulb will have additional dimmer settings with this default brightness percentage
 
@@ -172,7 +172,7 @@ All fields are optional unless noted with an asterisk (*)
         "delay": 5,
         "units": "SECONDS"
     },
-    "defaultOnOff": true
+    "defaultOn: true
 }
 ```
 
