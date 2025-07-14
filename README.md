@@ -93,7 +93,7 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
             "sensor": "CarbonDioxideSensor | CarbonMonoxideSensor | ContactSensor | LeakSensor | MotionSensor | OccupancySensor | SmokeSensor",
             "defaultOnOff": 1 | 0,
             "defaultBrightness": 0-100,
-            "defaultLockState": 0 | 1,
+            "defaultLockState": "locked" | "unlocked",
             "defaultPosition": "open" | "closed",
             "onCommand": "string",
             "offCommand": "string",
@@ -127,7 +127,7 @@ All fields are optional unless noted with an asterisk (*)
 
 - `defaultBrightness` — If set, lightbulb will have additional dimmer settings with this default brightness percentage
 
-- `defaultLockState` - The initial value for the lock. UNSECURED (Unlocked) = 0, SECURED (Locked) = 1
+- `defaultLockState` - The initial value for the lock, "locked" or "unlocked"
 
 - `defaultPosition` — Initial position for the door/window/blinds, "open" or "closed"
 
@@ -219,7 +219,7 @@ All fields are optional unless noted with an asterisk (*)
         "delay": 10,
         "units": "MINUTES"
     },
-    "defaultLockState": 0
+    "defaultLockState": "locked"
 }
 ```
 

@@ -73,9 +73,9 @@
               "enumNames": ["${config.enumNames.on}", "${config.enumNames.off}"]
             },
             "defaultLockState": {
-              "type": "number",
+              "type": "string",
               "title": "${config.title.defaultState}",
-              "enum": [1, 0],
+              "enum": ["locked", "unlocked"],
               "enumNames": ["${config.enumNames.secured}", "${config.enumNames.unsecured}"]
             },
             "defaultPosition": {

@@ -33,6 +33,11 @@ export enum SensorCharacteristic {
   SmokeDetected = 'SmokeDetected',
 }
 
+export enum DefaultLockState {
+  LOCKED = 'locked',
+  UNLOCKED = 'unlocked',
+}
+
 export enum DefaultPosition {
   OPEN = 'open',
   CLOSED = 'closed',
@@ -98,13 +103,13 @@ export type SwitchConfig = OnOffConfig & {
 }
 
 export type LockConfig = DummyConfig & {
-  defaultLockState?: CharacteristicValue;
+  defaultLockState?: DefaultLockState;
   commandLock?: string,
   commandUnlock?: string,
 }
 
 export type PositionConfig = DummyConfig & {
-  defaultPosition?: string,
+  defaultPosition?: DefaultPosition,
   commandOpen?: string,
   commandClose?: string,
 }

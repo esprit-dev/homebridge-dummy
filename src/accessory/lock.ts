@@ -4,7 +4,7 @@ import { DummyAccessory } from './base.js';
 
 import { strings } from '../i18n/i18n.js';
 
-import { AccessoryType, CharacteristicType, LockConfig, ServiceType } from '../model/types.js';
+import { AccessoryType, CharacteristicType, DefaultLockState, LockConfig, ServiceType } from '../model/types.js';
 
 import { Log } from '../tools/log.js';
 import { storageGet, storageSet } from '../tools/storage.js';
@@ -24,7 +24,7 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
   ) {
     super(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
 
-    this.state = this.defaultState;
+    this.state = this.defaultLockState;
 
     this.accessoryService.getCharacteristic(Characteristic.LockTargetState)
       .onGet(this.getState.bind(this))
@@ -50,8 +50,9 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
     return AccessoryType.LockMechanism;
   }
 
-  private get defaultState(): CharacteristicValue {
-    return this.config.defaultLockState === undefined ? this.Characteristic.LockTargetState.SECURED : this.config.defaultLockState;
+  private get defaultLockState(): CharacteristicValue {
+    return this.config.defaultLockState === DefaultLockState.UNLOCKED ?
+      this.Characteristic.LockTargetState.UNSECURED : this.Characteristic.LockTargetState.SECURED;
   }
 
   protected async getState(): Promise<CharacteristicValue> {
@@ -75,7 +76,7 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
     if (this.isStateful) {
       await storageSet(this.persistPath, this.defaultStateStorageKey, this.state);
     } else {
-      if (this.state !== this.defaultState) {
+      if (this.state !== this.defaultLockState) {
         this.startTimer(this.flip.bind(this));
       } else {
         this.cancelTimer();
