@@ -1,8 +1,7 @@
-<!--
+
 <p align="center">
 <img src="https://github.com/mpatfield/homebridge-dummy/blob/latest/img/banner.png?raw=true" width="600">
 </p>
--->
 
 <span align="center">
 
@@ -252,5 +251,7 @@ All fields are optional unless noted with an asterisk (*)
 ## Credits
 
 Special thanks to [@nfarina](https://github.com/nfarina) for creating the original version of this plugin and maintaining it for almost 10 (!!!) years
+
+[Keryan Belahcene](https://www.instagram.com/keryan.me) for creating the [Flume](https://github.com/homebridge-plugins/homebridge-flume) banner image which was adapted for use with this plugin
 
 And to the amazing creators/contributors of [Homebridge](https://homebridge.io) who made this plugin possible!
