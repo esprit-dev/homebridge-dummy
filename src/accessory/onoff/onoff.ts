@@ -48,7 +48,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
   }
 
   private get defaultOn(): CharacteristicValue {
-    return this.config.defaultOn ? 1 : 0;
+    return this.config.defaultOn ? true : false;
   }
 
   protected async getOn(): Promise<CharacteristicValue> {
