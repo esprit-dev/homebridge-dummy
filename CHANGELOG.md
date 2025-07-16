@@ -14,7 +14,7 @@ Please report any issues you encounter here: https://github.com/mpatfield/homebr
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-## 1.1.0 (XXXX-XX-XX)
+## 1.1.0-alpha.0 (2025-07-16)
 
 ### Added
 
