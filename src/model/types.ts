@@ -80,6 +80,7 @@ export type DummyConfig = {
   id: string,
   name: string,
   type: AccessoryType,
+  groupName?: string,
   timer?: TimerConfig,
   resetOnRestart?: boolean,
   disableLogging?: boolean,

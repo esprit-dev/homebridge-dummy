@@ -3,11 +3,12 @@ import { API, DynamicPlatformPlugin, Logger, PlatformAccessory } from 'homebridg
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings.js';
 
 import { DummyAccessory } from '../accessory/base.js';
-import { createAccessory } from '../accessory/helpers.js';
+import { GroupAccessory } from '../accessory/group.js';
+import { createDummyAccessory } from '../accessory/helpers.js';
 
 import { setLanguage, strings } from '../i18n/i18n.js';
 
-import { DummyConfig, DummyPlatformConfig } from '../model/types.js';
+import { DummyConfig, DummyPlatformConfig, GroupConfig } from '../model/types.js';
 
 import { migrateAccessories } from '../tools/configMigration.js';
 import { Log } from '../tools/log.js';
@@ -19,8 +20,8 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
 
   private readonly log: Log;
 
-  private readonly cachedAccessories: Map<string, PlatformAccessory> = new Map();
-  private readonly dummyAccessories: (DummyAccessory<DummyConfig>)[] = [];
+  private readonly platformAccessories: Map<string, PlatformAccessory> = new Map();
+  private readonly dummyAccessories: (DummyAccessory<DummyConfig> | GroupAccessory)[] = [];
 
   constructor(
     logger: Logger,
@@ -56,7 +57,7 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
 
   configureAccessory(accessory: PlatformAccessory): void {
     this.log.always(strings.startup.restoringAccessory, accessory.displayName);
-    this.cachedAccessories.set(accessory.context.identifier, accessory);
+    this.platformAccessories.set(accessory.context.identifier, accessory);
   }
 
   private teardown() {
@@ -77,29 +78,23 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
     
     const persistPath = this.api.user.persistPath();
 
-    const newAccessories: PlatformAccessory[] = [];
+    const groupAccessories = new Map<string, GroupConfig>();
 
     for (const accessoryConfig of accessories) {
+
+      if (accessoryConfig.groupName?.length) {
+        const groupConfig: GroupConfig = groupAccessories.get(accessoryConfig.groupName) || { accessories: [] };
+        groupConfig.accessories.push(accessoryConfig);
+        groupAccessories.set(accessoryConfig.groupName, groupConfig);
+        continue;
+      }
 
       const id = DummyAccessory.identifier(accessoryConfig);
       keepIdentifiers.add(id);
 
-      let accessory = this.cachedAccessories.get(id);
-      if (!accessory) {
+      const accessory = this.platformAccessories.get(id) ?? this.createPlatformAccessory(id, accessoryConfig.name);
 
-        const name = accessoryConfig.name;
-        this.log.always(strings.startup.newAccessory, name);
-
-        const uuid = this.api.hap.uuid.generate(id);
-
-        accessory = new this.api.platformAccessory(name, uuid);
-        accessory.context.identifier = id;
-    
-        newAccessories.push(accessory);
-        this.cachedAccessories.set(id, accessory);
-      }
-
-      const dummyAccessory = createAccessory(this.Service, this.Characteristic, accessory, accessoryConfig, this.log, persistPath);
+      const dummyAccessory = createDummyAccessory(this.Service, this.Characteristic, accessory, accessoryConfig, this.log, persistPath);
       if (!dummyAccessory) {
         continue;
       }
@@ -107,11 +102,20 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
       this.dummyAccessories.push(dummyAccessory);
     };
 
-    if (newAccessories.length) {
-      this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, newAccessories);
+    for (const groupName of groupAccessories.keys()) {
+
+      const groupConfig: GroupConfig = groupAccessories.get(groupName)!;
+
+      const id = GroupAccessory.identifier(groupName);
+      keepIdentifiers.add(id);
+
+      const accessory = this.platformAccessories.get(id) ?? this.createPlatformAccessory(id, groupName);
+
+      const groupAccessory = new GroupAccessory(this.Service, this.Characteristic, accessory, groupConfig, this.log, persistPath);
+      this.dummyAccessories.push(groupAccessory);      
     }
 
-    this.cachedAccessories.forEach(accessory => {
+    this.platformAccessories.forEach(accessory => {
       if (!keepIdentifiers.has(accessory.context.identifier)) {
         this.removeCachedAccessory(accessory);
       }
@@ -120,10 +124,26 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
     const randIndex = Math.floor(Math.random() * strings.startup.welcome.length);
     this.log.always(strings.startup.setupComplete, strings.startup.welcome[randIndex]);
   }
+
+  private createPlatformAccessory(id: string, name: string): PlatformAccessory {
+
+    this.log.always(strings.startup.newAccessory, name);
+
+    const uuid = this.api.hap.uuid.generate(id);
+
+    const accessory = new this.api.platformAccessory(name, uuid);
+    accessory.context.identifier = id;
+    
+    this.platformAccessories.set(id, accessory);
+
+    this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
+
+    return accessory;
+  }
   
   private removeCachedAccessory(accessory: PlatformAccessory) {
     this.log.always(strings.startup.removeAccessory, accessory.displayName);
     this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
-    this.cachedAccessories.delete(accessory.context.identifier);
+    this.platformAccessories.delete(accessory.context.identifier);
   }
 }

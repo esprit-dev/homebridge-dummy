@@ -53,6 +53,10 @@
               "enum": ["Door", "Lightbulb", "LockMechanism", "Outlet", "Switch", "Window", "WindowCovering"],
               "enumNames": ["${config.enumNames.door}", "${config.enumNames.lightbulb}", "${config.enumNames.lockMechanism}", "${config.enumNames.outlet}", "${config.enumNames.switch}", "${config.enumNames.window}", "${config.enumNames.windowCovering}"]
             },
+            "groupName": {
+              "type": "string",
+              "title": "${config.title.groupName}"
+            },
             "timer": { "$ref": "#/definitions/timer" },
             "sensor": {
               "type": "string",
@@ -62,9 +66,9 @@
             },
             "defaultBrightness": {
               "type": "number",
+              "title": "${config.title.defaultBrightness}",
               "minimum": 0,
-              "maximum": 100,
-              "title": "${config.title.defaultBrightness}"
+              "maximum": 100
             },
             "defaultOn": {
               "type": "number",
@@ -143,6 +147,10 @@
                 },
                 {
                   "key": "accessories[].type",
+                  "flex": "1 1 0"
+                },
+                {
+                  "key": "accessories[].groupName",
                   "flex": "1 1 0"
                 }
               ]

@@ -98,6 +98,7 @@ const en = {
       defaultState: 'Default State',
       delay: 'Delay',
       disableLogging: 'Disable Logging',
+      groupName: 'Group Name (Beta)',
       name: 'Name',
       options: 'Additional Settings',
       resetOnRestart: 'Reset on Restart',

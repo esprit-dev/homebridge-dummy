@@ -83,6 +83,7 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
         {
             "id": "string",
             "name": "string",
+            "groupName": "string",
             "type": "Door | Lightbulb | LockMechanism | Outlet | Switch | Window | WindoCovering",
             "timer": {
                 "delay": number,
@@ -113,6 +114,9 @@ All fields are optional unless noted with an asterisk (*)
 
 - `name`* - The display name for the accessory in HomeKit
 - `type`* - The type of accessory: `Door`, `Lightbulb`, `LockMechanism`, `Outlet`, `Switch`, `Window`, or `WindowCovering`
+
+- `groupName` - (Beta) Items sharing the same group name will be collected together in the Home app UI
+    - ⚠️ Be aware that adding/removing/changing the group name will require you to reconfigure any HomeKit scenes or automations
 
 - `timer.delay` — If defined, the switch will automatically toggle after this many seconds/minutes/hours
 - `timer.units` — The units to use for delay above (`SECONDS`, `MINUTES`, or `HOURS`). *Required if delay is set.
@@ -245,6 +249,25 @@ All fields are optional unless noted with an asterisk (*)
         "units": "SECONDS"
     },
     "defaultPosition": "closed"
+}
+```
+
+### Group
+```json
+{
+    "name": "Outlet 1",
+    "type": "Outlet",
+    "groupName": "Powerstrip"
+},
+{
+    "name": "Outlet 2",
+    "type": "Outlet",
+    "groupName": "Powerstrip"
+}
+{
+    "name": "Outlet 3",
+    "type": "Outlet",
+    "groupName": "Powerstrip"
 }
 ```
 
