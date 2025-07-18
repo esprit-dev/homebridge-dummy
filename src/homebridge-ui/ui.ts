@@ -146,6 +146,7 @@ const showSettings = (strings: Translation) => {
 };
 
 const showMigration = (strings: Translation) => {
+    document.getElementById('header')!.style.display = 'none';
     document.getElementById('intro')!.style.display = 'none';
     document.getElementById('migration')!.style.display = 'block';
 

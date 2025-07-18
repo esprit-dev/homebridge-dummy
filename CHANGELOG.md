@@ -1,14 +1,16 @@
-<!-- ⚠️ Plugin has a new owner/maintainer and will undergo significant cleanup and modernization in the near term. If you experience issues you can always downgrade to the last stable version v0.9.0
+## ‼️ WARNING - READ BEFORE CONTINUING ‼️
 
-Please report any issues you encounter here: https://github.com/mpatfield/homebridge-dummy/issues -->
+If upgrading from v0.9.2 or earlier, automations and scenes using Homebridge Dummy accessories will need to be reconfigured.
 
-# ‼️ WARNING ‼️
+Please downgrade back to your previous version now if you want to keep your existing setup.
 
-### If upgrading from v0.9.2 or earlier, automations and scenes using Homebridge Dummy accessories will need to be reconfigured. Please downgrade to v0.9.2 or earlier now if you want to keep your existing setup.
+## ⚠️ IMPORTANT ⚠️
 
-### After updating, you will need to open Homebridge Dummy plugin settings to run the accessory migration helper.
+Please **RESTART HOMEBRIDGE SERVICE & UI** (not just *RESTART HOMEBRIDGE*) before continuing or you will experience issues with Homebridge Dummy configuration.
 
-### Full details [here](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#v10-migration).
+Once you have restarted both Homebridge and the UI, you will need to open the Homebridge Dummy plugin settings to run the accessory migration helper.
+
+Full migration details [here](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#v10-migration).
 
 # Change Log
 
