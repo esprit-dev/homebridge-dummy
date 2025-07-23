@@ -177,7 +177,7 @@ All fields are optional unless noted with an asterisk (*)
         "delay": 5,
         "units": "SECONDS"
     },
-    "defaultOn: true
+    "defaultOn": true
 }
 ```
 
