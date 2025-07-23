@@ -32,7 +32,7 @@ function migrateAccessory(legacyConfig: LegacyAccessoryConfig): DummyConfig {
 
   if (!legacyConfig.stateful && legacyConfig.time) {
     dummyConfig.timer = {
-      delay: Math.min(1, legacyConfig.time / 1000),
+      delay: Math.max(1, legacyConfig.time / 1000),
       units: TimeUnits.SECONDS,
       random: legacyConfig.random,
     };
