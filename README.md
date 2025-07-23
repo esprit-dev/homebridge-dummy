@@ -24,7 +24,7 @@ Any issues or damage resulting from use of this plugin are not the fault of the 
 
 ### tl;dr
 
-‼️ There are significant code changes between v0.9 and v1.0 which means you will need to reconfigure HomeKit automations after upgrading. Homebridge Dummy will try to migrate old accessories in Homebridge so you don't need to recreate everything.
+‼️ There are significant code changes between v0.9 and v1.0 which means you will need to reconfigure HomeKit automations after upgrading. Homebridge Dummy will try to help migrate old accessories.
 
 ### Why?
 
@@ -32,15 +32,17 @@ The original HomebridgeDummy was written almost 10 years ago and uses the now de
 
 While this still works okay for now, migrating the code to use [Platform Plugins](https://developers.homebridge.io/#/api/platform-plugins) will future-proof Homebridge Dummy and allow for more modern and robust design patterns.
 
-v1.0 doesn't include any new features but will make it much easier to improve and extend this plugin going forward.
+The architecture used in v1.0 will make it much easier to improve and extend this plugin going forward and already includes several new features.
 
 ### Drawbacks
 
 Unfortunately, there is no built-in way to migrate existing accessory plugins to platform plugins. This means that all accessories will be considered "new" by HomeKit, so any existing automations or room setups will be lost.
 
-However, Homebridge Dummy will try to migrate the accessory configurations to the new system to prevent you having to set them all up again in Homebridge.
+However, Homebridge Dummy will try to help migrate the accessory configurations to the new system to prevent you having to set them all up again in Homebridge.
 
 ### Migration Flow
+
+⚠️ Please make sure to restart both Homebridge Service AND Homebridge UI after upgrading to v1.0 or you will experience issues with Homebridge Dummy configuration.
 
 Once you have installed v1.0, click on the icon to configure the Homebridge Dummy plugin in the Homebridge UI and it will walk you through the necessary questionnaire.
 
@@ -56,15 +58,15 @@ Alternatively, you can add the following to "platforms" in your config.json
 
 You will need to restart Homebridge after completing the flow for changes to take effect.
 
-⚠️ If you are using child bridges with v0.9, you will need to restart Homebridge _twice_ for migrated accessories to show up correctly.
+⚠️ If you are using child bridges with v0.9, you may need to restart Homebridge _twice_ for migrated accessories to show up correctly.
 
 You may safely ignore any "No plugin was found…" errors you see in the Homebridge logs. These should go away after a few Homebridge restarts.
 
 ### Problems?
 
-This is a highly experimental flow and may not work as intended. If you see "Sorry, something went wrong with the accessory migration" or encounter other issues, please [create an issue](https://github.com/mpatfield/homebridge-dummy/issues/new?template=new-issue.md).
+This is an experimental flow and may not work as intended. If you see "Sorry, something went wrong with the accessory migration" or encounter other issues, please [create an issue](https://github.com/mpatfield/homebridge-dummy/issues/new?template=new-issue.md).
 
-The first thing the flow does is create a backup called `config.json.bak` in your Homebridge directory. If all else fails, you can replace your `config.json` with the backup and downgrade to Homebridge Dummy v0.9 to restore everything back to normal.
+The first thing the flow does is create a backup called `config.json.bak` in your Homebridge directory. If all else fails, you can replace your `config.json` with the backup and downgrade to Homebridge Dummy v0.9 to restore your previous accessories.
 
 ## About
 

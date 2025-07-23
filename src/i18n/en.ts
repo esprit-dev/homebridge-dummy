@@ -40,9 +40,9 @@ const en = {
 
   config: {
     migrate: 'Are you upgrading from an earlier version?',
-    migrationDetails1: 'HomeKit automations using %s accessories will need to be reconfigured!', // plugin name
+    migrationDetails1: 'HomeKit scenes and automations using %s accessories will need to be reconfigured!', // plugin name
     migrationDetails2: 'Please downgrade to v0.9.2 or earlier if you want to keep your current setup.',
-    migrationDetails3: '%s can try to recreate your accessories, but you will still need reconfigure HomeKit automations.', // plugin name
+    migrationDetails3: '%s can try to recreate your accessories, but you will still need reconfigure HomeKit scenes and automations.', // plugin name
     migrationDetails4: 'Would you like to recreate your accessories now?',
     migrationDetails5: 'For more details, please visit %s', // url
     migrationRestartTitle: 'Restart Homebridge',
