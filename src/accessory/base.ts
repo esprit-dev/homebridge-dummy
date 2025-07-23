@@ -38,9 +38,15 @@ export abstract class DummyAccessory<C extends DummyConfig> {
     const serviceInstance = Service[this.getAccessoryType()];
 
     if (isGrouped) {
-      this.accessoryService =
-      accessory.getServiceById(serviceInstance, this.identifier) ||
-      accessory.addService(serviceInstance, config.name, this.identifier);
+
+      let accessoryService = accessory.getServiceById(serviceInstance, this.identifier);
+      if (!accessoryService) {
+        accessoryService = accessory.addService(serviceInstance, config.name, this.identifier);
+        accessoryService.setCharacteristic(Characteristic.ConfiguredName, config.name);
+      }
+
+      this.accessoryService = accessoryService;
+
       return;
     }
     
@@ -56,6 +62,10 @@ export abstract class DummyAccessory<C extends DummyConfig> {
   }
 
   protected abstract getAccessoryType(): AccessoryType;
+
+  public get subtype(): string | undefined {
+    return this.accessoryService.subtype;
+  }
 
   public teardown() {
     this.timer.teardown();

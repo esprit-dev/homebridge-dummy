@@ -14,6 +14,13 @@ Full details [here](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-
 
 All notable changes to homebridge-dummy will be documented in this file.
 
+## 1.1.0-beta.X (XXXX-XX-XX)
+
+### Added
+
+- Groups (Beta) - Items sharing the same group name will be collected together in the Home app UI
+    - ⚠️ Adding/removing/changing the group name will require you to reconfigure any HomeKit scenes or automations
+
 ## 1.0.0 (2025-07-23)
 
 ### Changed

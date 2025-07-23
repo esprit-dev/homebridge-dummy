@@ -15,7 +15,7 @@ import * as Types from '../model/types.js';
 
 import { Log } from '../tools/log.js';
 
-export function createAccessory(
+export function createDummyAccessory(
   Service: Types.ServiceType,
   Characteristic: Types.CharacteristicType,
   accessory: PlatformAccessory,
