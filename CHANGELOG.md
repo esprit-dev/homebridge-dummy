@@ -17,9 +17,11 @@ All notable changes to homebridge-dummy will be documented in this file.
 ## 1.1.0-beta.X (XXXX-XX-XX)
 
 ### Added
-
 - Groups (Beta) - Items sharing the same group name will be collected together in the Home app UI
-    - ⚠️ Adding/removing/changing the group name will require you to reconfigure any HomeKit scenes or automations
+    - ⚠️ Adding/removing/changing the group name for an accessory will require you to reconfigure any HomeKit scenes or automations
+
+### Fixed
+- Logging issue for timers over 1 hour ([#143](https://github.com/mpatfield/homebridge-dummy/issues/143))
 
 ## 1.0.0 (2025-07-23)
 
