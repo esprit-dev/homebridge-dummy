@@ -44,7 +44,7 @@ export class Timer {
     } else if (delay < HOUR) {
       this.log?.always(strings.accessory.timer.setMinutes, this.caller, Math.round(delay / MINUTE));
     } else {
-      this.log?.always(strings.accessory.timer.setSeconds, this.caller, Math.round(delay / HOUR));
+      this.log?.always(strings.accessory.timer.setHours, this.caller, Math.round(delay / HOUR));
     }
 
     this.timer = setTimeout(async () => {
