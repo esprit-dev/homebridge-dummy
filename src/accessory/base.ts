@@ -12,6 +12,7 @@ import { STORAGE_KEY_SUFFIX_DEFAULT_STATE } from '../tools/storage.js';
 import { Timer } from '../model/timer.js';
 import { assert } from '../tools/validation.js';
 import getVersion from '../tools/version.js';
+import { Trigger } from '../model/trigger.js';
 
 export abstract class DummyAccessory<C extends DummyConfig> {
 
@@ -21,7 +22,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
 
   protected readonly accessoryService: Service;
 
-  private readonly timer: Timer;
+  private readonly timer: Timer | undefined = undefined;
 
   constructor(
     protected readonly Service: ServiceType,
@@ -32,8 +33,14 @@ export abstract class DummyAccessory<C extends DummyConfig> {
     protected readonly persistPath: string,
     isGrouped: boolean,
   ) {
-   
-    this.timer = new Timer(config.name, config.disableLogging ? undefined : log);
+
+    if (config.timer) {
+      this.timer = new Timer(config.timer, config.name, config.disableLogging ? undefined : log);
+    }
+
+    if (config.trigger) {
+      new Trigger(config.trigger, config.name, log, config.disableLogging === true, this.trigger.bind(this));
+    }
 
     const serviceInstance = Service[this.getAccessoryType()];
 
@@ -63,12 +70,16 @@ export abstract class DummyAccessory<C extends DummyConfig> {
 
   protected abstract getAccessoryType(): AccessoryType;
 
+  protected abstract trigger(): Promise<void>;
+
+  protected abstract reset(): Promise<void>;
+
   public get subtype(): string | undefined {
     return this.accessoryService.subtype;
   }
 
   public teardown() {
-    this.timer.teardown();
+    this.timer?.teardown();
   }
 
   protected get identifier(): string {
@@ -83,7 +94,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
     return `${this.identifier}:${STORAGE_KEY_SUFFIX_DEFAULT_STATE}`;
   }
 
-  protected startTimer(callback: () => Promise<void>) {
+  protected startTimer() {
 
     if (!this.config.timer?.delay) {
       return;
@@ -93,11 +104,11 @@ export abstract class DummyAccessory<C extends DummyConfig> {
       return;
     }
 
-    this.timer.start(this.config.timer, callback);
+    this.timer?.start(this.reset.bind(this));
   }
 
   protected cancelTimer() {
-    this.timer.cancel();
+    this.timer?.cancel();
   }
 
   protected executeCommand(command: string) {

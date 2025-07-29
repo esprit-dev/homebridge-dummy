@@ -1,41 +1,30 @@
-import { strings } from '../i18n/i18n.js';
-import { Log } from '../tools/log.js';
-import { TimerConfig, TimeUnits } from './types.js';
+import { TimerConfig } from './types.js';
 
-const SECOND = 1000;
-const MINUTE = 60 * SECOND;
-const HOUR = 60 * MINUTE;
+import { strings } from '../i18n/i18n.js';
+
+import { Log } from '../tools/log.js';
+import { HOUR, MINUTE, SECOND, toMilliseconds } from '../tools/time.js';
 
 export class Timer {
   
   private timer: NodeJS.Timeout | undefined = undefined;
 
   constructor(
+    private readonly config: TimerConfig,
     private readonly caller: string,
     private readonly log?: Log,
   ) { }
 
-  public start(config: TimerConfig, callback:  () => Promise<void>) {
+  public start(callback:  () => Promise<void>) {
 
     if (this.timer) {
       this.log?.always(strings.accessory.timer.reset, this.caller);
       this.reset();
     }
 
-    let delay: number = config.delay;
-    switch(config.units) {
-    case TimeUnits.SECONDS:
-      delay *= SECOND;
-      break;
-    case TimeUnits.MINUTES:
-      delay *= MINUTE;
-      break;
-    case TimeUnits.HOURS:
-      delay *= HOUR; 
-      break;
-    }
+    let delay = toMilliseconds(this.config.delay, this.config.units);
 
-    if (config.random) {
+    if (this.config.random) {
       delay = Math.floor(Math.max(SECOND, Math.random() * delay));
     }
 

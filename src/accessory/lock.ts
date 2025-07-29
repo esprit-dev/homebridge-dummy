@@ -77,7 +77,7 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
       await storageSet(this.persistPath, this.defaultStateStorageKey, this.state);
     } else {
       if (this.state !== this.defaultLockState) {
-        this.startTimer(this.flip.bind(this));
+        this.startTimer();
       } else {
         this.cancelTimer();
       }
@@ -87,10 +87,18 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
     this.accessoryService.updateCharacteristic(this.Characteristic.LockCurrentState, this.state);
   }
 
-  private async flip(): Promise<void> {
-    const opposite = this.state === this.Characteristic.LockTargetState.SECURED ?
-      this.Characteristic.LockTargetState.UNSECURED : this.Characteristic.LockTargetState.SECURED;
-    await this.setState(opposite);
+  override async trigger(): Promise<void> {
+    if (this.state === this.defaultLockState) {
+      const opposite = this.state === this.Characteristic.LockTargetState.SECURED ?
+        this.Characteristic.LockTargetState.UNSECURED : this.Characteristic.LockTargetState.SECURED;
+      await this.setState(opposite);
+    }
+  }
+
+  override async reset(): Promise<void> {
+    if (this.state !== this.defaultLockState) {
+      await this.setState(this.defaultLockState);
+    }
   }
 
   protected logLockState(value: CharacteristicValue) {

@@ -84,7 +84,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
       await storageSet(this.persistPath, this.defaultStateStorageKey, this.position);
     } else {
       if (this.position !== this.defaultPosition) {
-        this.startTimer(this.flip.bind(this));
+        this.startTimer();
       } else {
         this.cancelTimer();
       }
@@ -94,9 +94,17 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
     this.accessoryService.updateCharacteristic(this.Characteristic.CurrentPosition, this.position);
   }
 
-  private async flip(): Promise<void> {
-    const opposite = this.position === POSITION_CLOSED ? POSITION_OPEN : POSITION_CLOSED;
-    await this.setPosition(opposite);
+  override async trigger(): Promise<void> {
+    if (this.position === this.defaultPosition) {
+      const opposite = this.position === POSITION_CLOSED ? POSITION_OPEN : POSITION_CLOSED;
+      await this.setPosition(opposite);
+    }
+  }
+
+  override async reset(): Promise<void> {
+    if (this.position !== this.defaultPosition) {
+      await this.setPosition(this.defaultPosition);
+    }
   }
 
   protected logPosition(value: CharacteristicValue) {

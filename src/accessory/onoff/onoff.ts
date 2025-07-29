@@ -73,7 +73,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
       await storageSet(this.persistPath, this.defaultStateStorageKey, this.on);
     } else {
       if (this.on !== this.defaultOn) {
-        this.startTimer(this.flip.bind(this));
+        this.startTimer();
       } else {
         this.cancelTimer();
       }
@@ -86,8 +86,16 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
     this.accessoryService.updateCharacteristic(this.Characteristic.On, this.on);
   }
 
-  private async flip(): Promise<void> {
-    await this.setOn(!this.on);
+  override async trigger(): Promise<void> {
+    if (this.on === this.defaultOn) {
+      await this.setOn(!this.on);
+    }
+  }
+
+  override async reset(): Promise<void> {
+    if (this.on !== this.defaultOn) {
+      await this.setOn(this.defaultOn);
+    }
   }
 
   protected logOnState(value: CharacteristicValue) {

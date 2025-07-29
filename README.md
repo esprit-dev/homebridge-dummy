@@ -92,6 +92,13 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
                 "units": "SECONDS | MINUTES | HOURS",
                 "random": true | false
             },
+            "trigger": {
+                "type": "INTERVAL" | "CRON",
+                "interval": number,
+                "units": "SECONDS | MINUTES | HOURS",
+                "random": true | false,
+                "cron": "string"
+            },
             "sensor": "CarbonDioxideSensor | CarbonMonoxideSensor | ContactSensor | LeakSensor | MotionSensor | OccupancySensor | SmokeSensor",
             "defaultOn": true | false,
             "defaultBrightness": 0-100,
@@ -124,6 +131,13 @@ All fields are optional unless noted with an asterisk (*)
 - `timer.units` — The units to use for delay above (`SECONDS`, `MINUTES`, or `HOURS`). *Required if delay is set.
 - `timer.random` — If true, the delay will be randomized with a maximum value of `timer.delay`
 
+- `trigger.type` — Automatically set the accessory to it's non-default value
+- `trigger.interval` — Trigger the accessory after this many seconds/minutes/hours. *Required if `trigger.type` = `INTERVAL`
+- `trigger.units` — The units to use for the interval (`SECONDS`, `MINUTES`, or `HOURS`) *Required if `trigger.type` = `INTERVAL`
+- `trigger.random` — If true, the interval will be randomized with a maximum value of `trigger.interval`
+- `trigger.cron` — The cron string for triggering the accessory.  *Required if `trigger.type` = `CRON`
+    - See [crontab.guru](http://crontab.guru) for help
+
 - `sensor` - Optionally attach a sensor that mirrors the state of the parent accessory
     - Only works with `Lightbulb`, `Outlet`, and `Switch`
     - Valid values are `CarbonDioxideSensor`, `CarbonMonoxideSensor`, `ContactSensor`, `LeakSensor`, `MotionSensor`, `OccupancySensor`, or `SmokeSensor`
@@ -142,7 +156,7 @@ All fields are optional unless noted with an asterisk (*)
 - `lockCommand` - Arbitraty command to execute when lock mechanism is locked
 - `unlockCommand` - Arbitraty command to execute when lock mechanism is unlocked
 
-- `resetOnRestart` _ If true, all values return to defaults when Homebridge restarts. Ignored when timer is defined.
+- `resetOnRestart` _ If true, accessory will return to default state when Homebridge restarts
 
 - `disableLogging` — If true, state changes will not be logged
 
@@ -273,10 +287,29 @@ All fields are optional unless noted with an asterisk (*)
 }
 ```
 
+### Hourly Trigger Switch
+```json
+{
+    "name": "Hourly",
+    "type": "Switch",
+    "timer": {
+        "delay": 1,
+        "units": "SECONDS"
+    },
+    "trigger": {
+        "type": "INTERVAL",
+        "interval": 1,
+        "units": "HOURS"
+    }
+}
+```
+
 ## Credits
 
-Special thanks to [@nfarina](https://github.com/nfarina) for creating the original version of this plugin and maintaining it for almost 10 (!!!) years
+Special thanks to [@nfarina](https://github.com/sponsors/nfarina) for creating the original version of this plugin and maintaining it for almost 10 (!!!) years
 
 [Keryan Belahcene](https://www.instagram.com/keryan.me) for creating the [Flume](https://github.com/homebridge-plugins/homebridge-flume) banner image which was adapted for use with this plugin
+
+Auto-Trigger feature inspired by [Homebridge Schedule](https://github.com/kbrashears5/typescript-homebridge-schedule) by [@kbrashears5](https://github.com/sponsors/kbrashears5)
 
 And to the amazing creators/contributors of [Homebridge](https://homebridge.io) who made this plugin possible!

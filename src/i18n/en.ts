@@ -2,6 +2,7 @@ const en = {
 
   accessory: {
 
+    invalidCron: '%s has an invalid cron expression %s', // accessory name, cron string
     missingRequired: '%s is missing required config variable %s', // accessory name, variable name
 
     command: {
@@ -36,6 +37,13 @@ const en = {
       setMinutes: '%s is waiting %s minutes',  // accessory name, number
       setHours: '%s is waiting %s hours', // accessory name, number
     },
+
+    trigger: {
+      cron: '%s starting trigger cronjob', // accessory name
+      intervalSeconds: '%s will trigger in %s seconds', // accessory name, number
+      intervalMinutes: '%s will trigger in %s minutes', // accessory name, number
+      intervalHours: '%s will trigger in %s hours', // accessory name, number
+    },
   },
 
   config: {
@@ -53,9 +61,11 @@ const en = {
     no: 'No',
 
     description: {
-      commands: 'Execute arbitration commands when the accessory changes state',
-      random: 'Delay will be randomized with the above value as a maximum',
-      timer: 'Optional settings to automatically toggle the accessory',
+      commands: 'Execute arbitrary commands when the accessory changes state',
+      cron: 'Visit crontab.guru for help',
+      random: 'Time will be randomized with the above value as a maximum',
+      timer: 'Always return the accessory to its default value after the specified delay',
+      trigger: 'Set the accessory to its opposite (non-default) value at specified interval or times',
     },
 
     enumNames: {
@@ -63,8 +73,10 @@ const en = {
       carbonMonoxideSensor: 'Carbon Monoxide',
       closed: 'Closed',
       contactSensor: 'Contact',
+      cron: 'Cron',
       door: 'Door',
       hours: 'Hours',
+      interval: 'Interval',
       leakSensor: 'Leak',
       lightbulb: 'Lightbulb',
       lockMechanism: 'Lock',
@@ -93,20 +105,22 @@ const en = {
       commandOpen: 'Open Command',
       commandLock: 'Lock Command',
       commandUnlock: 'Unlock Command',
+      cron: 'Cron',
       defaultBrightness: 'Default Brightness',
       defaultPosition: 'Default Position',
       defaultState: 'Default State',
       delay: 'Delay',
       disableLogging: 'Disable Logging',
       groupName: 'Group Name (Beta)',
+      interval: 'Interval',
       name: 'Name',
-      options: 'Additional Settings',
       resetOnRestart: 'Reset on Restart',
-      timer: 'Timer',
+      timer: 'Auto-Reset',
+      trigger: 'Auto-Trigger',
       sensor: 'Attach Sensor',
       type: 'Type',
       units: 'Units',
-      random: 'Random',
+      random: 'Randomize',
     },
   },
 

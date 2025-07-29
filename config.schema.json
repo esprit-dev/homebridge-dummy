@@ -27,6 +27,40 @@
             "description": "${config.description.random}"
           }
         }
+      },
+      "trigger": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "title": "${config.title.type}", 
+            "enum": [ "INTERVAL", "CRON"],
+            "enumNames": ["${config.enumNames.interval}", "${config.enumNames.cron}"]
+          },
+          "interval": {
+            "type": "integer",
+            "title": "${config.title.interval}", 
+            "minimum": 1
+          },
+          "units": {
+            "type": "string",
+            "title": "${config.title.units}", 
+            "enum": [ "SECONDS", "MINUTES", "HOURS"],
+            "enumNames": ["${config.enumNames.seconds}", "${config.enumNames.minutes}", "${config.enumNames.hours}"]
+          },
+          "random": {
+            "type": "boolean",
+            "title": "${config.title.random}",
+            "description": "${config.description.random}"
+          },
+          "cron": {
+            "type": "string",
+            "title": "${config.title.cron}", 
+            "description": "${config.description.cron}", 
+            "placeholder": "* * * * * *",
+            "minimum": 1
+          }
+        }        
       }
     },
     "properties": {
@@ -58,6 +92,7 @@
               "title": "${config.title.groupName}"
             },
             "timer": { "$ref": "#/definitions/timer" },
+            "trigger": { "$ref": "#/definitions/trigger" },
             "sensor": {
               "type": "string",
               "title": "${config.title.sensor}",
@@ -157,74 +192,7 @@
             },
             {
               "type": "fieldset",
-              "title": "${config.title.timer}",
-              "description": "${config.description.timer}",
-              "condition": {
-                "functionBody": "return model.accessories?.[arguments[1]]?.type !== undefined;"
-              },
-              "items": [
-                {
-                  "type": "div",
-                  "displayFlex": true,
-                  "flex-direction": "row",
-                  "items": [
-                    {
-                      "key": "accessories[].timer.delay",
-                      "flex": "1 1 0"
-                    },
-                    {
-                      "key": "accessories[].timer.units",
-                      "flex": "1 1 0"
-                    }
-                  ]
-                },
-                {
-                  "key": "accessories[].timer.random",
-                  "condition": {
-                    "functionBody": "return model.accessories?.[arguments[1]]?.timer?.delay !== undefined;"
-                  }
-                }
-              ]
-            },
-            {
-              "type": "fieldset",
-              "title": "${config.title.commands}",
-              "description": "${config.description.commands}",
-              "condition": {
-                "functionBody": "return ['Lightbulb','Outlet','Switch'].includes(model.accessories?.[arguments[1]]?.type);"
-              },
-              "items": [
-                "accessories[].commandOn",
-                "accessories[].commandOff"
-              ]
-            },
-            {
-              "type": "fieldset",
-              "title": "${config.title.commands}",
-              "description": "${config.description.commands}",
-              "condition": {
-                "functionBody": "return ['LockMechanism'].includes(model.accessories?.[arguments[1]]?.type);"
-              },
-              "items": [
-                "accessories[].commandLock",
-                "accessories[].commandUnlock"
-              ]
-            },            
-            {
-              "type": "fieldset",
-              "title": "${config.title.commands}",
-              "description": "${config.description.commands}",
-              "condition": {
-                "functionBody": "return ['Door', 'Window', 'WindowCovering'].includes(model.accessories?.[arguments[1]]?.type);"
-              },
-              "items": [
-                "accessories[].commandOpen",
-                "accessories[].commandClose"
-              ]
-            },
-            {
-              "type": "fieldset",
-              "title": "${config.title.options}",
+              "notitle": true,
               "condition": {
                 "functionBody": "return model.accessories?.[arguments[1]]?.type !== undefined;"
               },
@@ -297,9 +265,121 @@
                       "condition": {
                         "functionBody": "return model.accessories?.[arguments[1]]?.timer?.delay === undefined;"
                       }
-                    }                  
+                    }
                   ]
                 }
+              ]
+            },
+            {
+              "type": "fieldset",
+              "title": "${config.title.trigger}",
+              "description": "${config.description.trigger}",
+              "condition": {
+                "functionBody": "return model.accessories?.[arguments[1]]?.type !== undefined;"
+              },
+              "items": [
+                {
+                  "type": "div",
+                  "displayFlex": true,
+                  "flex-direction": "row",
+                  "items": [
+                    {
+                      "key": "accessories[].trigger.type",
+                      "flex": "1 1 0"
+                    },
+                    {
+                      "key": "accessories[].trigger.interval",
+                      "flex": "1 1 0",
+                      "condition": {
+                          "functionBody": "return model.accessories?.[arguments[1]]?.trigger?.type === 'INTERVAL';"
+                      }
+                    },
+                    {
+                      "key": "accessories[].trigger.units",
+                      "flex": "1 1 0",
+                      "condition": {
+                          "functionBody": "return model.accessories?.[arguments[1]]?.trigger?.type === 'INTERVAL';"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "key": "accessories[].trigger.cron",
+                  "condition": {
+                      "functionBody": "return model.accessories?.[arguments[1]]?.trigger?.type === 'CRON';"
+                  }
+                },
+                {
+                  "key": "accessories[].trigger.random",
+                  "condition": {
+                      "functionBody": "return model.accessories?.[arguments[1]]?.trigger?.type === 'INTERVAL';"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "fieldset",
+              "title": "${config.title.timer}",
+              "description": "${config.description.timer}",
+              "condition": {
+                "functionBody": "return model.accessories?.[arguments[1]]?.type !== undefined;"
+              },
+              "items": [
+                {
+                  "type": "div",
+                  "displayFlex": true,
+                  "flex-direction": "row",
+                  "items": [
+                    {
+                      "key": "accessories[].timer.delay",
+                      "flex": "1 1 0"
+                    },
+                    {
+                      "key": "accessories[].timer.units",
+                      "flex": "1 1 0"
+                    },
+                    {
+                      "flex": "1 1 0"
+                    }
+                  ]
+                },
+                "accessories[].timer.random"
+              ]
+            },
+            {
+              "type": "fieldset",
+              "title": "${config.title.commands}",
+              "description": "${config.description.commands}",
+              "condition": {
+                "functionBody": "return ['Lightbulb','Outlet','Switch'].includes(model.accessories?.[arguments[1]]?.type);"
+              },
+              "items": [
+                "accessories[].commandOn",
+                "accessories[].commandOff"
+              ]
+            },
+            {
+              "type": "fieldset",
+              "title": "${config.title.commands}",
+              "description": "${config.description.commands}",
+              "condition": {
+                "functionBody": "return ['LockMechanism'].includes(model.accessories?.[arguments[1]]?.type);"
+              },
+              "items": [
+                "accessories[].commandLock",
+                "accessories[].commandUnlock"
+              ]
+            },            
+            {
+              "type": "fieldset",
+              "title": "${config.title.commands}",
+              "description": "${config.description.commands}",
+              "condition": {
+                "functionBody": "return ['Door', 'Window', 'WindowCovering'].includes(model.accessories?.[arguments[1]]?.type);"
+              },
+              "items": [
+                "accessories[].commandOpen",
+                "accessories[].commandClose"
               ]
             }           
           ]

@@ -19,6 +19,10 @@ All notable changes to homebridge-dummy will be documented in this file.
 ### Added
 - Groups (Beta) - Items sharing the same group name will be collected together in the Home app UI
     - ⚠️ Adding/removing/changing the group name for an accessory will require you to reconfigure any HomeKit scenes or automations
+- Auto-Trigger feature to invoke accessory at a specified interval or times
+
+### Changed
+- Reorganized plugin config UI and renamed "Timer" to "Auto-Reset"
 
 ### Fixed
 - Logging issue for timers over 1 hour ([#143](https://github.com/mpatfield/homebridge-dummy/issues/143))

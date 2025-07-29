@@ -66,6 +66,11 @@ export enum TimeUnits {
   HOURS = 'HOURS',
 }
 
+export enum TriggerType {
+  INTERVAL = 'INTERVAL',
+  CRON = 'CRON',
+}
+
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export type Assertable = {
 }
@@ -76,12 +81,21 @@ export type TimerConfig = Assertable & {
   random?: boolean,
 }
 
+export type TriggerConfig = Assertable & {
+  type: TriggerType,
+  interval?: number,
+  units?: TimeUnits,
+  random?: boolean,
+  cron?: string,
+}
+
 export type DummyConfig = {
   id: string,
   name: string,
   type: AccessoryType,
   groupName?: string,
   timer?: TimerConfig,
+  trigger?: TriggerConfig,
   resetOnRestart?: boolean,
   disableLogging?: boolean,
 }
