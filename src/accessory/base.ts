@@ -10,7 +10,6 @@ import { AccessoryType, CharacteristicType, DummyConfig, ServiceType } from '../
 import { Log } from '../tools/log.js';
 import { STORAGE_KEY_SUFFIX_DEFAULT_STATE } from '../tools/storage.js';
 import { Timer } from '../model/timer.js';
-import { assert } from '../tools/validation.js';
 import getVersion from '../tools/version.js';
 import { Trigger } from '../model/trigger.js';
 
@@ -35,7 +34,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
   ) {
 
     if (config.timer) {
-      this.timer = new Timer(config.timer, config.name, config.disableLogging ? undefined : log);
+      this.timer = Timer.new(config.timer, config.name, log, config.disableLogging === true);
     }
 
     if (config.trigger) {
@@ -95,15 +94,6 @@ export abstract class DummyAccessory<C extends DummyConfig> {
   }
 
   protected startTimer() {
-
-    if (!this.config.timer?.delay) {
-      return;
-    }
-
-    if (!assert(this.log, this.config.name, this.config.timer, 'units')) {
-      return;
-    }
-
     this.timer?.start(this.reset.bind(this));
   }
 
@@ -119,10 +109,6 @@ export abstract class DummyAccessory<C extends DummyConfig> {
         this.logIfDesired(`${strings.accessory.command.executed}: %s\n%s`, this.config.name, command, stdout);
       }
     });
-  }
-
-  protected assert(...keys: (keyof C)[]): boolean {
-    return assert(this.log, this.config.name, this.config, ...keys);
   }
 
   protected logIfDesired(message: string, ...parameters: string[]) {

@@ -4,21 +4,30 @@ import { strings } from '../i18n/i18n.js';
 
 import { Log } from '../tools/log.js';
 import { HOUR, MINUTE, SECOND, toMilliseconds } from '../tools/time.js';
+import { assert } from '../tools/validation.js';
 
 export class Timer {
   
   private timer: NodeJS.Timeout | undefined = undefined;
 
-  constructor(
+  static new(config: TimerConfig, caller: string, log: Log, disableLogging: boolean): Timer | undefined {
+    if (!assert(log, caller, config, 'delay', 'units')) {
+      return undefined;
+    }
+    return new Timer(config, caller, log, disableLogging);
+  }
+
+  private constructor(
     private readonly config: TimerConfig,
     private readonly caller: string,
-    private readonly log?: Log,
-  ) { }
+    private readonly log: Log,
+    private readonly disableLogging: boolean,
+  ) {}
 
   public start(callback:  () => Promise<void>) {
 
     if (this.timer) {
-      this.log?.always(strings.accessory.timer.reset, this.caller);
+      this.logIfDesired(strings.accessory.timer.reset);
       this.reset();
     }
 
@@ -29,11 +38,11 @@ export class Timer {
     }
 
     if (delay < MINUTE) {
-      this.log?.always(strings.accessory.timer.setSeconds, this.caller, Math.round(delay / SECOND));
+      this.logIfDesired(strings.accessory.timer.setSeconds, Math.round(delay / SECOND));
     } else if (delay < HOUR) {
-      this.log?.always(strings.accessory.timer.setMinutes, this.caller, Math.round(delay / MINUTE));
+      this.logIfDesired(strings.accessory.timer.setMinutes, Math.round(delay / MINUTE));
     } else {
-      this.log?.always(strings.accessory.timer.setHours, this.caller, Math.round(delay / HOUR));
+      this.logIfDesired(strings.accessory.timer.setHours, Math.round(delay / HOUR));
     }
 
     this.timer = setTimeout(async () => {
@@ -44,7 +53,7 @@ export class Timer {
   
   public cancel() {
     if (this.timer) {
-      this.log?.always(strings.accessory.timer.cancel, this.caller);
+      this.logIfDesired(strings.accessory.timer.cancel);
       this.reset();
     }
   }
@@ -56,5 +65,14 @@ export class Timer {
   private reset() {
     clearTimeout(this.timer);
     this.timer = undefined;
+  }
+
+  private logIfDesired(message: string, ...parameters: (string | number)[]) {
+
+    if (this.disableLogging) {
+      return;
+    }
+
+    this.log.always(message, this.caller, ...parameters);
   }
 }

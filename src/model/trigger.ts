@@ -31,7 +31,7 @@ export class Trigger {
   }
 
   private startInterval() {
-          
+  
     if (!assert(this.log, this.caller, this.trigger, 'interval', 'units')) {
       return;
     }
@@ -79,7 +79,7 @@ export class Trigger {
     new CronJob(this.trigger.cron!, this.callback).start();
   }
 
-  protected logIfDesired(message: string, ...parameters: (string | number)[]) {
+  private logIfDesired(message: string, ...parameters: (string | number)[]) {
 
     if (this.disableLogging) {
       return;
