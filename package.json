@@ -50,6 +50,7 @@
     "esbuild": "^0.25.5",
     "eslint": "^9.27.0",
     "homebridge": "^2.0.0-beta.0",
+    "jiti": "^2.5.1",
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
     "typescript-eslint": "^8.35.1"

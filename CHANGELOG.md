@@ -1,20 +1,14 @@
-## ‼️ WARNING - READ BEFORE CONTINUING ‼️
-
-If upgrading from v0.9.2 or earlier, automations and scenes using Homebridge Dummy accessories will need to be reconfigured.
-
-## ⚠️ IMPORTANT ⚠️
-
-After installing v1.0, you must **RESTART HOMEBRIDGE SERVICE & UI** (not just *RESTART HOMEBRIDGE*) before continuing or you will experience issues with Homebridge Dummy configuration.
-
-Once you have restarted both Homebridge and the UI, you will need to open the Homebridge Dummy plugin settings to run the accessory migration helper.
-
-Full details [here](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#v10-migration).
-
 # Change Log
 
 All notable changes to homebridge-dummy will be documented in this file.
 
 ## 1.1.0-beta.X (XXXX-XX-XX)
+
+### ‼️ WARNING — Read this if upgrading from v0.9.2 or earlier…
+
+Automations and scenes using Homebridge Dummy accessories will need to be reconfigured. After upgrading, you must **RESTART HOMEBRIDGE SERVICE & UI** (not just *RESTART HOMEBRIDGE*). After restarting, open the Homebridge Dummy plugin settings to run the accessory migration helper. Full details [here](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#v10-migration).
+
+---
 
 ### Added
 - Groups (Beta) - Items sharing the same group name will be collected together in the Home app UI
@@ -25,7 +19,7 @@ All notable changes to homebridge-dummy will be documented in this file.
 - Reorganized plugin config UI and renamed "Timer" to "Auto-Reset"
 
 ### Fixed
-- Logging issue for timers over 1 hour ([#143](https://github.com/mpatfield/homebridge-dummy/issues/143))
+- Timers over 1 hour were logging incorrectly ([#143](https://github.com/mpatfield/homebridge-dummy/issues/143))
 
 ## 1.0.0 (2025-07-23)
 

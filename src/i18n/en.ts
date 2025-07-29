@@ -64,7 +64,7 @@ const en = {
       commands: 'Execute arbitrary commands when the accessory changes state',
       cron: 'Visit crontab.guru for help',
       random: 'Time will be randomized with the above value as a maximum',
-      timer: 'Always return the accessory to its default value after the specified delay',
+      timer: 'Return the accessory to its default value after the specified delay',
       trigger: 'Set the accessory to its opposite (non-default) value at specified interval or times',
     },
 
