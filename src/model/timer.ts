@@ -8,14 +8,14 @@ import { assert } from '../tools/validation.js';
 
 export class Timer {
   
-  private timer: NodeJS.Timeout | undefined = undefined;
-
   static new(config: TimerConfig, caller: string, log: Log, disableLogging: boolean): Timer | undefined {
     if (!assert(log, caller, config, 'delay', 'units')) {
       return undefined;
     }
     return new Timer(config, caller, log, disableLogging);
   }
+
+  private timeout?: NodeJS.Timeout;
 
   private constructor(
     private readonly config: TimerConfig,
@@ -26,7 +26,7 @@ export class Timer {
 
   public start(callback:  () => Promise<void>) {
 
-    if (this.timer) {
+    if (this.timeout) {
       this.logIfDesired(strings.accessory.timer.reset);
       this.reset();
     }
@@ -45,14 +45,14 @@ export class Timer {
       this.logIfDesired(strings.accessory.timer.setHours, Math.round(delay / HOUR));
     }
 
-    this.timer = setTimeout(async () => {
+    this.timeout = setTimeout(async () => {
       this.reset();
       await callback();
     }, delay);
   }
   
   public cancel() {
-    if (this.timer) {
+    if (this.timeout) {
       this.logIfDesired(strings.accessory.timer.cancel);
       this.reset();
     }
@@ -63,8 +63,8 @@ export class Timer {
   }
 
   private reset() {
-    clearTimeout(this.timer);
-    this.timer = undefined;
+    clearTimeout(this.timeout);
+    this.timeout = undefined;
   }
 
   private logIfDesired(message: string, ...parameters: (string | number)[]) {

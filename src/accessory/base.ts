@@ -21,7 +21,8 @@ export abstract class DummyAccessory<C extends DummyConfig> {
 
   protected readonly accessoryService: Service;
 
-  private readonly timer: Timer | undefined = undefined;
+  private readonly _timer?: Timer;
+  private readonly _trigger?: Trigger;
 
   constructor(
     protected readonly Service: ServiceType,
@@ -34,11 +35,11 @@ export abstract class DummyAccessory<C extends DummyConfig> {
   ) {
 
     if (config.timer) {
-      this.timer = Timer.new(config.timer, config.name, log, config.disableLogging === true);
+      this._timer = Timer.new(config.timer, config.name, log, config.disableLogging === true);
     }
 
     if (config.trigger) {
-      new Trigger(config.trigger, config.name, log, config.disableLogging === true, this.trigger.bind(this));
+      this._trigger = Trigger.new(config.trigger, config.name, log, config.disableLogging === true, this.trigger.bind(this));
     }
 
     const serviceInstance = Service[this.getAccessoryType()];
@@ -78,7 +79,8 @@ export abstract class DummyAccessory<C extends DummyConfig> {
   }
 
   public teardown() {
-    this.timer?.teardown();
+    this._timer?.teardown();
+    this._trigger?.teardown();
   }
 
   protected get identifier(): string {
@@ -86,7 +88,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
   }
 
   protected get isStateful(): boolean {
-    return this.config.timer?.delay === undefined && !this.config.resetOnRestart;
+    return this._timer === undefined && this._trigger === undefined && !this.config.resetOnRestart;
   }
 
   protected get defaultStateStorageKey(): string {
@@ -94,11 +96,11 @@ export abstract class DummyAccessory<C extends DummyConfig> {
   }
 
   protected startTimer() {
-    this.timer?.start(this.reset.bind(this));
+    this._timer?.start(this.reset.bind(this));
   }
 
   protected cancelTimer() {
-    this.timer?.cancel();
+    this._timer?.cancel();
   }
 
   protected executeCommand(command: string) {
@@ -111,7 +113,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
     });
   }
 
-  protected logIfDesired(message: string, ...parameters: string[]) {
+  protected logIfDesired(message: string, ...parameters: (string | number)[]) {
 
     if (this.config.disableLogging) {
       return;

@@ -85,8 +85,8 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
         {
             "id": "string",
             "name": "string",
+            "type": "Door | Lightbulb | LockMechanism | Outlet | Switch | Thermostat | Window | WindoCovering",
             "groupName": "string",
-            "type": "Door | Lightbulb | LockMechanism | Outlet | Switch | Window | WindoCovering",
             "timer": {
                 "delay": number,
                 "units": "SECONDS | MINUTES | HOURS",
@@ -100,14 +100,20 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
                 "cron": "string"
             },
             "sensor": "CarbonDioxideSensor | CarbonMonoxideSensor | ContactSensor | LeakSensor | MotionSensor | OccupancySensor | SmokeSensor",
+            "temperatureUnits": "C" | "F",
             "defaultOn": true | false,
             "defaultBrightness": 0-100,
             "defaultLockState": "locked" | "unlocked",
             "defaultPosition": "open" | "closed",
-            "onCommand": "string",
-            "offCommand": "string",
-            "lockCommand": "string",
-            "unlockCommand": "string",
+            "defaultThermostatState": "auto" | "heat" | "cool" | "off",
+            "defaultTemperature": number,
+            "commandOn": "string",
+            "commandOff": "string",
+            "commandLock": "string",
+            "commandUnlock": "string",
+            "commandOpen": "string",
+            "commandClose": "string",
+            "commandTemperature": "string",
             "resetOnRestart": true | false,
             "disableLogging": true | false
         }
@@ -122,7 +128,7 @@ All fields are optional unless noted with an asterisk (*)
 - `id`* - A unique identifier for the accessory. Changing this value will create a new accessory.
 
 - `name`* - The display name for the accessory in HomeKit
-- `type`* - The type of accessory: `Door`, `Lightbulb`, `LockMechanism`, `Outlet`, `Switch`, `Window`, or `WindowCovering`
+- `type`* - The type of accessory: `Door`, `Lightbulb`, `LockMechanism`, `Outlet`, `Switch`, `Thermostat`, `Window`, or `WindowCovering`
 
 - `groupName` - (Beta) Items sharing the same group name will be collected together in the Home app UI
     - ⚠️ Adding/removing/changing the group name will require you to reconfigure any HomeKit scenes or automations
@@ -142,6 +148,8 @@ All fields are optional unless noted with an asterisk (*)
     - Only works with `Lightbulb`, `Outlet`, and `Switch`
     - Valid values are `CarbonDioxideSensor`, `CarbonMonoxideSensor`, `ContactSensor`, `LeakSensor`, `MotionSensor`, `OccupancySensor`, or `SmokeSensor`
 
+- `temperatureUnits` - Units to use for thermostats, either 'C' or 'F'
+
 - `defaultOn` — Initial value. Default _ON_ = true, default _OFF_ = false
 
 - `defaultBrightness` — If set, lightbulb will have additional dimmer settings with this default brightness percentage
@@ -150,11 +158,17 @@ All fields are optional unless noted with an asterisk (*)
 
 - `defaultPosition` — Initial position for the door/window/blinds, "open" or "closed"
 
-- `onCommand` - Arbitraty command to execute when lightbulb/outlet/switch turns on
-- `offCommand` - Arbitraty command to execute when lightbulb/outlet/switch turns off
+- `defaultThermostatState` - The initial state for the thermostat, "auto", "heat", "cool", or "off"
+
+- `defaultTemperature` - The default temperature for the thermostat in `temperatureUnits` defined above
+
+- `onCommand` - Arbitraty command to execute when lightbulb/outlet/switch/thermostat turns on
+- `offCommand` - Arbitraty command to execute when lightbulb/outlet/switch/thermostat turns off
 
 - `lockCommand` - Arbitraty command to execute when lock mechanism is locked
 - `unlockCommand` - Arbitraty command to execute when lock mechanism is unlocked
+
+- `commandTemperature` - Arbitrary command to execute when temperature changes
 
 - `resetOnRestart` _ If true, accessory will return to default state when Homebridge restarts
 
@@ -301,6 +315,17 @@ All fields are optional unless noted with an asterisk (*)
         "interval": 1,
         "units": "HOURS"
     }
+}
+```
+
+### Thermostat
+```json
+{
+    "name": "Thermostat",
+    "type": "Thermostat",
+    "temperatureUnits": "F",
+    "defaultThermostatState": "heat",
+    "defaultTemperature": 78
 }
 ```
 

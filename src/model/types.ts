@@ -9,6 +9,7 @@ export enum AccessoryType {
   LockMechanism = 'LockMechanism',
   Outlet = 'Outlet',
   Switch = 'Switch',
+  Thermostat = 'Thermostat',
   Window = 'Window',
   WindowCovering = 'WindowCovering'
 }
@@ -43,6 +44,13 @@ export enum DefaultPosition {
   CLOSED = 'closed',
 }
 
+export enum DefaultThermostatState {
+  OFF = 'off',
+  COOL = 'cool',
+  HEAT = 'heat',
+  AUTO = 'auto',
+}
+
 export type LegacyAccessoryConfig = AccessoryConfig & {
   name: string;
   dimmer?: boolean;
@@ -69,6 +77,11 @@ export enum TimeUnits {
 export enum TriggerType {
   INTERVAL = 'INTERVAL',
   CRON = 'CRON',
+}
+
+export enum TemperatureUnits {
+  CELSIUS = 'C',
+  FAHRENHEIT = 'F',
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
@@ -121,6 +134,15 @@ export type LockConfig = DummyConfig & {
   defaultLockState?: DefaultLockState;
   commandLock?: string,
   commandUnlock?: string,
+}
+
+export type ThermostatConfig = DummyConfig & {
+  temperatureUnits?: TemperatureUnits
+  defaultThermostatState?: DefaultThermostatState;
+  defaultTemperature?: number;
+  commandOn?: string,
+  commandOff?: string,
+  commandTemperature?: string,
 }
 
 export type PositionConfig = DummyConfig & {

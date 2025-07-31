@@ -7,6 +7,7 @@ import { LightbulbAccessory } from './onoff/lightbulb.js';
 import { LockAccessory } from './lock.js';
 import { OutletAccessory } from './onoff/outlet.js';
 import { SwitchAccessory } from './onoff/switch.js';
+import { ThermostatAccessory } from './thermostat.js';
 import { WindowAccessory } from './position/window.js';
 
 import { strings } from '../i18n/i18n.js';
@@ -36,6 +37,8 @@ export function createDummyAccessory(
     return new OutletAccessory(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
   case Types.AccessoryType.Switch:
     return new SwitchAccessory(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
+  case Types.AccessoryType.Thermostat:
+    return new ThermostatAccessory(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
   case Types.AccessoryType.Window:
     return new WindowAccessory(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
   case Types.AccessoryType.WindowCovering:

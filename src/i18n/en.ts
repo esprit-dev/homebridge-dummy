@@ -30,6 +30,16 @@ const en = {
       open: '%s is open', // accessory name
     },
 
+    thermostat: {
+      auto: '%s set to Auto', // accessory name
+      cool: '%s set to Cool', // accessory name
+      heat: '%s set to Heat', // accessory name
+      off: '%s set to Off', // accessory name
+      temperatureC: '%s set to %s°C', // accessory name
+      temperatureF: '%s set to %s°F', // accessory name
+      unsupportedFunction: '%s is unsupported for thermostats', // function name
+    },
+
     timer: {
       cancel: 'Cancelled the timer for %s', // accessory name
       reset: 'Reset the timer for %s', // accessory name
@@ -69,12 +79,17 @@ const en = {
     },
 
     enumNames: {
+      auto: 'Auto',
       carbonDioxideSensor:'Carbon Dioxide',
       carbonMonoxideSensor: 'Carbon Monoxide',
+      celsius: '°C',
       closed: 'Closed',
       contactSensor: 'Contact',
+      cool: 'Cool',
       cron: 'Cron',
       door: 'Door',
+      fahrenheit: '°F',
+      heat: 'Heat',
       hours: 'Hours',
       interval: 'Interval',
       leakSensor: 'Leak',
@@ -91,6 +106,7 @@ const en = {
       secured: 'Locked',
       smokeSensor: 'Smoke',
       switch: 'Switch',
+      thermostat: 'Thermostat',
       unsecured: 'Unlocked',
       window: 'Window',
       windowCovering: 'Window Convering (Blinds)',
@@ -105,10 +121,12 @@ const en = {
       commandOpen: 'Open Command',
       commandLock: 'Lock Command',
       commandUnlock: 'Unlock Command',
+      commandTemperature: 'Temperature Changed Command',
       cron: 'Cron',
       defaultBrightness: 'Default Brightness',
       defaultPosition: 'Default Position',
       defaultState: 'Default State',
+      defaultTemperature: 'Default Temperature',
       delay: 'Delay',
       disableLogging: 'Disable Logging',
       groupName: 'Group Name (Beta)',

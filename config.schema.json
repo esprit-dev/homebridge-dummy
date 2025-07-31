@@ -84,8 +84,8 @@
             "type": {
               "type": "string",
               "title": "${config.title.type}", 
-              "enum": ["Door", "Lightbulb", "LockMechanism", "Outlet", "Switch", "Window", "WindowCovering"],
-              "enumNames": ["${config.enumNames.door}", "${config.enumNames.lightbulb}", "${config.enumNames.lockMechanism}", "${config.enumNames.outlet}", "${config.enumNames.switch}", "${config.enumNames.window}", "${config.enumNames.windowCovering}"]
+              "enum": ["Door", "Lightbulb", "LockMechanism", "Outlet", "Switch", "Thermostat", "Window", "WindowCovering"],
+              "enumNames": ["${config.enumNames.door}", "${config.enumNames.lightbulb}", "${config.enumNames.lockMechanism}", "${config.enumNames.outlet}", "${config.enumNames.switch}", "${config.enumNames.thermostat}", "${config.enumNames.window}", "${config.enumNames.windowCovering}"]
             },
             "groupName": {
               "type": "string",
@@ -98,6 +98,12 @@
               "title": "${config.title.sensor}",
               "enum": ["CarbonDioxideSensor", "CarbonMonoxideSensor", "ContactSensor", "LeakSensor", "MotionSensor", "OccupancySensor", "SmokeSensor"],
               "enumNames": ["${config.enumNames.carbonDioxideSensor}", "${config.enumNames.carbonMonoxideSensor}", "${config.enumNames.contactSensor}", "${config.enumNames.leakSensor}", "${config.enumNames.motionSensor}", "${config.enumNames.occupancySensor}", "${config.enumNames.smokeSensor}"]
+            },
+            "temperatureUnits": {
+              "type": "string",
+              "title": "${config.title.units}",
+              "enum": ["C", "F"],
+              "enumNames": ["${config.enumNames.celsius}", "${config.enumNames.fahrenheit}"]
             },
             "defaultBrightness": {
               "type": "number",
@@ -123,6 +129,16 @@
               "enum": ["open", "closed"],
               "enumNames": ["${config.enumNames.open}", "${config.enumNames.closed}"]
             },
+            "defaultThermostatState": {
+              "type": "string",
+              "title": "${config.title.defaultState}",
+              "enum": ["auto", "heat", "cool", "off"],
+              "enumNames": ["${config.enumNames.auto}", "${config.enumNames.heat}", "${config.enumNames.cool}", "${config.enumNames.off}"]
+            },
+            "defaultTemperature": {
+              "type": "number",
+              "title": "${config.title.defaultTemperature}"
+            },
             "commandOn": {
               "type": "string",
               "title": "${config.title.commandOn}"
@@ -146,6 +162,10 @@
             "commandClose": {
               "type": "string",
               "title": "${config.title.commandClose}"
+            },
+            "commandTemperature": {
+              "type": "string",
+              "title": "${config.title.commandTemperature}"
             },
             "resetOnRestart": {
               "type": "boolean",
@@ -178,15 +198,15 @@
               "items": [
                 {
                   "key": "accessories[].name",
-                  "flex": "1 1 0"
+                  "flex": "1 1 33%"
                 },
                 {
                   "key": "accessories[].type",
-                  "flex": "1 1 0"
+                  "flex": "1 1 33%"
                 },
                 {
                   "key": "accessories[].groupName",
-                  "flex": "1 1 0"
+                  "flex": "1 1 33%"
                 }
               ]
             },
@@ -207,15 +227,15 @@
                   "items": [
                     {
                       "key": "accessories[].defaultOn",
-                      "flex": "0 0 25%"
+                      "flex": "0 0 33%"
                     },
                     {
                       "key": "accessories[].sensor",
-                      "flex": "0 0 25%"
+                      "flex": "0 0 33%"
                     },
                     {
                       "key": "accessories[].defaultBrightness",
-                      "flex": "0 0 25%",
+                      "flex": "0 0 33%",
                       "condition": {
                         "functionBody": "return ['Lightbulb'].includes(model.accessories?.[arguments[1]]?.type);"
                       }
@@ -232,7 +252,7 @@
                   "items": [
                     {
                       "key": "accessories[].defaultLockState",
-                      "flex": "0 0 25%"
+                      "flex": "0 0 33%"
                     }
                   ]
                 },
@@ -246,10 +266,32 @@
                   "items": [
                     {
                       "key": "accessories[].defaultPosition",
-                      "flex": "0 0 25%"
+                      "flex": "0 0 33%"
                     }
                   ]
-                },                
+                },  
+                {
+                  "type": "div",
+                  "displayFlex": true,
+                  "flex-direction": "row",
+                  "condition": {
+                    "functionBody": "return ['Thermostat'].includes(model.accessories?.[arguments[1]]?.type);"
+                  },
+                  "items": [
+                    {
+                      "key": "accessories[].temperatureUnits",
+                      "flex": "0 0 33%"
+                    },
+                    {
+                      "key": "accessories[].defaultThermostatState",
+                      "flex": "0 0 33%"
+                    },
+                    {
+                      "key": "accessories[].defaultTemperature",
+                      "flex": "0 0 33%"
+                    }
+                  ]
+                },              
                 {
                   "type": "div",
                   "displayFlex": true,
@@ -257,11 +299,11 @@
                   "items": [
                     {
                       "key": "accessories[].disableLogging",
-                      "flex": "0 1 25%"
+                      "flex": "0 1 33%"
                     },
                     {
                       "key": "accessories[].resetOnRestart",
-                      "flex": "0 1 25%",
+                      "flex": "0 1 33%",
                       "condition": {
                         "functionBody": "return model.accessories?.[arguments[1]]?.timer?.delay === undefined;"
                       }
@@ -275,7 +317,7 @@
               "title": "${config.title.trigger}",
               "description": "${config.description.trigger}",
               "condition": {
-                "functionBody": "return model.accessories?.[arguments[1]]?.type !== undefined;"
+                "functionBody": "const type = model.accessories?.[arguments[1]]?.type; return type !== undefined && type !== 'Thermostat';"
               },
               "items": [
                 {
@@ -285,18 +327,18 @@
                   "items": [
                     {
                       "key": "accessories[].trigger.type",
-                      "flex": "1 1 0"
+                      "flex": "1 1 33%"
                     },
                     {
                       "key": "accessories[].trigger.interval",
-                      "flex": "1 1 0",
+                      "flex": "1 1 33%",
                       "condition": {
                           "functionBody": "return model.accessories?.[arguments[1]]?.trigger?.type === 'INTERVAL';"
                       }
                     },
                     {
                       "key": "accessories[].trigger.units",
-                      "flex": "1 1 0",
+                      "flex": "1 1 33%",
                       "condition": {
                           "functionBody": "return model.accessories?.[arguments[1]]?.trigger?.type === 'INTERVAL';"
                       }
@@ -322,7 +364,7 @@
               "title": "${config.title.timer}",
               "description": "${config.description.timer}",
               "condition": {
-                "functionBody": "return model.accessories?.[arguments[1]]?.type !== undefined;"
+                "functionBody": "const type = model.accessories?.[arguments[1]]?.type; return type !== undefined && type !== 'Thermostat';"
               },
               "items": [
                 {
@@ -332,14 +374,14 @@
                   "items": [
                     {
                       "key": "accessories[].timer.delay",
-                      "flex": "1 1 0"
+                      "flex": "1 1 33%"
                     },
                     {
                       "key": "accessories[].timer.units",
-                      "flex": "1 1 0"
+                      "flex": "1 1 33%"
                     },
                     {
-                      "flex": "1 1 0"
+                      "flex": "1 1 33%"
                     }
                   ]
                 },
@@ -350,38 +392,51 @@
               "type": "fieldset",
               "title": "${config.title.commands}",
               "description": "${config.description.commands}",
-              "condition": {
-                "functionBody": "return ['Lightbulb','Outlet','Switch'].includes(model.accessories?.[arguments[1]]?.type);"
-              },
               "items": [
-                "accessories[].commandOn",
-                "accessories[].commandOff"
+                {
+                  "key": "accessories[].commandOn",
+                  "condition": {
+                    "functionBody": "return ['Lightbulb','Outlet','Switch','Thermostat'].includes(model.accessories?.[arguments[1]]?.type);"
+                  }
+                },
+                {
+                  "key": "accessories[].commandOff",
+                  "condition": {
+                    "functionBody": "return ['Lightbulb','Outlet','Switch','Thermostat'].includes(model.accessories?.[arguments[1]]?.type);"
+                  }
+                },
+                {
+                  "key": "accessories[].commandLock",
+                  "condition": {
+                    "functionBody": "return ['LockMechanism'].includes(model.accessories?.[arguments[1]]?.type);"
+                  }
+                },
+                {
+                  "key": "accessories[].commandUnlock",
+                  "condition": {
+                    "functionBody": "return ['LockMechanism'].includes(model.accessories?.[arguments[1]]?.type);"
+                  }
+                },
+                {
+                  "key": "accessories[].commandOpen",
+                  "condition": {
+                    "functionBody": "return ['Door', 'Window', 'WindowCovering'].includes(model.accessories?.[arguments[1]]?.type);"
+                  }
+                },
+                {
+                  "key": "accessories[].commandClose",
+                  "condition": {
+                    "functionBody": "return ['Door', 'Window', 'WindowCovering'].includes(model.accessories?.[arguments[1]]?.type);"
+                  }
+                },
+                {
+                  "key": "accessories[].commandTemperature",
+                  "condition": {
+                    "functionBody": "return ['Thermostat'].includes(model.accessories?.[arguments[1]]?.type);"
+                  }
+                }
               ]
-            },
-            {
-              "type": "fieldset",
-              "title": "${config.title.commands}",
-              "description": "${config.description.commands}",
-              "condition": {
-                "functionBody": "return ['LockMechanism'].includes(model.accessories?.[arguments[1]]?.type);"
-              },
-              "items": [
-                "accessories[].commandLock",
-                "accessories[].commandUnlock"
-              ]
-            },            
-            {
-              "type": "fieldset",
-              "title": "${config.title.commands}",
-              "description": "${config.description.commands}",
-              "condition": {
-                "functionBody": "return ['Door', 'Window', 'WindowCovering'].includes(model.accessories?.[arguments[1]]?.type);"
-              },
-              "items": [
-                "accessories[].commandOpen",
-                "accessories[].commandClose"
-              ]
-            }           
+            }
           ]
         }
       ]
