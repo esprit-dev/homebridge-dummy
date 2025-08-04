@@ -1,4 +1,4 @@
-import { TimerConfig } from './types.js';
+import { TimerConfig, TimeUnits } from './types.js';
 
 import { strings } from '../i18n/i18n.js';
 
@@ -32,17 +32,28 @@ export class Timer {
     }
 
     let delay = toMilliseconds(this.config.delay, this.config.units);
+    let units = this.config.units;
 
     if (this.config.random) {
       delay = Math.floor(Math.max(SECOND, Math.random() * delay));
-    }
 
-    if (delay < MINUTE) {
+      if (delay < MINUTE) {
+        units = TimeUnits.SECONDS;
+      } else if (delay < HOUR) {
+        units = TimeUnits.MINUTES;
+      }
+    }
+    
+    switch(units) {
+    case TimeUnits.SECONDS:
       this.logIfDesired(strings.accessory.timer.setSeconds, Math.round(delay / SECOND));
-    } else if (delay < HOUR) {
+      break;
+    case TimeUnits.MINUTES:
       this.logIfDesired(strings.accessory.timer.setMinutes, Math.round(delay / MINUTE));
-    } else {
+      break;
+    case TimeUnits.HOURS:
       this.logIfDesired(strings.accessory.timer.setHours, Math.round(delay / HOUR));
+      break;
     }
 
     this.timeout = setTimeout(async () => {

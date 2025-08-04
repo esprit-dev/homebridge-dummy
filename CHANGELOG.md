@@ -22,6 +22,7 @@ Automations and scenes using Homebridge Dummy accessories will need to be reconf
 
 ### Fixed
 - Timers over 1 hour were logging incorrectly ([#143](https://github.com/mpatfield/homebridge-dummy/issues/143))
+- Improved timer logging ([#148](https://github.com/mpatfield/homebridge-dummy/issues/148))
 
 ## 1.0.0 (2025-07-23)
 

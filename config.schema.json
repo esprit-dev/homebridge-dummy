@@ -354,7 +354,7 @@
                 {
                   "key": "accessories[].trigger.random",
                   "condition": {
-                      "functionBody": "return model.accessories?.[arguments[1]]?.trigger?.type === 'INTERVAL';"
+                      "functionBody": "const trigger = model.accessories?.[arguments[1]]?.trigger; return trigger?.type === 'INTERVAL' && trigger?.interval !== undefined;"
                   }
                 }
               ]
@@ -385,7 +385,12 @@
                     }
                   ]
                 },
-                "accessories[].timer.random"
+                {
+                  "key": "accessories[].timer.random",
+                  "condition": {
+                      "functionBody": "return model.accessories?.[arguments[1]]?.timer?.delay !== undefined;"
+                  }
+                }
               ]
             },
             {
