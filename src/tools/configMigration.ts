@@ -32,8 +32,8 @@ function migrateAccessory(legacyConfig: LegacyAccessoryConfig): DummyConfig {
 
   if (!legacyConfig.stateful && legacyConfig.time) {
     dummyConfig.timer = {
-      delay: Math.max(1, legacyConfig.time / 1000),
-      units: TimeUnits.SECONDS,
+      delay: legacyConfig.time,
+      units: TimeUnits.MILLISECONDS,
       random: legacyConfig.random,
     };
   }

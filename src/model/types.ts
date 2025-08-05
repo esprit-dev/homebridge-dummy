@@ -69,6 +69,7 @@ export type DummyPlatformConfig = PlatformConfig & {
 }
 
 export enum TimeUnits {
+  MILLISECONDS = 'MILLISECONDS',
   SECONDS = 'SECONDS',
   MINUTES = 'MINUTES',
   HOURS = 'HOURS',

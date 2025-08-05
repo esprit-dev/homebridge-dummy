@@ -6,6 +6,8 @@ export const HOUR = 60 * MINUTE;
 
 export function toMilliseconds(value: number, units: TimeUnits): number {
   switch(units) {
+  case TimeUnits.MILLISECONDS:
+    return value;
   case TimeUnits.SECONDS:
     return value * SECOND;
   case TimeUnits.MINUTES:

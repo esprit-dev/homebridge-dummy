@@ -12,14 +12,14 @@
         "properties": {
           "delay": {
             "type": "integer",
-            "title": "${config.title.delay}", 
+            "title": "${config.title.delay}",
             "minimum": 1
           },
           "units": {
             "type": "string",
-            "title": "${config.title.units}", 
-            "enum": [ "SECONDS", "MINUTES", "HOURS"],
-            "enumNames": ["${config.enumNames.seconds}", "${config.enumNames.minutes}", "${config.enumNames.hours}"]
+            "title": "${config.title.units}",
+            "enum": [ "MILLISECONDS", "SECONDS", "MINUTES", "HOURS"],
+            "enumNames": ["${config.enumNames.milliseconds}", "${config.enumNames.seconds}", "${config.enumNames.minutes}", "${config.enumNames.hours}"]
           },
           "random": {
             "type": "boolean",
@@ -33,20 +33,20 @@
         "properties": {
           "type": {
             "type": "string",
-            "title": "${config.title.type}", 
+            "title": "${config.title.type}",
             "enum": [ "INTERVAL", "CRON"],
             "enumNames": ["${config.enumNames.interval}", "${config.enumNames.cron}"]
           },
           "interval": {
             "type": "integer",
-            "title": "${config.title.interval}", 
+            "title": "${config.title.interval}",
             "minimum": 1
           },
           "units": {
             "type": "string",
-            "title": "${config.title.units}", 
-            "enum": [ "SECONDS", "MINUTES", "HOURS"],
-            "enumNames": ["${config.enumNames.seconds}", "${config.enumNames.minutes}", "${config.enumNames.hours}"]
+            "title": "${config.title.units}",
+            "enum": [ "MILLISECONDS", "SECONDS", "MINUTES", "HOURS"],
+            "enumNames": ["${config.enumNames.milliseconds}", "${config.enumNames.seconds}", "${config.enumNames.minutes}", "${config.enumNames.hours}"]
           },
           "random": {
             "type": "boolean",
@@ -55,12 +55,12 @@
           },
           "cron": {
             "type": "string",
-            "title": "${config.title.cron}", 
-            "description": "${config.description.cron}", 
+            "title": "${config.title.cron}",
+            "description": "${config.description.cron}",
             "placeholder": "* * * * * *",
             "minimum": 1
           }
-        }        
+        }
       }
     },
     "properties": {
@@ -83,7 +83,7 @@
             },
             "type": {
               "type": "string",
-              "title": "${config.title.type}", 
+              "title": "${config.title.type}",
               "enum": ["Door", "Lightbulb", "LockMechanism", "Outlet", "Switch", "Thermostat", "Window", "WindowCovering"],
               "enumNames": ["${config.enumNames.door}", "${config.enumNames.lightbulb}", "${config.enumNames.lockMechanism}", "${config.enumNames.outlet}", "${config.enumNames.switch}", "${config.enumNames.thermostat}", "${config.enumNames.window}", "${config.enumNames.windowCovering}"]
             },
@@ -176,7 +176,7 @@
               "type": "boolean"
             }
           }
-        }        
+        }
       }
     }
   },
@@ -269,7 +269,7 @@
                       "flex": "0 0 33%"
                     }
                   ]
-                },  
+                },
                 {
                   "type": "div",
                   "displayFlex": true,
@@ -291,7 +291,7 @@
                       "flex": "0 0 33%"
                     }
                   ]
-                },              
+                },
                 {
                   "type": "div",
                   "displayFlex": true,

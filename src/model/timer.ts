@@ -7,7 +7,7 @@ import { HOUR, MINUTE, SECOND, toMilliseconds } from '../tools/time.js';
 import { assert } from '../tools/validation.js';
 
 export class Timer {
-  
+
   static new(config: TimerConfig, caller: string, log: Log, disableLogging: boolean): Timer | undefined {
     if (!assert(log, caller, config, 'delay', 'units')) {
       return undefined;
@@ -37,14 +37,19 @@ export class Timer {
     if (this.config.random) {
       delay = Math.floor(Math.max(SECOND, Math.random() * delay));
 
-      if (delay < MINUTE) {
+      if (delay < SECOND) {
+        units = TimeUnits.MILLISECONDS;
+      } else if (delay < MINUTE) {
         units = TimeUnits.SECONDS;
       } else if (delay < HOUR) {
         units = TimeUnits.MINUTES;
       }
     }
-    
+
     switch(units) {
+    case TimeUnits.MILLISECONDS:
+      this.logIfDesired(strings.accessory.timer.setMilliseconds, delay);
+      break;
     case TimeUnits.SECONDS:
       this.logIfDesired(strings.accessory.timer.setSeconds, Math.round(delay / SECOND));
       break;
@@ -61,7 +66,7 @@ export class Timer {
       await callback();
     }, delay);
   }
-  
+
   public cancel() {
     if (this.timeout) {
       this.logIfDesired(strings.accessory.timer.cancel);

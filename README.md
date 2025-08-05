@@ -89,13 +89,13 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
             "groupName": "string",
             "timer": {
                 "delay": number,
-                "units": "SECONDS | MINUTES | HOURS",
+                "units": "MILLISECONDS | SECONDS | MINUTES | HOURS",
                 "random": true | false
             },
             "trigger": {
                 "type": "INTERVAL" | "CRON",
                 "interval": number,
-                "units": "SECONDS | MINUTES | HOURS",
+                "units": "MILLISECONDS | SECONDS | MINUTES | HOURS",
                 "random": true | false,
                 "cron": "string"
             },
@@ -133,13 +133,13 @@ All fields are optional unless noted with an asterisk (*)
 - `groupName` - (Beta) Items sharing the same group name will be collected together in the Home app UI
     - ⚠️ Adding/removing/changing the group name will require you to reconfigure any HomeKit scenes or automations
 
-- `timer.delay` — If defined, the switch will automatically toggle after this many seconds/minutes/hours
-- `timer.units` — The units to use for delay above (`SECONDS`, `MINUTES`, or `HOURS`). *Required if delay is set.
+- `timer.delay` — If defined, the switch will automatically toggle after this many milliseconds/seconds/minutes/hours
+- `timer.units` — The units to use for delay above (`MILLISECONDS`, `SECONDS`, `MINUTES`, or `HOURS`). *Required if delay is set.
 - `timer.random` — If true, the delay will be randomized with a maximum value of `timer.delay`
 
 - `trigger.type` — Automatically set the accessory to it's non-default value
-- `trigger.interval` — Trigger the accessory after this many seconds/minutes/hours. *Required if `trigger.type` = `INTERVAL`
-- `trigger.units` — The units to use for the interval (`SECONDS`, `MINUTES`, or `HOURS`) *Required if `trigger.type` = `INTERVAL`
+- `trigger.interval` — Trigger the accessory after this many milliseconds/seconds/minutes/hours. *Required if `trigger.type` = `INTERVAL`
+- `trigger.units` — The units to use for the interval (`MILLISECONDS`, `SECONDS`, `MINUTES`, or `HOURS`) *Required if `trigger.type` = `INTERVAL`
 - `trigger.random` — If true, the interval will be randomized with a maximum value of `trigger.interval`
 - `trigger.cron` — The cron string for triggering the accessory.  *Required if `trigger.type` = `CRON`
     - See [crontab.guru](http://crontab.guru) for help

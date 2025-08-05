@@ -16,6 +16,7 @@ Automations and scenes using Homebridge Dummy accessories will need to be reconf
 - Auto-Trigger feature to invoke accessory at a specified interval or times
 - Support for Thermostats
     - Manual control only, no auto-trigger or auto-reset functionality
+- Millisecond unit option for triggers/timers
 
 ### Changed
 - Reorganized plugin config UI and renamed "Timer" to "Auto-Reset"

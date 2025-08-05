@@ -43,6 +43,7 @@ const en = {
     timer: {
       cancel: 'Cancelled the timer for %s', // accessory name
       reset: 'Reset the timer for %s', // accessory name
+      setMilliseconds: '%s is waiting %s milliseconds', // accessory name, number
       setSeconds: '%s is waiting %s seconds', // accessory name, number
       setMinutes: '%s is waiting %s minutes',  // accessory name, number
       setHours: '%s is waiting %s hours', // accessory name, number
@@ -50,6 +51,7 @@ const en = {
 
     trigger: {
       cron: '%s starting trigger cronjob', // accessory name
+      intervalMilliseconds: '%s will trigger in %s milliseconds', // accessory name, number
       intervalSeconds: '%s will trigger in %s seconds', // accessory name, number
       intervalMinutes: '%s will trigger in %s minutes', // accessory name, number
       intervalHours: '%s will trigger in %s hours', // accessory name, number
@@ -100,6 +102,7 @@ const en = {
       on: 'On',
       open: 'Open',
       outlet: 'Outlet',
+      milliseconds: 'Milliseconds',
       minutes: 'Minutes',
       motionSensor: 'Motion',
       seconds: 'Seconds',

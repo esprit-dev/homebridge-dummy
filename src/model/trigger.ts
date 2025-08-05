@@ -61,7 +61,9 @@ export class Trigger {
       delay = Math.floor(Math.max(SECOND, Math.random() * delay));
     }
 
-    if (delay < MINUTE) {
+    if (delay < SECOND) {
+      this.logIfDesired(strings.accessory.trigger.intervalMilliseconds, delay);
+    } else if (delay < MINUTE) {
       this.logIfDesired(strings.accessory.trigger.intervalSeconds, Math.round(delay / SECOND));
     } else if (delay < HOUR) {
       this.logIfDesired(strings.accessory.trigger.intervalMinutes, Math.round(delay / MINUTE));
