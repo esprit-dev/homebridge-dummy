@@ -4,6 +4,7 @@ const en = {
 
     invalidCron: '%s has an invalid cron expression %s', // accessory name, cron string
     missingRequired: '%s is missing required config variable %s', // accessory name, variable name
+    badValueType: '%s expected type %s but was %s', // accessory name, variable type, variable type
 
     command: {
       executed: '%s executed command', // accessory name

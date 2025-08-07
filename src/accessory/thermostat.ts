@@ -8,7 +8,8 @@ import { AccessoryType, CharacteristicType, DefaultThermostatState, ServiceType,
 
 import { Log } from '../tools/log.js';
 import { STORAGE_KEY_SUFFIX_DEFAULT_TEMPERATURE, storageGet, storageSet } from '../tools/storage.js';
-import { toCelsius } from '../tools/temperature.js';
+import { fromCelsius, toCelsius } from '../tools/temperature.js';
+import { assertType } from '../tools/validation.js';
 
 const DEFAULT_TEMPERATURE = 20;
 
@@ -86,7 +87,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
   private get defaulTemperatureStorageKey(): string {
     return `${this.identifier}:${STORAGE_KEY_SUFFIX_DEFAULT_TEMPERATURE}`;
   }
-  
+
   protected getAccessoryType(): AccessoryType {
     return AccessoryType.Thermostat;
   }
@@ -195,9 +196,15 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
   }
 
   protected logTemperature(value: CharacteristicValue) {
+
+    if (!assertType(this.log, this.config.name, value, 'number')) {
+      return;
+    }
+
     const message = this.config.temperatureUnits === TemperatureUnits.FAHRENHEIT ?
       strings.accessory.thermostat.temperatureF : strings.accessory.thermostat.temperatureC;
-    const temperature = typeof value === 'number' ? Math.round(value) : value.toString();
+
+    const temperature = fromCelsius(value as number, this.config.temperatureUnits);
     this.logIfDesired(message, this.config.name, temperature);
   }
 }

@@ -9,10 +9,11 @@ import { CharacteristicType, OnOffConfig, ServiceType } from '../../model/types.
 
 import { Log } from '../../tools/log.js';
 import { storageGet, storageSet } from '../../tools/storage.js';
+import { assertType } from '../../tools/validation.js';
 
 export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extends DummyAccessory<C> {
 
-  private on: CharacteristicValue;
+  private on: boolean;
 
   private sensor?: SensorAccessory;
 
@@ -44,10 +45,10 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
       this.on = await storageGet(this.persistPath, this.defaultStateStorageKey) ?? this.on;
     }
 
-    this.accessoryService.updateCharacteristic(this.Characteristic.On, this.on);  
+    this.accessoryService.updateCharacteristic(this.Characteristic.On, this.on);
   }
 
-  private get defaultOn(): CharacteristicValue {
+  protected get defaultOn(): boolean {
     return this.config.defaultOn ? true : false;
   }
 
@@ -56,6 +57,10 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
   }
 
   protected async setOn(value: CharacteristicValue): Promise<void> {
+
+    if (!assertType(this.log, this.config.name, value, 'boolean')) {
+      return;
+    }
 
     if (this.on !== value) {
       this.logOnState(value);
@@ -67,7 +72,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
       }
     }
 
-    this.on = value;
+    this.on = value as boolean;
 
     if (this.isStateful) {
       await storageSet(this.persistPath, this.defaultStateStorageKey, this.on);
