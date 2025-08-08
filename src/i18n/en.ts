@@ -12,8 +12,8 @@ const en = {
     },
 
     lightbulb: {
-      brightness: '%s brightness is %s', // accessory name, number
-      stateOn: '%s is on %s%', // accessory name, number
+      brightness: '%s brightness is %s%', // accessory name, number
+      stateOn: '%s is on, brightness is %s%', // accessory name, number
     },
 
     lock: {
@@ -56,6 +56,14 @@ const en = {
       intervalMinutes: '%s will trigger in %s minutes', // accessory name, number
       intervalHours: '%s will trigger in %s hours', // accessory name, number
     },
+
+    fade: {
+      cancel: '%s canceled fade',  // accessory name
+      startMilliseconds: '%s fading over %s milliseconds', // accessory name, number
+      startSeconds: '%s fading over %s seconds', // accessory name, number
+      startMinutes: '%s fading over %s minutes', // accessory name, number
+      startHours: '%s fading over %s hours', // accessory name, number
+    },
   },
 
   config: {
@@ -75,6 +83,7 @@ const en = {
     description: {
       commands: 'Execute arbitrary commands when the accessory changes state',
       cron: 'Visit crontab.guru for help',
+      fade: 'Lightbulb will fade gradually over the specified time interval',
       random: 'Time will be randomized with the above value as a maximum',
       timer: 'Return the accessory to its default value after the specified delay',
       trigger: 'Set the accessory to its opposite (non-default) value at specified interval or times',
@@ -132,6 +141,7 @@ const en = {
       defaultTemperature: 'Default Temperature',
       delay: 'Delay',
       disableLogging: 'Disable Logging',
+      fade: 'Fade',
       groupName: 'Group Name (Beta)',
       interval: 'Interval',
       name: 'Name',

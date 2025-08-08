@@ -105,6 +105,11 @@
               "enum": ["C", "F"],
               "enumNames": ["${config.enumNames.celsius}", "${config.enumNames.fahrenheit}"]
             },
+            "fade": {
+              "type": "boolean",
+              "title": "${config.title.fade}",
+              "description": "${config.description.fade}"
+            },
             "defaultBrightness": {
               "type": "number",
               "title": "${config.title.defaultBrightness}",
@@ -172,8 +177,8 @@
               "title": "${config.title.resetOnRestart}"
             },
             "disableLogging": {
-              "title": "${config.title.disableLogging}",
-              "type": "boolean"
+              "type": "boolean",
+              "title": "${config.title.disableLogging}"
             }
           }
         }
@@ -386,10 +391,20 @@
                   ]
                 },
                 {
-                  "key": "accessories[].timer.random",
+                  "type": "fieldset",
+                  "notitle": true,
                   "condition": {
-                      "functionBody": "return model.accessories?.[arguments[1]]?.timer?.delay !== undefined;"
-                  }
+                    "functionBody": "return model.accessories?.[arguments[1]]?.timer?.delay !== undefined;"
+                  },
+                  "items": [
+                    {
+                      "key": "accessories[].fade",
+                      "condition": {
+                          "functionBody": "return model.accessories?.[arguments[1]]?.defaultBrightness !== undefined;"
+                      }
+                    },
+                    "accessories[].timer.random"
+                  ]
                 }
               ]
             },

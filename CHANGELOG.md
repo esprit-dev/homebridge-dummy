@@ -17,6 +17,7 @@ Automations and scenes using Homebridge Dummy accessories will need to be reconf
 - Support for Thermostats
     - Manual control only, no auto-trigger or auto-reset functionality
 - Millisecond unit option for triggers/timers
+- "Fade" option for dimmer lightbulbs timers
 
 ### Changed
 - Reorganized plugin config UI and renamed "Timer" to "Auto-Reset"
