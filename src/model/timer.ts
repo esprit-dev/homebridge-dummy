@@ -1,9 +1,9 @@
-import { TimerConfig, TimeUnits } from './types.js';
+import { TimerConfig } from './types.js';
 
 import { strings } from '../i18n/i18n.js';
 
 import { Log } from '../tools/log.js';
-import { HOUR, MINUTE, SECOND, toMilliseconds } from '../tools/time.js';
+import { DelayLogStrings, getDelay } from '../tools/time.js';
 import { assert } from '../tools/validation.js';
 
 export class Timer {
@@ -26,40 +26,16 @@ export class Timer {
 
   public start(callback:  () => Promise<void>) {
 
-    if (this.timeout) {
-      this.logIfDesired(strings.accessory.timer.reset);
-      this.reset();
-    }
+    this.cancel();
 
-    let delay = toMilliseconds(this.config.delay, this.config.units);
-    let units = this.config.units;
+    const logStrings = DelayLogStrings(
+      strings.accessory.timer.setMilliseconds,
+      strings.accessory.timer.setSeconds,
+      strings.accessory.timer.setMinutes,
+      strings.accessory.timer.setHours,
+    );
 
-    if (this.config.random) {
-      delay = Math.floor(Math.max(SECOND, Math.random() * delay));
-
-      if (delay < SECOND) {
-        units = TimeUnits.MILLISECONDS;
-      } else if (delay < MINUTE) {
-        units = TimeUnits.SECONDS;
-      } else if (delay < HOUR) {
-        units = TimeUnits.MINUTES;
-      }
-    }
-
-    switch(units) {
-    case TimeUnits.MILLISECONDS:
-      this.logIfDesired(strings.accessory.timer.setMilliseconds, delay);
-      break;
-    case TimeUnits.SECONDS:
-      this.logIfDesired(strings.accessory.timer.setSeconds, Math.round(delay / SECOND));
-      break;
-    case TimeUnits.MINUTES:
-      this.logIfDesired(strings.accessory.timer.setMinutes, Math.round(delay / MINUTE));
-      break;
-    case TimeUnits.HOURS:
-      this.logIfDesired(strings.accessory.timer.setHours, Math.round(delay / HOUR));
-      break;
-    }
+    const delay = getDelay(this.config.delay, this.config.units, this.config.random, this.log, this.disableLogging, this.caller, logStrings);
 
     this.timeout = setTimeout(async () => {
       this.reset();

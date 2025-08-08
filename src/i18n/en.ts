@@ -43,7 +43,6 @@ const en = {
 
     timer: {
       cancel: 'Cancelled the timer for %s', // accessory name
-      reset: 'Reset the timer for %s', // accessory name
       setMilliseconds: '%s is waiting %s milliseconds', // accessory name, number
       setSeconds: '%s is waiting %s seconds', // accessory name, number
       setMinutes: '%s is waiting %s minutes',  // accessory name, number

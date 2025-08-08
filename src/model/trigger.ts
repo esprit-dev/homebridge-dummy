@@ -1,11 +1,11 @@
 import { CronJob, validateCronExpression } from 'cron';
 
-import { TimeUnits, TriggerConfig, TriggerType } from './types.js';
+import { TriggerConfig, TriggerType } from './types.js';
 
 import { strings } from '../i18n/i18n.js';
 
 import { Log } from '../tools/log.js';
-import { HOUR, MINUTE, SECOND, toMilliseconds } from '../tools/time.js';
+import { DelayLogStrings, getDelay } from '../tools/time.js';
 import { assert } from '../tools/validation.js';
 
 export class Trigger {
@@ -55,35 +55,14 @@ export class Trigger {
 
     this.resetTimeout();
 
-    let delay = toMilliseconds(this.trigger.interval!, this.trigger.units!);
-    let units = this.trigger.units;
+    const logStrings = DelayLogStrings(
+      strings.accessory.trigger.intervalMilliseconds,
+      strings.accessory.trigger.intervalSeconds,
+      strings.accessory.trigger.intervalMinutes,
+      strings.accessory.trigger.intervalHours,
+    );
 
-    if (this.trigger.random) {
-      delay = Math.floor(Math.max(SECOND, Math.random() * delay));
-
-      if (delay < SECOND) {
-        units = TimeUnits.MILLISECONDS;
-      } else if (delay < MINUTE) {
-        units = TimeUnits.SECONDS;
-      } else if (delay < HOUR) {
-        units = TimeUnits.MINUTES;
-      }
-    }
-
-    switch(units) {
-    case TimeUnits.MILLISECONDS:
-      this.logIfDesired(strings.accessory.trigger.intervalMilliseconds, delay);
-      break;
-    case TimeUnits.SECONDS:
-      this.logIfDesired(strings.accessory.trigger.intervalSeconds, Math.round(delay / SECOND));
-      break;
-    case TimeUnits.MINUTES:
-      this.logIfDesired(strings.accessory.trigger.intervalMinutes, Math.round(delay / MINUTE));
-      break;
-    case TimeUnits.HOURS:
-      this.logIfDesired(strings.accessory.trigger.intervalHours, Math.round(delay / HOUR));
-      break;
-    }
+    const delay = getDelay(this.trigger.interval!, this.trigger.units!, this.trigger.random, this.log, this.disableLogging, this.caller, logStrings);
 
     this.timeout = setTimeout(async () => {
       this.resetTimeout();
