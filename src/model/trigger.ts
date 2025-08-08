@@ -1,6 +1,6 @@
 import { CronJob, validateCronExpression } from 'cron';
 
-import { TriggerConfig, TriggerType } from './types.js';
+import { TimeUnits, TriggerConfig, TriggerType } from './types.js';
 
 import { strings } from '../i18n/i18n.js';
 
@@ -56,19 +56,33 @@ export class Trigger {
     this.resetTimeout();
 
     let delay = toMilliseconds(this.trigger.interval!, this.trigger.units!);
+    let units = this.trigger.units;
 
     if (this.trigger.random) {
       delay = Math.floor(Math.max(SECOND, Math.random() * delay));
+
+      if (delay < SECOND) {
+        units = TimeUnits.MILLISECONDS;
+      } else if (delay < MINUTE) {
+        units = TimeUnits.SECONDS;
+      } else if (delay < HOUR) {
+        units = TimeUnits.MINUTES;
+      }
     }
 
-    if (delay < SECOND) {
+    switch(units) {
+    case TimeUnits.MILLISECONDS:
       this.logIfDesired(strings.accessory.trigger.intervalMilliseconds, delay);
-    } else if (delay < MINUTE) {
+      break;
+    case TimeUnits.SECONDS:
       this.logIfDesired(strings.accessory.trigger.intervalSeconds, Math.round(delay / SECOND));
-    } else if (delay < HOUR) {
+      break;
+    case TimeUnits.MINUTES:
       this.logIfDesired(strings.accessory.trigger.intervalMinutes, Math.round(delay / MINUTE));
-    } else {
+      break;
+    case TimeUnits.HOURS:
       this.logIfDesired(strings.accessory.trigger.intervalHours, Math.round(delay / HOUR));
+      break;
     }
 
     this.timeout = setTimeout(async () => {
