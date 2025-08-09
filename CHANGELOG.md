@@ -2,7 +2,7 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-## 1.1.0-beta.3 (2025-08-05)
+## 1.1.0 (2025-08-XX)
 
 ### ‼️ WARNING — Read this if upgrading from v0.9.2 or earlier…
 
@@ -13,7 +13,7 @@ Automations and scenes using Homebridge Dummy accessories will need to be reconf
 ### Added
 - Groups (Beta) - Items sharing the same group name will be collected together in the Home app UI
     - ⚠️ Adding/removing/changing the group name for an accessory will require you to reconfigure any HomeKit scenes or automations
-- Auto-Trigger feature to invoke accessory at a specified interval or times
+- Auto-Trigger feature to invoke accessory at a specified interval or times (cron)
 - Support for Thermostats
     - Manual control only, no auto-trigger or auto-reset functionality
 - Millisecond unit option for triggers/timers
@@ -21,10 +21,10 @@ Automations and scenes using Homebridge Dummy accessories will need to be reconf
 
 ### Changed
 - Reorganized plugin config UI and renamed "Timer" to "Auto-Reset"
+- Updated dependencies
 
 ### Fixed
-- Timers over 1 hour were logging incorrectly ([#143](https://github.com/mpatfield/homebridge-dummy/issues/143))
-- Improved timer logging ([#148](https://github.com/mpatfield/homebridge-dummy/issues/148))
+- Timer logging issues ([#143](https://github.com/mpatfield/homebridge-dummy/issues/143), [#148](https://github.com/mpatfield/homebridge-dummy/issues/148))
 
 ## 1.0.0 (2025-07-23)
 

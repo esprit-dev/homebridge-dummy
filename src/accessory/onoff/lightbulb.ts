@@ -100,7 +100,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
   }
 
   override async getOn(): Promise<CharacteristicValue> {
-    return ( this.fader?.currentValue && this.defaultOn ) ?? super.getOn();
+    return ( this.fader?.currentValue && !this.defaultOn ) ?? super.getOn();
   }
 
   private async getBrightness(): Promise<CharacteristicValue> {
