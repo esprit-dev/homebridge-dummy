@@ -7,6 +7,12 @@
   "schema": {
     "type": "object",
     "definitions": {
+    "units": {
+        "type": "string",
+        "title": "${config.title.units}",
+        "enum": [ "MILLISECONDS", "SECONDS", "MINUTES", "HOURS"],
+        "enumNames": ["${config.enumNames.milliseconds}", "${config.enumNames.seconds}", "${config.enumNames.minutes}", "${config.enumNames.hours}"]
+      },
       "timer": {
         "type": "object",
         "properties": {
@@ -15,12 +21,7 @@
             "title": "${config.title.delay}",
             "minimum": 1
           },
-          "units": {
-            "type": "string",
-            "title": "${config.title.units}",
-            "enum": [ "MILLISECONDS", "SECONDS", "MINUTES", "HOURS"],
-            "enumNames": ["${config.enumNames.milliseconds}", "${config.enumNames.seconds}", "${config.enumNames.minutes}", "${config.enumNames.hours}"]
-          },
+          "units": { "$ref": "#/definitions/units" },
           "random": {
             "type": "boolean",
             "title": "${config.title.random}",
@@ -42,12 +43,7 @@
             "title": "${config.title.interval}",
             "minimum": 1
           },
-          "units": {
-            "type": "string",
-            "title": "${config.title.units}",
-            "enum": [ "MILLISECONDS", "SECONDS", "MINUTES", "HOURS"],
-            "enumNames": ["${config.enumNames.milliseconds}", "${config.enumNames.seconds}", "${config.enumNames.minutes}", "${config.enumNames.hours}"]
-          },
+          "units": { "$ref": "#/definitions/units" },
           "random": {
             "type": "boolean",
             "title": "${config.title.random}",
