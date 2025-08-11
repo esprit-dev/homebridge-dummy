@@ -72,6 +72,13 @@ export abstract class DummyAccessory<C extends DummyConfig> {
       .setCharacteristic(Characteristic.FirmwareRevision, getVersion());
 
     this.accessoryService = accessory.getService(serviceInstance) || accessory.addService(serviceInstance);
+
+    for (const type of Object.values(AccessoryType)) {
+      const existingService = accessory.getService(Service[type]);
+      if (existingService && type !== this.getAccessoryType()) {
+        accessory.removeService(existingService);
+      }
+    }
   }
 
   protected abstract getAccessoryType(): AccessoryType;
