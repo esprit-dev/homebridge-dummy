@@ -42,8 +42,8 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
       this.state = await storageGet(this.persistPath, this.defaultStateStorageKey) ?? this.state;
     }
 
-    this.accessoryService.updateCharacteristic(this.Characteristic.LockTargetState, this.state);  
-    this.accessoryService.updateCharacteristic(this.Characteristic.LockCurrentState, this.state);  
+    this.accessoryService.updateCharacteristic(this.Characteristic.LockTargetState, this.state);
+    this.accessoryService.updateCharacteristic(this.Characteristic.LockCurrentState, this.state);
   }
 
   protected getAccessoryType(): AccessoryType {
@@ -81,6 +81,10 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
       } else {
         this.cancelTimer();
       }
+    }
+
+    if (this.sensor) {
+      this.sensor.active = this.state !== this.defaultLockState;
     }
 
     this.accessoryService.updateCharacteristic(this.Characteristic.LockTargetState, this.state);

@@ -1,7 +1,6 @@
 import { CharacteristicValue, PlatformAccessory } from 'homebridge';
 
 import { DummyAccessory } from '../base.js';
-import { SensorAccessory } from '../sensor.js';
 
 import { strings } from '../../i18n/i18n.js';
 
@@ -15,8 +14,6 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
 
   private on: boolean;
 
-  private sensor?: SensorAccessory;
-
   constructor(
     Service: ServiceType,
     Characteristic: CharacteristicType,
@@ -29,8 +26,6 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
     super(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
 
     this.on = this.defaultOn;
-
-    this.sensor = SensorAccessory.init(Service, Characteristic, accessory, this.config.name, log, this.config.disableLogging, config.sensor);
 
     this.accessoryService.getCharacteristic(Characteristic.On)
       .onGet(this.getOn.bind(this))

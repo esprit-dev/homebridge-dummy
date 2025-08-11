@@ -258,6 +258,10 @@
                     {
                       "key": "accessories[].defaultLockState",
                       "flex": "0 0 33%"
+                    },
+                    {
+                      "key": "accessories[].sensor",
+                      "flex": "0 0 33%"
                     }
                   ]
                 },
@@ -271,6 +275,10 @@
                   "items": [
                     {
                       "key": "accessories[].defaultPosition",
+                      "flex": "0 0 33%"
+                    },
+                    {
+                      "key": "accessories[].sensor",
                       "flex": "0 0 33%"
                     }
                   ]

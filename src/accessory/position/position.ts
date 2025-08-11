@@ -48,8 +48,8 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
       this.position = await storageGet(this.persistPath, this.defaultStateStorageKey) ?? this.position;
     }
 
-    this.accessoryService.updateCharacteristic(this.Characteristic.TargetPosition, this.position);  
-    this.accessoryService.updateCharacteristic(this.Characteristic.CurrentPosition, this.position);  
+    this.accessoryService.updateCharacteristic(this.Characteristic.TargetPosition, this.position);
+    this.accessoryService.updateCharacteristic(this.Characteristic.CurrentPosition, this.position);
   }
 
   private get defaultPosition(): CharacteristicValue {
@@ -77,7 +77,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
         this.executeCommand(this.config.commandClose);
       }
     }
-    
+
     this.position = targetPosition;
 
     if (this.isStateful) {
@@ -88,6 +88,10 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
       } else {
         this.cancelTimer();
       }
+    }
+
+    if (this.sensor) {
+      this.sensor.active = this.position !== this.defaultPosition;
     }
 
     this.accessoryService.updateCharacteristic(this.Characteristic.TargetPosition, this.position);

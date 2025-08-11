@@ -1,6 +1,8 @@
 import { exec } from 'child_process';
 import { PlatformAccessory, Service } from 'homebridge';
 
+import { SensorAccessory } from './sensor.js';
+
 import { PLATFORM_NAME, PLUGIN_ALIAS } from '../homebridge/settings.js';
 
 import { strings } from '../i18n/i18n.js';
@@ -14,6 +16,8 @@ import getVersion from '../tools/version.js';
 import { Trigger } from '../model/trigger.js';
 
 export abstract class DummyAccessory<C extends DummyConfig> {
+
+  protected sensor?: SensorAccessory;
 
   public static identifier(config: DummyConfig): string {
     return config.id ?? `${PLATFORM_NAME}:${config.type}:${config.name.replace(/\s+/g,'')}`;
@@ -33,6 +37,8 @@ export abstract class DummyAccessory<C extends DummyConfig> {
     protected readonly persistPath: string,
     isGrouped: boolean,
   ) {
+
+    this.sensor = SensorAccessory.new(Service, Characteristic, accessory, this.config.name, log, this.config.disableLogging, config.sensor);
 
     if (config.timer) {
       this._timer = Timer.new(config.timer, config.name, log, config.disableLogging === true);
@@ -56,7 +62,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
 
       return;
     }
-    
+
     accessory.getService(Service.AccessoryInformation)!
       .setCharacteristic(Characteristic.Name, config.name)
       .setCharacteristic(Characteristic.ConfiguredName, config.name)

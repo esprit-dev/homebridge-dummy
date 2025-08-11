@@ -108,6 +108,7 @@ export type DummyConfig = {
   name: string,
   type: AccessoryType,
   groupName?: string,
+  sensor?: SensorType,
   timer?: TimerConfig,
   trigger?: TriggerConfig,
   resetOnRestart?: boolean,
@@ -116,7 +117,6 @@ export type DummyConfig = {
 
 export type OnOffConfig = DummyConfig & {
   defaultOn?: CharacteristicValue,
-  sensor?: SensorType,
   commandOn?: string,
   commandOff?: string,
 }

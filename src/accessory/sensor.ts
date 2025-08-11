@@ -20,12 +20,12 @@ const INFO_MAP: { [key in Type]: SensorInfo } = {
 };
 
 export class SensorAccessory {
- 
+
   protected readonly sensorService?: Service;
 
   private _active: number = 0;
 
-  static init(
+  static new(
     Service: ServiceType,
     Characteristic: CharacteristicType,
     accessory: PlatformAccessory,
@@ -34,12 +34,12 @@ export class SensorAccessory {
     disableLogging?: boolean,
     type?: Type,
   ): SensorAccessory | undefined {
-    
+
     if (type) {
       return new SensorAccessory(type, Service, Characteristic, accessory, caller, log, disableLogging);
     }
 
-    SensorAccessory.removeUnwantedServices(Service, accessory);    
+    SensorAccessory.removeUnwantedServices(Service, accessory);
   }
 
   private static removeUnwantedServices(Service: ServiceType, accessory: PlatformAccessory, keep?: Type) {
