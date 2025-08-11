@@ -100,20 +100,21 @@ function generateUUID() {
   });
 }
 
-const updateConfigWithUUIDs = (config: DummyPlatformConfig) => {
+const updateConfigsWithUUIDs = (configs: DummyPlatformConfig[]) => {
 
   let changed = false;
 
-  config.accessories?.forEach( (accessoryConfig) => {
-    if (accessoryConfig.id === undefined) {
-      const id = generateUUID();
-      accessoryConfig.id = id;
-      changed = true;
-    }
+  configs.forEach( (config) => {
+    config.accessories?.forEach( (accessoryConfig) => {
+      if (accessoryConfig.id === undefined) {
+        accessoryConfig.id = generateUUID();
+        changed = true;
+      }
+    });
   });
 
   if (changed) {
-    homebridge.updatePluginConfig([config]);
+    homebridge.updatePluginConfig(configs);
   }
 };
 
@@ -136,9 +137,7 @@ const showSettings = (strings: Translation) => {
 
   homebridge.addEventListener('configChanged', (evt: Event) => {
     const configs = (evt as MessageEvent).data as DummyPlatformConfig[];
-    if (configs.length) {
-      updateConfigWithUUIDs(configs[0]);
-    }
+    updateConfigsWithUUIDs(configs);
   });
 
   homebridge.enableSaveButton();
