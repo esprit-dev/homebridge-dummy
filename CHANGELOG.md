@@ -18,6 +18,7 @@ Automations and scenes using Homebridge Dummy accessories will need to be reconf
     - Manual control only, no auto-trigger or auto-reset functionality
 - Millisecond unit option for triggers/timers ([#149](https://github.com/mpatfield/homebridge-dummy/issues/149))
 - "Fade" option for dimmer lightbulbs timers ([#150](https://github.com/mpatfield/homebridge-dummy/issues/150))
+- Allow `sensor` to be added to all accessory types (except Thermostat)
 
 ### Changed
 - Reorganized plugin config UI and renamed "Timer" to "Auto-Reset"
@@ -26,6 +27,7 @@ Automations and scenes using Homebridge Dummy accessories will need to be reconf
 ### Fixed
 - Timer logging issues ([#143](https://github.com/mpatfield/homebridge-dummy/issues/143), [#148](https://github.com/mpatfield/homebridge-dummy/issues/148))
 - Better support for custom configuration with multiple plugin instances and child bridges ([#152](https://github.com/mpatfield/homebridge-dummy/issues/152))
+- Broken header image in config UI
 
 ## 1.0.0 (2025-07-23)
 

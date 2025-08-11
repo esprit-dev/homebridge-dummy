@@ -1,6 +1,6 @@
 
 <p align="center">
-<img src="https://github.com/mpatfield/homebridge-dummy/blob/latest/img/banner.png?raw=true" width="600">
+<img src="https://raw.githubusercontent.com/mpatfield/homebridge-dummy/refs/heads/latest/img/banner.png" width="600">
 </p>
 
 <span align="center">
