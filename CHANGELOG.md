@@ -11,13 +11,13 @@ Automations and scenes using Homebridge Dummy accessories will need to be reconf
 ---
 
 ### Added
-- Groups (Beta) - Items sharing the same group name will be collected together in the Home app UI
+- Groups (Beta) - Items sharing the same group name will be collected together in the Home app UI ([#46](https://github.com/mpatfield/homebridge-dummy/issues/46))
     - ⚠️ Adding/removing/changing the group name for an accessory will require you to reconfigure any HomeKit scenes or automations
-- Auto-Trigger feature to invoke accessory at a specified interval or times (cron)
-- Support for Thermostats
+- Auto-Trigger feature to invoke accessory at a specified interval or times via cron ([#136](https://github.com/mpatfield/homebridge-dummy/issues/136))
+- Support for Thermostats ([#145](https://github.com/mpatfield/homebridge-dummy/issues/145))
     - Manual control only, no auto-trigger or auto-reset functionality
-- Millisecond unit option for triggers/timers
-- "Fade" option for dimmer lightbulbs timers
+- Millisecond unit option for triggers/timers ([#149](https://github.com/mpatfield/homebridge-dummy/issues/149))
+- "Fade" option for dimmer lightbulbs timers ([#150](https://github.com/mpatfield/homebridge-dummy/issues/150))
 
 ### Changed
 - Reorganized plugin config UI and renamed "Timer" to "Auto-Reset"
@@ -25,6 +25,7 @@ Automations and scenes using Homebridge Dummy accessories will need to be reconf
 
 ### Fixed
 - Timer logging issues ([#143](https://github.com/mpatfield/homebridge-dummy/issues/143), [#148](https://github.com/mpatfield/homebridge-dummy/issues/148))
+- Better support for custom configuration with multiple plugin instances and child bridges ([#152](https://github.com/mpatfield/homebridge-dummy/issues/152))
 
 ## 1.0.0 (2025-07-23)
 
