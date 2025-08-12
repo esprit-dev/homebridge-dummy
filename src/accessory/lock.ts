@@ -106,7 +106,7 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
   override async reset(): Promise<void> {
     if (this.state !== this.defaultLockState) {
       await this.setState(this.defaultLockState);
-      if (this.sensor) {
+      if (this.sensor?.timerControlled) {
         this.sensor.active = true;
       }
     }

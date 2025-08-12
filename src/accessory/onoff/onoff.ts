@@ -99,7 +99,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
   override async reset(): Promise<void> {
     if (this.on !== this.defaultOn) {
       await this.setOn(this.defaultOn);
-      if (this.sensor) {
+      if (this.sensor?.timerControlled) {
         this.sensor.active = true;
       }
     }

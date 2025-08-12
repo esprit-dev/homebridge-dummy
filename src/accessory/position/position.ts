@@ -112,7 +112,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
   override async reset(): Promise<void> {
     if (this.position !== this.defaultPosition) {
       await this.setPosition(this.defaultPosition);
-      if (this.sensor) {
+      if (this.sensor?.timerControlled) {
         this.sensor.active = true;
       }
     }
