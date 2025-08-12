@@ -2,7 +2,7 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-## 1.1.0 (2025-08-XX)
+## 1.1.0 (2025-08-13)
 
 ### ‼️ WARNING — Read this if upgrading from v0.9.2 or earlier…
 
@@ -12,7 +12,7 @@ Automations and scenes using Homebridge Dummy accessories will need to be reconf
 
 ### Changed
 - Reorganized plugin config UI and renamed "Timer" to "Auto-Reset"
-- `sensor` is now an object rather than a primitive string
+- `sensor` is now an object rather than a primitive string (backwards compatible)
 - Updated dependencies
 
 ### Added
