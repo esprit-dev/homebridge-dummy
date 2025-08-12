@@ -80,7 +80,11 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
     }
 
     if (this.sensor) {
-      this.sensor.active = this.on !== this.defaultOn;
+      if (!this.sensor.timerControlled) {
+        this.sensor.active = this.on !== this.defaultOn;
+      } else if (this.on !== this.defaultOn) {
+        this.sensor.active = false;
+      }
     }
 
     this.accessoryService.updateCharacteristic(this.Characteristic.On, this.on);
@@ -95,6 +99,9 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
   override async reset(): Promise<void> {
     if (this.on !== this.defaultOn) {
       await this.setOn(this.defaultOn);
+      if (this.sensor) {
+        this.sensor.active = true;
+      }
     }
   }
 

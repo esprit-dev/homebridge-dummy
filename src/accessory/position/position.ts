@@ -91,7 +91,11 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
     }
 
     if (this.sensor) {
-      this.sensor.active = this.position !== this.defaultPosition;
+      if (!this.sensor.timerControlled) {
+        this.sensor.active = this.position !== this.defaultPosition;
+      } else if (this.position !== this.defaultPosition) {
+        this.sensor.active = false;
+      }
     }
 
     this.accessoryService.updateCharacteristic(this.Characteristic.TargetPosition, this.position);
@@ -108,6 +112,9 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
   override async reset(): Promise<void> {
     if (this.position !== this.defaultPosition) {
       await this.setPosition(this.defaultPosition);
+      if (this.sensor) {
+        this.sensor.active = true;
+      }
     }
   }
 

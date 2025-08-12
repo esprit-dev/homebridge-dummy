@@ -2,21 +2,21 @@ import { CharacteristicValue, PlatformAccessory, Service } from 'homebridge';
 
 import { strings } from '../i18n/i18n.js';
 
-import { CharacteristicType, SensorType as Type, SensorCharacteristic as Char, ServiceType } from '../model/types.js';
+import { CharacteristicType, SensorType, SensorCharacteristic as Char, ServiceType, SensorConfig } from '../model/types.js';
 
 import { Log } from '../tools/log.js';
 
 type SensorStrings = { active: string, inactive: string };
 type SensorInfo = { characteristic: Char, strings: SensorStrings };
 
-const INFO_MAP: { [key in Type]: SensorInfo } = {
-  [Type.CarbonDioxideSensor]: { characteristic: Char.CarbonDioxideDetected, strings: strings.sensor.carbonDioxide },
-  [Type.CarbonMonoxideSensor]: { characteristic: Char.CarbonMonoxideDetected, strings: strings.sensor.carbonMonoxide },
-  [Type.ContactSensor]: { characteristic: Char.ContactSensorState, strings: strings.sensor.contact },
-  [Type.LeakSensor]: { characteristic: Char.LeakDetected, strings: strings.sensor.leak },
-  [Type.MotionSensor]: { characteristic: Char.MotionDetected, strings: strings.sensor.motion },
-  [Type.OccupancySensor]: { characteristic: Char.OccupancyDetected, strings: strings.sensor.occupancy },
-  [Type.SmokeSensor]: { characteristic: Char.SmokeDetected, strings: strings.sensor.smoke },
+const INFO_MAP: { [key in SensorType]: SensorInfo } = {
+  [SensorType.CarbonDioxideSensor]: { characteristic: Char.CarbonDioxideDetected, strings: strings.sensor.carbonDioxide },
+  [SensorType.CarbonMonoxideSensor]: { characteristic: Char.CarbonMonoxideDetected, strings: strings.sensor.carbonMonoxide },
+  [SensorType.ContactSensor]: { characteristic: Char.ContactSensorState, strings: strings.sensor.contact },
+  [SensorType.LeakSensor]: { characteristic: Char.LeakDetected, strings: strings.sensor.leak },
+  [SensorType.MotionSensor]: { characteristic: Char.MotionDetected, strings: strings.sensor.motion },
+  [SensorType.OccupancySensor]: { characteristic: Char.OccupancyDetected, strings: strings.sensor.occupancy },
+  [SensorType.SmokeSensor]: { characteristic: Char.SmokeDetected, strings: strings.sensor.smoke },
 };
 
 export class SensorAccessory {
@@ -32,18 +32,25 @@ export class SensorAccessory {
     caller: string,
     log: Log,
     disableLogging?: boolean,
-    type?: Type,
+    sensor?: SensorConfig | SensorType,
   ): SensorAccessory | undefined {
 
-    if (type) {
-      return new SensorAccessory(type, Service, Characteristic, accessory, caller, log, disableLogging);
+    if (sensor) {
+
+      if (typeof sensor === 'string') {
+        sensor = {
+          type: sensor,
+        };
+      }
+
+      return new SensorAccessory(sensor, Service, Characteristic, accessory, caller, log, disableLogging);
     }
 
     SensorAccessory.removeUnwantedServices(Service, accessory);
   }
 
-  private static removeUnwantedServices(Service: ServiceType, accessory: PlatformAccessory, keep?: Type) {
-    for (const type of Object.values(Type)) {
+  private static removeUnwantedServices(Service: ServiceType, accessory: PlatformAccessory, keep?: SensorType) {
+    for (const type of Object.values(SensorType)) {
       if (type === keep) {
         continue;
       }
@@ -56,7 +63,7 @@ export class SensorAccessory {
   }
 
   private constructor(
-    readonly type: Type,
+    readonly config: SensorConfig,
     Service: ServiceType,
     readonly Characteristic: CharacteristicType,
     accessory: PlatformAccessory,
@@ -65,13 +72,13 @@ export class SensorAccessory {
     readonly disableLogging?: boolean,
   ) {
 
-    this.sensorService = accessory.getService(Service[type]) || accessory.addService(Service[type]);
+    this.sensorService = accessory.getService(Service[config.type]) || accessory.addService(Service[config.type]);
 
     const characteristicInstance = Characteristic[this.sensorInfo.characteristic];
     this.sensorService.getCharacteristic(characteristicInstance)
       .onGet(this.onGet.bind(this));
 
-    SensorAccessory.removeUnwantedServices(Service, accessory, type);
+    SensorAccessory.removeUnwantedServices(Service, accessory, config.type);
   }
 
   protected async onGet(): Promise<CharacteristicValue> {
@@ -79,7 +86,11 @@ export class SensorAccessory {
   }
 
   private get sensorInfo(): SensorInfo {
-    return INFO_MAP[this.type];
+    return INFO_MAP[this.config.type];
+  }
+
+  public get timerControlled(): boolean {
+    return this.config.timerControlled === true;
   }
 
   public get active(): boolean {

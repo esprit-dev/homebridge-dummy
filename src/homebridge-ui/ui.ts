@@ -14,7 +14,7 @@ const i18n_replacements = {
   dummy: PLUGIN_ALIAS,
 };
 
-const translateHtml = (strings: Translation) => {
+function translateHtml(strings: Translation) {
   document.querySelectorAll('[i18n]').forEach(element => {
 
     const key = element.getAttribute('i18n') as keyof typeof strings.config;
@@ -26,9 +26,9 @@ const translateHtml = (strings: Translation) => {
     }
     element.innerHTML = string;
   });
-};
+}
 
-const translateSchema = (strings: Translation) => {
+function translateSchema(strings: Translation) {
   const tags = ['span', 'label', 'legend', 'option', 'p'];
   const elements = Array.from(
     window.parent.document.querySelectorAll(tags.join(',')),
@@ -55,9 +55,9 @@ const translateSchema = (strings: Translation) => {
       element.innerHTML = newHtml;
     }
   });
-};
+}
 
-const updateAccessoryNames = (strings: Translation) => {
+function updateAccessoryNames(strings: Translation) {
 
   const legends = Array.from(window.parent.document.querySelectorAll('fieldset legend'));
 
@@ -73,7 +73,7 @@ const updateAccessoryNames = (strings: Translation) => {
       input.dataset.accessoryNameListener = 'true';
     }
   }
-};
+}
 
 function generateUUID() {
 
@@ -100,7 +100,7 @@ function generateUUID() {
   });
 }
 
-const updateConfigsWithUUIDs = (configs: DummyPlatformConfig[]) => {
+async function updateConfigsWithUUIDs(configs: DummyPlatformConfig[]) {
 
   let changed = false;
 
@@ -114,11 +114,32 @@ const updateConfigsWithUUIDs = (configs: DummyPlatformConfig[]) => {
   });
 
   if (changed) {
-    homebridge.updatePluginConfig(configs);
+    await homebridge.updatePluginConfig(configs);
   }
-};
+}
 
-const showSettings = (strings: Translation) => {
+async function updateSensorConfigs(configs: DummyPlatformConfig[]) {
+
+  let changed = false;
+
+  configs.forEach( (config) => {
+    config.accessories?.forEach( (accessoryConfig) => {
+      const currentSensor = accessoryConfig.sensor;
+      if (typeof currentSensor === 'string') {
+        accessoryConfig.sensor = {
+          type: currentSensor,
+        };
+        changed = true;
+      }
+    });
+  });
+
+  if (changed) {
+    await homebridge.updatePluginConfig(configs);
+  }
+}
+
+function showSettings(strings: Translation) {
   document.getElementById('intro')!.style.display = 'none';
   document.getElementById('migration')!.style.display = 'none';
   document.getElementById('support')!.style.display = 'block';
@@ -135,16 +156,16 @@ const showSettings = (strings: Translation) => {
 
   homebridge.showSchemaForm();
 
-  homebridge.addEventListener('configChanged', (evt: Event) => {
+  homebridge.addEventListener('configChanged', async (evt: Event) => {
     const configs = (evt as MessageEvent).data as DummyPlatformConfig[];
-    updateConfigsWithUUIDs(configs);
+    await updateConfigsWithUUIDs(configs);
   });
 
   homebridge.enableSaveButton();
   homebridge.hideSpinner();
-};
+}
 
-const showMigration = (strings: Translation) => {
+function showMigration(strings: Translation) {
     document.getElementById('header')!.style.display = 'none';
     document.getElementById('intro')!.style.display = 'none';
     document.getElementById('migration')!.style.display = 'block';
@@ -163,9 +184,9 @@ const showMigration = (strings: Translation) => {
       homebridge.closeSettings();
       homebridge.toast.info(strings.config.migrationRestartDescription.replace('%s', PLUGIN_ALIAS), strings.config.migrationRestartTitle);
     });
-};
+}
 
-const showIntro = (strings: Translation) => {
+function showIntro(strings: Translation) {
 
   homebridge.disableSaveButton();
 
@@ -183,7 +204,7 @@ const showIntro = (strings: Translation) => {
   document.getElementById('intro')!.style.display = 'block';
 
   homebridge.hideSpinner();
-};
+}
 
 (async () => {
   homebridge.showSpinner();
@@ -192,8 +213,9 @@ const showIntro = (strings: Translation) => {
   const strings = await homebridge.request('i18n', language);
   translateHtml(strings);
 
-  const config = await homebridge.getPluginConfig();
-  if (config.length) {
+  const configs = await homebridge.getPluginConfig() as DummyPlatformConfig[];
+  if (configs.length) {
+    await updateSensorConfigs(configs);
     showSettings(strings);
   } else {
     showIntro(strings);

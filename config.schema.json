@@ -13,6 +13,22 @@
         "enum": [ "MILLISECONDS", "SECONDS", "MINUTES", "HOURS"],
         "enumNames": ["${config.enumNames.milliseconds}", "${config.enumNames.seconds}", "${config.enumNames.minutes}", "${config.enumNames.hours}"]
       },
+      "sensor": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "title": "${config.title.sensor}",
+            "enum": ["CarbonDioxideSensor", "CarbonMonoxideSensor", "ContactSensor", "LeakSensor", "MotionSensor", "OccupancySensor", "SmokeSensor"],
+            "enumNames": ["${config.enumNames.carbonDioxideSensor}", "${config.enumNames.carbonMonoxideSensor}", "${config.enumNames.contactSensor}", "${config.enumNames.leakSensor}", "${config.enumNames.motionSensor}", "${config.enumNames.occupancySensor}", "${config.enumNames.smokeSensor}"]
+          },
+          "timerControlled": {
+            "type": "boolean",
+            "title": "${config.title.timerControlled}",
+            "description": "${config.description.timerControlled}"
+          }
+        }
+      },
       "timer": {
         "type": "object",
         "properties": {
@@ -87,14 +103,9 @@
               "type": "string",
               "title": "${config.title.groupName}"
             },
+            "sensor": { "$ref": "#/definitions/sensor" },
             "timer": { "$ref": "#/definitions/timer" },
             "trigger": { "$ref": "#/definitions/trigger" },
-            "sensor": {
-              "type": "string",
-              "title": "${config.title.sensor}",
-              "enum": ["CarbonDioxideSensor", "CarbonMonoxideSensor", "ContactSensor", "LeakSensor", "MotionSensor", "OccupancySensor", "SmokeSensor"],
-              "enumNames": ["${config.enumNames.carbonDioxideSensor}", "${config.enumNames.carbonMonoxideSensor}", "${config.enumNames.contactSensor}", "${config.enumNames.leakSensor}", "${config.enumNames.motionSensor}", "${config.enumNames.occupancySensor}", "${config.enumNames.smokeSensor}"]
-            },
             "temperatureUnits": {
               "type": "string",
               "title": "${config.title.units}",
@@ -231,7 +242,7 @@
                       "flex": "0 0 33%"
                     },
                     {
-                      "key": "accessories[].sensor",
+                      "key": "accessories[].sensor.type",
                       "flex": "0 0 33%"
                     },
                     {
@@ -256,7 +267,7 @@
                       "flex": "0 0 33%"
                     },
                     {
-                      "key": "accessories[].sensor",
+                      "key": "accessories[].sensor.type",
                       "flex": "0 0 33%"
                     }
                   ]
@@ -274,7 +285,7 @@
                       "flex": "0 0 33%"
                     },
                     {
-                      "key": "accessories[].sensor",
+                      "key": "accessories[].sensor.type",
                       "flex": "0 0 33%"
                     }
                   ]
@@ -388,9 +399,6 @@
                     {
                       "key": "accessories[].timer.units",
                       "flex": "1 1 33%"
-                    },
-                    {
-                      "flex": "1 1 33%"
                     }
                   ]
                 },
@@ -407,7 +415,13 @@
                           "functionBody": "return model.accessories?.[arguments[1]]?.defaultBrightness !== undefined;"
                       }
                     },
-                    "accessories[].timer.random"
+                    "accessories[].timer.random",
+                    {
+                      "key": "accessories[].sensor.timerControlled",
+                      "condition": {
+                          "functionBody": "return model.accessories?.[arguments[1]]?.sensor?.type !== undefined;"
+                      }
+                    }
                   ]
                 }
               ]

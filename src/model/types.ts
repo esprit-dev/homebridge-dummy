@@ -103,12 +103,17 @@ export type TriggerConfig = Assertable & {
   cron?: string,
 }
 
+export type SensorConfig = Assertable & {
+  type: SensorType,
+  timerControlled?: boolean,
+}
+
 export type DummyConfig = {
   id: string,
   name: string,
   type: AccessoryType,
   groupName?: string,
-  sensor?: SensorType,
+  sensor?: SensorType | SensorConfig,
   timer?: TimerConfig,
   trigger?: TriggerConfig,
   resetOnRestart?: boolean,

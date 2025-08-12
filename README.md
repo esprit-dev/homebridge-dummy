@@ -99,7 +99,10 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
                 "random": true | false,
                 "cron": "string"
             },
-            "sensor": "CarbonDioxideSensor | CarbonMonoxideSensor | ContactSensor | LeakSensor | MotionSensor | OccupancySensor | SmokeSensor",
+            "sensor": {
+                "type": "CarbonDioxideSensor | CarbonMonoxideSensor | ContactSensor | LeakSensor | MotionSensor | OccupancySensor | SmokeSensor",
+                "timerControlled": true | false
+            }
             "temperatureUnits": "C" | "F",
             "fade": true | false,
             "defaultOn": true | false,
@@ -145,9 +148,9 @@ All fields are optional unless noted with an asterisk (*)
 - `trigger.cron` — The cron string for triggering the accessory.  *Required if `trigger.type` = `CRON`
     - See [crontab.guru](http://crontab.guru) for help
 
-- `sensor` - Optionally attach a sensor that mirrors the state of the parent accessory
-    - Only works with `Lightbulb`, `Outlet`, and `Switch`
+- `sensor.type` - Optionally attach a sensor that mirrors the state of the parent accessory
     - Valid values are `CarbonDioxideSensor`, `CarbonMonoxideSensor`, `ContactSensor`, `LeakSensor`, `MotionSensor`, `OccupancySensor`, or `SmokeSensor`
+- `sensor.timerControlled` - If true, sensor will be activated if accessory is reset by timer but not if it is reset manually
 
 - `temperatureUnits` - Units to use for thermostats, either 'C' or 'F'
 

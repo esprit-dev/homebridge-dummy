@@ -84,7 +84,11 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
     }
 
     if (this.sensor) {
-      this.sensor.active = this.state !== this.defaultLockState;
+      if (!this.sensor.timerControlled) {
+        this.sensor.active = this.state !== this.defaultLockState;
+      } else if (this.state !== this.defaultLockState) {
+        this.sensor.active = false;
+      }
     }
 
     this.accessoryService.updateCharacteristic(this.Characteristic.LockTargetState, this.state);
@@ -102,6 +106,9 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
   override async reset(): Promise<void> {
     if (this.state !== this.defaultLockState) {
       await this.setState(this.defaultLockState);
+      if (this.sensor) {
+        this.sensor.active = true;
+      }
     }
   }
 

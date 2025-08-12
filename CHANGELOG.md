@@ -10,19 +10,22 @@ Automations and scenes using Homebridge Dummy accessories will need to be reconf
 
 ---
 
-### Added
-- Groups (Beta) - Items sharing the same group name will be collected together in the Home app UI ([#46](https://github.com/mpatfield/homebridge-dummy/issues/46))
-    - ⚠️ Adding/removing/changing the group name for an accessory will require you to reconfigure any HomeKit scenes or automations
-- Auto-Trigger feature to invoke accessory at a specified interval or times via cron ([#136](https://github.com/mpatfield/homebridge-dummy/issues/136))
-- Support for Thermostats ([#145](https://github.com/mpatfield/homebridge-dummy/issues/145))
-    - Manual control only, no auto-trigger or auto-reset functionality
-- Millisecond unit option for triggers/timers ([#149](https://github.com/mpatfield/homebridge-dummy/issues/149))
-- "Fade" option for dimmer lightbulbs timers ([#150](https://github.com/mpatfield/homebridge-dummy/issues/150))
-- Allow `sensor` to be added to all accessory types (except Thermostat)
-
 ### Changed
 - Reorganized plugin config UI and renamed "Timer" to "Auto-Reset"
+- `sensor` is now an object rather than a primitive string
 - Updated dependencies
+
+### Added
+- Groups (Beta) - Items sharing the same group name can be grouped together in a single accessory in the Home.app UI ([#46](https://github.com/mpatfield/homebridge-dummy/issues/46))
+    - ⚠️ Adding/removing/changing the group name for an accessory will require you to reconfigure any HomeKit scenes or automations
+- "Auto-Trigger" feature to invoke accessory at a specified interval or times via cron ([#136](https://github.com/mpatfield/homebridge-dummy/issues/136))
+- Added "Activate Sensor on Auto-Reset" option ([#142](https://github.com/mpatfield/homebridge-dummy/issues/142))
+    - Instead of mirroring accessory, sensor will be activated only when accessory auto-resets
+- "Fade" option for dimmer lightbulbs timers ([#150](https://github.com/mpatfield/homebridge-dummy/issues/150))
+- Millisecond unit option for triggers/timers ([#149](https://github.com/mpatfield/homebridge-dummy/issues/149))
+- Rudimentary support for Thermostats ([#145](https://github.com/mpatfield/homebridge-dummy/issues/145))
+    - Manual control only, no auto-trigger or auto-reset functionality
+- Allow `sensor` to be attached to all accessory types (excluding Thermostat)
 
 ### Fixed
 - Timer logging issues ([#143](https://github.com/mpatfield/homebridge-dummy/issues/143), [#148](https://github.com/mpatfield/homebridge-dummy/issues/148))
