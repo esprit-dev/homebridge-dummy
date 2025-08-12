@@ -83,6 +83,9 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
       }
     }
 
+    this.accessoryService.updateCharacteristic(this.Characteristic.LockTargetState, this.state);
+    this.accessoryService.updateCharacteristic(this.Characteristic.LockCurrentState, this.state);
+
     if (this.sensor) {
       if (!this.sensor.timerControlled) {
         this.sensor.active = this.state !== this.defaultLockState;
@@ -90,9 +93,6 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
         this.sensor.active = false;
       }
     }
-
-    this.accessoryService.updateCharacteristic(this.Characteristic.LockTargetState, this.state);
-    this.accessoryService.updateCharacteristic(this.Characteristic.LockCurrentState, this.state);
   }
 
   override async trigger(): Promise<void> {

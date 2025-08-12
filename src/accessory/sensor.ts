@@ -2,26 +2,26 @@ import { CharacteristicValue, PlatformAccessory, Service } from 'homebridge';
 
 import { strings } from '../i18n/i18n.js';
 
-import { CharacteristicType, SensorType, SensorCharacteristic as Char, ServiceType, SensorConfig } from '../model/types.js';
+import { CharacteristicType, SensorType, SensorCharacteristic, ServiceType, SensorConfig } from '../model/types.js';
 
 import { Log } from '../tools/log.js';
 
 type SensorStrings = { active: string, inactive: string };
-type SensorInfo = { characteristic: Char, strings: SensorStrings };
+type SensorInfo = { characteristic: SensorCharacteristic, strings: SensorStrings };
 
 const INFO_MAP: { [key in SensorType]: SensorInfo } = {
-  [SensorType.CarbonDioxideSensor]: { characteristic: Char.CarbonDioxideDetected, strings: strings.sensor.carbonDioxide },
-  [SensorType.CarbonMonoxideSensor]: { characteristic: Char.CarbonMonoxideDetected, strings: strings.sensor.carbonMonoxide },
-  [SensorType.ContactSensor]: { characteristic: Char.ContactSensorState, strings: strings.sensor.contact },
-  [SensorType.LeakSensor]: { characteristic: Char.LeakDetected, strings: strings.sensor.leak },
-  [SensorType.MotionSensor]: { characteristic: Char.MotionDetected, strings: strings.sensor.motion },
-  [SensorType.OccupancySensor]: { characteristic: Char.OccupancyDetected, strings: strings.sensor.occupancy },
-  [SensorType.SmokeSensor]: { characteristic: Char.SmokeDetected, strings: strings.sensor.smoke },
+  [SensorType.CarbonDioxideSensor]: { characteristic: SensorCharacteristic.CarbonDioxideDetected, strings: strings.sensor.carbonDioxide },
+  [SensorType.CarbonMonoxideSensor]: { characteristic: SensorCharacteristic.CarbonMonoxideDetected, strings: strings.sensor.carbonMonoxide },
+  [SensorType.ContactSensor]: { characteristic: SensorCharacteristic.ContactSensorState, strings: strings.sensor.contact },
+  [SensorType.LeakSensor]: { characteristic: SensorCharacteristic.LeakDetected, strings: strings.sensor.leak },
+  [SensorType.MotionSensor]: { characteristic: SensorCharacteristic.MotionDetected, strings: strings.sensor.motion },
+  [SensorType.OccupancySensor]: { characteristic: SensorCharacteristic.OccupancyDetected, strings: strings.sensor.occupancy },
+  [SensorType.SmokeSensor]: { characteristic: SensorCharacteristic.SmokeDetected, strings: strings.sensor.smoke },
 };
 
 export class SensorAccessory {
 
-  protected readonly sensorService?: Service;
+  protected readonly service: Service;
 
   private _active: number = 0;
 
@@ -31,7 +31,7 @@ export class SensorAccessory {
     accessory: PlatformAccessory,
     caller: string,
     log: Log,
-    disableLogging?: boolean,
+    disableLogging: boolean,
     sensor?: SensorConfig | SensorType,
   ): SensorAccessory | undefined {
 
@@ -69,19 +69,19 @@ export class SensorAccessory {
     accessory: PlatformAccessory,
     readonly caller: string,
     readonly log: Log,
-    readonly disableLogging?: boolean,
+    readonly disableLogging: boolean,
   ) {
 
-    this.sensorService = accessory.getService(Service[config.type]) || accessory.addService(Service[config.type]);
+    this.service = accessory.getService(Service[config.type]) || accessory.addService(Service[config.type]);
 
     const characteristicInstance = Characteristic[this.sensorInfo.characteristic];
-    this.sensorService.getCharacteristic(characteristicInstance)
+    this.service.getCharacteristic(characteristicInstance)
       .onGet(this.onGet.bind(this));
 
     SensorAccessory.removeUnwantedServices(Service, accessory, config.type);
   }
 
-  protected async onGet(): Promise<CharacteristicValue> {
+  private async onGet(): Promise<CharacteristicValue> {
     return this._active;
   }
 
@@ -102,10 +102,10 @@ export class SensorAccessory {
     this._active = isActive ? 1 : 0;
 
     const characteristicInstance = this.Characteristic[this.sensorInfo.characteristic];
-    this.sensorService?.updateCharacteristic(characteristicInstance, this._active);
+    this.service.updateCharacteristic(characteristicInstance, this._active);
 
     if (!this.disableLogging) {
-      this.log?.always(isActive ? this.sensorInfo.strings.active :this.sensorInfo.strings.inactive, this.caller);
+      this.log.always(isActive ? this.sensorInfo.strings.active :this.sensorInfo.strings.inactive, this.caller);
     }
   }
 }

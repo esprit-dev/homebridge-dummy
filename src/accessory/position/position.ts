@@ -90,6 +90,9 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
       }
     }
 
+    this.accessoryService.updateCharacteristic(this.Characteristic.TargetPosition, this.position);
+    this.accessoryService.updateCharacteristic(this.Characteristic.CurrentPosition, this.position);
+
     if (this.sensor) {
       if (!this.sensor.timerControlled) {
         this.sensor.active = this.position !== this.defaultPosition;
@@ -97,9 +100,6 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
         this.sensor.active = false;
       }
     }
-
-    this.accessoryService.updateCharacteristic(this.Characteristic.TargetPosition, this.position);
-    this.accessoryService.updateCharacteristic(this.Characteristic.CurrentPosition, this.position);
   }
 
   override async trigger(): Promise<void> {

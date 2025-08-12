@@ -38,7 +38,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
     isGrouped: boolean,
   ) {
 
-    this.sensor = SensorAccessory.new(Service, Characteristic, accessory, this.config.name, log, this.config.disableLogging, config.sensor);
+    this.sensor = SensorAccessory.new(Service, Characteristic, accessory, this.config.name, log, this.config.disableLogging === true, config.sensor);
 
     if (config.timer) {
       this._timer = Timer.new(config.timer, config.name, log, config.disableLogging === true);

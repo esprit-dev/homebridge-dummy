@@ -79,6 +79,8 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
       }
     }
 
+    this.accessoryService.updateCharacteristic(this.Characteristic.On, this.on);
+
     if (this.sensor) {
       if (!this.sensor.timerControlled) {
         this.sensor.active = this.on !== this.defaultOn;
@@ -86,8 +88,6 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
         this.sensor.active = false;
       }
     }
-
-    this.accessoryService.updateCharacteristic(this.Characteristic.On, this.on);
   }
 
   override async trigger(): Promise<void> {
