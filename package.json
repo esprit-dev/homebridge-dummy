@@ -19,9 +19,10 @@
   },
   "main": "dist/homebridge/index.js",
   "scripts": {
-    "build": "npm audit fix && rimraf ./dist && tsc && npm run build:html && npm run build:ui",
+    "build": "npm run install:secure && rimraf ./dist && tsc && npm run build:html && npm run build:ui",
     "build:html": "node --loader ts-node/esm ./scripts/build-html.ts",
     "build:ui": "esbuild src/homebridge-ui/ui.ts --bundle --outfile=dist/homebridge-ui/public/ui.js --minify",
+    "install:secure": "npm install && npm audit fix",
     "lint": "eslint . --max-warnings=0",
     "prepublishOnly": "npm run lint && npm run build"
   },
