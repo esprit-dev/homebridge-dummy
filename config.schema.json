@@ -430,6 +430,9 @@
               "type": "fieldset",
               "title": "${config.title.commands}",
               "description": "${config.description.commands}",
+              "condition": {
+                "functionBody": "return model.accessories?.[arguments[1]]?.type !== undefined;"
+              },
               "items": [
                 {
                   "key": "accessories[].commandOn",
