@@ -81,7 +81,7 @@ const en = {
     no: 'No',
 
     description: {
-      commands: 'Execute arbitrary commands when the accessory changes state',
+      commands: 'Execute arbitrary commands (e.g. curl) when the accessory changes state',
       cron: 'Visit crontab.guru for help',
       fade: 'Lightbulb will fade gradually over the specified time interval',
       random: 'Time will be randomized with the above value as a maximum',

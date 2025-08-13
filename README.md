@@ -70,9 +70,9 @@ The first thing the flow does is create a backup called `config.json.bak` in you
 
 ## About
 
-With this plugin, you can create any number of fake accessories that will do nothing when triggered. This can be very useful for advanced automation with HomeKit scenes.
+With this plugin, you can create any number of fake accessories which are useful for advanced automation with HomeKit scenes. Features include scheduling to trigger at a specific interval or times, resetting automatically after a delay, triggering sensors such as motion or occupancy, running arbitrary commands such as cron, and more.
 
-Currently, only Lightbulbs, Locks, Outlets, and Switches are supported. If there is a particular device you'd like to see supported, please [create an issue](https://github.com/mpatfield/homebridge-dummy/issues/new?template=new-issue.md).
+Currently, Doors, Lightbulbs, Locks, Outlets, Switches, Thermostats, Windows, and Blinds are supported. If there is a particular device or feature you'd like to see, please [create an issue](https://github.com/mpatfield/homebridge-dummy/issues/new?template=new-issue.md).
 
 ## Configuration
 
@@ -341,6 +341,10 @@ Special thanks to [@nfarina](https://github.com/sponsors/nfarina) for creating t
 
 [Keryan Belahcene](https://www.instagram.com/keryan.me) for creating the [Flume](https://github.com/homebridge-plugins/homebridge-flume) banner image which was adapted for use with this plugin
 
-Auto-Trigger feature inspired by [Homebridge Schedule](https://github.com/kbrashears5/typescript-homebridge-schedule) by [@kbrashears5](https://github.com/sponsors/kbrashears5)
+Schedule feature inspired by [Homebridge Schedule](https://github.com/kbrashears5/typescript-homebridge-schedule) by [@kbrashears5](https://github.com/sponsors/kbrashears5)
+
+Sensor feature inspired by [Homebridge-Delay-Switch](https://github.com/nitaybz/homebridge-delay-switch#readme) by [@nitaybz](https://github.com/sponsors/nitaybz)
+
+Command feature inspired by [homebridge-cmdtrigger](https://github.com/hallos/homebridge-cmdtrigger) by [@hallos](https://github.com/sponsors/hallos)
 
 And to the amazing creators/contributors of [Homebridge](https://homebridge.io) who made this plugin possible!
