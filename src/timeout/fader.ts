@@ -1,12 +1,13 @@
-import { TimerConfig } from './types.js';
+import { DelayLogStrings, Timeout } from './timeout.js';
 
 import { strings } from '../i18n/i18n.js';
 
+import { TimerConfig } from '../model/types.js';
+
 import { Log } from '../tools/log.js';
-import { DelayLogStrings, getDelay } from '../tools/time.js';
 import { assert } from '../tools/validation.js';
 
-export class Fader {
+export class Fader extends Timeout {
 
   static new(timerConfig: TimerConfig, fadeIn: boolean, caller: string, log: Log, disableLogging: boolean): Fader | undefined {
 
@@ -17,16 +18,20 @@ export class Fader {
     return new Fader(timerConfig, fadeIn, caller, log, disableLogging);
   }
 
-  private timeout?: NodeJS.Timeout;
   private value?: number;
 
   private constructor(
     private readonly timerConfig: TimerConfig,
     private readonly fadeIn: boolean,
-    private readonly caller: string,
-    private readonly log: Log,
-    private readonly disableLogging: boolean,
+    caller: string,
+    log: Log,
+    disableLogging: boolean,
   ) {
+    super(caller, log, disableLogging);
+  }
+
+  protected get cancelString(): string {
+    return strings.accessory.fade.cancel;
   }
 
   public get currentValue(): number | undefined {
@@ -44,7 +49,7 @@ export class Fader {
       strings.accessory.fade.startHours,
     );
 
-    const delay = getDelay(this.timerConfig.delay, this.timerConfig.units, this.timerConfig.random, this.log, this.disableLogging, this.caller, logStrings);
+    const delay = this.getDelay(this.timerConfig.delay, this.timerConfig.units, this.timerConfig.random, logStrings);
 
     const change = this.fadeIn ? 1 : -1;
     const interval = delay / maximum;
@@ -64,27 +69,8 @@ export class Fader {
     }, interval);
   }
 
-  public cancel() {
-
-    if (this.timeout) {
-      this.logIfDesired(strings.accessory.fade.cancel, this.caller);
-    }
-
-    this.reset();
-  }
-
-  public reset() {
-    clearTimeout(this.timeout);
-    this.timeout = undefined;
+  override reset() {
+    super.reset();
     this.value = undefined;
-  }
-
-  private logIfDesired(message: string, ...parameters: (string | number)[]) {
-
-    if (this.disableLogging) {
-      return;
-    }
-
-    this.log.always(message, this.caller, ...parameters);
   }
 }

@@ -1,19 +1,20 @@
 import { exec } from 'child_process';
 import { PlatformAccessory, Service } from 'homebridge';
 
-import { SensorAccessory } from './sensor.js';
-
 import { PLATFORM_NAME, PLUGIN_ALIAS } from '../homebridge/settings.js';
+
+import { SensorAccessory } from './sensor.js';
 
 import { strings } from '../i18n/i18n.js';
 
 import { AccessoryType, CharacteristicType, DummyConfig, ServiceType } from '../model/types.js';
 
+import { Timer } from '../timeout/timer.js';
+import { Trigger } from '../timeout/trigger.js';
+
 import { Log } from '../tools/log.js';
 import { STORAGE_KEY_SUFFIX_DEFAULT_STATE } from '../tools/storage.js';
-import { Timer } from '../model/timer.js';
 import getVersion from '../tools/version.js';
-import { Trigger } from '../model/trigger.js';
 
 export abstract class DummyAccessory<C extends DummyConfig> {
 

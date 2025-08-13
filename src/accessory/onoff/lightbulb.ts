@@ -4,8 +4,9 @@ import { OnOffAccessory } from './onoff.js';
 
 import { strings } from '../../i18n/i18n.js';
 
-import { Fader } from '../../model/fader.js';
 import { AccessoryType, CharacteristicType, LightbulbConfig, ServiceType } from '../../model/types.js';
+
+import { Fader } from '../../timeout/fader.js';
 
 import { Log } from '../../tools/log.js';
 import { STORAGE_KEY_SUFFIX_DEFAULT_BRIGHTNESS, storageGet, storageSet } from '../../tools/storage.js';

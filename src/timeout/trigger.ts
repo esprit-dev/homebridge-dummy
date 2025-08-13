@@ -1,14 +1,15 @@
 import { CronJob, validateCronExpression } from 'cron';
 
-import { TriggerConfig, TriggerType } from './types.js';
+import { DelayLogStrings, Timeout } from './timeout.js';
 
 import { strings } from '../i18n/i18n.js';
 
+import { TriggerConfig, TriggerType } from '../model/types.js';
+
 import { Log } from '../tools/log.js';
-import { DelayLogStrings, getDelay } from '../tools/time.js';
 import { assert } from '../tools/validation.js';
 
-export class Trigger {
+export class Trigger extends Timeout {
 
   static new(trigger: TriggerConfig, caller: string,  log: Log, disableLogging: boolean, callback:  () => Promise<void>): Trigger | undefined {
 
@@ -30,16 +31,17 @@ export class Trigger {
     return new Trigger(trigger, caller, log, disableLogging, callback);
   }
 
-  private timeout?: NodeJS.Timeout;
   private cronjob?: CronJob;
 
   private constructor(
     private readonly trigger: TriggerConfig,
-    private readonly caller: string,
-    private readonly log: Log,
-    private readonly disableLogging: boolean,
+    caller: string,
+    log: Log,
+    disableLogging: boolean,
     private readonly callback:  () => Promise<void>,
   ) {
+
+    super(caller, log, disableLogging);
 
     switch(this.trigger.type) {
     case TriggerType.INTERVAL:
@@ -51,9 +53,13 @@ export class Trigger {
     }
   }
 
+  protected get cancelString(): string {
+    throw new Error('Method not implemented.');
+  }
+
   private startTimeout() {
 
-    this.resetTimeout();
+    this.reset();
 
     const logStrings = DelayLogStrings(
       strings.accessory.trigger.intervalMilliseconds,
@@ -62,10 +68,10 @@ export class Trigger {
       strings.accessory.trigger.intervalHours,
     );
 
-    const delay = getDelay(this.trigger.interval!, this.trigger.units!, this.trigger.random, this.log, this.disableLogging, this.caller, logStrings);
+    const delay = this.getDelay(this.trigger.interval!, this.trigger.units!, this.trigger.random, logStrings);
 
     this.timeout = setTimeout(async () => {
-      this.resetTimeout();
+      this.reset();
       await this.callback();
       this.startTimeout();
     }, delay);
@@ -80,28 +86,14 @@ export class Trigger {
       return;
     }
 
-    this.logIfDesired(strings.accessory.trigger.cron, this.caller);
+    this.logIfDesired(strings.accessory.trigger.cron);
 
     this.cronjob = new CronJob(this.trigger.cron!, this.callback);
     this.cronjob.start();
   }
 
-  public teardown() {
-    this.resetTimeout();
+  override teardown() {
+    super.teardown();
     this.cronjob?.stop();
-  }
-
-  private resetTimeout() {
-    clearTimeout(this.timeout);
-    this.timeout = undefined;
-  }
-
-  private logIfDesired(message: string, ...parameters: (string | number)[]) {
-
-    if (this.disableLogging) {
-      return;
-    }
-
-    this.log.always(message, this.caller, ...parameters);
   }
 }
