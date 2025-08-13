@@ -9,8 +9,8 @@ import { strings } from '../i18n/i18n.js';
 
 import { AccessoryType, CharacteristicType, DummyConfig, ServiceType } from '../model/types.js';
 
+import { Schedule } from '../timeout/schedule.js';
 import { Timer } from '../timeout/timer.js';
-import { Trigger } from '../timeout/trigger.js';
 
 import { Log } from '../tools/log.js';
 import { STORAGE_KEY_SUFFIX_DEFAULT_STATE } from '../tools/storage.js';
@@ -26,8 +26,8 @@ export abstract class DummyAccessory<C extends DummyConfig> {
 
   protected readonly accessoryService: Service;
 
+  private readonly _schedule?: Schedule;
   private readonly _timer?: Timer;
-  private readonly _trigger?: Trigger;
 
   constructor(
     protected readonly Service: ServiceType,
@@ -45,8 +45,8 @@ export abstract class DummyAccessory<C extends DummyConfig> {
       this._timer = Timer.new(config.timer, config.name, log, config.disableLogging === true);
     }
 
-    if (config.trigger) {
-      this._trigger = Trigger.new(config.trigger, config.name, log, config.disableLogging === true, this.trigger.bind(this));
+    if (config.schedule) {
+      this._schedule = Schedule.new(config.schedule, config.name, log, config.disableLogging === true, this.schedule.bind(this));
     }
 
     const serviceInstance = Service[this.getAccessoryType()];
@@ -84,7 +84,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
 
   protected abstract getAccessoryType(): AccessoryType;
 
-  protected abstract trigger(): Promise<void>;
+  protected abstract schedule(): Promise<void>;
 
   protected abstract reset(): Promise<void>;
 
@@ -94,7 +94,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
 
   public teardown() {
     this._timer?.teardown();
-    this._trigger?.teardown();
+    this._schedule?.teardown();
   }
 
   protected get identifier(): string {
@@ -102,7 +102,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
   }
 
   protected get isStateful(): boolean {
-    return this._timer === undefined && this._trigger === undefined && !this.config.resetOnRestart;
+    return this._timer === undefined && this._schedule === undefined && !this.config.resetOnRestart;
   }
 
   protected get defaultStateStorageKey(): string {

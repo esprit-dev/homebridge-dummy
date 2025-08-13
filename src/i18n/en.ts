@@ -49,12 +49,12 @@ const en = {
       setHours: '%s is waiting %s hours', // accessory name, number
     },
 
-    trigger: {
-      cron: '%s starting trigger cronjob', // accessory name
-      intervalMilliseconds: '%s will trigger in %s milliseconds', // accessory name, number
-      intervalSeconds: '%s will trigger in %s seconds', // accessory name, number
-      intervalMinutes: '%s will trigger in %s minutes', // accessory name, number
-      intervalHours: '%s will trigger in %s hours', // accessory name, number
+    schedule: {
+      cron: '%s starting schedule cronjob', // accessory name
+      intervalMilliseconds: '%s will schedule in %s milliseconds', // accessory name, number
+      intervalSeconds: '%s will schedule in %s seconds', // accessory name, number
+      intervalMinutes: '%s will schedule in %s minutes', // accessory name, number
+      intervalHours: '%s will schedule in %s hours', // accessory name, number
     },
 
     fade: {
@@ -87,7 +87,7 @@ const en = {
       random: 'Time will be randomized with the above value as a maximum',
       timerControlled: 'Instead of mirroring accessory, sensor will be activated when accessory auto-resets',
       timer: 'Return the accessory to its default value after the specified delay',
-      trigger: 'Set the accessory to its opposite (non-default) value at specified interval or times',
+      schedule: 'Set the accessory to its opposite (non-default) value at specified interval or times',
     },
 
     enumNames: {
@@ -149,7 +149,7 @@ const en = {
       resetOnRestart: 'Reset on Restart',
       timer: 'Auto-Reset',
       timerControlled: 'Activate Sensor on Auto-Reset',
-      trigger: 'Auto-Trigger',
+      schedule: 'Schedule',
       sensor: 'Attach Sensor',
       type: 'Type',
       units: 'Units',

@@ -70,7 +70,7 @@ The first thing the flow does is create a backup called `config.json.bak` in you
 
 ## About
 
-With this plugin, you can create any number of fake accessories which are useful for advanced automation with HomeKit scenes. Features include scheduling to trigger at a specific interval or times, resetting automatically after a delay, triggering sensors such as motion or occupancy, running arbitrary commands such as cron, and more.
+With this plugin, you can create any number of fake accessories which are useful for advanced automation with HomeKit scenes. Features include scheduling to trigger at a specific interval or times, resetting automatically after a delay, activating sensors such as motion or occupancy, running arbitrary commands such as cron, and more.
 
 Currently, Doors, Lightbulbs, Locks, Outlets, Switches, Thermostats, Windows, and Blinds are supported. If there is a particular device or feature you'd like to see, please [create an issue](https://github.com/mpatfield/homebridge-dummy/issues/new?template=new-issue.md).
 
@@ -92,7 +92,7 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
                 "units": "MILLISECONDS | SECONDS | MINUTES | HOURS",
                 "random": true | false
             },
-            "trigger": {
+            "schedule": {
                 "type": "INTERVAL" | "CRON",
                 "interval": number,
                 "units": "MILLISECONDS | SECONDS | MINUTES | HOURS",
@@ -141,11 +141,11 @@ All fields are optional unless noted with an asterisk (*)
 - `timer.units` — The units to use for delay above (`MILLISECONDS`, `SECONDS`, `MINUTES`, or `HOURS`). *Required if delay is set.
 - `timer.random` — If true, the delay will be randomized with a maximum value of `timer.delay`
 
-- `trigger.type` — Automatically set the accessory to it's non-default value
-- `trigger.interval` — Trigger the accessory after this many milliseconds/seconds/minutes/hours. *Required if `trigger.type` = `INTERVAL`
-- `trigger.units` — The units to use for the interval (`MILLISECONDS`, `SECONDS`, `MINUTES`, or `HOURS`) *Required if `trigger.type` = `INTERVAL`
-- `trigger.random` — If true, the interval will be randomized with a maximum value of `trigger.interval`
-- `trigger.cron` — The cron string for triggering the accessory.  *Required if `trigger.type` = `CRON`
+- `schedule.type` — Automatically set the accessory to it's non-default value
+- `schedule.interval` — Trigger the accessory after this many milliseconds/seconds/minutes/hours. *Required if `schedule.type` = `INTERVAL`
+- `schedule.units` — The units to use for the interval (`MILLISECONDS`, `SECONDS`, `MINUTES`, or `HOURS`) *Required if `schedule.type` = `INTERVAL`
+- `schedule.random` — If true, the interval will be randomized with a maximum value of `schedule.interval`
+- `schedule.cron` — The cron string for triggering the accessory.  *Required if `schedule.type` = `CRON`
     - See [crontab.guru](http://crontab.guru) for help
 
 - `sensor.type` - Optionally attach a sensor that mirrors the state of the parent accessory
@@ -307,7 +307,7 @@ All fields are optional unless noted with an asterisk (*)
 }
 ```
 
-### Hourly Trigger Switch
+### Hourly Schedule Switch
 ```json
 {
     "name": "Hourly",
@@ -316,7 +316,7 @@ All fields are optional unless noted with an asterisk (*)
         "delay": 1,
         "units": "SECONDS"
     },
-    "trigger": {
+    "schedule": {
         "type": "INTERVAL",
         "interval": 1,
         "units": "HOURS"

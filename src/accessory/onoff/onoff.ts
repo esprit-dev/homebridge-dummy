@@ -90,7 +90,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
     }
   }
 
-  override async trigger(): Promise<void> {
+  override async schedule(): Promise<void> {
     if (this.on === this.defaultOn) {
       await this.setOn(!this.on);
     }

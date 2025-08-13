@@ -45,7 +45,7 @@
           }
         }
       },
-      "trigger": {
+      "schedule": {
         "type": "object",
         "properties": {
           "type": {
@@ -105,7 +105,7 @@
             },
             "sensor": { "$ref": "#/definitions/sensor" },
             "timer": { "$ref": "#/definitions/timer" },
-            "trigger": { "$ref": "#/definitions/trigger" },
+            "schedule": { "$ref": "#/definitions/schedule" },
             "temperatureUnits": {
               "type": "string",
               "title": "${config.title.units}",
@@ -334,8 +334,8 @@
             },
             {
               "type": "fieldset",
-              "title": "${config.title.trigger}",
-              "description": "${config.description.trigger}",
+              "title": "${config.title.schedule}",
+              "description": "${config.description.schedule}",
               "condition": {
                 "functionBody": "const type = model.accessories?.[arguments[1]]?.type; return type !== undefined && type !== 'Thermostat';"
               },
@@ -346,35 +346,35 @@
                   "flex-direction": "row",
                   "items": [
                     {
-                      "key": "accessories[].trigger.type",
+                      "key": "accessories[].schedule.type",
                       "flex": "1 1 33%"
                     },
                     {
-                      "key": "accessories[].trigger.interval",
+                      "key": "accessories[].schedule.interval",
                       "flex": "1 1 33%",
                       "condition": {
-                          "functionBody": "return model.accessories?.[arguments[1]]?.trigger?.type === 'INTERVAL';"
+                          "functionBody": "return model.accessories?.[arguments[1]]?.schedule?.type === 'INTERVAL';"
                       }
                     },
                     {
-                      "key": "accessories[].trigger.units",
+                      "key": "accessories[].schedule.units",
                       "flex": "1 1 33%",
                       "condition": {
-                          "functionBody": "return model.accessories?.[arguments[1]]?.trigger?.type === 'INTERVAL';"
+                          "functionBody": "return model.accessories?.[arguments[1]]?.schedule?.type === 'INTERVAL';"
                       }
                     }
                   ]
                 },
                 {
-                  "key": "accessories[].trigger.cron",
+                  "key": "accessories[].schedule.cron",
                   "condition": {
-                      "functionBody": "return model.accessories?.[arguments[1]]?.trigger?.type === 'CRON';"
+                      "functionBody": "return model.accessories?.[arguments[1]]?.schedule?.type === 'CRON';"
                   }
                 },
                 {
-                  "key": "accessories[].trigger.random",
+                  "key": "accessories[].schedule.random",
                   "condition": {
-                      "functionBody": "const trigger = model.accessories?.[arguments[1]]?.trigger; return trigger?.type === 'INTERVAL' && trigger?.interval !== undefined;"
+                      "functionBody": "const schedule = model.accessories?.[arguments[1]]?.schedule; return schedule?.type === 'INTERVAL' && schedule?.interval !== undefined;"
                   }
                 }
               ]

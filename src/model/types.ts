@@ -75,7 +75,7 @@ export enum TimeUnits {
   HOURS = 'HOURS',
 }
 
-export enum TriggerType {
+export enum ScheduleType {
   INTERVAL = 'INTERVAL',
   CRON = 'CRON',
 }
@@ -89,18 +89,18 @@ export enum TemperatureUnits {
 export type Assertable = {
 }
 
-export type TimerConfig = Assertable & {
-  delay: number,
-  units: TimeUnits,
-  random?: boolean,
-}
-
-export type TriggerConfig = Assertable & {
-  type: TriggerType,
+export type ScheduleConfig = Assertable & {
+  type: ScheduleType,
   interval?: number,
   units?: TimeUnits,
   random?: boolean,
   cron?: string,
+}
+
+export type TimerConfig = Assertable & {
+  delay: number,
+  units: TimeUnits,
+  random?: boolean,
 }
 
 export type SensorConfig = Assertable & {
@@ -115,7 +115,7 @@ export type DummyConfig = {
   groupName?: string,
   sensor?: SensorType | SensorConfig,
   timer?: TimerConfig,
-  trigger?: TriggerConfig,
+  schedule?: ScheduleConfig,
   resetOnRestart?: boolean,
   disableLogging?: boolean,
 }
