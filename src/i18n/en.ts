@@ -147,7 +147,7 @@ const en = {
       interval: 'Interval',
       name: 'Name',
       resetOnRestart: 'Reset on Restart',
-      timer: 'Auto-Reset',
+      timer: 'Auto-Reset Timer',
       timerControlled: 'Activate Sensor on Auto-Reset',
       schedule: 'Schedule',
       sensor: 'Attach Sensor',

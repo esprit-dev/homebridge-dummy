@@ -10,11 +10,6 @@ Automations and scenes using Homebridge Dummy accessories will need to be reconf
 
 ---
 
-### Changed
-- Reorganized plugin config UI and renamed "Timer" to "Auto-Reset"
-- `sensor` is now an object rather than a primitive string (backwards compatible)
-- Updated dependencies
-
 ### Added
 - Groups (Beta) - Items sharing the same group name can be grouped together in a single accessory in the Home.app UI ([#46](https://github.com/mpatfield/homebridge-dummy/issues/46))
     - ⚠️ Adding/removing/changing the group name for an accessory will require you to reconfigure any HomeKit scenes or automations
@@ -26,6 +21,11 @@ Automations and scenes using Homebridge Dummy accessories will need to be reconf
 - Rudimentary support for Thermostats ([#145](https://github.com/mpatfield/homebridge-dummy/issues/145))
     - Manual control only, no scheduling or auto-reset functionality
 - Allow `sensor` to be attached to all accessory types (excluding Thermostat)
+
+### Changed
+- Reorganized plugin config UI and renamed "Timer" to "Auto-Reset Timer"
+- `sensor` is now an object rather than a primitive string (backwards compatible)
+- Updated dependencies
 
 ### Fixed
 - Timer logging issues ([#143](https://github.com/mpatfield/homebridge-dummy/issues/143), [#148](https://github.com/mpatfield/homebridge-dummy/issues/148))
