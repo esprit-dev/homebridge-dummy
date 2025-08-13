@@ -36,8 +36,8 @@ const en = {
       cool: '%s set to Cool', // accessory name
       heat: '%s set to Heat', // accessory name
       off: '%s set to Off', // accessory name
-      temperatureC: '%s set to %s°C', // accessory name
-      temperatureF: '%s set to %s°F', // accessory name
+      temperatureC: '%s set to %s°C', // accessory name, number
+      temperatureF: '%s set to %s°F', // accessory name, number
       unsupportedFunction: '%s is unsupported for thermostats', // function name
     },
 
@@ -85,7 +85,7 @@ const en = {
       cron: 'Visit crontab.guru for help',
       fade: 'Lightbulb will fade gradually over the specified time interval',
       random: 'Time will be randomized with the above value as a maximum',
-      timerControlled: 'Instead of mirroring accessory, sensor will be activated only when accessory auto-resets',
+      timerControlled: 'Instead of mirroring accessory, sensor will be activated when accessory auto-resets',
       timer: 'Return the accessory to its default value after the specified delay',
       trigger: 'Set the accessory to its opposite (non-default) value at specified interval or times',
     },
