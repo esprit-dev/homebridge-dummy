@@ -112,11 +112,6 @@
               "enum": ["C", "F"],
               "enumNames": ["${config.enumNames.celsius}", "${config.enumNames.fahrenheit}"]
             },
-            "fade": {
-              "type": "boolean",
-              "title": "${config.title.fade}",
-              "description": "${config.description.fade}"
-            },
             "defaultBrightness": {
               "type": "number",
               "title": "${config.title.defaultBrightness}",
@@ -409,12 +404,6 @@
                     "functionBody": "return model.accessories?.[arguments[1]]?.timer?.delay !== undefined;"
                   },
                   "items": [
-                    {
-                      "key": "accessories[].fade",
-                      "condition": {
-                          "functionBody": "return model.accessories?.[arguments[1]]?.defaultBrightness !== undefined;"
-                      }
-                    },
                     "accessories[].timer.random",
                     {
                       "key": "accessories[].sensor.timerControlled",

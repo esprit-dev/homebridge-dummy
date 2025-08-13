@@ -16,7 +16,6 @@ Automations and scenes using Homebridge Dummy accessories will need to be reconf
 - "Schedule" feature to invoke accessory at a specified interval or times via cron ([#136](https://github.com/mpatfield/homebridge-dummy/issues/136))
 - Added "Activate Sensor on Auto-Reset" option ([#142](https://github.com/mpatfield/homebridge-dummy/issues/142))
     - Instead of mirroring accessory, sensor will be activated only when accessory auto-resets
-- "Fade" option for dimmer lightbulbs timers ([#150](https://github.com/mpatfield/homebridge-dummy/issues/150))
 - Millisecond unit option ([#149](https://github.com/mpatfield/homebridge-dummy/issues/149))
 - Rudimentary support for Thermostats ([#145](https://github.com/mpatfield/homebridge-dummy/issues/145))
     - Manual control only, no scheduling or auto-reset functionality

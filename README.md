@@ -104,7 +104,6 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
                 "timerControlled": true | false
             }
             "temperatureUnits": "C" | "F",
-            "fade": true | false,
             "defaultOn": true | false,
             "defaultBrightness": 0-100,
             "defaultLockState": "locked" | "unlocked",
@@ -153,8 +152,6 @@ All fields are optional unless noted with an asterisk (*)
 - `sensor.timerControlled` - If true, sensor will be activated if accessory is reset by timer but not if it is reset manually
 
 - `temperatureUnits` - Units to use for thermostats, either 'C' or 'F'
-
-- `fade` — If true, dimmer lightbulbs will fade gradually over the specified time interval. *Requires `timer` to be defined.
 
 - `defaultOn` — Initial value. Default _ON_ = true, default _OFF_ = false
 

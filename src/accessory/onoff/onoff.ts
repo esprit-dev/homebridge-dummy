@@ -43,15 +43,15 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
     this.accessoryService.updateCharacteristic(this.Characteristic.On, this.on);
   }
 
-  protected get defaultOn(): boolean {
+  private get defaultOn(): boolean {
     return this.config.defaultOn ? true : false;
   }
 
-  protected async getOn(): Promise<CharacteristicValue> {
+  private async getOn(): Promise<CharacteristicValue> {
     return this.on;
   }
 
-  protected async setOn(value: CharacteristicValue): Promise<void> {
+  private async setOn(value: CharacteristicValue): Promise<void> {
 
     if (!assertType(this.log, this.config.name, value, 'boolean')) {
       return;

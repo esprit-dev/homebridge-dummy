@@ -56,14 +56,6 @@ const en = {
       intervalMinutes: '%s will schedule in %s minutes', // accessory name, number
       intervalHours: '%s will schedule in %s hours', // accessory name, number
     },
-
-    fade: {
-      cancel: '%s canceled fade',  // accessory name
-      startMilliseconds: '%s fading over %s milliseconds', // accessory name, number
-      startSeconds: '%s fading over %s seconds', // accessory name, number
-      startMinutes: '%s fading over %s minutes', // accessory name, number
-      startHours: '%s fading over %s hours', // accessory name, number
-    },
   },
 
   config: {
@@ -83,7 +75,6 @@ const en = {
     description: {
       commands: 'Execute arbitrary commands (e.g. curl) when the accessory changes state',
       cron: 'Visit crontab.guru for help',
-      fade: 'Lightbulb will fade gradually over the specified time interval',
       random: 'Time will be randomized with the above value as a maximum',
       timerControlled: 'Instead of mirroring accessory, sensor will be activated when accessory auto-resets',
       timer: 'Return the accessory to its default value after the specified delay',
@@ -142,7 +133,6 @@ const en = {
       defaultTemperature: 'Default Temperature',
       delay: 'Delay',
       disableLogging: 'Disable Logging',
-      fade: 'Fade',
       groupName: 'Group Name (Beta)',
       interval: 'Interval',
       name: 'Name',
