@@ -4,6 +4,8 @@ import { strings } from '../i18n/i18n.js';
 
 import { CharacteristicType, SensorType, SensorCharacteristic, ServiceType, SensorConfig } from '../model/types.js';
 
+import { Timeout } from '../timeout/timeout.js';
+
 import { Log } from '../tools/log.js';
 
 type SensorStrings = { active: string, inactive: string };
@@ -19,7 +21,7 @@ const INFO_MAP: { [key in SensorType]: SensorInfo } = {
   [SensorType.SmokeSensor]: { characteristic: SensorCharacteristic.SmokeDetected, strings: strings.sensor.smoke },
 };
 
-export class SensorAccessory {
+export class SensorAccessory extends Timeout {
 
   protected readonly service: Service;
 
@@ -63,14 +65,16 @@ export class SensorAccessory {
   }
 
   private constructor(
-    readonly config: SensorConfig,
+    private readonly config: SensorConfig,
     Service: ServiceType,
-    readonly Characteristic: CharacteristicType,
+    private readonly Characteristic: CharacteristicType,
     accessory: PlatformAccessory,
-    readonly caller: string,
-    readonly log: Log,
-    readonly disableLogging: boolean,
+    caller: string,
+    log: Log,
+    disableLogging: boolean,
   ) {
+
+    super(caller, log, disableLogging);
 
     this.service = accessory.getService(Service[config.type]) || accessory.addService(Service[config.type]);
 
@@ -79,6 +83,10 @@ export class SensorAccessory {
       .onGet(this.onGet.bind(this));
 
     SensorAccessory.removeUnwantedServices(Service, accessory, config.type);
+  }
+
+  protected get cancelString(): string {
+    throw new Error('Method not implemented.');
   }
 
   private async onGet(): Promise<CharacteristicValue> {
@@ -99,13 +107,23 @@ export class SensorAccessory {
 
   public set active(isActive: boolean) {
 
+    this.reset();
+
+    if (this.active === isActive) {
+      return;
+    }
+
     this._active = isActive ? 1 : 0;
 
     const characteristicInstance = this.Characteristic[this.sensorInfo.characteristic];
     this.service.updateCharacteristic(characteristicInstance, this._active);
 
-    if (!this.disableLogging) {
-      this.log.always(isActive ? this.sensorInfo.strings.active :this.sensorInfo.strings.inactive, this.caller);
+    this.logIfDesired(isActive ? this.sensorInfo.strings.active :this.sensorInfo.strings.inactive);
+
+    if (this.timerControlled && this.active) {
+      this.timeout = setTimeout( () => {
+        this.active = false;
+      }, 1000);
     }
   }
 }
