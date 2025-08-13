@@ -325,7 +325,7 @@
                       "key": "accessories[].resetOnRestart",
                       "flex": "0 1 33%",
                       "condition": {
-                        "functionBody": "return model.accessories?.[arguments[1]]?.timer?.delay === undefined;"
+                        "functionBody": "return model.accessories?.[arguments[1]]?.schedule?.type === undefined && model.accessories?.[arguments[1]]?.timer?.delay === undefined;"
                       }
                     }
                   ]
