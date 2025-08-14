@@ -2,7 +2,7 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-## 1.1.0 (2025-08-13)
+## 1.1.0 (2025-08-14)
 
 ### ‼️ WARNING — Read this if upgrading from v0.9.2 or earlier…
 
@@ -11,9 +11,9 @@ Automations and scenes using Homebridge Dummy accessories will need to be reconf
 ---
 
 ### Added
+- "Schedule" feature to invoke accessory at a specified interval or times via cron ([#136](https://github.com/mpatfield/homebridge-dummy/issues/136))
 - Groups (Beta) - Items sharing the same group name can be grouped together in a single accessory in the Home.app UI ([#46](https://github.com/mpatfield/homebridge-dummy/issues/46))
     - ⚠️ Adding/removing/changing the group name for an accessory will require you to reconfigure any HomeKit scenes or automations
-- "Schedule" feature to invoke accessory at a specified interval or times via cron ([#136](https://github.com/mpatfield/homebridge-dummy/issues/136))
 - Added "Activate Sensor on Auto-Reset" option ([#142](https://github.com/mpatfield/homebridge-dummy/issues/142))
     - Instead of mirroring accessory, sensor will be activated only when accessory auto-resets
 - Millisecond unit option ([#149](https://github.com/mpatfield/homebridge-dummy/issues/149))
