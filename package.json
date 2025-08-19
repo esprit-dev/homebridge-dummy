@@ -2,7 +2,7 @@
   "name": "homebridge-dummy",
   "platform": "HomebridgeDummy",
   "displayName": "Homebridge Dummy",
-  "description": "Dummy accessories for automation with scheduling, delays, sensors, commands, and more",
+  "description": "Create fake accessories to help with automation — features scheduling, delays, sensors, commands, and more",
   "type": "module",
   "version": "1.1.0",
   "homepage": "https://github.com/mpatfield/homebridge-dummy#readme",
