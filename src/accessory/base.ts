@@ -7,7 +7,8 @@ import { SensorAccessory } from './sensor.js';
 
 import { strings } from '../i18n/i18n.js';
 
-import { AccessoryType, CharacteristicType, DummyConfig, ServiceType } from '../model/types.js';
+import { AccessoryType } from '../model/enums.js';
+import { CharacteristicType, DummyConfig, ServiceType } from '../model/types.js';
 
 import { Schedule } from '../timeout/schedule.js';
 import { Timer } from '../timeout/timer.js';

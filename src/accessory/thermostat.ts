@@ -4,7 +4,8 @@ import { DummyAccessory } from './base.js';
 
 import { strings } from '../i18n/i18n.js';
 
-import { AccessoryType, CharacteristicType, DefaultThermostatState, ServiceType, TemperatureUnits, ThermostatConfig } from '../model/types.js';
+import { AccessoryType, DefaultThermostatState, TemperatureUnits }  from '../model/enums.js';
+import { CharacteristicType, ServiceType, ThermostatConfig } from '../model/types.js';
 
 import { Log } from '../tools/log.js';
 import { STORAGE_KEY_SUFFIX_DEFAULT_TEMPERATURE, storageGet, storageSet } from '../tools/storage.js';

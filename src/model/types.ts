@@ -3,53 +3,7 @@ import { AccessoryConfig, CharacteristicValue, PlatformConfig } from 'homebridge
 export type ServiceType = typeof import('homebridge').Service;
 export type CharacteristicType = typeof import('homebridge').Characteristic;
 
-export enum AccessoryType {
-  Door = 'Door',
-  Lightbulb = 'Lightbulb',
-  LockMechanism = 'LockMechanism',
-  Outlet = 'Outlet',
-  Switch = 'Switch',
-  Thermostat = 'Thermostat',
-  Window = 'Window',
-  WindowCovering = 'WindowCovering'
-}
-
-export enum SensorType {
-  CarbonDioxideSensor = 'CarbonDioxideSensor',
-  CarbonMonoxideSensor = 'CarbonMonoxideSensor',
-  ContactSensor = 'ContactSensor',
-  LeakSensor = 'LeakSensor',
-  MotionSensor = 'MotionSensor',
-  OccupancySensor = 'OccupancySensor',
-  SmokeSensor = 'SmokeSensor',
-}
-
-export enum SensorCharacteristic {
-  CarbonDioxideDetected = 'CarbonDioxideDetected',
-  CarbonMonoxideDetected = 'CarbonMonoxideDetected',
-  ContactSensorState = 'ContactSensorState',
-  LeakDetected = 'LeakDetected',
-  MotionDetected = 'MotionDetected',
-  OccupancyDetected = 'OccupancyDetected',
-  SmokeDetected = 'SmokeDetected',
-}
-
-export enum DefaultLockState {
-  LOCKED = 'locked',
-  UNLOCKED = 'unlocked',
-}
-
-export enum DefaultPosition {
-  OPEN = 'open',
-  CLOSED = 'closed',
-}
-
-export enum DefaultThermostatState {
-  OFF = 'off',
-  COOL = 'cool',
-  HEAT = 'heat',
-  AUTO = 'auto',
-}
+import { AccessoryType, DefaultLockState, DefaultPosition, DefaultThermostatState, ScheduleType, SensorType, TemperatureUnits, TimeUnits } from './enums.js';
 
 export type LegacyAccessoryConfig = AccessoryConfig & {
   name: string;
@@ -66,23 +20,6 @@ export type LegacyAccessoryConfig = AccessoryConfig & {
 export type DummyPlatformConfig = PlatformConfig & {
   accessories?: DummyConfig[];
   migrationNeeded?: boolean;
-}
-
-export enum TimeUnits {
-  MILLISECONDS = 'MILLISECONDS',
-  SECONDS = 'SECONDS',
-  MINUTES = 'MINUTES',
-  HOURS = 'HOURS',
-}
-
-export enum ScheduleType {
-  INTERVAL = 'INTERVAL',
-  CRON = 'CRON',
-}
-
-export enum TemperatureUnits {
-  CELSIUS = 'C',
-  FAHRENHEIT = 'F',
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type

@@ -8,7 +8,8 @@ import { strings } from '../i18n/i18n.js';
 
 import { LEGACY_ALIAS, PLATFORM_NAME } from '../homebridge/settings.js';
 
-import { DummyConfig, DummyPlatformConfig, LegacyAccessoryConfig, LightbulbConfig, OnOffConfig, AccessoryType, TimeUnits } from '../model/types.js';
+import { AccessoryType, TimeUnits }  from '../model/enums.js';
+import { DummyConfig, DummyPlatformConfig, LegacyAccessoryConfig, LightbulbConfig, OnOffConfig } from '../model/types.js';
 
 function migrateAccessory(legacyConfig: LegacyAccessoryConfig): DummyConfig {
 

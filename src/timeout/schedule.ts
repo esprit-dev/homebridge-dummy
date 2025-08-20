@@ -4,7 +4,8 @@ import { DelayLogStrings, Timeout } from './timeout.js';
 
 import { strings } from '../i18n/i18n.js';
 
-import { ScheduleConfig, ScheduleType } from '../model/types.js';
+import { ScheduleType }  from '../model/enums.js';
+import { ScheduleConfig } from '../model/types.js';
 
 import { Log } from '../tools/log.js';
 import { assert } from '../tools/validation.js';

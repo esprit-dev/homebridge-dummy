@@ -1,4 +1,4 @@
-import { TimeUnits } from '../model/types.js';
+import { TimeUnits } from '../model/enums.js';
 
 import { Log } from '../tools/log.js';
 

@@ -12,36 +12,37 @@ import { WindowAccessory } from './position/window.js';
 
 import { strings } from '../i18n/i18n.js';
 
-import * as Types from '../model/types.js';
+import { AccessoryType } from '../model/enums.js';
+import { CharacteristicType, DummyConfig, ServiceType } from '../model/types.js';
 
 import { Log } from '../tools/log.js';
 
 export function createDummyAccessory(
-  Service: Types.ServiceType,
-  Characteristic: Types.CharacteristicType,
+  Service: ServiceType,
+  Characteristic: CharacteristicType,
   accessory: PlatformAccessory,
-  config: Types.DummyConfig,
+  config: DummyConfig,
   log: Log,
   persistPath: string,
   isGrouped: boolean = false,
-): DummyAccessory<Types.DummyConfig> | null {
+): DummyAccessory<DummyConfig> | null {
 
   switch(config.type) {
-  case Types.AccessoryType.Door:
+  case AccessoryType.Door:
     return new DoorAccessory(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
-  case Types.AccessoryType.Lightbulb:
+  case AccessoryType.Lightbulb:
     return new LightbulbAccessory(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
-  case Types.AccessoryType.LockMechanism:
+  case AccessoryType.LockMechanism:
     return new LockAccessory(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
-  case Types.AccessoryType.Outlet:
+  case AccessoryType.Outlet:
     return new OutletAccessory(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
-  case Types.AccessoryType.Switch:
+  case AccessoryType.Switch:
     return new SwitchAccessory(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
-  case Types.AccessoryType.Thermostat:
+  case AccessoryType.Thermostat:
     return new ThermostatAccessory(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
-  case Types.AccessoryType.Window:
+  case AccessoryType.Window:
     return new WindowAccessory(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
-  case Types.AccessoryType.WindowCovering:
+  case AccessoryType.WindowCovering:
     return new BlindAccessory(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
   default:
     log.error(strings.startup.unsupportedType, `'${config.type}'`);

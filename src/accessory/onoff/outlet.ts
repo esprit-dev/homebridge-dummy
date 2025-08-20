@@ -1,6 +1,7 @@
 import { OnOffAccessory } from './onoff.js';
 
-import { OutletConfig, AccessoryType } from '../../model/types.js';
+import { AccessoryType } from '../../model/enums.js';
+import { OutletConfig } from '../../model/types.js';
 
 export class OutletAccessory extends OnOffAccessory<OutletConfig> {
 

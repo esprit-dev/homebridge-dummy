@@ -1,6 +1,7 @@
 import { PositionAccessory } from './position.js';
 
-import { AccessoryType, DoorConfig } from '../../model/types.js';
+import { AccessoryType } from '../../model/enums.js';
+import { DoorConfig } from '../../model/types.js';
 
 export class DoorAccessory extends PositionAccessory<DoorConfig> {
 

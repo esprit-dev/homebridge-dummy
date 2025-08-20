@@ -2,7 +2,8 @@ import { CharacteristicValue, PlatformAccessory, Service } from 'homebridge';
 
 import { strings } from '../i18n/i18n.js';
 
-import { CharacteristicType, SensorType, SensorCharacteristic, ServiceType, SensorConfig } from '../model/types.js';
+import { SensorType, SensorCharacteristic }  from '../model/enums.js';
+import { CharacteristicType, ServiceType, SensorConfig } from '../model/types.js';
 
 import { Timeout } from '../timeout/timeout.js';
 

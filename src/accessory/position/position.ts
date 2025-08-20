@@ -4,7 +4,8 @@ import { DummyAccessory } from '../base.js';
 
 import { strings } from '../../i18n/i18n.js';
 
-import { CharacteristicType, DefaultPosition, PositionConfig, ServiceType } from '../../model/types.js';
+import { DefaultPosition } from '../../model/enums.js';
+import { CharacteristicType, PositionConfig, ServiceType } from '../../model/types.js';
 
 import { Log } from '../../tools/log.js';
 import { storageGet, storageSet } from '../../tools/storage.js';
