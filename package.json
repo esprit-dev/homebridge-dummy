@@ -56,7 +56,7 @@
   "dependencies": {
     "@homebridge/plugin-ui-utils": "^2.0.2",
     "cron": "^4.3.2",
-    "homebridge-lib": "^7.1.4",
+    "homebridge-lib": "^7.1.7",
     "lodash.merge": "^4.6.2",
     "node-persist": "^4.0.4"
   },
