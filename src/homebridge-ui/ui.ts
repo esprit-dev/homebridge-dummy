@@ -206,9 +206,11 @@ function showIntro(strings: Translation) {
   homebridge.hideSpinner();
 }
 
-(async () => {
+(() => {
   homebridge.showSpinner();
+})();
 
+(async () => {
   const language = await homebridge.i18nCurrentLang();
   const strings = await homebridge.request('i18n', language);
   translateHtml(strings);
