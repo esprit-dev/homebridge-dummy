@@ -41,7 +41,7 @@ Automations and scenes using Homebridge Dummy accessories will need to be reconf
 - resetOnRestart option for stateful accessories to return to defaults on Homebridge restart
 - Support for Door, Outlet, and Lock Mechanism, Window, and Window Covering
 - Sensor support (CO2, CO, Contact, Leak, Motion, Occupancy, and Smoke)
-- Execute arbitraty commands when accessory state changes
+- Execute arbitrary commands when accessory state changes
 
 ## 0.9.2 (2025-06-26)
 

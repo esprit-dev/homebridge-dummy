@@ -167,11 +167,11 @@ All fields are optional unless noted with an asterisk (*)
 
 - `defaultTemperature` - The default temperature for the thermostat in `temperatureUnits` defined above
 
-- `onCommand` - Arbitraty command to execute when lightbulb/outlet/switch/thermostat turns on
-- `offCommand` - Arbitraty command to execute when lightbulb/outlet/switch/thermostat turns off
+- `onCommand` - Arbitrary command to execute when lightbulb/outlet/switch/thermostat turns on
+- `offCommand` - Arbitrary command to execute when lightbulb/outlet/switch/thermostat turns off
 
-- `lockCommand` - Arbitraty command to execute when lock mechanism is locked
-- `unlockCommand` - Arbitraty command to execute when lock mechanism is unlocked
+- `lockCommand` - Arbitrary command to execute when lock mechanism is locked
+- `unlockCommand` - Arbitrary command to execute when lock mechanism is unlocked
 
 - `commandTemperature` - Arbitrary command to execute when temperature changes
 
