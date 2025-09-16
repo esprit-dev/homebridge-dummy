@@ -43,7 +43,33 @@
             "title": "${config.title.random}",
             "description": "${config.description.random}"
           }
-        }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "delay": {
+                }
+              },
+              "required": ["delay"]
+            },
+            "then": {
+              "required": ["units"]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "units" : {
+                }
+              },
+              "required": [ "units" ]
+            },
+            "then": {
+              "required": [ "delay"]
+            }
+          }
+        ]
       },
       "schedule": {
         "type": "object",
@@ -69,10 +95,37 @@
             "type": "string",
             "title": "${config.title.cron}",
             "description": "${config.description.cron}",
-            "placeholder": "* * * * * *",
-            "minimum": 1
+            "placeholder": "* * * * * *"
           }
-        }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "type": {
+                  "const": "INTERVAL"
+                }
+              },
+              "required": ["type"]
+            },
+            "then": {
+              "required": ["interval", "units"]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "type": {
+                  "const": "CRON"
+                }
+              },
+              "required": ["type"]
+            },
+            "then": {
+              "required": ["cron"]
+            }
+          }
+        ]
       }
     },
     "properties": {

@@ -2,13 +2,16 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-## 1.1.0 (2025-08-14)
+## 1.1.1 (2025-09-XX)
 
 ### ‼️ WARNING — Read this if upgrading from v0.9.2 or earlier…
 
 Automations and scenes using Homebridge Dummy accessories will need to be reconfigured. After upgrading, you must **RESTART HOMEBRIDGE SERVICE & UI** (not just *RESTART HOMEBRIDGE*). After restarting, open the Homebridge Dummy plugin settings to run the accessory migration helper. Full details [here](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#v10-migration).
 
----
+### Changed
+- Better validation in config UI (Thank you, [@justjam2013](https://github.com/sponsors/justjam2013) for teaching me this!)
+
+## 1.1.0 (2025-08-14)
 
 ### Added
 - "Schedule" feature to invoke accessory at a specified interval or times via cron ([#136](https://github.com/mpatfield/homebridge-dummy/issues/136))
