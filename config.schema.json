@@ -7,7 +7,7 @@
   "schema": {
     "type": "object",
     "definitions": {
-    "units": {
+      "units": {
         "type": "string",
         "title": "${config.title.units}",
         "enum": [ "MILLISECONDS", "SECONDS", "MINUTES", "HOURS"],

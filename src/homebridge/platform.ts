@@ -67,7 +67,7 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
   }
 
   private async setup(): Promise<void> {
-   
+
     const keepIdentifiers = new Set<string>();
 
     const accessories: DummyConfig[] = this.config.accessories || [];
@@ -75,7 +75,7 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
       const migratedAccessories = await migrateAccessories(this.log, this.api.user.configPath()) ?? [];
       accessories.push(...migratedAccessories);
     }
-    
+
     const persistPath = this.api.user.persistPath();
 
     const groupAccessories = new Map<string, GroupConfig>();
@@ -112,7 +112,7 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
       const accessory = this.platformAccessories.get(id) ?? this.createPlatformAccessory(id, groupName);
 
       const groupAccessory = new GroupAccessory(this.Service, this.Characteristic, accessory, groupConfig, this.log, persistPath);
-      this.dummyAccessories.push(groupAccessory);      
+      this.dummyAccessories.push(groupAccessory);
     }
 
     this.platformAccessories.forEach(accessory => {
@@ -122,7 +122,7 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
     });
 
     const randIndex = Math.floor(Math.random() * strings.startup.welcome.length);
-    this.log.always(strings.startup.setupComplete, strings.startup.welcome[randIndex]);
+    this.log.always(`${strings.startup.setupComplete}\n${strings.startup.welcome[randIndex]}`);
   }
 
   private createPlatformAccessory(id: string, name: string): PlatformAccessory {
@@ -133,14 +133,14 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
 
     const accessory = new this.api.platformAccessory(name, uuid);
     accessory.context.identifier = id;
-    
+
     this.platformAccessories.set(id, accessory);
 
     this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
 
     return accessory;
   }
-  
+
   private removeCachedAccessory(accessory: PlatformAccessory) {
     this.log.always(strings.startup.removeAccessory, accessory.displayName);
     this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
