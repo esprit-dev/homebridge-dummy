@@ -2,7 +2,7 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-## 1.1.1 (2025-09-XX)
+## 1.1.1 (2025-09-18)
 
 ### ‼️ WARNING — Read this if upgrading from v0.9.2 or earlier…
 
