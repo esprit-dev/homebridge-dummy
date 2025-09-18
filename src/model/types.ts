@@ -32,6 +32,7 @@ export type ScheduleConfig = Assertable & {
   units?: TimeUnits,
   random?: boolean,
   cron?: string,
+  cronCustom?: string,
 }
 
 export type TimerConfig = Assertable & {

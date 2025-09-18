@@ -51,10 +51,10 @@ const en = {
 
     schedule: {
       cron: '%s starting schedule cronjob', // accessory name
-      intervalMilliseconds: '%s will schedule in %s milliseconds', // accessory name, number
-      intervalSeconds: '%s will schedule in %s seconds', // accessory name, number
-      intervalMinutes: '%s will schedule in %s minutes', // accessory name, number
-      intervalHours: '%s will schedule in %s hours', // accessory name, number
+      intervalMilliseconds: '%s scheduled for %s milliseconds', // accessory name, number
+      intervalSeconds: '%s scheduled for %s seconds', // accessory name, number
+      intervalMinutes: '%s scheduled for %s minutes', // accessory name, number
+      intervalHours: '% scheduled for %s hours', // accessory name, number
     },
   },
 
@@ -90,14 +90,19 @@ const en = {
       contactSensor: 'Contact',
       cool: 'Cool',
       cron: 'Cron',
+      custom: 'Custom',
+      daily: 'Daily',
       door: 'Door',
       fahrenheit: '°F',
       heat: 'Heat',
+      hourly: 'Hourly',
       hours: 'Hours',
       interval: 'Interval',
       leakSensor: 'Leak',
       lightbulb: 'Lightbulb',
       lockMechanism: 'Lock',
+      minutely: 'Every Minute',
+      monthly: 'Monthly',
       off: 'Off',
       occupancySensor: 'Occupancy',
       on: 'On',
@@ -106,14 +111,19 @@ const en = {
       milliseconds: 'Milliseconds',
       minutes: 'Minutes',
       motionSensor: 'Motion',
+      secondly: 'Every Second',
       seconds: 'Seconds',
       secured: 'Locked',
       smokeSensor: 'Smoke',
       switch: 'Switch',
       thermostat: 'Thermostat',
       unsecured: 'Unlocked',
+      weekdays: 'Weekdays',
+      weekends: 'Weekends',
+      weekly: 'Weekly',
       window: 'Window',
       windowCovering: 'Window Convering (Blinds)',
+      yearly: 'Annually',
     },
 
     title: {
@@ -127,15 +137,17 @@ const en = {
       commandUnlock: 'Unlock Command',
       commandTemperature: 'Temperature Changed Command',
       cron: 'Cron',
+      cronCustom: 'Custom Cron',
       defaultBrightness: 'Default Brightness',
       defaultPosition: 'Default Position',
       defaultState: 'Default State',
       defaultTemperature: 'Default Temperature',
       delay: 'Delay',
       disableLogging: 'Disable Logging',
-      groupName: 'Group Name (Beta)',
+      groupName: 'Group Name',
       interval: 'Interval',
       name: 'Name',
+      preset: 'Preset',
       resetOnRestart: 'Reset on Restart',
       timer: 'Auto-Reset Timer',
       timerControlled: 'Activate Sensor on Auto-Reset',

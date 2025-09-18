@@ -135,7 +135,7 @@ All fields are optional unless noted with an asterisk (*)
 - `name`* - The display name for the accessory in HomeKit
 - `type`* - The type of accessory: `Door`, `Lightbulb`, `LockMechanism`, `Outlet`, `Switch`, `Thermostat`, `Window`, or `WindowCovering`
 
-- `groupName` - (Beta) Items sharing the same group name will be collected together in the Home app UI
+- `groupName` - Items sharing the same group name will be collected together in the Home app UI
     - ⚠️ Adding/removing/changing the group name will require you to reconfigure any HomeKit scenes or automations
 
 - `timer.delay` — If defined, the switch will automatically toggle after this many milliseconds/seconds/minutes/hours
@@ -146,7 +146,8 @@ All fields are optional unless noted with an asterisk (*)
 - `schedule.interval` — Trigger the accessory after this many milliseconds/seconds/minutes/hours. *Required if `schedule.type` = `INTERVAL`
 - `schedule.units` — The units to use for the interval (`MILLISECONDS`, `SECONDS`, `MINUTES`, or `HOURS`) *Required if `schedule.type` = `INTERVAL`
 - `schedule.random` — If true, the interval will be randomized with a maximum value of `schedule.interval`
-- `schedule.cron` — The cron string for triggering the accessory.  *Required if `schedule.type` = `CRON`
+- `schedule.cron` — One of `@secondly`, `@minutely`, `@hourly`, `@daily`, `@weekly`, `@weekdays`, `@weekends`, `@monthly`, `@yearly`, or `CUSTOM_CRON`. *Required if `schedule.type` = `CRON`
+- `schedule.cronCustom` - Custom cron string for triggering the accessory. *Required if `schedule.cron` = `CUSTOM_CRON`
     - See [crontab.guru](http://crontab.guru) for help
 
 - `sensor.type` - Optionally attach a sensor that mirrors the state of the parent accessory

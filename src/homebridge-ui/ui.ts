@@ -5,6 +5,7 @@ import { Translation } from '../i18n/i18n.js';
 import { PLUGIN_ALIAS } from '../homebridge/settings.js';
 
 import { DummyPlatformConfig } from '../model/types.js';
+import { ScheduleType } from '../model/enums.js';
 
 declare const homebridge: IHomebridgePluginUi;
 
@@ -20,7 +21,7 @@ function translateHtml(strings: Translation) {
     const key = element.getAttribute('i18n') as keyof typeof strings.config;
     let string = strings.config[key] as string;
 
-    const token = element.getAttribute('i18n_replace');
+    const token = element.getAttribute('i18n_replace') as keyof typeof i18n_replacements;
     if (token) {
       string = string.replace('%s', i18n_replacements[token]);
     }
@@ -118,16 +119,27 @@ async function updateConfigsWithUUIDs(configs: DummyPlatformConfig[]) {
   }
 }
 
-async function updateSensorConfigs(configs: DummyPlatformConfig[]) {
+async function migrateDeprecatedFields(configs: DummyPlatformConfig[]) {
 
   let changed = false;
 
   configs.forEach( (config) => {
     config.accessories?.forEach( (accessoryConfig) => {
+
       const currentSensor = accessoryConfig.sensor;
       if (typeof currentSensor === 'string') {
         accessoryConfig.sensor = {
           type: currentSensor,
+        };
+        changed = true;
+      }
+
+      const schedule = accessoryConfig.schedule;
+      if (schedule?.type === ScheduleType.CRON && schedule.cron !== 'CRON_CUSTOM' && !schedule.cron?.startsWith('@')) {
+        accessoryConfig.schedule = {
+          ...schedule,
+          cron: 'CRON_CUSTOM',
+          cronCustom: schedule.cron,
         };
         changed = true;
       }
@@ -189,8 +201,6 @@ function showMigration(strings: Translation) {
 
 function showIntro(strings: Translation) {
 
-  homebridge.disableSaveButton();
-
   const noButton = document.getElementById('showSettings') as HTMLButtonElement;
   noButton.addEventListener('click', async () => {
     await homebridge.updatePluginConfig([{ name: PLUGIN_ALIAS }]);
@@ -219,7 +229,7 @@ function showIntro(strings: Translation) {
 
   const configs = await homebridge.getPluginConfig() as DummyPlatformConfig[];
   if (configs.length) {
-    await updateSensorConfigs(configs);
+    await migrateDeprecatedFields(configs);
     showSettings(strings);
   } else {
     showIntro(strings);

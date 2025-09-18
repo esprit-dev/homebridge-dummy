@@ -10,6 +10,8 @@ import { ScheduleConfig } from '../model/types.js';
 import { Log } from '../tools/log.js';
 import { assert } from '../tools/validation.js';
 
+const CRON_CUSTOM = 'CRON_CUSTOM';
+
 export class Schedule extends Timeout {
 
   static new(schedule: ScheduleConfig, caller: string,  log: Log, disableLogging: boolean, callback:  () => Promise<void>): Schedule | undefined {
@@ -26,6 +28,10 @@ export class Schedule extends Timeout {
       break;
     case ScheduleType.CRON:
       if (!assert(log, caller, schedule, 'cron')) {
+        return;
+      }
+
+      if (schedule.cron === CRON_CUSTOM && !assert(log, caller, schedule, 'cronCustom')) {
         return;
       }
     }
@@ -80,16 +86,19 @@ export class Schedule extends Timeout {
 
   private startCron() {
 
-    const cron = this.schedule.cron!;
+    let cron = this.schedule.cron!;
+    if (cron === CRON_CUSTOM) {
+      cron = this.schedule.cronCustom!;
+    }
 
     if (!validateCronExpression(cron).valid) {
-      this.log.error(strings.accessory.invalidCron, this.caller, `'${this.schedule.cron}'`);
+      this.log.error(strings.accessory.invalidCron, this.caller, `'${cron}'`);
       return;
     }
 
     this.logIfDesired(strings.accessory.schedule.cron);
 
-    this.cronjob = new CronJob(this.schedule.cron!, this.callback);
+    this.cronjob = new CronJob(cron, this.callback);
     this.cronjob.start();
   }
 
