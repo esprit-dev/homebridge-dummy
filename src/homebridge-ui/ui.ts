@@ -154,15 +154,16 @@ function showSettings(strings: Translation) {
     { childList: true, subtree: true },
   );
 
-  homebridge.showSchemaForm();
-
   homebridge.addEventListener('configChanged', async (evt: Event) => {
     const configs = (evt as MessageEvent).data as DummyPlatformConfig[];
     await updateConfigsWithUUIDs(configs);
   });
 
-  homebridge.enableSaveButton();
-  homebridge.hideSpinner();
+  setTimeout( () => {
+    homebridge.showSchemaForm();
+    homebridge.hideSpinner();
+    homebridge.enableSaveButton();
+  }, 1000);
 }
 
 function showMigration(strings: Translation) {
@@ -207,6 +208,7 @@ function showIntro(strings: Translation) {
 }
 
 (() => {
+  homebridge.disableSaveButton();
   homebridge.showSpinner();
 })();
 

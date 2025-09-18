@@ -11,6 +11,9 @@ Automations and scenes using Homebridge Dummy accessories will need to be reconf
 ### Changed
 - Better validation in config UI (Thank you, [@justjam2013](https://github.com/sponsors/justjam2013) for teaching me this!)
 
+### Fixed
+- Config UI rendering issue when migrating deprecated config fields
+
 ## 1.1.0 (2025-08-14)
 
 ### Added
