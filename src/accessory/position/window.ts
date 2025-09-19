@@ -5,7 +5,7 @@ import { WindowConfig } from '../../model/types.js';
 
 export class WindowAccessory extends PositionAccessory<WindowConfig> {
 
-  protected getAccessoryType(): AccessoryType {
+  override getAccessoryType(): AccessoryType {
     return AccessoryType.Window;
   }
 

@@ -47,7 +47,7 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
     this.accessoryService.updateCharacteristic(this.Characteristic.LockCurrentState, this.state);
   }
 
-  protected getAccessoryType(): AccessoryType {
+  override getAccessoryType(): AccessoryType {
     return AccessoryType.LockMechanism;
   }
 

@@ -89,7 +89,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
     return `${this.identifier}:${STORAGE_KEY_SUFFIX_DEFAULT_TEMPERATURE}`;
   }
 
-  protected getAccessoryType(): AccessoryType {
+  override getAccessoryType(): AccessoryType {
     return AccessoryType.Thermostat;
   }
 

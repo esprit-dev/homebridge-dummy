@@ -5,7 +5,7 @@ import { OutletConfig } from '../../model/types.js';
 
 export class OutletAccessory extends OnOffAccessory<OutletConfig> {
 
-  protected getAccessoryType(): AccessoryType {
+  override getAccessoryType(): AccessoryType {
     return AccessoryType.Outlet;
   }
 }

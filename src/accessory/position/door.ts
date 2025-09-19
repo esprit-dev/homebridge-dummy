@@ -5,7 +5,7 @@ import { DoorConfig } from '../../model/types.js';
 
 export class DoorAccessory extends PositionAccessory<DoorConfig> {
 
-  protected getAccessoryType(): AccessoryType {
+  override getAccessoryType(): AccessoryType {
     return AccessoryType.Door;
   }
 

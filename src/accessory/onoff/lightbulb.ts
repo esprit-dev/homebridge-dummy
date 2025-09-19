@@ -48,7 +48,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
     return `${this.identifier}:${STORAGE_KEY_SUFFIX_DEFAULT_BRIGHTNESS}`;
   }
 
-  protected getAccessoryType(): AccessoryType {
+  override getAccessoryType(): AccessoryType {
     return AccessoryType.Lightbulb;
   }
 
