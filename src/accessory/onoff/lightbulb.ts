@@ -9,7 +9,6 @@ import { CharacteristicType, LightbulbConfig, ServiceType } from '../../model/ty
 
 import { Log } from '../../tools/log.js';
 import { STORAGE_KEY_SUFFIX_DEFAULT_BRIGHTNESS, storageGet, storageSet } from '../../tools/storage.js';
-import { assertType } from '../../tools/validation.js';
 
 const NO_BRIGHTNESS = -1;
 
@@ -74,10 +73,6 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
   }
 
   private async setBrightness(value: CharacteristicValue) {
-
-    if (!assertType(this.log, this.config.name,value, 'number')) {
-      return;
-    }
 
     this.startTimer();
 

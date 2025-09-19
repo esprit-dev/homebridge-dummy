@@ -8,7 +8,6 @@ import { CharacteristicType, OnOffConfig, ServiceType } from '../../model/types.
 
 import { Log } from '../../tools/log.js';
 import { storageGet, storageSet } from '../../tools/storage.js';
-import { assertType } from '../../tools/validation.js';
 
 export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extends DummyAccessory<C> {
 
@@ -52,10 +51,6 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
   }
 
   private async setOn(value: CharacteristicValue): Promise<void> {
-
-    if (!assertType(this.log, this.config.name, value, 'boolean')) {
-      return;
-    }
 
     if (this.on !== value) {
       this.logOnState(value);

@@ -10,7 +10,6 @@ import { CharacteristicType, ServiceType, ThermostatConfig } from '../model/type
 import { Log } from '../tools/log.js';
 import { STORAGE_KEY_SUFFIX_DEFAULT_TEMPERATURE, storageGet, storageSet } from '../tools/storage.js';
 import { fromCelsius, toCelsius } from '../tools/temperature.js';
-import { assertType } from '../tools/validation.js';
 
 const DEFAULT_TEMPERATURE = 20;
 
@@ -197,11 +196,6 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
   }
 
   protected logTemperature(value: CharacteristicValue) {
-
-    if (!assertType(this.log, this.config.name, value, 'number')) {
-      return;
-    }
-
     const message = this.config.temperatureUnits === TemperatureUnits.FAHRENHEIT ?
       strings.accessory.thermostat.temperatureF : strings.accessory.thermostat.temperatureC;
 
