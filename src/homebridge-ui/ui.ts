@@ -171,11 +171,9 @@ function showSettings(strings: Translation) {
     await updateConfigsWithUUIDs(configs);
   });
 
-  setTimeout( () => {
-    homebridge.showSchemaForm();
-    homebridge.hideSpinner();
-    homebridge.enableSaveButton();
-  }, 1000);
+  homebridge.showSchemaForm();
+  homebridge.hideSpinner();
+  homebridge.enableSaveButton();
 }
 
 function showMigration(strings: Translation) {
