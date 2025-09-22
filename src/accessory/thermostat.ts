@@ -192,7 +192,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
       message = strings.accessory.thermostat.off;
     }
 
-    this.logIfDesired(message, this.config.name);
+    this.logIfDesired(message);
   }
 
   protected logTemperature(value: CharacteristicValue) {
@@ -200,6 +200,6 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
       strings.accessory.thermostat.temperatureF : strings.accessory.thermostat.temperatureC;
 
     const temperature = fromCelsius(value as number, this.config.temperatureUnits);
-    this.logIfDesired(message, this.config.name, temperature);
+    this.logIfDesired(message, temperature);
   }
 }

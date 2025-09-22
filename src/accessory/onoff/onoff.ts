@@ -100,7 +100,11 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
     }
   }
 
+  private logStringForCV(value: CharacteristicValue): string {
+    return value ? strings.accessory.onOff.stateOn : strings.accessory.onOff.stateOff;
+  }
+
   protected logOnState(value: CharacteristicValue) {
-    this.logIfDesired(value ? strings.accessory.onOff.stateOn : strings.accessory.onOff.stateOff, this.config.name);
+    this.logIfDesired(this.logStringForCV(value));
   }
 }

@@ -134,6 +134,6 @@ export abstract class DummyAccessory<C extends DummyConfig> {
       return;
     }
 
-    this.log.always(message, ...parameters);
+    this.log.always(message, this.config.name, ...parameters);
   }
 }

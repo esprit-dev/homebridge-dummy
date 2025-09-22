@@ -116,6 +116,6 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
   protected logLockState(value: CharacteristicValue) {
     const message = value === this.Characteristic.LockTargetState.SECURED ?
       strings.accessory.lock.secured : strings.accessory.lock.unsecured;
-    this.logIfDesired(message, this.config.name);
+    this.logIfDesired(message);
   }
 }

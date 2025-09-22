@@ -62,7 +62,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
 
   override logOnState(value: CharacteristicValue) {
     if (this.isDimmer && value) {
-      this.logIfDesired(strings.accessory.lightbulb.stateOn, this.config.name, this.brightness.toLocaleString());
+      this.logIfDesired(strings.accessory.lightbulb.stateOn, this.brightness.toLocaleString());
     } else {
       super.logOnState(value);
     }
@@ -82,7 +82,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
 
     this.brightness = value;
 
-    this.logIfDesired(strings.accessory.lightbulb.brightness, this.config.name, this.brightness.toString());
+    this.logIfDesired(strings.accessory.lightbulb.brightness, this.brightness.toString());
 
     if (this.isStateful) {
       await storageSet(this.persistPath, this.defaultBrightnessStorageKey, this.brightness);

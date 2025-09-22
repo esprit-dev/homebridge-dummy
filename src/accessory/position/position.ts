@@ -121,6 +121,6 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
 
   protected logPosition(value: CharacteristicValue) {
     const message = value === POSITION_CLOSED ? strings.accessory.position.closed : strings.accessory.position.open;
-    this.logIfDesired(message, this.config.name);
+    this.logIfDesired(message);
   }
 }
