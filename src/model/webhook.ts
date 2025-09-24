@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import escape from 'escape-html';
 import { CharacteristicValue } from 'homebridge';
 import { Server } from 'http';
 
@@ -170,7 +171,7 @@ export class WebhookManager {
     }
 
     const message = callback(value);
-    response.status(200).send(`{ "success": "${message}" }\n`);
+    response.status(200).send(`{ "success": "${escape(message)}" }\n`);
   }
 
   private isValidValue(value: CharacteristicValue, validValues: (number | boolean)[]): boolean {
@@ -189,7 +190,7 @@ export class WebhookManager {
 
   private onBadRequest(response: Response, errorMessage: string, alsoLog: boolean = true) {
 
-    response.status(400).send(`{ "error": "${errorMessage}" }\n`);
+    response.status(400).send(`{ "error": "${escape(errorMessage)}" }\n`);
 
     if(alsoLog) {
       this.log.error(errorMessage);
