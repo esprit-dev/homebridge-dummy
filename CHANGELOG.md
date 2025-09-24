@@ -2,13 +2,14 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-## 1.1.1 (2025-09-18)
+## 1.2.0-beta.0 (2025-09-24)
 
 ### ‼️ WARNING — Read this if upgrading from v0.9.2 or earlier…
 
 Automations and scenes using Homebridge Dummy accessories will need to be reconfigured. After upgrading, you must **RESTART HOMEBRIDGE SERVICE & UI** (not just *RESTART HOMEBRIDGE*). After restarting, open the Homebridge Dummy plugin settings to run the accessory migration helper. Full details [here](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#v10-migration).
 
 ### Changed
+- Support for webhooks ([documentation](https://github.com/mpatfield/homebridge-dummy#webhooks))
 - Better field validation in config UI (Thank you, [@justjam2013](https://github.com/sponsors/justjam2013) for teaching me this!)
 - `schedule.cron` now expects an `@` preset or `CRON_CUSTOM` with `schedule.cronCustom` defined.
     - This is backwards compatible so no manual edits are necessary

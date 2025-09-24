@@ -9,6 +9,7 @@ import { strings } from '../i18n/i18n.js';
 
 import { AccessoryType } from '../model/enums.js';
 import { CharacteristicType, DummyConfig, ServiceType } from '../model/types.js';
+import { Webhook } from '../model/webhook.js';
 
 import { Schedule } from '../timeout/schedule.js';
 import { Timer } from '../timeout/timer.js';
@@ -97,6 +98,8 @@ export abstract class DummyAccessory<C extends DummyConfig> {
     this._timer?.teardown();
     this._schedule?.teardown();
   }
+
+  public abstract webhooks(): Webhook[];
 
   protected get identifier(): string {
     return DummyAccessory.identifier(this.config);

@@ -4,8 +4,9 @@ import { DummyAccessory } from './base.js';
 
 import { strings } from '../i18n/i18n.js';
 
-import { AccessoryType, DefaultThermostatState, TemperatureUnits }  from '../model/enums.js';
+import { AccessoryType, DefaultThermostatState, TemperatureUnits, WebhookCommand }  from '../model/enums.js';
 import { CharacteristicType, ServiceType, ThermostatConfig } from '../model/types.js';
+import { Webhook } from '../model/webhook.js';
 
 import { Log } from '../tools/log.js';
 import { STORAGE_KEY_SUFFIX_DEFAULT_TEMPERATURE, storageGet, storageSet } from '../tools/storage.js';
@@ -92,6 +93,24 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
     return AccessoryType.Thermostat;
   }
 
+  override webhooks(): Webhook[] {
+
+    return [
+
+      new Webhook(this.identifier, WebhookCommand.TargetHeatingCoolingState,
+        (value) => {
+          this.setState(value);
+          return this.stateLogTemplateForCV(value).replace('%s', this.config.name);
+        }),
+
+      new Webhook(this.identifier, WebhookCommand.TargetTemperature,
+        (value) => {
+          this.setTemperature(value);
+          return this.temperatureLogTemplateForCV(value).replace('%s', this.config.name);
+        }),
+    ];
+  }
+
   private get defaultState(): CharacteristicValue {
     switch (this.config.defaultThermostatState) {
     case DefaultThermostatState.AUTO:
@@ -109,9 +128,13 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
     return this.config.defaultTemperature ? toCelsius(this.config.defaultTemperature, this.config.temperatureUnits) : DEFAULT_TEMPERATURE;
   }
 
+  private get units(): TemperatureUnits {
+    return this.config.temperatureUnits ?? TemperatureUnits.CELSIUS;
+  }
+
   private async getUnits(): Promise<CharacteristicValue> {
-    return this.config.temperatureUnits === TemperatureUnits.FAHRENHEIT ?
-      this.Characteristic.TemperatureDisplayUnits.FAHRENHEIT : this.Characteristic.TemperatureDisplayUnits.CELSIUS;
+    return this.units === TemperatureUnits.FAHRENHEIT
+      ? this.Characteristic.TemperatureDisplayUnits.FAHRENHEIT : this.Characteristic.TemperatureDisplayUnits.CELSIUS;
   }
 
   protected async getCurrentState(): Promise<CharacteristicValue> {
@@ -175,31 +198,30 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
     throw new Error(strings.accessory.thermostat.unsupportedFunction.replace('%s', `${this.reset.name}()`));
   }
 
-  protected logState(value: CharacteristicValue) {
-
-    let message: string;
+  private stateLogTemplateForCV(value: CharacteristicValue): string {
     switch(value) {
     case this.STATE_AUTO:
-      message = strings.accessory.thermostat.auto;
-      break;
+      return strings.accessory.thermostat.auto;
     case this.STATE_COOL:
-      message = strings.accessory.thermostat.cool;
-      break;
+      return strings.accessory.thermostat.cool;
     case this.STATE_HEAT:
-      message = strings.accessory.thermostat.heat;
-      break;
+      return strings.accessory.thermostat.heat;
     default:
-      message = strings.accessory.thermostat.off;
+      return strings.accessory.thermostat.off;
     }
+  }
 
-    this.logIfDesired(message);
+  protected logState(value: CharacteristicValue) {
+    this.logIfDesired(this.stateLogTemplateForCV(value));
+  }
+
+  private temperatureLogTemplateForCV(value: CharacteristicValue): string {
+    const message = this.units === TemperatureUnits.FAHRENHEIT ? strings.accessory.thermostat.temperatureF : strings.accessory.thermostat.temperatureC;
+    const temperature = fromCelsius(value as number, this.config.temperatureUnits);
+    return message.replace('%d', temperature.toString());
   }
 
   protected logTemperature(value: CharacteristicValue) {
-    const message = this.config.temperatureUnits === TemperatureUnits.FAHRENHEIT ?
-      strings.accessory.thermostat.temperatureF : strings.accessory.thermostat.temperatureC;
-
-    const temperature = fromCelsius(value as number, this.config.temperatureUnits);
-    this.logIfDesired(message, temperature);
+    this.logIfDesired(this.temperatureLogTemplateForCV(value));
   }
 }

@@ -4,6 +4,7 @@ import { DummyAccessory } from './base.js';
 import { createDummyAccessory } from './helpers.js';
 
 import { CharacteristicType, DummyConfig, GroupConfig, ServiceType } from '../model/types.js';
+import { WebhookManager } from '../model/webhook.js';
 
 import { Log } from '../tools/log.js';
 import { PLATFORM_NAME, PLUGIN_ALIAS } from '../homebridge/settings.js';
@@ -18,12 +19,13 @@ export class GroupAccessory {
   private readonly accessories: (DummyAccessory<DummyConfig>)[] = [];
 
   constructor(
-    protected readonly Service: ServiceType,
-    protected readonly Characteristic: CharacteristicType,
-    protected readonly accessory: PlatformAccessory,
-    protected readonly config: GroupConfig,
-    protected readonly log: Log,
-    protected readonly persistPath: string,
+    Service: ServiceType,
+    Characteristic: CharacteristicType,
+    accessory: PlatformAccessory,
+    config: GroupConfig,
+    log: Log,
+    persistPath: string,
+    webhookManager: WebhookManager,
   ) {
 
     accessory.getService(Service.AccessoryInformation)!
@@ -36,9 +38,13 @@ export class GroupAccessory {
 
     for (const dummyConfig of config.accessories) {
 
-      const dummyAccessory = createDummyAccessory(this.Service, this.Characteristic, accessory, dummyConfig, this.log, persistPath, true);
+      const dummyAccessory = createDummyAccessory(Service, Characteristic, accessory, dummyConfig, log, persistPath, true);
       if (!dummyAccessory) {
         continue;
+      }
+
+      if (dummyConfig.enableWebook) {
+        webhookManager.registerAccessory(dummyAccessory);
       }
 
       keepSubtypes.add(dummyAccessory.subtype!);

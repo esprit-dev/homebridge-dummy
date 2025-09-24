@@ -5,9 +5,11 @@ import { DummyAccessory } from '../base.js';
 import { strings } from '../../i18n/i18n.js';
 
 import { CharacteristicType, OnOffConfig, ServiceType } from '../../model/types.js';
+import { Webhook } from '../../model/webhook.js';
 
 import { Log } from '../../tools/log.js';
 import { storageGet, storageSet } from '../../tools/storage.js';
+import { WebhookCommand } from '../../model/enums.js';
 
 export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extends DummyAccessory<C> {
 
@@ -33,6 +35,16 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
     this.initializeOn();
   }
 
+  override webhooks(): Webhook[] {
+    return [
+      new Webhook(this.identifier, WebhookCommand.On,
+        (value) => {
+          this.setOn(value);
+          return this.logMessageForOnState(value).replace('%s', this.config.name);
+        }),
+    ];
+  }
+
   private async initializeOn() {
 
     if (this.isStateful) {
@@ -53,7 +65,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
   private async setOn(value: CharacteristicValue): Promise<void> {
 
     if (this.on !== value) {
-      this.logOnState(value);
+      this.logIfDesired(this.logMessageForOnState(value));
 
       if (this.config.commandOn && value) {
         this.executeCommand(this.config.commandOn);
@@ -100,11 +112,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
     }
   }
 
-  private logStringForCV(value: CharacteristicValue): string {
+  protected logMessageForOnState(value: CharacteristicValue): string {
     return value ? strings.accessory.onOff.stateOn : strings.accessory.onOff.stateOff;
-  }
-
-  protected logOnState(value: CharacteristicValue) {
-    this.logIfDesired(this.logStringForCV(value));
   }
 }

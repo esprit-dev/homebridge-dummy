@@ -4,8 +4,9 @@ import { OnOffAccessory } from './onoff.js';
 
 import { strings } from '../../i18n/i18n.js';
 
-import { AccessoryType } from '../../model/enums.js';
+import { AccessoryType, WebhookCommand } from '../../model/enums.js';
 import { CharacteristicType, LightbulbConfig, ServiceType } from '../../model/types.js';
+import { Webhook } from '../../model/webhook.js';
 
 import { Log } from '../../tools/log.js';
 import { STORAGE_KEY_SUFFIX_DEFAULT_BRIGHTNESS, storageGet, storageSet } from '../../tools/storage.js';
@@ -51,6 +52,17 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
     return AccessoryType.Lightbulb;
   }
 
+  override webhooks(): Webhook[] {
+    return [
+      ...super.webhooks(),
+      new Webhook(this.identifier, WebhookCommand.Brightness,
+        (value) => {
+          this.setBrightness(value);
+          return strings.accessory.lightbulb.brightness.replace('%s', this.config.name).replace('%d', value.toString());
+        }),
+    ];
+  }
+
   private async initializeBrightness() {
 
     if (this.isStateful) {
@@ -60,11 +72,11 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
     this.accessoryService.updateCharacteristic(this.Characteristic.Brightness, this.brightness);
   }
 
-  override logOnState(value: CharacteristicValue) {
+  override logMessageForOnState(value: CharacteristicValue): string {
     if (this.isDimmer && value) {
-      this.logIfDesired(strings.accessory.lightbulb.stateOn, this.brightness.toLocaleString());
+      return strings.accessory.lightbulb.stateOn.replace('%d', this.brightness.toLocaleString());
     } else {
-      super.logOnState(value);
+      return super.logMessageForOnState(value);
     }
   }
 

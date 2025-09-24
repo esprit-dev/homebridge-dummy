@@ -13,6 +13,7 @@ import { DummyConfig, DummyPlatformConfig, GroupConfig } from '../model/types.js
 import { migrateAccessories } from '../tools/configMigration.js';
 import { Log } from '../tools/log.js';
 import getVersion from '../tools/version.js';
+import { WebhookManager } from '../model/webhook.js';
 
 export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
   private readonly Service;
@@ -22,6 +23,8 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
 
   private readonly platformAccessories: Map<string, PlatformAccessory> = new Map();
   private readonly dummyAccessories: (DummyAccessory<DummyConfig> | GroupAccessory)[] = [];
+
+  private webhookManager: WebhookManager;
 
   constructor(
     logger: Logger,
@@ -35,7 +38,8 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
     this.Service = api.hap.Service;
     this.Characteristic = api.hap.Characteristic;
 
-    this.log = new Log(logger);
+    this.log = new Log(logger, config.verbose === true);
+    this.webhookManager = new WebhookManager(this.Characteristic, this.log);
 
     this.log.always(
       'v%s | System %s | Node %s | HB v%s | HAPNodeJS v%s',
@@ -99,6 +103,10 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
         continue;
       }
 
+      if (accessoryConfig.enableWebook) {
+        this.webhookManager.registerAccessory(dummyAccessory);
+      }
+
       this.dummyAccessories.push(dummyAccessory);
     };
 
@@ -111,7 +119,7 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
 
       const accessory = this.platformAccessories.get(id) ?? this.createPlatformAccessory(id, groupName);
 
-      const groupAccessory = new GroupAccessory(this.Service, this.Characteristic, accessory, groupConfig, this.log, persistPath);
+      const groupAccessory = new GroupAccessory(this.Service, this.Characteristic, accessory, groupConfig, this.log, persistPath, this.webhookManager);
       this.dummyAccessories.push(groupAccessory);
     }
 
@@ -120,6 +128,8 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
         this.removeCachedAccessory(accessory);
       }
     });
+
+    this.webhookManager.startServer();
 
     const randIndex = Math.floor(Math.random() * strings.startup.welcome.length);
     this.log.always(`${strings.startup.setupComplete}\n${strings.startup.welcome[randIndex]}`);

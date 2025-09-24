@@ -4,8 +4,9 @@ import { DummyAccessory } from '../base.js';
 
 import { strings } from '../../i18n/i18n.js';
 
-import { DefaultPosition } from '../../model/enums.js';
+import { DefaultPosition, WebhookCommand } from '../../model/enums.js';
 import { CharacteristicType, PositionConfig, ServiceType } from '../../model/types.js';
+import { Webhook } from '../../model/webhook.js';
 
 import { Log } from '../../tools/log.js';
 import { storageGet, storageSet } from '../../tools/storage.js';
@@ -41,6 +42,16 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
       .onGet(this.getPosition.bind(this));
 
     this.initializePosition();
+  }
+
+  override webhooks(): Webhook[] {
+    return [
+      new Webhook(this.identifier, WebhookCommand.TargetPosition,
+        (value) => {
+          this.setPosition(value);
+          return this.logTemplateForCV(value).replace('%s', this.config.name);
+        }),
+    ];
   }
 
   private async initializePosition() {
@@ -119,8 +130,11 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
     }
   }
 
+  private logTemplateForCV(value: CharacteristicValue): string {
+    return value === POSITION_CLOSED ? strings.accessory.position.closed : strings.accessory.position.open;
+  }
+
   protected logPosition(value: CharacteristicValue) {
-    const message = value === POSITION_CLOSED ? strings.accessory.position.closed : strings.accessory.position.open;
-    this.logIfDesired(message);
+    this.logIfDesired(this.logTemplateForCV(value));
   }
 }
