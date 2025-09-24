@@ -1,5 +1,5 @@
-import express, { Request, Response } from 'express';
 import escape from 'escape-html';
+import express, { Request, Response } from 'express';
 import { CharacteristicValue } from 'homebridge';
 import { Server } from 'http';
 
