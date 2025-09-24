@@ -3,7 +3,7 @@ const en = {
   accessory: {
 
     invalidCron: '%s has an invalid cron expression %s', // accessory name, cron string
-    missingRequired: '%s is missing required config variable %s', // accessory name, variable name
+    missingRequired: '%s is missing required field %s', // accessory name, variable name
     badValueType: '%s expected type %s but was %s', // accessory name, variable type, variable type
 
     command: {
@@ -12,8 +12,8 @@ const en = {
     },
 
     lightbulb: {
-      brightness: '%s brightness is %s%', // accessory name, number
-      stateOn: '%s is on, brightness is %s%', // accessory name, number
+      brightness: '%s brightness is %d%', // accessory name, number
+      stateOn: '%s is on, brightness is %d%', // accessory name, number
     },
 
     lock: {
@@ -36,8 +36,8 @@ const en = {
       cool: '%s set to Cool', // accessory name
       heat: '%s set to Heat', // accessory name
       off: '%s set to Off', // accessory name
-      temperatureC: '%s set to %s°C', // accessory name, number
-      temperatureF: '%s set to %s°F', // accessory name, number
+      temperatureC: '%s set to %d°C', // accessory name, number
+      temperatureF: '%s set to %d°F', // accessory name, number
       unsupportedFunction: '%s is unsupported for thermostats', // function name
     },
 
@@ -144,6 +144,7 @@ const en = {
       defaultTemperature: 'Default Temperature',
       delay: 'Delay',
       disableLogging: 'Disable Logging',
+      enableWebook: 'Enable Webhook',
       groupName: 'Group Name',
       interval: 'Interval',
       name: 'Name',
@@ -215,6 +216,20 @@ const en = {
       'Please rate us on HOOBS! https://plugins.hoobs.org/plugin/homebridge-dummy',
       'Want to see this plugin in your own language? Please visit https://github.com/mpatfield/homebridge-dummy/issues/105',
     ],
+  },
+
+  webhook: {
+    missing: 'Request is missing the following fields:',
+    received: 'Webhook command received',
+    register: 'Registering accessory with id %s for webhook command %s', // id, command
+    started: 'Webhook server running and listening on port %s', // port number
+    stopped: 'Webhook server stopped',
+    stopping: 'Shutting down webhook server…',
+    validRange: 'The %s webhook command expects a number value between %s and %s', // command name, number, number
+    validValues: 'Valid values for the %s webhook command are:', // command name
+    unregisteredCommand: 'There are no accessories registered for the webhook command %s. Did you \'Enable Webhook\' for this accessory?', // command name
+    unsupportedCommand: 'The webhook command %s is not supported', // value
+    unregisteredId: 'There is no accessory registered for webhooks with the id %s. You can find the correct id in the JSON config.', // id
   },
 };
 

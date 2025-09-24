@@ -62,3 +62,12 @@ export enum TemperatureUnits {
   CELSIUS = 'C',
   FAHRENHEIT = 'F',
 }
+
+export enum WebhookCommand {
+  Brightness = 'Brightness',
+  LockTargetState = 'LockTargetState',
+  On = 'On',
+  TargetHeatingCoolingState = 'TargetHeatingCoolingState',
+  TargetPosition = 'TargetPosition',
+  TargetTemperature = 'TargetTemperature',
+}

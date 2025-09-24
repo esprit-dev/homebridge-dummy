@@ -248,12 +248,19 @@
               "type": "boolean",
               "title": "${config.title.resetOnRestart}"
             },
+            "enableWebook": {
+              "type": "boolean",
+              "title": "${config.title.enableWebook}"
+            },
             "disableLogging": {
               "type": "boolean",
               "title": "${config.title.disableLogging}"
             }
           }
         }
+      },
+      "verbose": {
+        "type": "boolean"
       }
     }
   },
@@ -382,6 +389,10 @@
                   "displayFlex": true,
                   "flex-direction": "row",
                   "items": [
+                    {
+                      "key": "accessories[].enableWebook",
+                      "flex": "0 1 33%"
+                    },
                     {
                       "key": "accessories[].disableLogging",
                       "flex": "0 1 33%"

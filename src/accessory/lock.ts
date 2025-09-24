@@ -4,8 +4,9 @@ import { DummyAccessory } from './base.js';
 
 import { strings } from '../i18n/i18n.js';
 
-import { AccessoryType, DefaultLockState }  from '../model/enums.js';
+import { AccessoryType, DefaultLockState, WebhookCommand }  from '../model/enums.js';
 import { CharacteristicType, LockConfig, ServiceType } from '../model/types.js';
+import { Webhook } from '../model/webhook.js';
 
 import { Log } from '../tools/log.js';
 import { storageGet, storageSet } from '../tools/storage.js';
@@ -49,6 +50,16 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
 
   override getAccessoryType(): AccessoryType {
     return AccessoryType.LockMechanism;
+  }
+
+  override webhooks(): Webhook[] {
+    return [
+      new Webhook(this.identifier, WebhookCommand.LockTargetState,
+        (value) => {
+          this.setState(value);
+          return this.logTemplateForCV(value).replace('%s', this.name);
+        }),
+    ];
   }
 
   private get defaultLockState(): CharacteristicValue {
@@ -113,9 +124,12 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
     }
   }
 
+  private logTemplateForCV(value: CharacteristicValue): string {
+    return value === this.Characteristic.LockTargetState.SECURED ? strings.accessory.lock.secured : strings.accessory.lock.unsecured;
+  }
+
+
   protected logLockState(value: CharacteristicValue) {
-    const message = value === this.Characteristic.LockTargetState.SECURED ?
-      strings.accessory.lock.secured : strings.accessory.lock.unsecured;
-    this.logIfDesired(message, this.config.name);
+    this.logIfDesired(this.logTemplateForCV(value));
   }
 }

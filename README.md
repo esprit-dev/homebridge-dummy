@@ -119,6 +119,7 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
             "commandOpen": "string",
             "commandClose": "string",
             "commandTemperature": "string",
+            "enableWebook": true | false
             "resetOnRestart": true | false,
             "disableLogging": true | false
         }
@@ -156,6 +157,8 @@ All fields are optional unless noted with an asterisk (*)
 
 - `temperatureUnits` - Units to use for thermostats, either 'C' or 'F'
 
+- `enableWebook` - Turn on webhooks for this accessory. See [Webhooks](https://github.com/mpatfield/homebridge-dummy#webhooks) section below for details.
+
 - `defaultOn` — Initial value. Default _ON_ = true, default _OFF_ = false
 
 - `defaultBrightness` — If set, lightbulb will have additional dimmer settings with this default brightness percentage
@@ -180,158 +183,49 @@ All fields are optional unless noted with an asterisk (*)
 
 - `disableLogging` — If true, state changes will not be logged
 
-## Examples
+## Webhooks
 
-### Stateful Switch
+You can optionally enable webhooks on an accessory by choosing `Enable Webhooks` in the config UI or setting `enableWebhooks` to `true` in the JSON config.
+
+If at least one accessory has webhooks enabled, then Homebridge Dummy will start a webhook server on startup on port `63743`, e.g. `http://localhost:63743/`
+
+Incoming requests must be valid JSON and include the id of the accessory, the desired command, and the value to set.
+
+For example, to turn a switch on the JSON request should look like this:
+
 ```json
 {
-    "name": "Stateful",
-    "type": "Switch"
+    "id": "17a62a7b",
+    "command": "On",
+    "value": true
 }
 ```
 
-### Timer Switch
-```json
-{
-    "name": "Timer",
-    "type": "Switch",
-    "timer": {
-        "delay": 10,
-        "units": "SECONDS"
-    }
-}
+Here's how you would call it from the command line.
+
+```
+curl -X POST http://localhost:63743/ -H "Content-Type: application/json" -d '{"id": "17a62a7b", "command": "On", "value": true}
 ```
 
-### "Reversed" Switch (i.e. Default On)
-```json
-{
-    "name": "Default On",
-    "type": "Switch",
-    "timer": {
-        "delay": 5,
-        "units": "SECONDS"
-    },
-    "defaultOn": true
-}
-```
+The accessory `id` can be found in the plugin JSON config.
 
-### Timer Lightbulb
-```json
-{
-    "name": "Lightbulb",
-    "type": "Lightbulb",
-    "timer": {
-        "delay": 5,
-        "units": "SECONDS"
-    }
-}
-```
+Here are the possible values for `command` and their respective valid `value`
 
-### Stateful Dimmer Lightbulb
-```json
-{
-    "name": "Dimmer",
-    "type": "Lightbulb",
-    "defaultBrightness": 42
-}
-```
+- `Brightness` - number from 0-100
+- `LockTargetState` - 0 (UNSECURED) or 1 (SECURED)
+- `On` - true or false
+- `TargetHeatingCoolingState` - 0 (OFF), 1 (HEAT), 2 (COOL), 3 (AUTO)
+- `TargetPosition` - number from 0-100
+- `TargetTemperature` - number between 10°C and 38°C
 
-### Random Timer Switch
-```json
-{
-    "name": "Random",
-    "type": "Switch",
-    "timer": {
-        "delay": 2,
-        "units": "MINUTES",
-        "random": true
-    }
-}
-```
+For `TargetTemperature` you may optionally supply a `unit` (either 'F' or 'C') to allow you to pass in Fahrenheit or Celsius units.
 
-### Lock
 ```json
 {
-    "name": "Lock",
-    "type": "LockMechanism",
-    "timer": {
-        "delay": 10,
-        "units": "MINUTES"
-    },
-    "defaultLockState": "locked"
-}
-```
-
-### Motion Sensor Switch
-```json
-{
-    "name": "Motion Switch",
-    "type": "Switch",
-    "timer": {
-        "delay": 3,
-        "units": "MINUTES"
-    },
-    "sensor": "MotionSensor"
-}
-```
-
-### Door
-```json
-{
-    "name": "Door",
-    "type": "Door",
-    "timer": {
-        "delay": 20,
-        "units": "SECONDS"
-    },
-    "defaultPosition": "closed"
-}
-```
-
-### Group
-```json
-{
-    "name": "Outlet 1",
-    "type": "Outlet",
-    "groupName": "Powerstrip"
-},
-{
-    "name": "Outlet 2",
-    "type": "Outlet",
-    "groupName": "Powerstrip"
-}
-{
-    "name": "Outlet 3",
-    "type": "Outlet",
-    "groupName": "Powerstrip"
-}
-```
-
-### Hourly Schedule Switch
-```json
-{
-    "name": "Hourly",
-    "type": "Switch",
-    "timer": {
-        "delay": 1,
-        "units": "SECONDS"
-    },
-    "schedule": {
-        "type": "INTERVAL",
-        "interval": 1,
-        "units": "HOURS"
-    }
-}
-```
-
-### Thermostat
-```json
-{
-    "name": "Thermostat",
-    "type": "Thermostat",
-    "temperatureUnits": "F",
-    "defaultThermostatState": "heat",
-    "defaultTemperature": 78
+    "id": "18a35b6c",
+    "command": "TargetTemperature",
+    "value": 72,
+    "unit": "F"
 }
 ```
 

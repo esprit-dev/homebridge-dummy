@@ -20,6 +20,7 @@ export type LegacyAccessoryConfig = AccessoryConfig & {
 export type DummyPlatformConfig = PlatformConfig & {
   accessories?: DummyConfig[];
   migrationNeeded?: boolean;
+  verbose?: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
@@ -55,6 +56,7 @@ export type DummyConfig = {
   timer?: TimerConfig,
   schedule?: ScheduleConfig,
   resetOnRestart?: boolean,
+  enableWebook?: boolean,
   disableLogging?: boolean,
 }
 
