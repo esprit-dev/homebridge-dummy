@@ -49,7 +49,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
       new Webhook(this.identifier, WebhookCommand.TargetPosition,
         (value) => {
           this.setPosition(value);
-          return this.logTemplateForCV(value).replace('%s', this.config.name);
+          return this.logTemplateForCV(value).replace('%s', this.name);
         }),
     ];
   }

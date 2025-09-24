@@ -100,13 +100,13 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
       new Webhook(this.identifier, WebhookCommand.TargetHeatingCoolingState,
         (value) => {
           this.setState(value);
-          return this.stateLogTemplateForCV(value).replace('%s', this.config.name);
+          return this.stateLogTemplateForCV(value).replace('%s', this.name);
         }),
 
       new Webhook(this.identifier, WebhookCommand.TargetTemperature,
         (value) => {
           this.setTemperature(value);
-          return this.temperatureLogTemplateForCV(value).replace('%s', this.config.name);
+          return this.temperatureLogTemplateForCV(value).replace('%s', this.name);
         }),
     ];
   }

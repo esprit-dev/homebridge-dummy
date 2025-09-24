@@ -57,7 +57,7 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
       new Webhook(this.identifier, WebhookCommand.LockTargetState,
         (value) => {
           this.setState(value);
-          return this.logTemplateForCV(value).replace('%s', this.config.name);
+          return this.logTemplateForCV(value).replace('%s', this.name);
         }),
     ];
   }

@@ -40,7 +40,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
       new Webhook(this.identifier, WebhookCommand.On,
         (value) => {
           this.setOn(value);
-          return this.logMessageForOnState(value).replace('%s', this.config.name);
+          return this.logMessageForOnState(value).replace('%s', this.name);
         }),
     ];
   }

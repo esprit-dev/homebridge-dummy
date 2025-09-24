@@ -41,7 +41,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
     isGrouped: boolean,
   ) {
 
-    this.sensor = SensorAccessory.new(Service, Characteristic, accessory, this.config.name, log, this.config.disableLogging === true, config.sensor);
+    this.sensor = SensorAccessory.new(Service, Characteristic, accessory, this.name, log, this.config.disableLogging === true, config.sensor);
 
     if (config.timer) {
       this._timer = Timer.new(config.timer, config.name, log, config.disableLogging === true);
@@ -105,6 +105,10 @@ export abstract class DummyAccessory<C extends DummyConfig> {
     return DummyAccessory.identifier(this.config);
   }
 
+  protected get name(): string {
+    return this.config.name;
+  }
+
   protected get isStateful(): boolean {
     return this._timer === undefined && this._schedule === undefined && !this.config.resetOnRestart;
   }
@@ -124,9 +128,9 @@ export abstract class DummyAccessory<C extends DummyConfig> {
   protected executeCommand(command: string) {
     exec(command, (_error, stdout, stderr) => {
       if (stderr) {
-        this.log.error(`${strings.accessory.command.error}: %s\n%s`, this.config.name, command, stderr);
+        this.log.error(`${strings.accessory.command.error}: %s\n%s`, this.name, command, stderr);
       } else {
-        this.logIfDesired(`${strings.accessory.command.executed}: %s\n%s`, this.config.name, command, stdout);
+        this.logIfDesired(`${strings.accessory.command.executed}: %s\n%s`, this.name, command, stdout);
       }
     });
   }
@@ -137,6 +141,6 @@ export abstract class DummyAccessory<C extends DummyConfig> {
       return;
     }
 
-    this.log.always(message, this.config.name, ...parameters);
+    this.log.always(message, this.name, ...parameters);
   }
 }
