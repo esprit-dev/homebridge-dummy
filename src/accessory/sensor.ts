@@ -86,10 +86,6 @@ export class SensorAccessory extends Timeout {
     SensorAccessory.removeUnwantedServices(Service, accessory, config.type);
   }
 
-  protected get cancelString(): string {
-    throw new Error('Method not implemented.');
-  }
-
   private async onGet(): Promise<CharacteristicValue> {
     return this._active;
   }

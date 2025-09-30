@@ -25,10 +25,6 @@ export class Timer extends Timeout {
     super(caller, log, disableLogging);
   }
 
-  protected get cancelString(): string {
-    return strings.accessory.timer.cancel;
-  }
-
   public start(callback:  () => Promise<void>) {
 
     this.cancel();
@@ -46,5 +42,14 @@ export class Timer extends Timeout {
       this.reset();
       await callback();
     }, delay);
+  }
+
+  override cancel() {
+
+    if (this.timeout) {
+      this.logIfDesired(strings.accessory.timer.cancel);
+    }
+
+    super.cancel();
   }
 }

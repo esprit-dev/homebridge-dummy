@@ -27,14 +27,7 @@ export abstract class Timeout {
     private readonly disableLogging: boolean,
   ) { }
 
-  protected abstract get cancelString(): string;
-
   public cancel() {
-
-    if (this.timeout) {
-      this.logIfDesired(this.cancelString);
-    }
-
     this.reset();
   }
 
@@ -47,7 +40,7 @@ export abstract class Timeout {
     this.timeout = undefined;
   }
 
-  protected getDelay(rawTime: number, units: TimeUnits, random: boolean | undefined, strings: DelayLogStrings): number {
+  protected getDelay(rawTime: number, units: TimeUnits, random: boolean | undefined = undefined, strings: DelayLogStrings | undefined = undefined): number {
 
     let time: number;
 
@@ -80,29 +73,31 @@ export abstract class Timeout {
 
     if (!this.disableLogging) {
 
-      let string: string;
+      let string: string | undefined;
       let divisor: number;
 
       switch(units) {
       case TimeUnits.MILLISECONDS:
-        string = strings.milliseconds;
+        string = strings?.milliseconds;
         divisor = 1;
         break;
       case TimeUnits.SECONDS:
-        string = strings.seconds;
+        string = strings?.seconds;
         divisor = SECOND;
         break;
       case TimeUnits.MINUTES:
-        string = strings.minutes;
+        string = strings?.minutes;
         divisor = MINUTE;
         break;
       case TimeUnits.HOURS:
-        string = strings.hours;
+        string = strings?.hours;
         divisor = HOUR;
         break;
       }
 
-      this.log.always(string, this.caller, Math.round(time / divisor));
+      if (string) {
+        this.log.always(string, this.caller, Math.round(time / divisor));
+      }
     }
 
     return time;

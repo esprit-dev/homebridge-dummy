@@ -60,10 +60,6 @@ export class Schedule extends Timeout {
     }
   }
 
-  protected get cancelString(): string {
-    throw new Error('Method not implemented.');
-  }
-
   private startTimeout() {
 
     this.reset();
