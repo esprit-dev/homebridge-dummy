@@ -21,10 +21,9 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
     accessory: PlatformAccessory,
     config: C,
     log: Log,
-    persistPath: string,
     isGrouped: boolean,
   ) {
-    super(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
+    super(Service, Characteristic, accessory, config, log, isGrouped);
 
     this.on = this.defaultOn;
 
@@ -48,7 +47,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
   private async initializeOn() {
 
     if (this.isStateful) {
-      this.on = await storageGet(this.persistPath, this.defaultStateStorageKey) ?? this.on;
+      this.on = await storageGet(this.defaultStateStorageKey) ?? this.on;
     }
 
     this.accessoryService.updateCharacteristic(this.Characteristic.On, this.on);
@@ -77,7 +76,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
     this.on = value as boolean;
 
     if (this.isStateful) {
-      await storageSet(this.persistPath, this.defaultStateStorageKey, this.on);
+      await storageSet(this.defaultStateStorageKey, this.on);
     } else {
       if (this.on !== this.defaultOn) {
         this.startTimer();

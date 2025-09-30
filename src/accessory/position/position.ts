@@ -24,10 +24,9 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
     accessory: PlatformAccessory,
     config: C,
     log: Log,
-    persistPath: string,
     isGrouped: boolean,
   ) {
-    super(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
+    super(Service, Characteristic, accessory, config, log, isGrouped);
 
     this.position = this.defaultPosition;
 
@@ -57,7 +56,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
   private async initializePosition() {
 
     if (this.isStateful) {
-      this.position = await storageGet(this.persistPath, this.defaultStateStorageKey) ?? this.position;
+      this.position = await storageGet(this.defaultStateStorageKey) ?? this.position;
     }
 
     this.accessoryService.updateCharacteristic(this.Characteristic.TargetPosition, this.position);
@@ -93,7 +92,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
     this.position = targetPosition;
 
     if (this.isStateful) {
-      await storageSet(this.persistPath, this.defaultStateStorageKey, this.position);
+      await storageSet(this.defaultStateStorageKey, this.position);
     } else {
       if (this.position !== this.defaultPosition) {
         this.startTimer();

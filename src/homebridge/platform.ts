@@ -14,6 +14,7 @@ import { migrateAccessories } from '../tools/configMigration.js';
 import { Log } from '../tools/log.js';
 import getVersion from '../tools/version.js';
 import { WebhookManager } from '../model/webhook.js';
+import { initStorage } from '../tools/storage.js';
 
 export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
   private readonly Service;
@@ -72,6 +73,8 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
 
   private async setup(): Promise<void> {
 
+    await initStorage(this.api.user.persistPath());
+
     const keepIdentifiers = new Set<string>();
 
     const accessories: DummyConfig[] = this.config.accessories || [];
@@ -79,8 +82,6 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
       const migratedAccessories = await migrateAccessories(this.log, this.api.user.configPath()) ?? [];
       accessories.push(...migratedAccessories);
     }
-
-    const persistPath = this.api.user.persistPath();
 
     const groupAccessories = new Map<string, GroupConfig>();
 
@@ -98,7 +99,7 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
 
       const accessory = this.platformAccessories.get(id) ?? this.createPlatformAccessory(id, accessoryConfig.name);
 
-      const dummyAccessory = createDummyAccessory(this.Service, this.Characteristic, accessory, accessoryConfig, this.log, persistPath);
+      const dummyAccessory = createDummyAccessory(this.Service, this.Characteristic, accessory, accessoryConfig, this.log);
       if (!dummyAccessory) {
         continue;
       }
@@ -119,7 +120,7 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
 
       const accessory = this.platformAccessories.get(id) ?? this.createPlatformAccessory(id, groupName);
 
-      const groupAccessory = new GroupAccessory(this.Service, this.Characteristic, accessory, groupConfig, this.log, persistPath, this.webhookManager);
+      const groupAccessory = new GroupAccessory(this.Service, this.Characteristic, accessory, groupConfig, this.log, this.webhookManager);
       this.dummyAccessories.push(groupAccessory);
     }
 

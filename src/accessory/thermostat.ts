@@ -30,10 +30,9 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
     accessory: PlatformAccessory,
     config: ThermostatConfig,
     log: Log,
-    persistPath: string,
     isGrouped: boolean,
   ) {
-    super(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
+    super(Service, Characteristic, accessory, config, log, isGrouped);
 
     this.STATE_AUTO = Characteristic.TargetHeatingCoolingState.AUTO;
     this.STATE_COOL = Characteristic.TargetHeatingCoolingState.COOL;
@@ -75,8 +74,8 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
   private async initializeThermostat() {
 
     if (this.isStateful) {
-      this.state = await storageGet(this.persistPath, this.defaultStateStorageKey) ?? this.state;
-      this.temperature = await storageGet(this.persistPath, this.defaulTemperatureStorageKey) ?? this.temperature;
+      this.state = await storageGet(this.defaultStateStorageKey) ?? this.state;
+      this.temperature = await storageGet(this.defaulTemperatureStorageKey) ?? this.temperature;
     }
 
     this.accessoryService.updateCharacteristic(this.Characteristic.TargetHeatingCoolingState, this.state);
@@ -160,7 +159,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
     this.state = value;
 
     if (this.isStateful) {
-      await storageSet(this.persistPath, this.defaultStateStorageKey, this.state);
+      await storageSet(this.defaultStateStorageKey, this.state);
     }
 
     this.accessoryService.updateCharacteristic(this.Characteristic.TargetHeatingCoolingState, this.state);
@@ -183,7 +182,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
     this.temperature = value;
 
     if (this.isStateful) {
-      await storageSet(this.persistPath, this.defaulTemperatureStorageKey, this.temperature);
+      await storageSet(this.defaulTemperatureStorageKey, this.temperature);
     }
 
     this.accessoryService.updateCharacteristic(this.Characteristic.TargetTemperature, this.temperature);
