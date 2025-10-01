@@ -3,7 +3,7 @@ import express, { Request, Response } from 'express';
 import { CharacteristicValue } from 'homebridge';
 import { Server } from 'http';
 
-import { TemperatureUnits, WebhookCommand } from './enums.js';
+import { isValidTemperatureUnits, printableValues, TemperatureUnits, WebhookCommand } from './enums.js';
 import { CharacteristicType, DummyConfig } from './types.js';
 
 import { DummyAccessory } from '../accessory/base.js';
@@ -138,6 +138,13 @@ export class WebhookManager {
       break;
     }
     case WebhookCommand.TargetTemperature: {
+
+      if (!isValidTemperatureUnits(body.units)) {
+        validRequest = false;
+        requirements = `${strings.webhook.badUnits.replace('%s', `'${command}'`).replace('%s', `'${body.units}'`)} ${printableValues(TemperatureUnits)}`;
+        break;
+      }
+
       const units = body.units ?? TemperatureUnits.CELSIUS;
       const minTemp = fromCelsius(MINIMUM_TEMPERATURE, units);
       const maxTemp = fromCelsius(MAXIMUM_TEMPERATURE, units);
@@ -146,6 +153,7 @@ export class WebhookManager {
       if (validRequest) {
         value = toCelsius(value as number, units);
       }
+
       break;
     }
     default:

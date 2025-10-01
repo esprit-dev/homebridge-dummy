@@ -4,7 +4,9 @@ import { DummyAccessory } from './base.js';
 
 import { strings } from '../i18n/i18n.js';
 
-import { AccessoryType, DefaultThermostatState, TemperatureUnits, WebhookCommand }  from '../model/enums.js';
+import {
+  AccessoryType, DefaultThermostatState, isValidTemperatureUnits, isValidThermostatState,
+  printableValues, TemperatureUnits, WebhookCommand }  from '../model/enums.js';
 import { CharacteristicType, ServiceType, ThermostatConfig } from '../model/types.js';
 import { Webhook } from '../model/webhook.js';
 
@@ -38,6 +40,14 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
     this.STATE_COOL = Characteristic.TargetHeatingCoolingState.COOL;
     this.STATE_HEAT = Characteristic.TargetHeatingCoolingState.HEAT;
     this.STATE_OFF = Characteristic.TargetHeatingCoolingState.OFF;
+
+    if (!isValidTemperatureUnits(config.temperatureUnits)) {
+      this.log.warning(strings.accessory.thermostat.badUnits, this.name, `'${config.temperatureUnits}'`, printableValues(TemperatureUnits));
+    }
+
+    if (!isValidThermostatState(config.defaultThermostatState)) {
+      this.log.warning(strings.accessory.thermostat.badDefault, this.name, `'${config.defaultThermostatState}'`, printableValues(DefaultThermostatState));
+    }
 
     this.state = this.defaultState;
     this.temperature = this.defaultTemperature;

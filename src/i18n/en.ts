@@ -2,9 +2,9 @@ const en = {
 
   accessory: {
 
+    badValueType: '%s expected type %s but was %s', // accessory name, variable type, variable type
     invalidCron: '%s has an invalid cron expression %s', // accessory name, cron string
     missingRequired: '%s is missing required field %s', // accessory name, variable name
-    badValueType: '%s expected type %s but was %s', // accessory name, variable type, variable type
 
     command: {
       executed: '%s executed command', // accessory name
@@ -17,6 +17,7 @@ const en = {
     },
 
     lock: {
+      badDefault: '%s has invalid default lock state %s. Must be one of: %s', // accessory name, input, list of state names
       secured: '%s is locked', // accessory name
       unsecured: '%s is unlocked', // accessory name
     },
@@ -27,12 +28,15 @@ const en = {
     },
 
     position: {
+      badDefault: '%s has invalid default position %s. Must be one of: %s', // accessory name, input, list of position names
       closed: '%s is closed', // accessory name
       open: '%s is open', // accessory name
     },
 
     thermostat: {
       auto: '%s set to Auto', // accessory name
+      badDefault: '%s has invalid default state %s. Must be one of: %s', // accessory name, input, list of state names
+      badUnits: '%s has invalid temperature units %s. Must be one of: %s', // accessory name, input, list of unit names
       cool: '%s set to Cool', // accessory name
       heat: '%s set to Heat', // accessory name
       off: '%s set to Off', // accessory name
@@ -42,6 +46,7 @@ const en = {
     },
 
     timer: {
+      badUnits: '%s timer has invalid time units %s. Must be one of: %s', // accessory name, input, list of unit names
       cancel: 'Cancelled the timer for %s', // accessory name
       setMilliseconds: '%s is waiting %s milliseconds', // accessory name, number
       setSeconds: '%s is waiting %s seconds', // accessory name, number
@@ -50,6 +55,8 @@ const en = {
     },
 
     schedule: {
+      badType: '%s has invalid schedule type %s. Must be one of: %s', // accessory name, input, list of type names
+      badUnits: '%s schedule has invalid time units %s. Must be one of: %s', // accessory name, input, list of unit names
       cron: '%s starting schedule cronjob', // accessory name
       intervalMilliseconds: '%s scheduled for %s milliseconds', // accessory name, number
       intervalSeconds: '%s scheduled for %s seconds', // accessory name, number
@@ -162,6 +169,8 @@ const en = {
 
   sensor: {
 
+    badType: '%s has invalid sensor type %s. Must be one of: %s', // accessory name, input, list of type names
+
     carbonDioxide: {
       active: '%s detected carbon dioxide', // accessory name
       inactive: '%s stopped detecting carbon dioxide', // accessory name
@@ -219,6 +228,7 @@ const en = {
   },
 
   webhook: {
+    badUnits: 'The %s webhook command has invalid temperature units %s. Must be one of:', // accessory name, input, list of unit names
     missing: 'Request is missing the following fields:',
     received: 'Webhook command received',
     register: 'Registering accessory with id %s for webhook command %s', // id, command

@@ -4,7 +4,7 @@ import { DummyAccessory } from '../base.js';
 
 import { strings } from '../../i18n/i18n.js';
 
-import { DefaultPosition, WebhookCommand } from '../../model/enums.js';
+import { DefaultPosition, isValidPosition, printableValues, WebhookCommand } from '../../model/enums.js';
 import { CharacteristicType, PositionConfig, ServiceType } from '../../model/types.js';
 import { Webhook } from '../../model/webhook.js';
 
@@ -27,6 +27,10 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
     isGrouped: boolean,
   ) {
     super(Service, Characteristic, accessory, config, log, isGrouped);
+
+    if (!isValidPosition(config.defaultPosition)) {
+      this.log.warning(strings.accessory.position.badDefault, this.name, `'${config.defaultPosition}'`, printableValues(DefaultPosition));
+    }
 
     this.position = this.defaultPosition;
 

@@ -4,7 +4,7 @@ import { DummyAccessory } from './base.js';
 
 import { strings } from '../i18n/i18n.js';
 
-import { AccessoryType, DefaultLockState, WebhookCommand }  from '../model/enums.js';
+import { AccessoryType, DefaultLockState, isValidLockState, printableValues, WebhookCommand }  from '../model/enums.js';
 import { CharacteristicType, LockConfig, ServiceType } from '../model/types.js';
 import { Webhook } from '../model/webhook.js';
 
@@ -24,6 +24,10 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
     isGrouped: boolean,
   ) {
     super(Service, Characteristic, accessory, config, log, isGrouped);
+
+    if (!isValidLockState(this.config.defaultLockState)) {
+      this.log.warning(strings.accessory.lock.badDefault, this.name, `'${config.defaultLockState}'`, printableValues(DefaultLockState));
+    }
 
     this.state = this.defaultLockState;
 

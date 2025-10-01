@@ -6,13 +6,21 @@ import { strings } from '../i18n/i18n.js';
 
 import { Log } from '../tools/log.js';
 import { assert } from '../tools/validation.js';
+import { isValidTimeUnits, printableValues, TimeUnits } from '../model/enums.js';
 
 export class Timer extends Timeout {
 
   static new(config: TimerConfig, caller: string, log: Log, disableLogging: boolean): Timer | undefined {
+
     if (!assert(log, caller, config, 'delay', 'units')) {
-      return undefined;
+      return;
     }
+
+    if (!isValidTimeUnits(config.units)) {
+      log.error(strings.accessory.timer.badUnits, caller, `'${config.units}'`, printableValues(TimeUnits));
+      return;
+    }
+
     return new Timer(config, caller, log, disableLogging);
   }
 

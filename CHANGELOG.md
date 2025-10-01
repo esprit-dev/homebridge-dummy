@@ -10,12 +10,10 @@ Automations and scenes using Homebridge Dummy accessories will need to be reconf
 
 ### Changed
 - Support for webhooks ([documentation](https://github.com/mpatfield/homebridge-dummy#webhooks))
+- Improved error messaging for invalid config values
 - Better field validation in config UI (Thank you, [@justjam2013](https://github.com/sponsors/justjam2013) for teaching me this!)
 - `schedule.cron` now expects an `@` preset or `CRON_CUSTOM` with `schedule.cronCustom` defined.
     - This is backwards compatible so no manual edits are necessary
-
-### Fixed
-- Config UI rendering issue when migrating deprecated fields
 
 ## 1.1.0 (2025-08-14)
 

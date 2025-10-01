@@ -19,6 +19,10 @@ export enum SensorType {
   SmokeSensor = 'SmokeSensor',
 }
 
+export function isValidSensorType(input: SensorType): boolean {
+  return Object.values(SensorType).includes(input);
+}
+
 export enum SensorCharacteristic {
   CarbonDioxideDetected = 'CarbonDioxideDetected',
   CarbonMonoxideDetected = 'CarbonMonoxideDetected',
@@ -34,16 +38,28 @@ export enum DefaultLockState {
   UNLOCKED = 'unlocked',
 }
 
+export function isValidLockState(input?: DefaultLockState): boolean {
+  return input === undefined || Object.values(DefaultLockState).includes(input);
+}
+
 export enum DefaultPosition {
   OPEN = 'open',
   CLOSED = 'closed',
 }
 
+export function isValidPosition(input?: DefaultPosition): boolean {
+  return input === undefined || Object.values(DefaultPosition).includes(input);
+}
+
 export enum DefaultThermostatState {
-  OFF = 'off',
+  AUTO = 'auto',
   COOL = 'cool',
   HEAT = 'heat',
-  AUTO = 'auto',
+  OFF = 'off',
+}
+
+export function isValidThermostatState(input?: DefaultThermostatState): boolean {
+  return input === undefined || Object.values(DefaultThermostatState).includes(input);
 }
 
 export enum TimeUnits {
@@ -51,6 +67,10 @@ export enum TimeUnits {
   SECONDS = 'SECONDS',
   MINUTES = 'MINUTES',
   HOURS = 'HOURS',
+}
+
+export function isValidTimeUnits(input: TimeUnits): boolean {
+  return Object.values(TimeUnits).includes(input);
 }
 
 export enum ScheduleType {
@@ -63,6 +83,10 @@ export enum TemperatureUnits {
   FAHRENHEIT = 'F',
 }
 
+export function isValidTemperatureUnits(input?: TemperatureUnits): boolean {
+  return input === undefined || Object.values(TemperatureUnits).includes(input);
+}
+
 export enum WebhookCommand {
   Brightness = 'Brightness',
   LockTargetState = 'LockTargetState',
@@ -70,4 +94,8 @@ export enum WebhookCommand {
   TargetHeatingCoolingState = 'TargetHeatingCoolingState',
   TargetPosition = 'TargetPosition',
   TargetTemperature = 'TargetTemperature',
+}
+
+export function printableValues<T>(o: { [s: string]: T; } | ArrayLike<T>): string {
+  return Object.values(o).map(value => `'${value}'`).join(', ');
 }
