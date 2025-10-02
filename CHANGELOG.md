@@ -18,6 +18,9 @@ Automations and scenes using Homebridge Dummy accessories will need to be reconf
 - Updated dependencies
 - Code changes to speed future feature development
 
+### Notes
+Would you like to see Homebridge Dummy in your language? Please consider [getting involved](https://github.com/mpatfield/homebridge-dummy/issues/105). No coding experience required!
+
 ## 1.1.0 (2025-08-14)
 
 ### Added
