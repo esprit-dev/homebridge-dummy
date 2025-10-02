@@ -11,6 +11,7 @@ import { AccessoryType } from '../model/enums.js';
 import { CharacteristicType, DummyConfig, ServiceType } from '../model/types.js';
 import { Webhook } from '../model/webhook.js';
 
+import Limiter from '../timeout/limiter.js';
 import { Schedule } from '../timeout/schedule.js';
 import { Timer } from '../timeout/timer.js';
 
@@ -30,6 +31,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
 
   private readonly _schedule?: Schedule;
   private readonly _timer?: Timer;
+  private readonly _limiter?: Limiter;
 
   constructor(
     protected readonly Service: ServiceType,
@@ -48,6 +50,10 @@ export abstract class DummyAccessory<C extends DummyConfig> {
 
     if (config.schedule) {
       this._schedule = Schedule.new(config.schedule, config.name, log, config.disableLogging === true, this.schedule.bind(this));
+    }
+
+    if (config.limiter){
+      this._limiter = Limiter.new(config.limiter, config.name, log, config.disableLogging === true);
     }
 
     const serviceInstance = Service[this.getAccessoryType()];
@@ -96,6 +102,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
   public teardown() {
     this._timer?.teardown();
     this._schedule?.teardown();
+    this._limiter?.teardown();
   }
 
   public abstract webhooks(): Webhook[];
@@ -118,10 +125,12 @@ export abstract class DummyAccessory<C extends DummyConfig> {
 
   protected startTimer() {
     this._timer?.start(this.reset.bind(this));
+    this._limiter?.start(this.reset.bind(this));
   }
 
   protected cancelTimer() {
     this._timer?.cancel();
+    this._limiter?.cancel();
   }
 
   protected executeCommand(command: string) {

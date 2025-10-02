@@ -107,8 +107,14 @@ async function updateConfigsWithUUIDs(configs: DummyPlatformConfig[]) {
 
   configs.forEach( (config) => {
     config.accessories?.forEach( (accessoryConfig) => {
+
       if (accessoryConfig.id === undefined) {
         accessoryConfig.id = generateUUID();
+        changed = true;
+      }
+
+      if (accessoryConfig.limiter !== undefined && accessoryConfig.limiter.id === undefined) {
+        accessoryConfig.limiter.id = generateUUID();
         changed = true;
       }
     });

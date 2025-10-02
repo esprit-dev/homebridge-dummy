@@ -104,7 +104,13 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
             "sensor": {
                 "type": "CarbonDioxideSensor | CarbonMonoxideSensor | ContactSensor | LeakSensor | MotionSensor | OccupancySensor | SmokeSensor",
                 "timerControlled": true | false
-            }
+            },
+            "limiter": {
+                "id": "string",
+                "limit": number,
+                "units": "MILLISECONDS | SECONDS | MINUTES | HOURS",
+                "period": "HOUR | DAY | WEEK | MONTH",
+            },
             "temperatureUnits": "C" | "F",
             "defaultOn": true | false,
             "defaultBrightness": 0-100,
@@ -119,11 +125,11 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
             "commandOpen": "string",
             "commandClose": "string",
             "commandTemperature": "string",
-            "enableWebook": true | false
+            "enableWebook": true | false,
             "resetOnRestart": true | false,
             "disableLogging": true | false
         }
-        // ...additional accessories...
+        …
     ],
     "platform": "HomebridgeDummy"
 }
@@ -131,17 +137,35 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
 
 All fields are optional unless noted with an asterisk (*)
 
+### General
 - `id`* - A unique identifier for the accessory. Changing this value will create a new accessory.
-
 - `name`* - The display name for the accessory in HomeKit
-- `type`* - The type of accessory: `Door`, `Lightbulb`, `LockMechanism`, `Outlet`, `Switch`, `Thermostat`, `Window`, or `WindowCovering`
+- `type`* - The type of accessory
 
+Valid values for `type` are:
+- `Door`
+- `Lightbulb`
+- `LockMechanism`
+- `Outlet`
+- `Switch`
+- `Thermostat`
+- `Window`
+- `WindowCovering`
+
+### Group
 - `groupName` - Items sharing the same group name will be collected together in the Home app UI
-    - ⚠️ Adding/removing/changing the group name will require you to reconfigure any HomeKit scenes or automations
+
+⚠️ Adding/removing/changing the group name will require you to reconfigure any HomeKit scenes or automations
+
+### Timer
+Return the accessory to its default value after the specified delay
 
 - `timer.delay` — If defined, the switch will automatically toggle after this many milliseconds/seconds/minutes/hours
 - `timer.units` — The units to use for delay above (`MILLISECONDS`, `SECONDS`, `MINUTES`, or `HOURS`). *Required if delay is set.
 - `timer.random` — If true, the delay will be randomized with a maximum value of `timer.delay`
+
+### Schedule
+Set the accessory to its opposite (non-default) value at specified interval or times
 
 - `schedule.type` — Automatically set the accessory to it's non-default value
 - `schedule.interval` — Trigger the accessory after this many milliseconds/seconds/minutes/hours. *Required if `schedule.type` = `INTERVAL`
@@ -151,36 +175,49 @@ All fields are optional unless noted with an asterisk (*)
 - `schedule.cronCustom` - Custom cron string for triggering the accessory. *Required if `schedule.cron` = `CUSTOM_CRON`
     - See [crontab.guru](http://crontab.guru) for help
 
+### Limiter
+Restrict the total time this accessory can be set to its non-default value, for each specified period
+
+- `limiter.id` - A random id (such as UUID) for storing the limit. Change this value to reset the limit.
+- `limiter.limit` - The total time number of seconds/minutes/hours that this accessory may run for each `period`
+- `limiter.units` - The units to use for delay above (`MILLISECONDS`, `SECONDS`, `MINUTES`, or `HOURS`). *Required if limit is set.
+- `limiter.period` - How often the limit is reset (`HOUR`, `DAY`, `WEEK`, `MONTH`) *Required if limit is set.
+    - `HOUR` is reset at X:00:00, `DAY` at local midnight, `WEEK` on Monday, and `MONTH` on the 1st day
+
+### Sensor
 - `sensor.type` - Optionally attach a sensor that mirrors the state of the parent accessory
-    - Valid values are `CarbonDioxideSensor`, `CarbonMonoxideSensor`, `ContactSensor`, `LeakSensor`, `MotionSensor`, `OccupancySensor`, or `SmokeSensor`
 - `sensor.timerControlled` - If true, sensor will be activated if accessory is reset by timer but not if it is reset manually
 
-- `temperatureUnits` - Units to use for thermostats, either 'C' or 'F'
+Valid values for sensor are:
+- `CarbonDioxideSensor`
+- `CarbonMonoxideSensor`
+- `ContactSensor`
+- `LeakSensor`
+- `MotionSensor`
+- `OccupancySensor`
+- `SmokeSensor`
 
-- `enableWebook` - Turn on webhooks for this accessory. See [Webhooks](https://github.com/mpatfield/homebridge-dummy#webhooks) section below for details.
-
-- `defaultOn` — Initial value. Default _ON_ = true, default _OFF_ = false
-
-- `defaultBrightness` — If set, lightbulb will have additional dimmer settings with this default brightness percentage
-
-- `defaultLockState` - The initial value for the lock, "locked" or "unlocked"
-
-- `defaultPosition` — Initial position for the door/window/blinds, "open" or "closed"
-
-- `defaultThermostatState` - The initial state for the thermostat, "auto", "heat", "cool", or "off"
-
-- `defaultTemperature` - The default temperature for the thermostat in `temperatureUnits` defined above
+### Commands
+Execute arbitrary commands (e.g. curl) when the accessory changes state
 
 - `onCommand` - Arbitrary command to execute when lightbulb/outlet/switch/thermostat turns on
 - `offCommand` - Arbitrary command to execute when lightbulb/outlet/switch/thermostat turns off
-
 - `lockCommand` - Arbitrary command to execute when lock mechanism is locked
 - `unlockCommand` - Arbitrary command to execute when lock mechanism is unlocked
-
 - `commandTemperature` - Arbitrary command to execute when temperature changes
 
-- `resetOnRestart` _ If true, accessory will return to default state when Homebridge restarts
+### Defaults
+- `temperatureUnits` - Units to use for thermostats, either 'C' or 'F'
+- `defaultOn` — Initial value. Default _ON_ = true, default _OFF_ = false
+- `defaultBrightness` — If set, lightbulb will have additional dimmer settings with this default brightness percentage
+- `defaultLockState` - The initial value for the lock, "locked" or "unlocked"
+- `defaultPosition` — Initial position for the door/window/blinds, "open" or "closed"
+- `defaultThermostatState` - The initial state for the thermostat, "auto", "heat", "cool", or "off"
+- `defaultTemperature` - The default temperature for the thermostat in `temperatureUnits` defined above
 
+### Options
+- `enableWebook` - Turn on webhooks for this accessory. See [Webhooks](https://github.com/mpatfield/homebridge-dummy#webhooks) section below for details.
+- `resetOnRestart` _ If true, accessory will return to default state when Homebridge restarts
 - `disableLogging` — If true, state changes will not be logged
 
 ## Webhooks

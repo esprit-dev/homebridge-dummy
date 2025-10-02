@@ -62,6 +62,13 @@ export function isValidThermostatState(input?: DefaultThermostatState): boolean 
   return input === undefined || Object.values(DefaultThermostatState).includes(input);
 }
 
+export enum TimePeriod {
+  HOUR = 'HOUR',
+  DAY = 'DAY',
+  WEEK = 'WEEK',
+  MONTH = 'MONTH',
+}
+
 export enum TimeUnits {
   MILLISECONDS = 'MILLISECONDS',
   SECONDS = 'SECONDS',

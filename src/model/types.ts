@@ -3,7 +3,10 @@ import { AccessoryConfig, CharacteristicValue, PlatformConfig } from 'homebridge
 export type ServiceType = typeof import('homebridge').Service;
 export type CharacteristicType = typeof import('homebridge').Characteristic;
 
-import { AccessoryType, DefaultLockState, DefaultPosition, DefaultThermostatState, ScheduleType, SensorType, TemperatureUnits, TimeUnits } from './enums.js';
+import {
+  AccessoryType, DefaultLockState, DefaultPosition, DefaultThermostatState,
+  ScheduleType, SensorType, TemperatureUnits, TimePeriod, TimeUnits,
+} from './enums.js';
 
 export type LegacyAccessoryConfig = AccessoryConfig & {
   name: string;
@@ -47,6 +50,13 @@ export type SensorConfig = Assertable & {
   timerControlled?: boolean,
 }
 
+export type LimiterConfig = Assertable & {
+  id?: string,
+  limit: number,
+  units: TimeUnits,
+  period: TimePeriod,
+}
+
 export type DummyConfig = {
   id: string,
   name: string,
@@ -55,6 +65,7 @@ export type DummyConfig = {
   sensor?: SensorType | SensorConfig,
   timer?: TimerConfig,
   schedule?: ScheduleConfig,
+  limiter?: LimiterConfig,
   resetOnRestart?: boolean,
   enableWebook?: boolean,
   disableLogging?: boolean,

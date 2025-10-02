@@ -143,6 +143,68 @@
             }
           }
         ]
+      },
+      "limiter": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "limit": {
+            "type": "number",
+            "title": "${config.title.limit}"
+          },
+          "units": {
+            "type": "string",
+            "title": "${config.title.units}",
+            "enum": [ "SECONDS", "MINUTES", "HOURS"],
+            "enumNames": ["${config.enumNames.seconds}", "${config.enumNames.minutes}", "${config.enumNames.hours}"]
+          },
+          "period": {
+            "type": "string",
+            "title": "${config.title.period}",
+            "enum": [ "HOUR", "DAY", "WEEK", "MONTH"],
+            "enumNames": ["${config.enumNames.hour}", "${config.enumNames.day}", "${config.enumNames.week}", "${config.enumNames.month}"]
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "limit": {
+                }
+              },
+              "required": ["limit"]
+            },
+            "then": {
+              "required": ["units", "period"]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "units" : {
+                }
+              },
+              "required": [ "units" ]
+            },
+            "then": {
+              "required": [ "limit"]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "period" : {
+                }
+              },
+              "required": [ "period" ]
+            },
+            "then": {
+              "required": [ "limit"]
+            }
+          }
+        ]
       }
     },
     "properties": {
@@ -176,6 +238,7 @@
             "sensor": { "$ref": "#/definitions/sensor" },
             "timer": { "$ref": "#/definitions/timer" },
             "schedule": { "$ref": "#/definitions/schedule" },
+            "limiter": { "$ref": "#/definitions/limiter" },
             "temperatureUnits": {
               "type": "string",
               "title": "${config.title.units}",
@@ -506,6 +569,35 @@
                       "condition": {
                           "functionBody": "return model.accessories?.[arguments[1]]?.sensor?.type !== undefined;"
                       }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "fieldset",
+              "title": "${config.title.limiter}",
+              "description": "${config.description.limiter}",
+              "condition": {
+                "functionBody": "const type = model.accessories?.[arguments[1]]?.type; return type !== undefined && type !== 'Thermostat';"
+              },
+              "items": [
+                {
+                  "type": "div",
+                  "displayFlex": true,
+                  "flex-direction": "row",
+                  "items": [
+                    {
+                      "key": "accessories[].limiter.limit",
+                      "flex": "1 1 33%"
+                    },
+                    {
+                      "key": "accessories[].limiter.units",
+                      "flex": "1 1 33%"
+                    },
+                    {
+                      "key": "accessories[].limiter.period",
+                      "flex": "1 1 33%"
                     }
                   ]
                 }

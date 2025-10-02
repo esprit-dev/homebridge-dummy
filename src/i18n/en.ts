@@ -45,6 +45,17 @@ const en = {
       unsupportedFunction: '%s is unsupported for thermostats', // function name
     },
 
+    limiter: {
+      badPeriod: 'The time limit for %s has invalid period %s. Must be one of: %s', // accessory name, input, list of unit names
+      badUnits: 'The time limit for %s has invalid units %s. Must be one of: %s', // accessory name, input, list of unit names
+      expired: 'The time limit for %s has expired', // accessory name
+      limitExceedsPeriod: 'The time limit for %s exceeds period. Please reduce the limit or increase the period.', // accessory name
+      remainingDayPlus: 'The time limit for %s has more than a day remaining', // accessory name
+      remainingHours: 'The time limit for %s has %s hours remaining', // accessory name, number
+      remainingMinutes: 'The time limit for %s has %s minutes remaining', // accessory name, number
+      remainingSeconds: 'The time limit for %s has %s seconds remaining', // accessory name, number
+    },
+
     timer: {
       badUnits: '%s timer has invalid time units %s. Must be one of: %s', // accessory name, input, list of unit names
       cancel: 'Cancelled the timer for %s', // accessory name
@@ -82,6 +93,7 @@ const en = {
     description: {
       commands: 'Execute arbitrary commands (e.g. curl) when the accessory changes state',
       cron: 'Visit crontab.guru for help',
+      limiter: 'Restrict the total time this accessory can be set to its non-default value, for each specified period',
       random: 'Time will be randomized with the above value as a maximum',
       timerControlled: 'Instead of mirroring accessory, sensor will be activated when accessory auto-resets',
       timer: 'Return the accessory to its default value after the specified delay',
@@ -99,9 +111,11 @@ const en = {
       cron: 'Cron',
       custom: 'Custom',
       daily: 'Daily',
+      day: 'Day',
       door: 'Door',
       fahrenheit: '°F',
       heat: 'Heat',
+      hour: 'Hour',
       hourly: 'Hourly',
       hours: 'Hours',
       interval: 'Interval',
@@ -109,6 +123,7 @@ const en = {
       lightbulb: 'Lightbulb',
       lockMechanism: 'Lock',
       minutely: 'Every Minute',
+      month: 'Month',
       monthly: 'Monthly',
       off: 'Off',
       occupancySensor: 'Occupancy',
@@ -127,6 +142,7 @@ const en = {
       unsecured: 'Unlocked',
       weekdays: 'Weekdays',
       weekends: 'Weekends',
+      week: 'Week',
       weekly: 'Weekly',
       window: 'Window',
       windowCovering: 'Window Convering (Blinds)',
@@ -155,6 +171,9 @@ const en = {
       groupName: 'Group Name',
       interval: 'Interval',
       name: 'Name',
+      limit: 'Limit',
+      limiter: 'Time Limit',
+      period: 'Per',
       preset: 'Preset',
       resetOnRestart: 'Reset on Restart',
       timer: 'Auto-Reset Timer',
