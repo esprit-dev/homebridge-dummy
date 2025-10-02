@@ -8,6 +8,6 @@ const overrides = {
 
 };
 
-const REPLACE_THIS_WITH_ISO_CODE = merge({}, en, overrides);
+const TODO_REPLACE_THIS_WITH_ISO_CODE = merge({}, en, overrides);
 
-export default REPLACE_THIS_WITH_ISO_CODE;
+export default TODO_REPLACE_THIS_WITH_ISO_CODE;

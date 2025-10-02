@@ -57,7 +57,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
       new Webhook(this.identifier, WebhookCommand.Brightness,
         (value) => {
           this.setBrightness(value);
-          return strings.accessory.lightbulb.brightness.replace('%s', this.name).replace('%d', value.toString());
+          return strings.lightbulb.brightness.replace('%s', this.name).replace('%d', value.toString());
         }),
     ];
   }
@@ -73,7 +73,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
 
   override logMessageForOnState(value: CharacteristicValue): string {
     if (this.isDimmer && value) {
-      return strings.accessory.lightbulb.stateOn.replace('%d', this.brightness.toLocaleString());
+      return strings.lightbulb.stateOn.replace('%d', this.brightness.toLocaleString());
     } else {
       return super.logMessageForOnState(value);
     }
@@ -93,7 +93,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
 
     this.brightness = value;
 
-    this.logIfDesired(strings.accessory.lightbulb.brightness, this.brightness.toString());
+    this.logIfDesired(strings.lightbulb.brightness, this.brightness.toString());
 
     if (this.isStateful) {
       await storageSet(this.defaultBrightnessStorageKey, this.brightness);

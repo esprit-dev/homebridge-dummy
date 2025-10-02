@@ -17,7 +17,7 @@ export class Timer extends Timeout {
     }
 
     if (!isValidTimeUnits(config.units)) {
-      log.error(strings.accessory.timer.badUnits, caller, `'${config.units}'`, printableValues(TimeUnits));
+      log.error(strings.timer.badUnits, caller, `'${config.units}'`, printableValues(TimeUnits));
       return;
     }
 
@@ -38,10 +38,10 @@ export class Timer extends Timeout {
     this.cancel();
 
     const logStrings = DelayLogStrings(
-      strings.accessory.timer.setMilliseconds,
-      strings.accessory.timer.setSeconds,
-      strings.accessory.timer.setMinutes,
-      strings.accessory.timer.setHours,
+      strings.timer.setMilliseconds,
+      strings.timer.setSeconds,
+      strings.timer.setMinutes,
+      strings.timer.setHours,
     );
 
     const delay = this.getDelay(this.config.delay, this.config.units, this.config.random, logStrings);
@@ -55,7 +55,7 @@ export class Timer extends Timeout {
   override cancel() {
 
     if (this.timeout) {
-      this.logIfDesired(strings.accessory.timer.cancel);
+      this.logIfDesired(strings.timer.cancel);
     }
 
     super.cancel();

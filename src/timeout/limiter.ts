@@ -20,7 +20,7 @@ export default class Limiter extends Timeout {
     }
 
     if (!isValidTimeUnits(config.units)) {
-      log.error(strings.accessory.limiter.badUnits, caller, `'${config.units}'`, printableValues(TimeUnits));
+      log.error(strings.limiter.badUnits, caller, `'${config.units}'`, printableValues(TimeUnits));
       return;
     }
 
@@ -39,13 +39,13 @@ export default class Limiter extends Timeout {
       periodLength = 31 * DAY;
       break;
     default:
-      log.error(strings.accessory.limiter.badPeriod, caller, `'${config.period}'`, printableValues(TimePeriod));
+      log.error(strings.limiter.badPeriod, caller, `'${config.period}'`, printableValues(TimePeriod));
       return;
     }
 
     const delay = getDelay(config.limit, config.units);
     if (delay > periodLength) {
-      log.error(strings.accessory.limiter.limitExceedsPeriod, caller);
+      log.error(strings.limiter.limitExceedsPeriod, caller);
       return;
     }
 
@@ -162,15 +162,15 @@ export default class Limiter extends Timeout {
     }
 
     if (this.limit.timeRemaining === 0) {
-      this.logIfDesired(strings.accessory.limiter.expired);
+      this.logIfDesired(strings.limiter.expired);
     } else if (this.limit.timeRemaining < MINUTE) {
-      this.logIfDesired(strings.accessory.limiter.remainingSeconds, this.limit.timeRemaining / SECOND);
+      this.logIfDesired(strings.limiter.remainingSeconds, this.limit.timeRemaining / SECOND);
     } else if (this.limit.timeRemaining < HOUR) {
-      this.logIfDesired(strings.accessory.limiter.remainingMinutes, this.limit.timeRemaining / MINUTE);
+      this.logIfDesired(strings.limiter.remainingMinutes, this.limit.timeRemaining / MINUTE);
     } else if (this.limit.timeRemaining < DAY) {
-      this.logIfDesired(strings.accessory.limiter.remainingHours, this.limit.timeRemaining / HOUR);
+      this.logIfDesired(strings.limiter.remainingHours, this.limit.timeRemaining / HOUR);
     } else {
-      this.logIfDesired(strings.accessory.limiter.remainingDayPlus);
+      this.logIfDesired(strings.limiter.remainingDayPlus);
     }
   }
 }

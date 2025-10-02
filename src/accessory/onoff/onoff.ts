@@ -112,6 +112,6 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
   }
 
   protected logMessageForOnState(value: CharacteristicValue): string {
-    return value ? strings.accessory.onOff.stateOn : strings.accessory.onOff.stateOff;
+    return value ? strings.onOff.stateOn : strings.onOff.stateOff;
   }
 }

@@ -1,103 +1,95 @@
 const en = {
 
   accessory: {
-
     badValueType: '%s expected type %s but was %s', // accessory name, variable type, variable type
     invalidCron: '%s has an invalid cron expression %s', // accessory name, cron string
     missingRequired: '%s is missing required field %s', // accessory name, variable name
-
-    command: {
-      executed: '%s executed command', // accessory name
-      error: '%s failed to execute command', // accessory name
-    },
-
-    lightbulb: {
-      brightness: '%s brightness is %d%', // accessory name, number
-      stateOn: '%s is on, brightness is %d%', // accessory name, number
-    },
-
-    lock: {
-      badDefault: '%s has invalid default lock state %s. Must be one of: %s', // accessory name, input, list of state names
-      secured: '%s is locked', // accessory name
-      unsecured: '%s is unlocked', // accessory name
-    },
-
-    onOff: {
-      stateOn: '%s is on', // accessory name
-      stateOff: '%s is off', // accessory name
-    },
-
-    position: {
-      badDefault: '%s has invalid default position %s. Must be one of: %s', // accessory name, input, list of position names
-      closed: '%s is closed', // accessory name
-      open: '%s is open', // accessory name
-    },
-
-    thermostat: {
-      auto: '%s set to Auto', // accessory name
-      badDefault: '%s has invalid default state %s. Must be one of: %s', // accessory name, input, list of state names
-      badUnits: '%s has invalid temperature units %s. Must be one of: %s', // accessory name, input, list of unit names
-      cool: '%s set to Cool', // accessory name
-      heat: '%s set to Heat', // accessory name
-      off: '%s set to Off', // accessory name
-      temperatureC: '%s set to %d°C', // accessory name, number
-      temperatureF: '%s set to %d°F', // accessory name, number
-      unsupportedFunction: '%s is unsupported for thermostats', // function name
-    },
-
-    limiter: {
-      badPeriod: 'The time limit for %s has invalid period %s. Must be one of: %s', // accessory name, input, list of unit names
-      badUnits: 'The time limit for %s has invalid units %s. Must be one of: %s', // accessory name, input, list of unit names
-      expired: 'The time limit for %s has expired', // accessory name
-      limitExceedsPeriod: 'The time limit for %s exceeds period. Please reduce the limit or increase the period.', // accessory name
-      remainingDayPlus: 'The time limit for %s has more than a day remaining', // accessory name
-      remainingHours: 'The time limit for %s has %s hours remaining', // accessory name, number
-      remainingMinutes: 'The time limit for %s has %s minutes remaining', // accessory name, number
-      remainingSeconds: 'The time limit for %s has %s seconds remaining', // accessory name, number
-    },
-
-    timer: {
-      badUnits: '%s timer has invalid time units %s. Must be one of: %s', // accessory name, input, list of unit names
-      cancel: 'Cancelled the timer for %s', // accessory name
-      setMilliseconds: '%s is waiting %s milliseconds', // accessory name, number
-      setSeconds: '%s is waiting %s seconds', // accessory name, number
-      setMinutes: '%s is waiting %s minutes',  // accessory name, number
-      setHours: '%s is waiting %s hours', // accessory name, number
-    },
-
-    schedule: {
-      badType: '%s has invalid schedule type %s. Must be one of: %s', // accessory name, input, list of type names
-      badUnits: '%s schedule has invalid time units %s. Must be one of: %s', // accessory name, input, list of unit names
-      cron: '%s starting schedule cronjob', // accessory name
-      intervalMilliseconds: '%s scheduled for %s milliseconds', // accessory name, number
-      intervalSeconds: '%s scheduled for %s seconds', // accessory name, number
-      intervalMinutes: '%s scheduled for %s minutes', // accessory name, number
-      intervalHours: '% scheduled for %s hours', // accessory name, number
-    },
   },
 
+  command: {
+    error: '%s failed to execute command', // accessory name
+    executed: '%s executed command', // accessory name
+  },
+
+  lightbulb: {
+    brightness: '%s brightness is %d%', // accessory name, number
+    stateOn: '%s is on, brightness is %d%', // accessory name, number
+  },
+
+  limiter: {
+    badPeriod: 'The time limit for %s has invalid period %s. Must be one of: %s', // accessory name, input, list of unit names
+    badUnits: 'The time limit for %s has invalid units %s. Must be one of: %s', // accessory name, input, list of unit names
+    expired: 'The time limit for %s has expired', // accessory name
+    limitExceedsPeriod: 'The time limit for %s exceeds period. Please reduce the limit or increase the period.', // accessory name
+    remainingDayPlus: 'The time limit for %s has more than a day remaining', // accessory name
+    remainingHours: 'The time limit for %s has %s hours remaining', // accessory name, number
+    remainingMinutes: 'The time limit for %s has %s minutes remaining', // accessory name, number
+    remainingSeconds: 'The time limit for %s has %s seconds remaining', // accessory name, number
+  },
+
+  lock: {
+    badDefault: '%s has invalid default lock state %s. Must be one of: %s', // accessory name, input, list of state names
+    secured: '%s is locked', // accessory name
+    unsecured: '%s is unlocked', // accessory name
+  },
+
+  onOff: {
+    stateOff: '%s is off', // accessory name
+    stateOn: '%s is on', // accessory name
+  },
+
+  position: {
+    badDefault: '%s has invalid default position %s. Must be one of: %s', // accessory name, input, list of position names
+    closed: '%s is closed', // accessory name
+    open: '%s is open', // accessory name
+  },
+
+  schedule: {
+    badType: '%s has invalid schedule type %s. Must be one of: %s', // accessory name, input, list of type names
+    badUnits: '%s schedule has invalid time units %s. Must be one of: %s', // accessory name, input, list of unit names
+    cron: '%s starting schedule cronjob', // accessory name
+    intervalMilliseconds: '%s scheduled for %s milliseconds', // accessory name, number
+    intervalSeconds: '%s scheduled for %s seconds', // accessory name, number
+    intervalMinutes: '%s scheduled for %s minutes', // accessory name, number
+    intervalHours: '% scheduled for %s hours', // accessory name, number
+  },
+
+  thermostat: {
+    auto: '%s set to Auto', // accessory name
+    badDefault: '%s has invalid default state %s. Must be one of: %s', // accessory name, input, list of state names
+    badUnits: '%s has invalid temperature units %s. Must be one of: %s', // accessory name, input, list of unit names
+    cool: '%s set to Cool', // accessory name
+    heat: '%s set to Heat', // accessory name
+    off: '%s set to Off', // accessory name
+    temperatureC: '%s set to %d°C', // accessory name, number
+    temperatureF: '%s set to %d°F', // accessory name, number
+    unsupportedFunction: '%s is unsupported for thermostats', // function name
+  },
+
+  timer: {
+    badUnits: '%s timer has invalid time units %s. Must be one of: %s', // accessory name, input, list of unit names
+    cancel: 'Cancelled the timer for %s', // accessory name
+    setMilliseconds: '%s is waiting %s milliseconds', // accessory name, number
+    setSeconds: '%s is waiting %s seconds', // accessory name, number
+    setMinutes: '%s is waiting %s minutes',  // accessory name, number
+    setHours: '%s is waiting %s hours', // accessory name, number
+  },
+
+
+
+
+
+
   config: {
-    migrate: 'Are you upgrading from an earlier version?',
-    migrationDetails1: 'HomeKit scenes and automations using %s accessories will need to be reconfigured!', // plugin name
-    migrationDetails2: 'Please downgrade to v0.9.2 or earlier if you want to keep your current setup.',
-    migrationDetails3: '%s can try to recreate your accessories, but you will still need reconfigure HomeKit scenes and automations.', // plugin name
-    migrationDetails4: 'Would you like to recreate your accessories now?',
-    migrationDetails5: 'For more details, please visit %s', // url
-    migrationRestartTitle: 'Restart Homebridge',
-    migrationRestartDescription: 'Please restart Homebridge to begin %s migration', // plugin name
-    support: 'For documentation and support please visit %s', // url
-    thankYou: 'Thank you for installing %s', // plugin name
-    yes: 'Yes',
-    no: 'No',
 
     description: {
       commands: 'Execute arbitrary commands (e.g. curl) when the accessory changes state',
       cron: 'Visit crontab.guru for help',
       limiter: 'Restrict the total time this accessory can be set to its non-default value, for each specified period',
       random: 'Time will be randomized with the above value as a maximum',
-      timerControlled: 'Instead of mirroring accessory, sensor will be activated when accessory auto-resets',
-      timer: 'Return the accessory to its default value after the specified delay',
       schedule: 'Set the accessory to its opposite (non-default) value at specified interval or times',
+      timer: 'Return the accessory to its default value after the specified delay',
+      timerControlled: 'Instead of mirroring accessory, sensor will be activated when accessory auto-resets',
     },
 
     enumNames: {
@@ -125,8 +117,8 @@ const en = {
       minutely: 'Every Minute',
       month: 'Month',
       monthly: 'Monthly',
-      off: 'Off',
       occupancySensor: 'Occupancy',
+      off: 'Off',
       on: 'On',
       open: 'Open',
       outlet: 'Outlet',
@@ -140,25 +132,38 @@ const en = {
       switch: 'Switch',
       thermostat: 'Thermostat',
       unsecured: 'Unlocked',
+      week: 'Week',
       weekdays: 'Weekdays',
       weekends: 'Weekends',
-      week: 'Week',
       weekly: 'Weekly',
       window: 'Window',
       windowCovering: 'Window Convering (Blinds)',
       yearly: 'Annually',
     },
 
+    migrate: 'Are you upgrading from an earlier version?',
+    migrationDetails1: 'HomeKit scenes and automations using %s accessories will need to be reconfigured!', // plugin name
+    migrationDetails2: 'Please downgrade to v0.9.2 or earlier if you want to keep your current setup.',
+    migrationDetails3: '%s can try to recreate your accessories, but you will still need reconfigure HomeKit scenes and automations.', // plugin name
+    migrationDetails4: 'Would you like to recreate your accessories now?',
+    migrationDetails5: 'For more details, please visit %s', // url
+    migrationRestartDescription: 'Please restart Homebridge to begin %s migration', // plugin name
+    migrationRestartTitle: 'Restart Homebridge',
+    no: 'No',
+    support: 'For documentation and support please visit %s', // url
+    thankYou: 'Thank you for installing %s', // plugin name
+    yes: 'Yes',
+
     title: {
       accessory: 'Accessory',
-      commands: 'Commands',
       commandClose: 'Close Command',
-      commandOn: 'On Command',
       commandOff: 'Off Command',
+      commandOn: 'On Command',
       commandOpen: 'Open Command',
       commandLock: 'Lock Command',
-      commandUnlock: 'Unlock Command',
+      commands: 'Commands',
       commandTemperature: 'Temperature Changed Command',
+      commandUnlock: 'Unlock Command',
       cron: 'Cron',
       cronCustom: 'Custom Cron',
       defaultBrightness: 'Default Brightness',
@@ -170,19 +175,19 @@ const en = {
       enableWebook: 'Enable Webhook',
       groupName: 'Group Name',
       interval: 'Interval',
-      name: 'Name',
       limit: 'Limit',
       limiter: 'Time Limit',
+      name: 'Name',
       period: 'Per',
       preset: 'Preset',
+      random: 'Randomize',
       resetOnRestart: 'Reset on Restart',
-      timer: 'Auto-Reset Timer',
-      timerControlled: 'Activate Sensor on Auto-Reset',
       schedule: 'Schedule',
       sensor: 'Attach Sensor',
+      timer: 'Auto-Reset Timer',
+      timerControlled: 'Activate Sensor on Auto-Reset',
       type: 'Type',
       units: 'Units',
-      random: 'Randomize',
     },
   },
 
@@ -229,9 +234,9 @@ const en = {
   startup: {
     migrationBridge: '‼️ Please restart Homebridge one more time for migration to take full effect ‼️',
     migrationComplete: 'Successfully migrated %s accessories!', // number
-    migrationNoAccessories: 'Unable to find any accessories to migrate',
-    migrationIgnore: 'You may safely ignore \'No plugin was found…\' errors — they should go away the next time you restart Homebridge',
     migrationFailed: 'Sorry, something went wrong with the accessory migration',
+    migrationIgnore: 'You may safely ignore \'No plugin was found…\' errors — they should go away the next time you restart Homebridge',
+    migrationNoAccessories: 'Unable to find any accessories to migrate',
     migrationRevert: 'If you encounter problems, you can find a backup config.json.bak in your Homebridge directory',
     newAccessory: 'Adding new accessory:',
     removeAccessory: 'Removing accessory:',

@@ -42,11 +42,11 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
     this.STATE_OFF = Characteristic.TargetHeatingCoolingState.OFF;
 
     if (!isValidTemperatureUnits(config.temperatureUnits)) {
-      this.log.warning(strings.accessory.thermostat.badUnits, this.name, `'${config.temperatureUnits}'`, printableValues(TemperatureUnits));
+      this.log.warning(strings.thermostat.badUnits, this.name, `'${config.temperatureUnits}'`, printableValues(TemperatureUnits));
     }
 
     if (!isValidThermostatState(config.defaultThermostatState)) {
-      this.log.warning(strings.accessory.thermostat.badDefault, this.name, `'${config.defaultThermostatState}'`, printableValues(DefaultThermostatState));
+      this.log.warning(strings.thermostat.badDefault, this.name, `'${config.defaultThermostatState}'`, printableValues(DefaultThermostatState));
     }
 
     this.state = this.defaultState;
@@ -200,23 +200,23 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
   }
 
   override async schedule(): Promise<void> {
-    throw new Error(strings.accessory.thermostat.unsupportedFunction.replace('%s', `${this.schedule.name}()`));
+    throw new Error(strings.thermostat.unsupportedFunction.replace('%s', `${this.schedule.name}()`));
   }
 
   override async reset(): Promise<void> {
-    throw new Error(strings.accessory.thermostat.unsupportedFunction.replace('%s', `${this.reset.name}()`));
+    throw new Error(strings.thermostat.unsupportedFunction.replace('%s', `${this.reset.name}()`));
   }
 
   private stateLogTemplateForCV(value: CharacteristicValue): string {
     switch(value) {
     case this.STATE_AUTO:
-      return strings.accessory.thermostat.auto;
+      return strings.thermostat.auto;
     case this.STATE_COOL:
-      return strings.accessory.thermostat.cool;
+      return strings.thermostat.cool;
     case this.STATE_HEAT:
-      return strings.accessory.thermostat.heat;
+      return strings.thermostat.heat;
     default:
-      return strings.accessory.thermostat.off;
+      return strings.thermostat.off;
     }
   }
 
@@ -225,7 +225,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
   }
 
   private temperatureLogTemplateForCV(value: CharacteristicValue): string {
-    const message = this.units === TemperatureUnits.FAHRENHEIT ? strings.accessory.thermostat.temperatureF : strings.accessory.thermostat.temperatureC;
+    const message = this.units === TemperatureUnits.FAHRENHEIT ? strings.thermostat.temperatureF : strings.thermostat.temperatureC;
     const temperature = fromCelsius(value as number, this.config.temperatureUnits);
     return message.replace('%d', temperature.toString());
   }

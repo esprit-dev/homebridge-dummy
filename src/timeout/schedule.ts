@@ -27,7 +27,7 @@ export class Schedule extends Timeout {
       }
 
       if (!isValidTimeUnits(schedule.units!)) {
-        log.error(strings.accessory.schedule.badUnits, caller, `'${schedule.units}'`, printableValues(TimeUnits));
+        log.error(strings.schedule.badUnits, caller, `'${schedule.units}'`, printableValues(TimeUnits));
         return;
       }
 
@@ -42,7 +42,7 @@ export class Schedule extends Timeout {
       }
       break;
     default:
-      log.error(strings.accessory.schedule.badType, caller, `'${schedule.type}'`, printableValues(ScheduleType));
+      log.error(strings.schedule.badType, caller, `'${schedule.type}'`, printableValues(ScheduleType));
       return;
     }
 
@@ -76,10 +76,10 @@ export class Schedule extends Timeout {
     this.reset();
 
     const logStrings = DelayLogStrings(
-      strings.accessory.schedule.intervalMilliseconds,
-      strings.accessory.schedule.intervalSeconds,
-      strings.accessory.schedule.intervalMinutes,
-      strings.accessory.schedule.intervalHours,
+      strings.schedule.intervalMilliseconds,
+      strings.schedule.intervalSeconds,
+      strings.schedule.intervalMinutes,
+      strings.schedule.intervalHours,
     );
 
     const delay = this.getDelay(this.schedule.interval!, this.schedule.units!, this.schedule.random, logStrings);
@@ -103,7 +103,7 @@ export class Schedule extends Timeout {
       return;
     }
 
-    this.logIfDesired(strings.accessory.schedule.cron);
+    this.logIfDesired(strings.schedule.cron);
 
     this.cronjob = new CronJob(cron, this.callback);
     this.cronjob.start();

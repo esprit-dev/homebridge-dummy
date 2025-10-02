@@ -26,7 +26,7 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
     super(Service, Characteristic, accessory, config, log, isGrouped);
 
     if (!isValidLockState(this.config.defaultLockState)) {
-      this.log.warning(strings.accessory.lock.badDefault, this.name, `'${config.defaultLockState}'`, printableValues(DefaultLockState));
+      this.log.warning(strings.lock.badDefault, this.name, `'${config.defaultLockState}'`, printableValues(DefaultLockState));
     }
 
     this.state = this.defaultLockState;
@@ -128,7 +128,7 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
   }
 
   private logTemplateForCV(value: CharacteristicValue): string {
-    return value === this.Characteristic.LockTargetState.SECURED ? strings.accessory.lock.secured : strings.accessory.lock.unsecured;
+    return value === this.Characteristic.LockTargetState.SECURED ? strings.lock.secured : strings.lock.unsecured;
   }
 
 

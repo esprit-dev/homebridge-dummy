@@ -29,7 +29,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
     super(Service, Characteristic, accessory, config, log, isGrouped);
 
     if (!isValidPosition(config.defaultPosition)) {
-      this.log.warning(strings.accessory.position.badDefault, this.name, `'${config.defaultPosition}'`, printableValues(DefaultPosition));
+      this.log.warning(strings.position.badDefault, this.name, `'${config.defaultPosition}'`, printableValues(DefaultPosition));
     }
 
     this.position = this.defaultPosition;
@@ -134,7 +134,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
   }
 
   private logTemplateForCV(value: CharacteristicValue): string {
-    return value === POSITION_CLOSED ? strings.accessory.position.closed : strings.accessory.position.open;
+    return value === POSITION_CLOSED ? strings.position.closed : strings.position.open;
   }
 
   protected logPosition(value: CharacteristicValue) {
