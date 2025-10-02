@@ -97,12 +97,12 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
 
     if (this.isStateful) {
       await storageSet(this.defaultStateStorageKey, this.position);
+    }
+
+    if (this.position !== this.defaultPosition) {
+      this.startTimer();
     } else {
-      if (this.position !== this.defaultPosition) {
-        this.startTimer();
-      } else {
-        this.cancelTimer();
-      }
+      this.cancelTimer();
     }
 
     this.accessoryService.updateCharacteristic(this.Characteristic.TargetPosition, this.position);

@@ -90,12 +90,12 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
 
     if (this.isStateful) {
       await storageSet(this.defaultStateStorageKey, this.state);
+    }
+
+    if (this.state !== this.defaultLockState) {
+      this.startTimer();
     } else {
-      if (this.state !== this.defaultLockState) {
-        this.startTimer();
-      } else {
-        this.cancelTimer();
-      }
+      this.cancelTimer();
     }
 
     this.accessoryService.updateCharacteristic(this.Characteristic.LockTargetState, this.state);

@@ -77,12 +77,12 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
 
     if (this.isStateful) {
       await storageSet(this.defaultStateStorageKey, this.on);
+    }
+
+    if (this.on !== this.defaultOn) {
+      this.startTimer();
     } else {
-      if (this.on !== this.defaultOn) {
-        this.startTimer();
-      } else {
-        this.cancelTimer();
-      }
+      this.cancelTimer();
     }
 
     this.accessoryService.updateCharacteristic(this.Characteristic.On, this.on);
