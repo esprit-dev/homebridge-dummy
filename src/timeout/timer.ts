@@ -6,13 +6,21 @@ import { strings } from '../i18n/i18n.js';
 
 import { Log } from '../tools/log.js';
 import { assert } from '../tools/validation.js';
+import { isValidTimeUnits, printableValues, TimeUnits } from '../model/enums.js';
 
 export class Timer extends Timeout {
 
   static new(config: TimerConfig, caller: string, log: Log, disableLogging: boolean): Timer | undefined {
+
     if (!assert(log, caller, config, 'delay', 'units')) {
-      return undefined;
+      return;
     }
+
+    if (!isValidTimeUnits(config.units)) {
+      log.error(strings.accessory.timer.badUnits, caller, `'${config.units}'`, printableValues(TimeUnits));
+      return;
+    }
+
     return new Timer(config, caller, log, disableLogging);
   }
 
@@ -23,10 +31,6 @@ export class Timer extends Timeout {
     disableLogging: boolean,
   ) {
     super(caller, log, disableLogging);
-  }
-
-  protected get cancelString(): string {
-    return strings.accessory.timer.cancel;
   }
 
   public start(callback:  () => Promise<void>) {
@@ -46,5 +50,14 @@ export class Timer extends Timeout {
       this.reset();
       await callback();
     }, delay);
+  }
+
+  override cancel() {
+
+    if (this.timeout) {
+      this.logIfDesired(strings.accessory.timer.cancel);
+    }
+
+    super.cancel();
   }
 }

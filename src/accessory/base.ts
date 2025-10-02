@@ -37,7 +37,6 @@ export abstract class DummyAccessory<C extends DummyConfig> {
     protected readonly accessory: PlatformAccessory,
     protected readonly config: C,
     protected readonly log: Log,
-    protected readonly persistPath: string,
     isGrouped: boolean,
   ) {
 

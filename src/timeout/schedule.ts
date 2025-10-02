@@ -4,7 +4,7 @@ import { DelayLogStrings, Timeout } from './timeout.js';
 
 import { strings } from '../i18n/i18n.js';
 
-import { ScheduleType }  from '../model/enums.js';
+import { isValidTimeUnits, printableValues, ScheduleType, TimeUnits }  from '../model/enums.js';
 import { ScheduleConfig } from '../model/types.js';
 
 import { Log } from '../tools/log.js';
@@ -25,6 +25,12 @@ export class Schedule extends Timeout {
       if (!assert(log, caller, schedule, 'interval', 'units')) {
         return;
       }
+
+      if (!isValidTimeUnits(schedule.units!)) {
+        log.error(strings.accessory.schedule.badUnits, caller, `'${schedule.units}'`, printableValues(TimeUnits));
+        return;
+      }
+
       break;
     case ScheduleType.CRON:
       if (!assert(log, caller, schedule, 'cron')) {
@@ -34,7 +40,12 @@ export class Schedule extends Timeout {
       if (schedule.cron === CRON_CUSTOM && !assert(log, caller, schedule, 'cronCustom')) {
         return;
       }
+      break;
+    default:
+      log.error(strings.accessory.schedule.badType, caller, `'${schedule.type}'`, printableValues(ScheduleType));
+      return;
     }
+
     return new Schedule(schedule, caller, log, disableLogging, callback);
   }
 
@@ -58,10 +69,6 @@ export class Schedule extends Timeout {
       this.startCron();
       break;
     }
-  }
-
-  protected get cancelString(): string {
-    throw new Error('Method not implemented.');
   }
 
   private startTimeout() {

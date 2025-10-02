@@ -4,7 +4,7 @@ import { DummyAccessory } from './base.js';
 
 import { strings } from '../i18n/i18n.js';
 
-import { AccessoryType, DefaultLockState, WebhookCommand }  from '../model/enums.js';
+import { AccessoryType, DefaultLockState, isValidLockState, printableValues, WebhookCommand }  from '../model/enums.js';
 import { CharacteristicType, LockConfig, ServiceType } from '../model/types.js';
 import { Webhook } from '../model/webhook.js';
 
@@ -21,10 +21,13 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
     accessory: PlatformAccessory,
     config: LockConfig,
     log: Log,
-    persistPath: string,
     isGrouped: boolean,
   ) {
-    super(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
+    super(Service, Characteristic, accessory, config, log, isGrouped);
+
+    if (!isValidLockState(this.config.defaultLockState)) {
+      this.log.warning(strings.accessory.lock.badDefault, this.name, `'${config.defaultLockState}'`, printableValues(DefaultLockState));
+    }
 
     this.state = this.defaultLockState;
 
@@ -41,7 +44,7 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
   private async initializeState() {
 
     if (this.isStateful) {
-      this.state = await storageGet(this.persistPath, this.defaultStateStorageKey) ?? this.state;
+      this.state = await storageGet(this.defaultStateStorageKey) ?? this.state;
     }
 
     this.accessoryService.updateCharacteristic(this.Characteristic.LockTargetState, this.state);
@@ -86,7 +89,7 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
     this.state = value;
 
     if (this.isStateful) {
-      await storageSet(this.persistPath, this.defaultStateStorageKey, this.state);
+      await storageSet(this.defaultStateStorageKey, this.state);
     } else {
       if (this.state !== this.defaultLockState) {
         this.startTimer();

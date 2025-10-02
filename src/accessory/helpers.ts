@@ -23,27 +23,26 @@ export function createDummyAccessory(
   accessory: PlatformAccessory,
   config: DummyConfig,
   log: Log,
-  persistPath: string,
   isGrouped: boolean = false,
 ): DummyAccessory<DummyConfig> | null {
 
   switch(config.type) {
   case AccessoryType.Door:
-    return new DoorAccessory(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
+    return new DoorAccessory(Service, Characteristic, accessory, config, log, isGrouped);
   case AccessoryType.Lightbulb:
-    return new LightbulbAccessory(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
+    return new LightbulbAccessory(Service, Characteristic, accessory, config, log, isGrouped);
   case AccessoryType.LockMechanism:
-    return new LockAccessory(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
+    return new LockAccessory(Service, Characteristic, accessory, config, log, isGrouped);
   case AccessoryType.Outlet:
-    return new OutletAccessory(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
+    return new OutletAccessory(Service, Characteristic, accessory, config, log, isGrouped);
   case AccessoryType.Switch:
-    return new SwitchAccessory(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
+    return new SwitchAccessory(Service, Characteristic, accessory, config, log, isGrouped);
   case AccessoryType.Thermostat:
-    return new ThermostatAccessory(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
+    return new ThermostatAccessory(Service, Characteristic, accessory, config, log, isGrouped);
   case AccessoryType.Window:
-    return new WindowAccessory(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
+    return new WindowAccessory(Service, Characteristic, accessory, config, log, isGrouped);
   case AccessoryType.WindowCovering:
-    return new BlindAccessory(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
+    return new BlindAccessory(Service, Characteristic, accessory, config, log, isGrouped);
   default:
     log.error(strings.startup.unsupportedType, `'${config.type}'`);
     return null;

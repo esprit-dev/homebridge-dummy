@@ -4,7 +4,9 @@ import { DummyAccessory } from './base.js';
 
 import { strings } from '../i18n/i18n.js';
 
-import { AccessoryType, DefaultThermostatState, TemperatureUnits, WebhookCommand }  from '../model/enums.js';
+import {
+  AccessoryType, DefaultThermostatState, isValidTemperatureUnits, isValidThermostatState,
+  printableValues, TemperatureUnits, WebhookCommand }  from '../model/enums.js';
 import { CharacteristicType, ServiceType, ThermostatConfig } from '../model/types.js';
 import { Webhook } from '../model/webhook.js';
 
@@ -30,15 +32,22 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
     accessory: PlatformAccessory,
     config: ThermostatConfig,
     log: Log,
-    persistPath: string,
     isGrouped: boolean,
   ) {
-    super(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
+    super(Service, Characteristic, accessory, config, log, isGrouped);
 
     this.STATE_AUTO = Characteristic.TargetHeatingCoolingState.AUTO;
     this.STATE_COOL = Characteristic.TargetHeatingCoolingState.COOL;
     this.STATE_HEAT = Characteristic.TargetHeatingCoolingState.HEAT;
     this.STATE_OFF = Characteristic.TargetHeatingCoolingState.OFF;
+
+    if (!isValidTemperatureUnits(config.temperatureUnits)) {
+      this.log.warning(strings.accessory.thermostat.badUnits, this.name, `'${config.temperatureUnits}'`, printableValues(TemperatureUnits));
+    }
+
+    if (!isValidThermostatState(config.defaultThermostatState)) {
+      this.log.warning(strings.accessory.thermostat.badDefault, this.name, `'${config.defaultThermostatState}'`, printableValues(DefaultThermostatState));
+    }
 
     this.state = this.defaultState;
     this.temperature = this.defaultTemperature;
@@ -75,8 +84,8 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
   private async initializeThermostat() {
 
     if (this.isStateful) {
-      this.state = await storageGet(this.persistPath, this.defaultStateStorageKey) ?? this.state;
-      this.temperature = await storageGet(this.persistPath, this.defaulTemperatureStorageKey) ?? this.temperature;
+      this.state = await storageGet(this.defaultStateStorageKey) ?? this.state;
+      this.temperature = await storageGet(this.defaulTemperatureStorageKey) ?? this.temperature;
     }
 
     this.accessoryService.updateCharacteristic(this.Characteristic.TargetHeatingCoolingState, this.state);
@@ -160,7 +169,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
     this.state = value;
 
     if (this.isStateful) {
-      await storageSet(this.persistPath, this.defaultStateStorageKey, this.state);
+      await storageSet(this.defaultStateStorageKey, this.state);
     }
 
     this.accessoryService.updateCharacteristic(this.Characteristic.TargetHeatingCoolingState, this.state);
@@ -183,7 +192,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
     this.temperature = value;
 
     if (this.isStateful) {
-      await storageSet(this.persistPath, this.defaulTemperatureStorageKey, this.temperature);
+      await storageSet(this.defaulTemperatureStorageKey, this.temperature);
     }
 
     this.accessoryService.updateCharacteristic(this.Characteristic.TargetTemperature, this.temperature);

@@ -23,10 +23,9 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
     accessory: PlatformAccessory,
     config: LightbulbConfig,
     log: Log,
-    persistPath: string,
     isGrouped: boolean,
   ) {
-    super(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
+    super(Service, Characteristic, accessory, config, log, isGrouped);
 
     this.brightness = this.config.defaultBrightness ?? NO_BRIGHTNESS;
 
@@ -66,7 +65,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
   private async initializeBrightness() {
 
     if (this.isStateful) {
-      this.brightness = await storageGet(this.persistPath, this.defaultBrightnessStorageKey) ?? this.brightness;
+      this.brightness = await storageGet(this.defaultBrightnessStorageKey) ?? this.brightness;
     }
 
     this.accessoryService.updateCharacteristic(this.Characteristic.Brightness, this.brightness);
@@ -97,7 +96,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
     this.logIfDesired(strings.accessory.lightbulb.brightness, this.brightness.toString());
 
     if (this.isStateful) {
-      await storageSet(this.persistPath, this.defaultBrightnessStorageKey, this.brightness);
+      await storageSet(this.defaultBrightnessStorageKey, this.brightness);
     }
 
     this.accessoryService.updateCharacteristic(this.Characteristic.Brightness, this.brightness);

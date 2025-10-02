@@ -2,7 +2,7 @@ import { CharacteristicValue, PlatformAccessory, Service } from 'homebridge';
 
 import { strings } from '../i18n/i18n.js';
 
-import { SensorType, SensorCharacteristic }  from '../model/enums.js';
+import { SensorType, SensorCharacteristic, isValidSensorType, printableValues }  from '../model/enums.js';
 import { CharacteristicType, ServiceType, SensorConfig } from '../model/types.js';
 
 import { Timeout } from '../timeout/timeout.js';
@@ -46,10 +46,17 @@ export class SensorAccessory extends Timeout {
         };
       }
 
+      if (!isValidSensorType(sensor.type)) {
+        log.error(strings.sensor.badType, caller, `'${sensor.type}'`, printableValues(SensorType));
+        return;
+      }
+
       return new SensorAccessory(sensor, Service, Characteristic, accessory, caller, log, disableLogging);
     }
 
     SensorAccessory.removeUnwantedServices(Service, accessory);
+
+    return;
   }
 
   private static removeUnwantedServices(Service: ServiceType, accessory: PlatformAccessory, keep?: SensorType) {
@@ -84,10 +91,6 @@ export class SensorAccessory extends Timeout {
       .onGet(this.onGet.bind(this));
 
     SensorAccessory.removeUnwantedServices(Service, accessory, config.type);
-  }
-
-  protected get cancelString(): string {
-    throw new Error('Method not implemented.');
   }
 
   private async onGet(): Promise<CharacteristicValue> {

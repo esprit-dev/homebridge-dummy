@@ -4,7 +4,7 @@ import { DummyAccessory } from '../base.js';
 
 import { strings } from '../../i18n/i18n.js';
 
-import { DefaultPosition, WebhookCommand } from '../../model/enums.js';
+import { DefaultPosition, isValidPosition, printableValues, WebhookCommand } from '../../model/enums.js';
 import { CharacteristicType, PositionConfig, ServiceType } from '../../model/types.js';
 import { Webhook } from '../../model/webhook.js';
 
@@ -24,10 +24,13 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
     accessory: PlatformAccessory,
     config: C,
     log: Log,
-    persistPath: string,
     isGrouped: boolean,
   ) {
-    super(Service, Characteristic, accessory, config, log, persistPath, isGrouped);
+    super(Service, Characteristic, accessory, config, log, isGrouped);
+
+    if (!isValidPosition(config.defaultPosition)) {
+      this.log.warning(strings.accessory.position.badDefault, this.name, `'${config.defaultPosition}'`, printableValues(DefaultPosition));
+    }
 
     this.position = this.defaultPosition;
 
@@ -57,7 +60,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
   private async initializePosition() {
 
     if (this.isStateful) {
-      this.position = await storageGet(this.persistPath, this.defaultStateStorageKey) ?? this.position;
+      this.position = await storageGet(this.defaultStateStorageKey) ?? this.position;
     }
 
     this.accessoryService.updateCharacteristic(this.Characteristic.TargetPosition, this.position);
@@ -93,7 +96,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
     this.position = targetPosition;
 
     if (this.isStateful) {
-      await storageSet(this.persistPath, this.defaultStateStorageKey, this.position);
+      await storageSet(this.defaultStateStorageKey, this.position);
     } else {
       if (this.position !== this.defaultPosition) {
         this.startTimer();

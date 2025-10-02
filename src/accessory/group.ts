@@ -24,7 +24,6 @@ export class GroupAccessory {
     accessory: PlatformAccessory,
     config: GroupConfig,
     log: Log,
-    persistPath: string,
     webhookManager: WebhookManager,
   ) {
 
@@ -38,7 +37,7 @@ export class GroupAccessory {
 
     for (const dummyConfig of config.accessories) {
 
-      const dummyAccessory = createDummyAccessory(Service, Characteristic, accessory, dummyConfig, log, persistPath, true);
+      const dummyAccessory = createDummyAccessory(Service, Characteristic, accessory, dummyConfig, log, true);
       if (!dummyAccessory) {
         continue;
       }
