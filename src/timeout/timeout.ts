@@ -113,7 +113,7 @@ export abstract class Timeout {
   }
 
   protected getDelay(rawTime: number, units: TimeUnits, random: boolean | undefined = undefined, logStrings: DelayLogStrings | undefined = undefined): number {
-    return getDelay(rawTime, units, random, logStrings, this.log, this.caller);
+    return getDelay(rawTime, units, random, logStrings, this.disableLogging ? undefined : this.log, this.caller);
   }
 
   protected logIfDesired(message: string, ...parameters: (string | number)[]) {
