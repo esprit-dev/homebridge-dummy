@@ -9,7 +9,7 @@ import { CharacteristicType, PositionConfig, ServiceType } from '../../model/typ
 import { Webhook } from '../../model/webhook.js';
 
 import { Log } from '../../tools/log.js';
-import { storageGet, storageSet } from '../../tools/storage.js';
+import { storageGet_Deprecated, Storage } from '../../tools/storage.js';
 
 const POSITION_OPEN = 100;
 const POSITION_CLOSED = 0;
@@ -59,12 +59,18 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
 
   private async initializePosition() {
 
-    if (this.isStateful) {
-      this.position = await storageGet(this.defaultStateStorageKey) ?? this.position;
+    if (!this.isStateful) {
+      this.accessoryService.updateCharacteristic(this.Characteristic.TargetPosition, this.position);
+      this.accessoryService.updateCharacteristic(this.Characteristic.CurrentPosition, this.position);
+      return;
     }
 
-    this.accessoryService.updateCharacteristic(this.Characteristic.TargetPosition, this.position);
-    this.accessoryService.updateCharacteristic(this.Characteristic.CurrentPosition, this.position);
+    const position = await storageGet_Deprecated(this.defaultStateStorageKey);
+    if (position === undefined) {
+      return;
+    }
+
+    await this.setPosition(position);
   }
 
   private get defaultPosition(): CharacteristicValue {
@@ -96,7 +102,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
     this.position = targetPosition;
 
     if (this.isStateful) {
-      await storageSet(this.defaultStateStorageKey, this.position);
+      await Storage.set(this.defaultStateStorageKey, this.position);
     }
 
     if (this.position !== this.defaultPosition) {

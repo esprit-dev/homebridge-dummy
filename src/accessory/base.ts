@@ -16,7 +16,6 @@ import { Schedule } from '../timeout/schedule.js';
 import { Timer } from '../timeout/timer.js';
 
 import { Log } from '../tools/log.js';
-import { STORAGE_KEY_SUFFIX_DEFAULT_STATE } from '../tools/storage.js';
 import getVersion from '../tools/version.js';
 
 export abstract class DummyAccessory<C extends DummyConfig> {
@@ -120,7 +119,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
   }
 
   protected get defaultStateStorageKey(): string {
-    return `${this.identifier}:${STORAGE_KEY_SUFFIX_DEFAULT_STATE}`;
+    return `${this.identifier}:DefaultState`;
   }
 
   protected startTimer() {

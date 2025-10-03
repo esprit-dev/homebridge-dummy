@@ -9,7 +9,7 @@ import { CharacteristicType, LightbulbConfig, ServiceType } from '../../model/ty
 import { Webhook } from '../../model/webhook.js';
 
 import { Log } from '../../tools/log.js';
-import { STORAGE_KEY_SUFFIX_DEFAULT_BRIGHTNESS, storageGet, storageSet } from '../../tools/storage.js';
+import { storageGet_Deprecated, Storage } from '../../tools/storage.js';
 
 const NO_BRIGHTNESS = -1;
 
@@ -44,7 +44,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
   }
 
   private get defaultBrightnessStorageKey(): string {
-    return `${this.identifier}:${STORAGE_KEY_SUFFIX_DEFAULT_BRIGHTNESS}`;
+    return `${this.identifier}:Brightness`;
   }
 
   override getAccessoryType(): AccessoryType {
@@ -64,11 +64,17 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
 
   private async initializeBrightness() {
 
-    if (this.isStateful) {
-      this.brightness = await storageGet(this.defaultBrightnessStorageKey) ?? this.brightness;
+    if (!this.isStateful) {
+      this.accessoryService.updateCharacteristic(this.Characteristic.Brightness, this.brightness);
+      return;
     }
 
-    this.accessoryService.updateCharacteristic(this.Characteristic.Brightness, this.brightness);
+    const brightness = await storageGet_Deprecated(this.defaultBrightnessStorageKey);
+    if (brightness === undefined) {
+      return;
+    }
+
+    await this.setBrightness(brightness);
   }
 
   override logMessageForOnState(value: CharacteristicValue): string {
@@ -96,7 +102,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
     this.logIfDesired(strings.lightbulb.brightness, this.brightness.toString());
 
     if (this.isStateful) {
-      await storageSet(this.defaultBrightnessStorageKey, this.brightness);
+      await Storage.set(this.defaultBrightnessStorageKey, this.brightness);
     }
 
     this.accessoryService.updateCharacteristic(this.Characteristic.Brightness, this.brightness);

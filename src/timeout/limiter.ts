@@ -6,7 +6,7 @@ import { isValidTimeUnits, printableValues, TimePeriod, TimeUnits } from '../mod
 import { LimiterConfig } from '../model/types.js';
 
 import { Log } from '../tools/log.js';
-import { STORAGE_KEY_SUFFIX_LIMIT, storageGet, storageSet } from '../tools/storage.js';
+import { Storage } from '../tools/storage.js';
 import { assert } from '../tools/validation.js';
 
 type Limit = { timeRemaining: number, resetTimestamp: number };
@@ -74,7 +74,7 @@ export default class Limiter extends Timeout {
 
   private get limitStorageKey(): string {
     const identifier = this.config.id ?? this.caller;
-    return `${identifier}:${STORAGE_KEY_SUFFIX_LIMIT}`;
+    return `${identifier}:Limit`;
   }
 
   public start(callback:  () => Promise<void>) {
@@ -152,7 +152,7 @@ export default class Limiter extends Timeout {
   }
 
   private storeLimit() {
-    storageSet(this.limitStorageKey, this.limit);
+    Storage.set(this.limitStorageKey, this.limit);
   }
 
   private logTimeRemaining() {

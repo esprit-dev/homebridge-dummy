@@ -8,7 +8,7 @@ import { CharacteristicType, OnOffConfig, ServiceType } from '../../model/types.
 import { Webhook } from '../../model/webhook.js';
 
 import { Log } from '../../tools/log.js';
-import { storageGet, storageSet } from '../../tools/storage.js';
+import { storageGet_Deprecated, Storage } from '../../tools/storage.js';
 import { WebhookCommand } from '../../model/enums.js';
 
 export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extends DummyAccessory<C> {
@@ -46,11 +46,17 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
 
   private async initializeOn() {
 
-    if (this.isStateful) {
-      this.on = await storageGet(this.defaultStateStorageKey) ?? this.on;
+    if (!this.isStateful) {
+      this.accessoryService.updateCharacteristic(this.Characteristic.On, this.on);
+      return;
     }
 
-    this.accessoryService.updateCharacteristic(this.Characteristic.On, this.on);
+    const on = await storageGet_Deprecated(this.defaultStateStorageKey);
+    if (on === undefined) {
+      return;
+    }
+
+    await this.setOn(on);
   }
 
   private get defaultOn(): boolean {
@@ -76,7 +82,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
     this.on = value as boolean;
 
     if (this.isStateful) {
-      await storageSet(this.defaultStateStorageKey, this.on);
+      await Storage.set(this.defaultStateStorageKey, this.on);
     }
 
     if (this.on !== this.defaultOn) {

@@ -9,7 +9,7 @@ import { CharacteristicType, LockConfig, ServiceType } from '../model/types.js';
 import { Webhook } from '../model/webhook.js';
 
 import { Log } from '../tools/log.js';
-import { storageGet, storageSet } from '../tools/storage.js';
+import { storageGet_Deprecated, Storage } from '../tools/storage.js';
 
 export class LockAccessory extends DummyAccessory<LockConfig> {
 
@@ -43,12 +43,18 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
 
   private async initializeState() {
 
-    if (this.isStateful) {
-      this.state = await storageGet(this.defaultStateStorageKey) ?? this.state;
+    if (!this.isStateful) {
+      this.accessoryService.updateCharacteristic(this.Characteristic.LockTargetState, this.state);
+      this.accessoryService.updateCharacteristic(this.Characteristic.LockCurrentState, this.state);
+      return;
     }
 
-    this.accessoryService.updateCharacteristic(this.Characteristic.LockTargetState, this.state);
-    this.accessoryService.updateCharacteristic(this.Characteristic.LockCurrentState, this.state);
+    const state = await storageGet_Deprecated(this.defaultStateStorageKey);
+    if (state === undefined) {
+      return;
+    }
+
+    await this.setState(state);
   }
 
   override getAccessoryType(): AccessoryType {
@@ -89,7 +95,7 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
     this.state = value;
 
     if (this.isStateful) {
-      await storageSet(this.defaultStateStorageKey, this.state);
+      await Storage.set(this.defaultStateStorageKey, this.state);
     }
 
     if (this.state !== this.defaultLockState) {

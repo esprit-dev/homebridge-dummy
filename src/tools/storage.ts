@@ -1,28 +1,58 @@
+import { PrimitiveTypes } from 'homebridge';
 import storage from 'node-persist';
 
-export const STORAGE_KEY_SUFFIX_DEFAULT_STATE = 'DefaultState';
-export const STORAGE_KEY_SUFFIX_DEFAULT_BRIGHTNESS = 'Brightness';
-export const STORAGE_KEY_SUFFIX_DEFAULT_TEMPERATURE = 'Temperature';
-export const STORAGE_KEY_SUFFIX_LIMIT = 'Limit';
+type Primative = string | number | boolean;
+type Storable = Primative | Primative[] | { [key: string]: PrimitiveTypes };
 
-export async function initStorage(persistPath: string) {
-  await storage.init({ dir: persistPath, forgiveParseErrors: true });
-}
+const BUCKET_KEY = 'Storage.bucket';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function storageGet(key: string): Promise<any> {
-  try {
-    return await storage.get(key);
-  } catch (err) {
-    // Nothing
+export async function storageGet_Deprecated(key: string): Promise<Storable | undefined> {
+
+  if (!Storage.has(key)) {
+    const storable = await storage.get(key);
+    if (storable) {
+      await Storage.set(key, storable);
+    }
   }
+
+  return Storage.get(key);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function storageSet(key: string, value: any): Promise<void> {
-  try {
-    storage.set(key, value);
-  } catch {
-    // Nothing
+export class Storage {
+
+  private static readonly bucket = new Map<string, Storable>();
+
+  public static async init(persistPath: string) {
+    await storage.init({ dir: persistPath, forgiveParseErrors: true });
+
+    const bucketJson = await storage.get(BUCKET_KEY);
+    if (bucketJson === undefined) {
+      return;
+    }
+
+    try {
+      const bucketArray = JSON.parse(bucketJson) as [string, Storable][];
+      for (const entry of bucketArray) {
+        Storage.bucket.set(entry[0], entry[1]);
+      }
+    } catch {
+    // ignore
+    }
+  }
+
+  public static has(key: string) {
+    return Storage.bucket.has(key);
+  }
+
+  public static get(key: string): Storable | undefined {
+    return Storage.bucket.get(key);
+  }
+
+  public static async set(key: string, storable: Storable) {
+    Storage.bucket.set(key, storable);
+
+    const bucketArray = Array.from(Storage.bucket.entries());
+    const bucketJson = JSON.stringify(bucketArray);
+    await storage.set(BUCKET_KEY, bucketJson);
   }
 }

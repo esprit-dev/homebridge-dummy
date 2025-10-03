@@ -11,7 +11,7 @@ import { CharacteristicType, ServiceType, ThermostatConfig } from '../model/type
 import { Webhook } from '../model/webhook.js';
 
 import { Log } from '../tools/log.js';
-import { STORAGE_KEY_SUFFIX_DEFAULT_TEMPERATURE, storageGet, storageSet } from '../tools/storage.js';
+import { storageGet_Deprecated, Storage } from '../tools/storage.js';
 import { fromCelsius, toCelsius } from '../tools/temperature.js';
 
 const DEFAULT_TEMPERATURE = 20;
@@ -83,19 +83,28 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
 
   private async initializeThermostat() {
 
-    if (this.isStateful) {
-      this.state = await storageGet(this.defaultStateStorageKey) ?? this.state;
-      this.temperature = await storageGet(this.defaulTemperatureStorageKey) ?? this.temperature;
+    if (!this.isStateful) {
+      this.accessoryService.updateCharacteristic(this.Characteristic.TargetHeatingCoolingState, this.state);
+
+      this.accessoryService.updateCharacteristic(this.Characteristic.TargetTemperature, this.temperature);
+      this.accessoryService.updateCharacteristic(this.Characteristic.CurrentTemperature, this.temperature);
+
+      return;
     }
 
-    this.accessoryService.updateCharacteristic(this.Characteristic.TargetHeatingCoolingState, this.state);
+    const state = await storageGet_Deprecated(this.defaultStateStorageKey);
+    if (state !== undefined) {
+      await this.setState(state);
+    }
 
-    this.accessoryService.updateCharacteristic(this.Characteristic.TargetTemperature, this.temperature);
-    this.accessoryService.updateCharacteristic(this.Characteristic.CurrentTemperature, this.temperature);
+    const temperature = await storageGet_Deprecated(this.defaulTemperatureStorageKey);
+    if (temperature !== undefined) {
+      await this.setTemperature(temperature);
+    }
   }
 
   private get defaulTemperatureStorageKey(): string {
-    return `${this.identifier}:${STORAGE_KEY_SUFFIX_DEFAULT_TEMPERATURE}`;
+    return `${this.identifier}:Temperature`;
   }
 
   override getAccessoryType(): AccessoryType {
@@ -169,7 +178,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
     this.state = value;
 
     if (this.isStateful) {
-      await storageSet(this.defaultStateStorageKey, this.state);
+      await Storage.set(this.defaultStateStorageKey, this.state);
     }
 
     this.accessoryService.updateCharacteristic(this.Characteristic.TargetHeatingCoolingState, this.state);
@@ -192,7 +201,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
     this.temperature = value;
 
     if (this.isStateful) {
-      await storageSet(this.defaulTemperatureStorageKey, this.temperature);
+      await Storage.set(this.defaulTemperatureStorageKey, this.temperature);
     }
 
     this.accessoryService.updateCharacteristic(this.Characteristic.TargetTemperature, this.temperature);

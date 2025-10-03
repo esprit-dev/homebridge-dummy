@@ -14,7 +14,7 @@ import { migrateAccessories } from '../tools/configMigration.js';
 import { Log } from '../tools/log.js';
 import getVersion from '../tools/version.js';
 import { WebhookManager } from '../model/webhook.js';
-import { initStorage } from '../tools/storage.js';
+import { Storage } from '../tools/storage.js';
 
 export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
   private readonly Service;
@@ -73,7 +73,7 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
 
   private async setup(): Promise<void> {
 
-    await initStorage(this.api.user.persistPath());
+    await Storage.init(this.api.user.persistPath());
 
     const keepIdentifiers = new Set<string>();
 
