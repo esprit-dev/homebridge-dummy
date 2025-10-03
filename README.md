@@ -87,7 +87,7 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
         {
             "id": "string",
             "name": "string",
-            "type": "Door | Lightbulb | LockMechanism | Outlet | Switch | Thermostat | Window | WindoCovering",
+            "type": "Door | Lightbulb | LockMechanism | Outlet | Switch | Thermostat | Window | WindowCovering",
             "groupName": "string",
             "timer": {
                 "delay": number,
