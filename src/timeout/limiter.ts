@@ -9,7 +9,7 @@ import { Log } from '../tools/log.js';
 import { Storage } from '../tools/storage.js';
 import { assert } from '../tools/validation.js';
 
-type Limit = { timeRemaining: number, resetTimestamp: number };
+type Limit = { timeRemaining: number, resetTimestamp: number, startTimestamp?: number };
 
 export default class Limiter extends Timeout {
 
@@ -52,9 +52,7 @@ export default class Limiter extends Timeout {
     return new Limiter(config, caller, log, disableLogging);
   }
 
-  private limit: Limit = { timeRemaining: -1, resetTimestamp: -1 };
-
-  private startedAtTimestamp?: number;
+  private limit: Limit = { timeRemaining: -1, resetTimestamp: -1, startTimestamp: undefined };
 
   private constructor(
     private readonly config: LimiterConfig,
@@ -64,12 +62,19 @@ export default class Limiter extends Timeout {
   ) {
     super(caller, log, disableLogging);
 
-    setTimeout(async () => {
-      const cache = await storageGet(this.limitStorageKey);
-      if (cache) {
-        this.limit = cache;
-      }
-    });
+    const cache = Storage.get(this.limitStorageKey);
+    if (cache === undefined) {
+      return;
+    }
+
+    this.limit = cache as Limit;
+
+    if (this.limit.startTimestamp === undefined) {
+      return;
+    }
+
+    const elapsedTime = Date.now() - this.limit.startTimestamp;
+    this.limit.timeRemaining = Math.max(0, this.limit.timeRemaining - elapsedTime);
   }
 
   private get limitStorageKey(): string {
@@ -78,8 +83,6 @@ export default class Limiter extends Timeout {
   }
 
   public start(callback:  () => Promise<void>) {
-
-    super.cancel();
 
     if (Date.now() - this.limit.resetTimestamp >= 0 || this.limit.timeRemaining === -1) {
       this.resetTimeRemaining();
@@ -93,34 +96,44 @@ export default class Limiter extends Timeout {
     }
 
     if (this.limit.timeRemaining > 0) {
-      this.startedAtTimestamp = Date.now();
+      this.logTimeRemaining();
+      this.limit.startTimestamp = Date.now();
+      this.storeLimit();
     }
-
-    this.logTimeRemaining();
 
     this.timeout = setTimeout(async () => {
       this.reset();
       await callback();
     }, Math.max(this.limit.timeRemaining, 0.1 * SECOND));
+  }
 
-    this.storeLimit();
+  override cancel() {
+
+    if (!this.limit.startTimestamp) {
+      return;
+    }
+
+    super.cancel();
   }
 
   override reset() {
     super.reset();
 
-    if (!this.startedAtTimestamp) {
-      return;
+    if (this.limit.startTimestamp !== undefined) {
+
+      const elapsedTime = Date.now() - this.limit.startTimestamp;
+      this.limit.timeRemaining = Math.max(0, this.limit.timeRemaining - elapsedTime);
+
+      this.limit.startTimestamp = undefined;
+
+      this.storeLimit();
     }
 
-    const elapsedTime = Date.now() - this.startedAtTimestamp;
-    this.limit.timeRemaining = Math.max(0, this.limit.timeRemaining - elapsedTime);
-
-    this.startedAtTimestamp = undefined;
-
     this.logTimeRemaining();
+  }
 
-    this.storeLimit();
+  override teardown() {
+    super.reset();
   }
 
   private resetTimeRemaining() {
@@ -164,11 +177,11 @@ export default class Limiter extends Timeout {
     if (this.limit.timeRemaining === 0) {
       this.logIfDesired(strings.limiter.expired);
     } else if (this.limit.timeRemaining < MINUTE) {
-      this.logIfDesired(strings.limiter.remainingSeconds, this.limit.timeRemaining / SECOND);
+      this.logIfDesired(strings.limiter.remainingSeconds, Math.round(this.limit.timeRemaining / SECOND));
     } else if (this.limit.timeRemaining < HOUR) {
-      this.logIfDesired(strings.limiter.remainingMinutes, this.limit.timeRemaining / MINUTE);
+      this.logIfDesired(strings.limiter.remainingMinutes, Math.round(this.limit.timeRemaining / MINUTE));
     } else if (this.limit.timeRemaining < DAY) {
-      this.logIfDesired(strings.limiter.remainingHours, this.limit.timeRemaining / HOUR);
+      this.logIfDesired(strings.limiter.remainingHours, Math.round(this.limit.timeRemaining / HOUR));
     } else {
       this.logIfDesired(strings.limiter.remainingDayPlus);
     }
