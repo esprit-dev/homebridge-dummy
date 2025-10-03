@@ -44,7 +44,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
     this.sensor = SensorAccessory.new(Service, Characteristic, accessory, this.name, log, this.config.disableLogging === true, config.sensor);
 
     if (config.timer) {
-      this._timer = Timer.new(config.timer, config.name, log, config.disableLogging === true);
+      this._timer = Timer.new(config.timer, this.identifier, config.name, log, config.disableLogging === true);
     }
 
     if (config.schedule) {
@@ -115,7 +115,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
   }
 
   protected get isStateful(): boolean {
-    return this._timer === undefined && this._schedule === undefined && !this.config.resetOnRestart;
+    return this._schedule === undefined && !this.config.resetOnRestart;
   }
 
   protected get defaultStateStorageKey(): string {

@@ -69,16 +69,13 @@ const en = {
   timer: {
     badUnits: '%s timer has invalid time units %s. Must be one of: %s', // accessory name, input, list of unit names
     cancel: 'Cancelled the timer for %s', // accessory name
+    expired: '%s timer expired while restarting. Returning to default state…', // accessory name
+    resume: '%s resuming timer', // accessory name
     setMilliseconds: '%s is waiting %s milliseconds', // accessory name, number
     setSeconds: '%s is waiting %s seconds', // accessory name, number
     setMinutes: '%s is waiting %s minutes',  // accessory name, number
     setHours: '%s is waiting %s hours', // accessory name, number
   },
-
-
-
-
-
 
   config: {
 

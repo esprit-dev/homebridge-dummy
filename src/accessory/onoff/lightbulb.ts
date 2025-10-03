@@ -35,7 +35,11 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
         .onGet(this.getBrightness.bind(this))
         .onSet(this.setBrightness.bind(this));
 
-      this.initializeBrightness();
+      if (this.isStateful && Storage.has(this.defaultBrightnessStorageKey)) {
+        this.brightness = Storage.get(this.defaultBrightnessStorageKey) ?? this.brightness;
+      } else {
+        this.initializeBrightness_Deprecated();
+      }
     }
   }
 
@@ -62,7 +66,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
     ];
   }
 
-  private async initializeBrightness() {
+  private async initializeBrightness_Deprecated() {
 
     if (!this.isStateful) {
       this.accessoryService.updateCharacteristic(this.Characteristic.Brightness, this.brightness);
@@ -90,8 +94,6 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
   }
 
   private async setBrightness(value: CharacteristicValue) {
-
-    this.startTimer();
 
     if (this.brightness === value) {
       return;

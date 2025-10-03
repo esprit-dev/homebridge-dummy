@@ -48,8 +48,12 @@ export class Storage {
     return Storage.bucket.get(key);
   }
 
-  public static async set(key: string, storable: Storable) {
-    Storage.bucket.set(key, storable);
+  public static async set(key: string, storable: Storable | undefined) {
+    if (storable !== undefined) {
+      Storage.bucket.set(key, storable);
+    } else {
+      Storage.bucket.delete(key);
+    }
 
     const bucketArray = Array.from(Storage.bucket.entries());
     const bucketJson = JSON.stringify(bucketArray);
