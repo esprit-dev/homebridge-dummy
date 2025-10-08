@@ -133,8 +133,8 @@ export abstract class DummyAccessory<C extends DummyConfig> {
   }
 
   protected executeCommand(command: string) {
-    exec(command, (_error, stdout, stderr) => {
-      if (stderr) {
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
         this.log.error(`${strings.command.error}: %s\n%s`, this.name, command, stderr);
       } else {
         this.logIfDesired(`${strings.command.executed}: %s\n%s`, this.name, command, stdout);

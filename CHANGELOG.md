@@ -10,6 +10,9 @@ Automations and scenes using Homebridge Dummy accessories will need to be reconf
 ### Added
 - Time Limits ([documentation](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#limiter))
 
+### Fixed
+- Commands incorrectly displaing errors after executing successfully
+
 ### Changed
 - Running timers are resumed and sensor states are restored after plugin/Homebridge restart ([#189](https://github.com/mpatfield/homebridge-dummy/issues/189)) ([#191](https://github.com/mpatfield/homebridge-dummy/issues/191))
 - Improved error messaging for invalid config values
