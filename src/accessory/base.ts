@@ -1,5 +1,6 @@
-import { exec } from 'child_process';
+import { exec, ExecException } from 'child_process';
 import { PlatformAccessory, Service } from 'homebridge';
+import { promisify } from 'util';
 
 import { PLATFORM_NAME, PLUGIN_ALIAS } from '../homebridge/settings.js';
 
@@ -31,6 +32,8 @@ export abstract class DummyAccessory<C extends DummyConfig> {
   private readonly _schedule?: Schedule;
   private readonly _timer?: Timer;
   private readonly _limiter?: Limiter;
+
+  private readonly execAsync = promisify(exec);
 
   constructor(
     protected readonly Service: ServiceType,
@@ -132,14 +135,47 @@ export abstract class DummyAccessory<C extends DummyConfig> {
     this._limiter?.cancel();
   }
 
-  protected executeCommand(command: string) {
-    exec(command, (error, stdout, stderr) => {
-      if (error) {
-        this.log.error(`${strings.command.error}: %s\n%s`, this.name, command, stderr);
-      } else {
-        this.logIfDesired(`${strings.command.executed}: %s\n%s`, this.name, command, stdout);
+  protected async executeCommand(command: string) {
+
+    try {
+      const { stdout } = await this.execAsync(command);
+      const output = stdout.trim();
+
+      if (output) {
+        this.logIfDesired(`${strings.command.executed}: %s\n%s`, command, output);
       }
-    });
+
+    } catch (err) {
+
+      if (!this.isExecException(err)) {
+        const message = err instanceof Error ? err.message : JSON.stringify(err);
+        this.log.error(`${strings.command.error}: %s`, this.name, message);
+        return;
+      }
+
+      const exitCode = err.code ?? -1;
+
+      const output = (err.stdout ?? '').trim();
+      const error = (err.stderr ?? '').trim();
+
+      if (exitCode === 0) {
+        if (output) {
+          this.logIfDesired(`${strings.command.executed}: %s\n%s`, command, output);
+        }
+      } else {
+        this.log.error(`${strings.command.error}: %s (%s)`, this.name, command, exitCode, error ? `\n${error}` : undefined);
+      }
+    }
+  }
+
+  private isExecException(err: unknown): err is ExecException {
+    return err instanceof Error &&
+      'code' in err &&
+      typeof err.code === 'number' &&
+      'stdout' in err &&
+      typeof err.stdout === 'string' &&
+      'stderr' in err &&
+      typeof err.stderr === 'string';
   }
 
   protected logIfDesired(message: string, ...parameters: (string | number)[]) {

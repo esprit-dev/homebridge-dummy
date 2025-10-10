@@ -2,7 +2,7 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-## 1.3.0-beta.3 (2025-10-05)
+## 1.3.0-beta.5 (2025-10-10)
 
 ### ‼️ WARNING — Read this if upgrading from v0.9.2 or earlier…
 Automations and scenes using Homebridge Dummy accessories will need to be reconfigured. After upgrading, you must **RESTART HOMEBRIDGE SERVICE & UI** (not just *RESTART HOMEBRIDGE*). After restarting, open the Homebridge Dummy plugin settings to run the accessory migration helper. Full details [here](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#v1.0-migration).
@@ -11,7 +11,7 @@ Automations and scenes using Homebridge Dummy accessories will need to be reconf
 - Time Limits ([documentation](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#limiter))
 
 ### Fixed
-- Commands incorrectly displaing errors after executing successfully
+- More robust command execution to prevent incorrectly displaing errors on success
 
 ### Changed
 - Running timers are resumed and sensor states are restored after plugin/Homebridge restart ([#189](https://github.com/mpatfield/homebridge-dummy/issues/189)) ([#191](https://github.com/mpatfield/homebridge-dummy/issues/191))
