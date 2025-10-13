@@ -4,7 +4,7 @@
   "displayName": "Homebridge Dummy",
   "description": "Create Homebridge accessories to help with automation and control — scheduling, delays, sensors, commands, webhooks, and more",
   "type": "module",
-  "version": "1.3.0-beta.5",
+  "version": "1.3.0",
   "homepage": "https://github.com/mpatfield/homebridge-dummy#readme",
   "repository": {
     "type": "git",
