@@ -25,7 +25,7 @@ export class Timer extends Timeout {
     return new Timer(config, callerId, callerName, log, disableLogging);
   }
 
-  private _expiresTimestamp?: number;
+  private expiresTimestamp?: number;
 
   private constructor(
     private readonly config: TimerConfig,
@@ -43,12 +43,7 @@ export class Timer extends Timeout {
     return `${this.callerId}:Timer`;
   }
 
-  private get expiresTimestamp(): number | undefined {
-    return this._expiresTimestamp;
-  }
-
-  private set expiresTimestamp(value: number | undefined) {
-    this._expiresTimestamp = value;
+  private storeExpiresTimestamp(value: number | undefined) {
     Storage.set(this.timerStorageKey, value);
   }
 
@@ -77,7 +72,7 @@ export class Timer extends Timeout {
 
     } else {
       delay = this.getDelay(this.config.delay, this.config.units, this.config.random, logStrings);
-      this.expiresTimestamp = Date.now() + delay;
+      this.storeExpiresTimestamp(Date.now() + delay);
     }
 
     this.timeout = setTimeout(async () => {
@@ -88,6 +83,7 @@ export class Timer extends Timeout {
 
   override reset() {
     this.expiresTimestamp = undefined;
+    this.storeExpiresTimestamp(undefined);
     super.reset();
   }
 
