@@ -42,6 +42,18 @@ Unfortunately, there is no built-in way to migrate existing accessory plugins to
 
 However, Homebridge Dummy will try to help migrate the accessory configurations to the new system to prevent you having to set them all up again in Homebridge.
 
+### HOOBS Users
+
+Homebridge Dummy now requires `customUi` for the config UI to help with migration from older versions, translations, UUID generation and some other useful tools. Unfortunately, HOOBS does not support `customUi`.
+
+If you use HOOBS your current options are:
+
+1. Upgrade to v1.0+ and use Advanced Mode to manually edit the JSON config
+2. Continue to use `v0.9.2` which should continue to work for the foreseeable future but won't include any of the new features
+3. Migrate your system to Homebridge which is very actively developed and has an engaged community of developers
+
+You may also add a comment on [this ticket](https://github.com/hoobs-org/sidecars/issues/13) to help encourage the HOOBS team to add a "sidecar" for Homebridge Dummy.
+
 ### Migration Flow
 
 ⚠️ Please make sure to restart both Homebridge Service AND Homebridge UI after upgrading to v1.0 or you will experience issues with Homebridge Dummy configuration.
