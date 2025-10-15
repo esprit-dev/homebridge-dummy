@@ -209,7 +209,7 @@ const en = {
 
     leak: {
       active: '%s detected a leak', // accessory name
-      inactive: '%s stopped detecting leaks', // accessory name
+      inactive: '%s stopped detecting the leak', // accessory name
     },
 
     motion: {
