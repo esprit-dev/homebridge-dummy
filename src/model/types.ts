@@ -23,6 +23,7 @@ export type LegacyAccessoryConfig = AccessoryConfig & {
 export type DummyPlatformConfig = PlatformConfig & {
   accessories?: DummyConfig[];
   migrationNeeded?: boolean;
+  webhookPort?: number,
   verbose?: boolean;
 }
 

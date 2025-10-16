@@ -143,7 +143,9 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
         }
         …
     ],
-    "platform": "HomebridgeDummy"
+    "platform": "HomebridgeDummy",
+    "verbose": true | false,
+    "webhookPort": number,
 }
 ```
 
@@ -236,7 +238,7 @@ Execute arbitrary commands (e.g. curl) when the accessory changes state
 
 You can optionally enable webhooks on an accessory by choosing `Enable Webhooks` in the config UI or setting `enableWebhooks` to `true` in the JSON config.
 
-If at least one accessory has webhooks enabled, then Homebridge Dummy will start a webhook server on startup on port `63743`, e.g. `http://localhost:63743/`
+If at least one accessory has webhooks enabled, then Homebridge Dummy will start a webhook server on startup. The default port is `63743`, e.g. `http://localhost:63743/`. To change the port, add `webhookPort` to the top level Homebridge Dummy config (see above).
 
 Incoming requests must be valid JSON and include the id of the accessory, the desired command, and the value to set.
 

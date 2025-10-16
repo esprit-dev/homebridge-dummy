@@ -2,7 +2,7 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-## 1.3.1-beta.2 (2025-10-16)
+## 1.3.1-beta.3 (2025-10-16)
 
 ### ‼️ WARNING — If upgrading from v0.9.2 or earlier…
 Read [this](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#v10-migration) before upgrading.
@@ -14,10 +14,13 @@ Read [this](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#v10
 - Deutsche Übersetzungen. Danke, [@jotzet79](https://github.com/sponsors/jotzet79)!
 - Traducciones al español. ¡Gracias, [@dcompane](https://github.com/sponsors/dcompane)!
 
+### Changed
+- Webhook server port is now configurable using `webhookPort` ([docs](https://github.com/mpatfield/homebridge-dummy#webhooks))
+
 ## 1.3.0 (2025-10-13)
 
 ### Added
-- Time Limits ([documentation](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#limiter))
+- Time Limits ([docs](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#limiter))
 
 ### Fixed
 - More robust command execution to prevent incorrectly displaing errors on success
@@ -32,7 +35,7 @@ Would you like to see Homebridge Dummy in your language? Please consider [gettin
 ## 1.2.0 (2025-10-02)
 
 ### Added
-- Webhooks ([documentation](https://github.com/mpatfield/homebridge-dummy#webhooks))
+- Webhooks ([docs](https://github.com/mpatfield/homebridge-dummy#webhooks))
 
 ### Changed
 - `schedule.cron` now expects an `@` preset or `CRON_CUSTOM` with `schedule.cronCustom` defined.

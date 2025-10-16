@@ -38,7 +38,16 @@ export class WebhookManager {
   constructor(
     private readonly Characteristic: CharacteristicType,
     private readonly log: Log,
-  ) {}
+    private readonly port: number | undefined,
+  ) {
+
+    this.port = port ?? DEFAULT_PORT;
+
+    if (typeof this.port !== 'number') {
+      log.error(strings.webhook.badPort, DEFAULT_PORT);
+      this.port = DEFAULT_PORT;
+    }
+  }
 
   public registerAccessory(accessory: DummyAccessory<DummyConfig>) {
     for (const webhook of accessory.webhooks()) {
@@ -73,8 +82,8 @@ export class WebhookManager {
       this.requestHandler(request, response);
     });
 
-    this.server = exp.listen(DEFAULT_PORT, () => {
-      this.log.ifVerbose(strings.webhook.started, DEFAULT_PORT);
+    this.server = exp.listen(this.port, () => {
+      this.log.ifVerbose(strings.webhook.started, this.port);
     });
   }
 
