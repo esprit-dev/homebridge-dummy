@@ -4,8 +4,11 @@ All notable changes to homebridge-dummy will be documented in this file.
 
 ## 1.3.1 (2025-10-18)
 
-### ‼️ WARNING — If upgrading from v0.9.2 or earlier…
-Read [this](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#v10-migration) before upgrading.
+### ‼️ WARNING ‼️ If upgrading from v0.9.2 or earlier, [READ THIS](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#v10-migration) before upgrading.
+
+### ⚠️ Feedback Request
+
+I am considering the removal of Thermostat as a supported accessory type from a future version. If you use Thermostat, please add your use case to [this ticket](https://github.com/mpatfield/homebridge-dummy/issues/207).
 
 ### Fixed
 - Auto-Reset timer not resetting delay when re-invoked ([#197](https://github.com/mpatfield/homebridge-dummy/issues/197))
