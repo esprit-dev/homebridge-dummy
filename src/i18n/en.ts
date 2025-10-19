@@ -73,7 +73,7 @@ const en = {
     resume: '%s resuming timer', // accessory name
     setMilliseconds: '%s is waiting %s milliseconds', // accessory name, number
     setSeconds: '%s is waiting %s seconds', // accessory name, number
-    setMinutes: '%s is waiting %s minutes',  // accessory name, number
+    setMinutes: '%s is waiting %s minutes', // accessory name, number
     setHours: '%s is waiting %s hours', // accessory name, number
   },
 
