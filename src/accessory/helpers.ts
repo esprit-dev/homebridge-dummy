@@ -3,6 +3,7 @@ import { PlatformAccessory } from 'homebridge';
 import { DummyAccessory } from './base.js';
 import { BlindAccessory } from './position/blind.js';
 import { DoorAccessory } from './position/door.js';
+import { GarageDoorAccessory } from './position/garage.js';
 import { LightbulbAccessory } from './onoff/lightbulb.js';
 import { LockAccessory } from './lock.js';
 import { OutletAccessory } from './onoff/outlet.js';
@@ -29,6 +30,8 @@ export function createDummyAccessory(
   switch(config.type) {
   case AccessoryType.Door:
     return new DoorAccessory(Service, Characteristic, accessory, config, log, isGrouped);
+  case AccessoryType.GarageDoorOpener:
+    return new GarageDoorAccessory(Service, Characteristic, accessory, config, log, isGrouped);
   case AccessoryType.Lightbulb:
     return new LightbulbAccessory(Service, Characteristic, accessory, config, log, isGrouped);
   case AccessoryType.LockMechanism:

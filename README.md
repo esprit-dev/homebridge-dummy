@@ -86,7 +86,7 @@ The first thing the flow does is create a backup called `config.json.bak` in you
 
 With this plugin, you can create any number of fake accessories which are useful for advanced automation with HomeKit scenes. Features include scheduling to trigger at a specific interval or times, resetting automatically after a delay, activating sensors such as motion or occupancy, running arbitrary commands such as cron, and more.
 
-Currently, Doors, Lightbulbs, Locks, Outlets, Switches, Thermostats, Windows, and Blinds are supported. If there is a particular device or feature you'd like to see, please [create an issue](https://github.com/mpatfield/homebridge-dummy/issues/new?template=new-issue.md).
+Currently, Doors, Garage Door Openers, Lightbulbs, Locks, Outlets, Switches, Thermostats, Windows, and Window Coverings are supported. If there is a particular device or feature you'd like to see, please [create an issue](https://github.com/mpatfield/homebridge-dummy/issues/new?template=new-issue.md).
 
 ## Configuration
 
@@ -99,7 +99,7 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
         {
             "id": "string",
             "name": "string",
-            "type": "Door | Lightbulb | LockMechanism | Outlet | Switch | Thermostat | Window | WindowCovering",
+            "type": "Door | GarageDoorOpener | Lightbulb | LockMechanism | Outlet | Switch | Thermostat | Window | WindowCovering",
             "groupName": "string",
             "timer": {
                 "delay": number,
@@ -158,6 +158,7 @@ All fields are optional unless noted with an asterisk (*)
 
 Valid values for `type` are:
 - `Door`
+- `GarageDoorOpener`
 - `Lightbulb`
 - `LockMechanism`
 - `Outlet`
@@ -225,7 +226,7 @@ Execute arbitrary commands (e.g. curl) when the accessory changes state
 - `defaultOn` — Initial value. Default _ON_ = true, default _OFF_ = false
 - `defaultBrightness` — If set, lightbulb will have additional dimmer settings with this default brightness percentage
 - `defaultLockState` - The initial value for the lock, "locked" or "unlocked"
-- `defaultPosition` — Initial position for the door/window/blinds, "open" or "closed"
+- `defaultPosition` — Initial position for the door/garage/window/blinds, "open" or "closed"
 - `defaultThermostatState` - The initial state for the thermostat, "auto", "heat", "cool", or "off"
 - `defaultTemperature` - The default temperature for the thermostat in `temperatureUnits` defined above
 

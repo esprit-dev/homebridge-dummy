@@ -103,6 +103,7 @@ const en = {
       day: 'Day',
       door: 'Door',
       fahrenheit: '°F',
+      garageDoorOpener: 'Garage Door',
       heat: 'Heat',
       hour: 'Hour',
       hourly: 'Hourly',
@@ -134,7 +135,7 @@ const en = {
       weekends: 'Weekends',
       weekly: 'Weekly',
       window: 'Window',
-      windowCovering: 'Window Convering (Blinds)',
+      windowCovering: 'Window Covering (Blinds)',
       yearly: 'Annually',
     },
 

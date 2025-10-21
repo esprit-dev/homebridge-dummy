@@ -228,8 +228,8 @@
             "type": {
               "type": "string",
               "title": "${config.title.type}",
-              "enum": ["Door", "Lightbulb", "LockMechanism", "Outlet", "Switch", "Thermostat", "Window", "WindowCovering"],
-              "enumNames": ["${config.enumNames.door}", "${config.enumNames.lightbulb}", "${config.enumNames.lockMechanism}", "${config.enumNames.outlet}", "${config.enumNames.switch}", "${config.enumNames.thermostat}", "${config.enumNames.window}", "${config.enumNames.windowCovering}"]
+              "enum": ["Door", "GarageDoorOpener", "Lightbulb", "LockMechanism", "Outlet", "Switch", "Thermostat", "Window", "WindowCovering"],
+              "enumNames": ["${config.enumNames.door}", "${config.enumNames.garageDoorOpener}", "${config.enumNames.lightbulb}", "${config.enumNames.lockMechanism}", "${config.enumNames.outlet}", "${config.enumNames.switch}", "${config.enumNames.thermostat}", "${config.enumNames.window}", "${config.enumNames.windowCovering}"]
             },
             "groupName": {
               "type": "string",
@@ -415,7 +415,7 @@
                   "displayFlex": true,
                   "flex-direction": "row",
                   "condition": {
-                    "functionBody": "return ['Door', 'Window', 'WindowCovering'].includes(model.accessories?.[arguments[1]]?.type);"
+                    "functionBody": "return ['Door', 'GarageDoorOpener', 'Window', 'WindowCovering'].includes(model.accessories?.[arguments[1]]?.type);"
                   },
                   "items": [
                     {
@@ -641,13 +641,13 @@
                 {
                   "key": "accessories[].commandOpen",
                   "condition": {
-                    "functionBody": "return ['Door', 'Window', 'WindowCovering'].includes(model.accessories?.[arguments[1]]?.type);"
+                    "functionBody": "return ['Door', 'GarageDoorOpener', 'Window', 'WindowCovering'].includes(model.accessories?.[arguments[1]]?.type);"
                   }
                 },
                 {
                   "key": "accessories[].commandClose",
                   "condition": {
-                    "functionBody": "return ['Door', 'Window', 'WindowCovering'].includes(model.accessories?.[arguments[1]]?.type);"
+                    "functionBody": "return ['Door', 'GarageDoorOpener', 'Window', 'WindowCovering'].includes(model.accessories?.[arguments[1]]?.type);"
                   }
                 },
                 {

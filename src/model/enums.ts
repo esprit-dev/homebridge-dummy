@@ -1,5 +1,6 @@
 export enum AccessoryType {
   Door = 'Door',
+  GarageDoorOpener = 'GarageDoorOpener',
   Lightbulb = 'Lightbulb',
   LockMechanism = 'LockMechanism',
   Outlet = 'Outlet',
@@ -98,6 +99,7 @@ export enum WebhookCommand {
   Brightness = 'Brightness',
   LockTargetState = 'LockTargetState',
   On = 'On',
+  TargetDoorState = 'TargetDoorState',
   TargetHeatingCoolingState = 'TargetHeatingCoolingState',
   TargetPosition = 'TargetPosition',
   TargetTemperature = 'TargetTemperature',

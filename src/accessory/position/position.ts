@@ -11,9 +11,6 @@ import { Webhook } from '../../model/webhook.js';
 import { Log } from '../../tools/log.js';
 import { storageGet_Deprecated, Storage } from '../../tools/storage.js';
 
-const POSITION_OPEN = 100;
-const POSITION_CLOSED = 0;
-
 export abstract class PositionAccessory<C extends PositionConfig = PositionConfig> extends DummyAccessory<PositionConfig> {
 
   private position: CharacteristicValue;
@@ -34,22 +31,48 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
 
     this.position = this.defaultPosition;
 
-    this.accessoryService.getCharacteristic(Characteristic.PositionState)
-      .onGet(this.getState.bind(this));
+    if (this.hasPositionState) {
+      this.accessoryService.getCharacteristic(Characteristic.PositionState)
+        .onGet(this.getState.bind(this));
+    }
 
-    this.accessoryService.getCharacteristic(Characteristic.TargetPosition)
+    this.accessoryService.getCharacteristic(this.targetCharacteristic)
       .onGet(this.getPosition.bind(this))
       .onSet(this.setPosition.bind(this));
 
-    this.accessoryService.getCharacteristic(Characteristic.CurrentPosition)
+    this.accessoryService.getCharacteristic(this.currentCharacteristic)
       .onGet(this.getPosition.bind(this));
 
     this.initializePosition();
   }
 
+  protected get hasPositionState() {
+    return true;
+  }
+
+  protected get positionClosed() {
+    return 0;
+  }
+
+  protected get positionOpen() {
+    return 100;
+  }
+
+  protected get targetCharacteristic() {
+    return this.Characteristic.TargetPosition;
+  }
+
+  protected get currentCharacteristic() {
+    return this.Characteristic.CurrentPosition;
+  }
+
+  protected get webhookCommand() {
+    return WebhookCommand.TargetPosition;
+  }
+
   override webhooks(): Webhook[] {
     return [
-      new Webhook(this.identifier, WebhookCommand.TargetPosition,
+      new Webhook(this.identifier, this.webhookCommand,
         (value) => {
           this.setPosition(value);
           return this.logTemplateForCV(value).replace('%s', this.name);
@@ -60,8 +83,8 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
   private async initializePosition() {
 
     if (!this.isStateful) {
-      this.accessoryService.updateCharacteristic(this.Characteristic.TargetPosition, this.position);
-      this.accessoryService.updateCharacteristic(this.Characteristic.CurrentPosition, this.position);
+      this.accessoryService.updateCharacteristic(this.targetCharacteristic, this.position);
+      this.accessoryService.updateCharacteristic(this.currentCharacteristic, this.position);
       return;
     }
 
@@ -74,27 +97,27 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
   }
 
   private get defaultPosition(): CharacteristicValue {
-    return this.config.defaultPosition === DefaultPosition.OPEN ? POSITION_OPEN : POSITION_CLOSED;
+    return this.config.defaultPosition === DefaultPosition.OPEN ? this.positionOpen : this.positionClosed;
   }
 
-  protected async getState(): Promise<CharacteristicValue> {
+  private async getState(): Promise<CharacteristicValue> {
     return this.Characteristic.PositionState.STOPPED;
   }
 
-  protected async getPosition(): Promise<CharacteristicValue> {
+  private async getPosition(): Promise<CharacteristicValue> {
     return this.position;
   }
 
-  protected async setPosition(value: CharacteristicValue): Promise<void> {
+  private async setPosition(value: CharacteristicValue): Promise<void> {
 
-    const targetPosition = value === POSITION_CLOSED ? POSITION_CLOSED : POSITION_OPEN;
+    const targetPosition = value === this.positionClosed ? this.positionClosed : this.positionOpen;
 
     if (this.position !== targetPosition) {
       this.logPosition(targetPosition);
 
-      if (this.config.commandOpen && targetPosition !== POSITION_CLOSED) {
+      if (this.config.commandOpen && targetPosition !== this.positionClosed) {
         this.executeCommand(this.config.commandOpen);
-      } else if (this.config.commandClose && targetPosition === POSITION_CLOSED) {
+      } else if (this.config.commandClose && targetPosition === this.positionClosed) {
         this.executeCommand(this.config.commandClose);
       }
     }
@@ -111,8 +134,8 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
       this.cancelTimer();
     }
 
-    this.accessoryService.updateCharacteristic(this.Characteristic.TargetPosition, this.position);
-    this.accessoryService.updateCharacteristic(this.Characteristic.CurrentPosition, this.position);
+    this.accessoryService.updateCharacteristic(this.targetCharacteristic, this.position);
+    this.accessoryService.updateCharacteristic(this.currentCharacteristic, this.position);
 
     if (this.sensor) {
       if (!this.sensor.timerControlled) {
@@ -125,7 +148,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
 
   override async schedule(): Promise<void> {
     if (this.position === this.defaultPosition) {
-      const opposite = this.position === POSITION_CLOSED ? POSITION_OPEN : POSITION_CLOSED;
+      const opposite = this.position === this.positionClosed ? this.positionOpen : this.positionClosed;
       await this.setPosition(opposite);
     }
   }
@@ -140,7 +163,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
   }
 
   private logTemplateForCV(value: CharacteristicValue): string {
-    return value === POSITION_CLOSED ? strings.position.closed : strings.position.open;
+    return value === this.positionClosed ? strings.position.closed : strings.position.open;
   }
 
   protected logPosition(value: CharacteristicValue) {

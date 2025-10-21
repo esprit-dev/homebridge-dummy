@@ -109,6 +109,9 @@ export type PositionConfig = DummyConfig & {
   commandClose?: string,
 }
 
+export type GarageDoorConfig = PositionConfig & {
+}
+
 export type DoorConfig = PositionConfig & {
 }
 
