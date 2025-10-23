@@ -200,8 +200,8 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
     this.accessoryService.updateCharacteristic(this.Characteristic.CurrentTemperature, this.temperature);
   }
 
-  override async schedule(): Promise<void> {
-    throw new Error(strings.thermostat.unsupportedFunction.replace('%s', `${this.schedule.name}()`));
+  override async trigger(): Promise<void> {
+    throw new Error(strings.thermostat.unsupportedFunction.replace('%s', `${this.trigger.name}()`));
   }
 
   override async reset(): Promise<void> {

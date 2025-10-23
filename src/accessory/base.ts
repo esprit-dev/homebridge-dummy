@@ -72,7 +72,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
 
     this._timer = Timer.new(addonDependency, dependency.config.timer);
 
-    this._schedule = Schedule.new(addonDependency, dependency.config.schedule, this.schedule.bind(this));
+    this._schedule = Schedule.new(addonDependency, dependency.config.schedule, this.trigger.bind(this));
 
     this._limiter = Limiter.new(addonDependency, dependency.config.limiter);
 
@@ -111,7 +111,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
 
   protected abstract getAccessoryType(): AccessoryType;
 
-  protected abstract schedule(): Promise<void>;
+  protected abstract trigger(): Promise<void>;
 
   protected abstract reset(): Promise<void>;
 
