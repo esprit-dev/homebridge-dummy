@@ -1,38 +1,30 @@
-import { CharacteristicValue, PlatformAccessory } from 'homebridge';
+import { CharacteristicValue } from 'homebridge';
 
-import { DummyAccessory } from '../base.js';
+import { DummyAccessory, DummyAccessoryDependency } from '../base.js';
 
 import { strings } from '../../i18n/i18n.js';
 
 import { DefaultPosition, isValidPosition, printableValues, WebhookCommand } from '../../model/enums.js';
-import { CharacteristicType, PositionConfig, ServiceType } from '../../model/types.js';
+import { PositionConfig } from '../../model/types.js';
 import { Webhook } from '../../model/webhook.js';
 
-import { Log } from '../../tools/log.js';
 import { storageGet_Deprecated, Storage } from '../../tools/storage.js';
 
 export abstract class PositionAccessory<C extends PositionConfig = PositionConfig> extends DummyAccessory<PositionConfig> {
 
   private position: CharacteristicValue;
 
-  constructor(
-    Service: ServiceType,
-    Characteristic: CharacteristicType,
-    accessory: PlatformAccessory,
-    config: C,
-    log: Log,
-    isGrouped: boolean,
-  ) {
-    super(Service, Characteristic, accessory, config, log, isGrouped);
+  constructor(dependency: DummyAccessoryDependency<C>) {
+    super(dependency);
 
-    if (!isValidPosition(config.defaultPosition)) {
-      this.log.warning(strings.position.badDefault, this.name, `'${config.defaultPosition}'`, printableValues(DefaultPosition));
+    if (!isValidPosition(dependency.config.defaultPosition)) {
+      this.log.warning(strings.position.badDefault, this.name, `'${dependency.config.defaultPosition}'`, printableValues(DefaultPosition));
     }
 
     this.position = this.defaultPosition;
 
     if (this.hasPositionState) {
-      this.accessoryService.getCharacteristic(Characteristic.PositionState)
+      this.accessoryService.getCharacteristic(dependency.Characteristic.PositionState)
         .onGet(this.getState.bind(this));
     }
 

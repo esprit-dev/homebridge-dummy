@@ -19,6 +19,25 @@ import { Timer } from '../timeout/timer.js';
 import { Log } from '../tools/log.js';
 import getVersion from '../tools/version.js';
 
+export type DummyAccessoryDependency<C extends DummyConfig> = {
+  Service: ServiceType,
+  Characteristic: CharacteristicType,
+  accessory: PlatformAccessory,
+  config: C,
+  log: Log,
+  isGrouped: boolean,
+}
+
+export type DummyAddonDependency = {
+  Service: ServiceType,
+  Characteristic: CharacteristicType,
+  accessory: PlatformAccessory,
+  identifier: string,
+  caller: string,
+  log: Log,
+  disableLogging: boolean,
+}
+
 export abstract class DummyAccessory<C extends DummyConfig> {
 
   protected sensor?: SensorAccessory;
@@ -36,36 +55,35 @@ export abstract class DummyAccessory<C extends DummyConfig> {
   private readonly execAsync = promisify(exec);
 
   constructor(
-    protected readonly Service: ServiceType,
-    protected readonly Characteristic: CharacteristicType,
-    protected readonly accessory: PlatformAccessory,
-    protected readonly config: C,
-    protected readonly log: Log,
-    isGrouped: boolean,
+    private readonly dependency: DummyAccessoryDependency<C>,
   ) {
 
-    this.sensor = SensorAccessory.new(Service, Characteristic, accessory, this.name, log, this.config.disableLogging === true, config.sensor);
+    const addonDependency: DummyAddonDependency =  {
+      Service: dependency.Service,
+      Characteristic: dependency.Characteristic,
+      accessory: dependency.accessory,
+      identifier: this.identifier,
+      caller: dependency.config.name,
+      log: dependency.log,
+      disableLogging: dependency.config.disableLogging === true,
+    };
 
-    if (config.timer) {
-      this._timer = Timer.new(config.timer, this.identifier, config.name, log, config.disableLogging === true);
-    }
+    this.sensor = SensorAccessory.new(addonDependency, dependency.config.sensor);
 
-    if (config.schedule) {
-      this._schedule = Schedule.new(config.schedule, config.name, log, config.disableLogging === true, this.schedule.bind(this));
-    }
+    this._timer = Timer.new(addonDependency, dependency.config.timer);
 
-    if (config.limiter){
-      this._limiter = Limiter.new(config.limiter, config.name, log, config.disableLogging === true);
-    }
+    this._schedule = Schedule.new(addonDependency, dependency.config.schedule, this.schedule.bind(this));
 
-    const serviceInstance = Service[this.getAccessoryType()];
+    this._limiter = Limiter.new(addonDependency, dependency.config.limiter);
 
-    if (isGrouped) {
+    const serviceInstance = dependency.Service[this.getAccessoryType()];
 
-      let accessoryService = accessory.getServiceById(serviceInstance, this.identifier);
+    if (dependency.isGrouped) {
+
+      let accessoryService = dependency.accessory.getServiceById(serviceInstance, this.identifier);
       if (!accessoryService) {
-        accessoryService = accessory.addService(serviceInstance, config.name, this.identifier);
-        accessoryService.setCharacteristic(Characteristic.ConfiguredName, config.name);
+        accessoryService = dependency.accessory.addService(serviceInstance, dependency.config.name, this.identifier);
+        accessoryService.setCharacteristic(dependency.Characteristic.ConfiguredName, dependency.config.name);
       }
 
       this.accessoryService = accessoryService;
@@ -73,20 +91,20 @@ export abstract class DummyAccessory<C extends DummyConfig> {
       return;
     }
 
-    accessory.getService(Service.AccessoryInformation)!
-      .setCharacteristic(Characteristic.Name, config.name)
-      .setCharacteristic(Characteristic.ConfiguredName, config.name)
-      .setCharacteristic(Characteristic.Manufacturer, PLUGIN_ALIAS)
-      .setCharacteristic(Characteristic.Model, config.type)
-      .setCharacteristic(Characteristic.SerialNumber, this.identifier)
-      .setCharacteristic(Characteristic.FirmwareRevision, getVersion());
+    dependency.accessory.getService(dependency.Service.AccessoryInformation)!
+      .setCharacteristic(dependency.Characteristic.Name, dependency.config.name)
+      .setCharacteristic(dependency.Characteristic.ConfiguredName, dependency.config.name)
+      .setCharacteristic(dependency.Characteristic.Manufacturer, PLUGIN_ALIAS)
+      .setCharacteristic(dependency.Characteristic.Model, dependency.config.type)
+      .setCharacteristic(dependency.Characteristic.SerialNumber, this.identifier)
+      .setCharacteristic(dependency.Characteristic.FirmwareRevision, getVersion());
 
-    this.accessoryService = accessory.getService(serviceInstance) || accessory.addService(serviceInstance);
+    this.accessoryService = dependency.accessory.getService(serviceInstance) || dependency.accessory.addService(serviceInstance);
 
     for (const type of Object.values(AccessoryType)) {
-      const existingService = accessory.getService(Service[type]);
+      const existingService = dependency.accessory.getService(dependency.Service[type]);
       if (existingService && type !== this.getAccessoryType()) {
-        accessory.removeService(existingService);
+        dependency.accessory.removeService(existingService);
       }
     }
   }
@@ -109,12 +127,24 @@ export abstract class DummyAccessory<C extends DummyConfig> {
 
   public abstract webhooks(): Webhook[];
 
+  protected get config(): C {
+    return this.dependency.config;
+  }
+
   protected get identifier(): string {
     return DummyAccessory.identifier(this.config);
   }
 
   protected get name(): string {
     return this.config.name;
+  }
+
+  protected get log(): Log {
+    return this.dependency.log;
+  }
+
+  protected get Characteristic(): CharacteristicType {
+    return this.dependency.Characteristic;
   }
 
   protected get isStateful(): boolean {

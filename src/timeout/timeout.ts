@@ -1,3 +1,4 @@
+import { DummyAddonDependency } from '../accessory/base.js';
 import { TimeUnits } from '../model/enums.js';
 
 import { Log } from '../tools/log.js';
@@ -93,11 +94,7 @@ export abstract class Timeout {
 
   protected timeout?: NodeJS.Timeout;
 
-  protected constructor(
-    protected readonly caller: string,
-    protected readonly log: Log,
-    private readonly disableLogging: boolean,
-  ) { }
+  protected constructor(protected readonly dependency: DummyAddonDependency) { }
 
   public cancel() {
     this.reset();
@@ -105,6 +102,18 @@ export abstract class Timeout {
 
   public teardown() {
     this.reset();
+  }
+
+  protected get caller(): string {
+    return this.dependency.caller;
+  }
+
+  protected get log(): Log {
+    return this.dependency.log;
+  }
+
+  private get disableLogging(): boolean {
+    return this.dependency.disableLogging;
   }
 
   protected reset() {

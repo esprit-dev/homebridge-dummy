@@ -1,13 +1,12 @@
-import { CharacteristicValue, PlatformAccessory } from 'homebridge';
+import { CharacteristicValue } from 'homebridge';
 
-import { DummyAccessory } from '../base.js';
+import { DummyAccessory, DummyAccessoryDependency } from '../base.js';
 
 import { strings } from '../../i18n/i18n.js';
 
-import { CharacteristicType, OnOffConfig, ServiceType } from '../../model/types.js';
+import { OnOffConfig } from '../../model/types.js';
 import { Webhook } from '../../model/webhook.js';
 
-import { Log } from '../../tools/log.js';
 import { storageGet_Deprecated, Storage } from '../../tools/storage.js';
 import { WebhookCommand } from '../../model/enums.js';
 
@@ -15,19 +14,12 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
 
   private on: boolean;
 
-  constructor(
-    Service: ServiceType,
-    Characteristic: CharacteristicType,
-    accessory: PlatformAccessory,
-    config: C,
-    log: Log,
-    isGrouped: boolean,
-  ) {
-    super(Service, Characteristic, accessory, config, log, isGrouped);
+  constructor(dependency: DummyAccessoryDependency<C>) {
+    super(dependency);
 
     this.on = this.defaultOn;
 
-    this.accessoryService.getCharacteristic(Characteristic.On)
+    this.accessoryService.getCharacteristic(dependency.Characteristic.On)
       .onGet(this.getOn.bind(this))
       .onSet(this.setOn.bind(this));
 

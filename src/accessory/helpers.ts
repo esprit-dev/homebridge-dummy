@@ -1,6 +1,4 @@
-import { PlatformAccessory } from 'homebridge';
-
-import { DummyAccessory } from './base.js';
+import { DummyAccessory, DummyAccessoryDependency } from './base.js';
 import { BlindAccessory } from './position/blind.js';
 import { DoorAccessory } from './position/door.js';
 import { GarageDoorAccessory } from './position/garage.js';
@@ -14,40 +12,31 @@ import { WindowAccessory } from './position/window.js';
 import { strings } from '../i18n/i18n.js';
 
 import { AccessoryType } from '../model/enums.js';
-import { CharacteristicType, DummyConfig, ServiceType } from '../model/types.js';
+import { DummyConfig } from '../model/types.js';
 
-import { Log } from '../tools/log.js';
+export function createDummyAccessory(dependency: DummyAccessoryDependency<DummyConfig>): DummyAccessory<DummyConfig> | null {
 
-export function createDummyAccessory(
-  Service: ServiceType,
-  Characteristic: CharacteristicType,
-  accessory: PlatformAccessory,
-  config: DummyConfig,
-  log: Log,
-  isGrouped: boolean = false,
-): DummyAccessory<DummyConfig> | null {
-
-  switch(config.type) {
+  switch(dependency.config.type) {
   case AccessoryType.Door:
-    return new DoorAccessory(Service, Characteristic, accessory, config, log, isGrouped);
+    return new DoorAccessory(dependency);
   case AccessoryType.GarageDoorOpener:
-    return new GarageDoorAccessory(Service, Characteristic, accessory, config, log, isGrouped);
+    return new GarageDoorAccessory(dependency);
   case AccessoryType.Lightbulb:
-    return new LightbulbAccessory(Service, Characteristic, accessory, config, log, isGrouped);
+    return new LightbulbAccessory(dependency);
   case AccessoryType.LockMechanism:
-    return new LockAccessory(Service, Characteristic, accessory, config, log, isGrouped);
+    return new LockAccessory(dependency);
   case AccessoryType.Outlet:
-    return new OutletAccessory(Service, Characteristic, accessory, config, log, isGrouped);
+    return new OutletAccessory(dependency);
   case AccessoryType.Switch:
-    return new SwitchAccessory(Service, Characteristic, accessory, config, log, isGrouped);
+    return new SwitchAccessory(dependency);
   case AccessoryType.Thermostat:
-    return new ThermostatAccessory(Service, Characteristic, accessory, config, log, isGrouped);
+    return new ThermostatAccessory(dependency);
   case AccessoryType.Window:
-    return new WindowAccessory(Service, Characteristic, accessory, config, log, isGrouped);
+    return new WindowAccessory(dependency);
   case AccessoryType.WindowCovering:
-    return new BlindAccessory(Service, Characteristic, accessory, config, log, isGrouped);
+    return new BlindAccessory(dependency);
   default:
-    log.error(strings.startup.unsupportedType, `'${config.type}'`);
+    dependency.log.error(strings.startup.unsupportedType, `'${dependency.config.type}'`);
     return null;
   }
 }

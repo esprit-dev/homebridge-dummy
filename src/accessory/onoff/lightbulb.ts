@@ -1,14 +1,15 @@
-import { CharacteristicValue, PlatformAccessory } from 'homebridge';
+import { CharacteristicValue } from 'homebridge';
 
 import { OnOffAccessory } from './onoff.js';
+
+import { DummyAccessoryDependency } from '../base.js';
 
 import { strings } from '../../i18n/i18n.js';
 
 import { AccessoryType, WebhookCommand } from '../../model/enums.js';
-import { CharacteristicType, LightbulbConfig, ServiceType } from '../../model/types.js';
+import { LightbulbConfig } from '../../model/types.js';
 import { Webhook } from '../../model/webhook.js';
 
-import { Log } from '../../tools/log.js';
 import { storageGet_Deprecated, Storage } from '../../tools/storage.js';
 
 const NO_BRIGHTNESS = -1;
@@ -17,21 +18,14 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
 
   private brightness: CharacteristicValue;
 
-  constructor(
-    Service: ServiceType,
-    Characteristic: CharacteristicType,
-    accessory: PlatformAccessory,
-    config: LightbulbConfig,
-    log: Log,
-    isGrouped: boolean,
-  ) {
-    super(Service, Characteristic, accessory, config, log, isGrouped);
+  constructor(dependency: DummyAccessoryDependency<LightbulbConfig>) {
+    super(dependency);
 
     this.brightness = this.config.defaultBrightness ?? NO_BRIGHTNESS;
 
     if (this.isDimmer) {
 
-      this.accessoryService.getCharacteristic(this.Characteristic.Brightness)
+      this.accessoryService.getCharacteristic(dependency.Characteristic.Brightness)
         .onGet(this.getBrightness.bind(this))
         .onSet(this.setBrightness.bind(this));
 

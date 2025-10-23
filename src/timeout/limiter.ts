@@ -1,11 +1,12 @@
 import { DAY, getDelay, HOUR, MINUTE, SECOND, Timeout } from './timeout.js';
 
+import { DummyAddonDependency } from '../accessory/base.js';
+
 import { strings } from '../i18n/i18n.js';
 
 import { isValidTimeUnits, printableValues, TimePeriod, TimeUnits } from '../model/enums.js';
 import { LimiterConfig } from '../model/types.js';
 
-import { Log } from '../tools/log.js';
 import { Storage } from '../tools/storage.js';
 import { assert } from '../tools/validation.js';
 
@@ -13,14 +14,14 @@ type Limit = { timeRemaining: number, resetTimestamp: number, startTimestamp?: n
 
 export default class Limiter extends Timeout {
 
-  static new(config: LimiterConfig, caller: string, log: Log, disableLogging: boolean): Limiter | undefined {
+  static new(dependency: DummyAddonDependency, config?: LimiterConfig): Limiter | undefined {
 
-    if (!assert(log, caller, config, 'limit', 'units', 'period')) {
+    if (config === undefined || !assert(dependency.log, dependency.caller, config, 'limit', 'units', 'period')) {
       return;
     }
 
     if (!isValidTimeUnits(config.units)) {
-      log.error(strings.limiter.badUnits, caller, `'${config.units}'`, printableValues(TimeUnits));
+      dependency.log.error(strings.limiter.badUnits, dependency.caller, `'${config.units}'`, printableValues(TimeUnits));
       return;
     }
 
@@ -39,28 +40,23 @@ export default class Limiter extends Timeout {
       periodLength = 31 * DAY;
       break;
     default:
-      log.error(strings.limiter.badPeriod, caller, `'${config.period}'`, printableValues(TimePeriod));
+      dependency.log.error(strings.limiter.badPeriod, dependency.caller, `'${config.period}'`, printableValues(TimePeriod));
       return;
     }
 
     const delay = getDelay(config.limit, config.units);
     if (delay > periodLength) {
-      log.error(strings.limiter.limitExceedsPeriod, caller);
+      dependency.log.error(strings.limiter.limitExceedsPeriod, dependency.caller);
       return;
     }
 
-    return new Limiter(config, caller, log, disableLogging);
+    return new Limiter(dependency, config);
   }
 
   private limit: Limit = { timeRemaining: -1, resetTimestamp: -1, startTimestamp: undefined };
 
-  private constructor(
-    private readonly config: LimiterConfig,
-    caller: string,
-    log: Log,
-    disableLogging: boolean,
-  ) {
-    super(caller, log, disableLogging);
+  private constructor(dependency: DummyAddonDependency, private readonly config: LimiterConfig) {
+    super(dependency);
 
     const cache = Storage.get(this.limitStorageKey);
     if (cache === undefined) {

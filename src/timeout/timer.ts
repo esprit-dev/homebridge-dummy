@@ -1,46 +1,41 @@
 import { DelayLogStrings, SECOND, Timeout } from './timeout.js';
 
+import { DummyAddonDependency } from '../accessory/base.js';
+
 import { isValidTimeUnits, printableValues, TimeUnits } from '../model/enums.js';
 import { TimerConfig } from '../model/types.js';
 
 import { strings } from '../i18n/i18n.js';
 
-import { Log } from '../tools/log.js';
 import { Storage } from '../tools/storage.js';
 import { assert } from '../tools/validation.js';
 
 export class Timer extends Timeout {
 
-  static new(config: TimerConfig, callerId: string, callerName: string, log: Log, disableLogging: boolean): Timer | undefined {
+  static new(dependency: DummyAddonDependency, config?: TimerConfig): Timer | undefined {
 
-    if (!assert(log, callerName, config, 'delay', 'units')) {
+    if (config === undefined || !assert(dependency.log, dependency.caller, config, 'delay', 'units')) {
       return;
     }
 
     if (!isValidTimeUnits(config.units)) {
-      log.error(strings.timer.badUnits, callerName, `'${config.units}'`, printableValues(TimeUnits));
+      dependency.log.error(strings.timer.badUnits, dependency.caller, `'${config.units}'`, printableValues(TimeUnits));
       return;
     }
 
-    return new Timer(config, callerId, callerName, log, disableLogging);
+    return new Timer(dependency, config);
   }
 
   private expiresTimestamp?: number;
 
-  private constructor(
-    private readonly config: TimerConfig,
-    private readonly callerId: string,
-    callerName: string,
-    log: Log,
-    disableLogging: boolean,
-  ) {
-    super(callerName, log, disableLogging);
+  private constructor(dependency: DummyAddonDependency, private readonly config: TimerConfig) {
+    super(dependency);
 
     this.expiresTimestamp = Storage.get(this.timerStorageKey) as number;
   }
 
   private get timerStorageKey(): string {
-    return `${this.callerId}:Timer`;
+    return `${this.dependency.identifier}:Timer`;
   }
 
   private storeExpiresTimestamp(value: number | undefined) {
