@@ -8,6 +8,7 @@ import { SensorAccessory } from './sensor.js';
 
 import { strings } from '../i18n/i18n.js';
 
+import { ConditionManager } from '../model/conditions.js';
 import { AccessoryType } from '../model/enums.js';
 import { CharacteristicType, DummyConfig, ServiceType } from '../model/types.js';
 import { Webhook } from '../model/webhook.js';
@@ -22,8 +23,9 @@ import getVersion from '../tools/version.js';
 export type DummyAccessoryDependency<C extends DummyConfig> = {
   Service: ServiceType,
   Characteristic: CharacteristicType,
-  accessory: PlatformAccessory,
+  platformAccessory: PlatformAccessory,
   config: C,
+  conditionManager: ConditionManager,
   log: Log,
   isGrouped: boolean,
 }
@@ -31,7 +33,7 @@ export type DummyAccessoryDependency<C extends DummyConfig> = {
 export type DummyAddonDependency = {
   Service: ServiceType,
   Characteristic: CharacteristicType,
-  accessory: PlatformAccessory,
+  platformAccessory: PlatformAccessory,
   identifier: string,
   caller: string,
   log: Log,
@@ -61,7 +63,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
     const addonDependency: DummyAddonDependency =  {
       Service: dependency.Service,
       Characteristic: dependency.Characteristic,
-      accessory: dependency.accessory,
+      platformAccessory: dependency.platformAccessory,
       identifier: this.identifier,
       caller: dependency.config.name,
       log: dependency.log,
@@ -80,9 +82,9 @@ export abstract class DummyAccessory<C extends DummyConfig> {
 
     if (dependency.isGrouped) {
 
-      let accessoryService = dependency.accessory.getServiceById(serviceInstance, this.identifier);
+      let accessoryService = dependency.platformAccessory.getServiceById(serviceInstance, this.identifier);
       if (!accessoryService) {
-        accessoryService = dependency.accessory.addService(serviceInstance, dependency.config.name, this.identifier);
+        accessoryService = dependency.platformAccessory.addService(serviceInstance, dependency.config.name, this.identifier);
         accessoryService.setCharacteristic(dependency.Characteristic.ConfiguredName, dependency.config.name);
       }
 
@@ -91,7 +93,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
       return;
     }
 
-    dependency.accessory.getService(dependency.Service.AccessoryInformation)!
+    dependency.platformAccessory.getService(dependency.Service.AccessoryInformation)!
       .setCharacteristic(dependency.Characteristic.Name, dependency.config.name)
       .setCharacteristic(dependency.Characteristic.ConfiguredName, dependency.config.name)
       .setCharacteristic(dependency.Characteristic.Manufacturer, PLUGIN_ALIAS)
@@ -99,12 +101,12 @@ export abstract class DummyAccessory<C extends DummyConfig> {
       .setCharacteristic(dependency.Characteristic.SerialNumber, this.identifier)
       .setCharacteristic(dependency.Characteristic.FirmwareRevision, getVersion());
 
-    this.accessoryService = dependency.accessory.getService(serviceInstance) || dependency.accessory.addService(serviceInstance);
+    this.accessoryService = dependency.platformAccessory.getService(serviceInstance) || dependency.platformAccessory.addService(serviceInstance);
 
     for (const type of Object.values(AccessoryType)) {
-      const existingService = dependency.accessory.getService(dependency.Service[type]);
+      const existingService = dependency.platformAccessory.getService(dependency.Service[type]);
       if (existingService && type !== this.getAccessoryType()) {
-        dependency.accessory.removeService(existingService);
+        dependency.platformAccessory.removeService(existingService);
       }
     }
   }

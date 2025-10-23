@@ -15,6 +15,7 @@ import { Log } from '../tools/log.js';
 import getVersion from '../tools/version.js';
 import { WebhookManager } from '../model/webhook.js';
 import { Storage } from '../tools/storage.js';
+import { ConditionManager } from '../model/conditions.js';
 
 export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
   private readonly Service;
@@ -60,9 +61,9 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
     });
   }
 
-  configureAccessory(accessory: PlatformAccessory): void {
-    this.log.always(strings.startup.restoringAccessory, accessory.displayName);
-    this.platformAccessories.set(accessory.context.identifier, accessory);
+  configureAccessory(platformAccessory: PlatformAccessory): void {
+    this.log.always(strings.startup.restoringAccessory, platformAccessory.displayName);
+    this.platformAccessories.set(platformAccessory.context.identifier, platformAccessory);
   }
 
   private teardown() {
@@ -85,6 +86,8 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
 
     const groupAccessories = new Map<string, GroupConfig>();
 
+    const conditionManager = new ConditionManager();
+
     for (const accessoryConfig of accessories) {
 
       if (accessoryConfig.groupName?.length) {
@@ -97,13 +100,14 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
       const id = DummyAccessory.identifier(accessoryConfig);
       keepIdentifiers.add(id);
 
-      const accessory = this.platformAccessories.get(id) ?? this.createPlatformAccessory(id, accessoryConfig.name);
+      const platformAccessory = this.platformAccessories.get(id) ?? this.createPlatformAccessory(id, accessoryConfig.name);
 
       const dependency: DummyAccessoryDependency<DummyConfig> = {
         Service: this.Service,
         Characteristic: this.Characteristic,
-        accessory: accessory,
+        platformAccessory: platformAccessory,
         config: accessoryConfig,
+        conditionManager: conditionManager,
         log: this.log,
         isGrouped: false,
       };
@@ -127,12 +131,13 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
       const id = GroupAccessory.identifier(groupName);
       keepIdentifiers.add(id);
 
-      const accessory = this.platformAccessories.get(id) ?? this.createPlatformAccessory(id, groupName);
+      const platformAccessory = this.platformAccessories.get(id) ?? this.createPlatformAccessory(id, groupName);
 
       const dependency: GroupAccessoryDependency = {
         Service: this.Service,
         Characteristic: this.Characteristic,
-        accessory: accessory,
+        platformAccessory: platformAccessory,
+        conditionManager: conditionManager,
         log: this.log,
       };
 
@@ -168,9 +173,9 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
     return accessory;
   }
 
-  private removeCachedAccessory(accessory: PlatformAccessory) {
-    this.log.always(strings.startup.removeAccessory, accessory.displayName);
-    this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
-    this.platformAccessories.delete(accessory.context.identifier);
+  private removeCachedAccessory(platformAccessory: PlatformAccessory) {
+    this.log.always(strings.startup.removeAccessory, platformAccessory.displayName);
+    this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [platformAccessory]);
+    this.platformAccessories.delete(platformAccessory.context.identifier);
   }
 }

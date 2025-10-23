@@ -3,6 +3,7 @@ import { PlatformAccessory } from 'homebridge';
 import { DummyAccessory, DummyAccessoryDependency } from './base.js';
 import { createDummyAccessory } from './helpers.js';
 
+import { ConditionManager } from '../model/conditions.js';
 import { CharacteristicType, DummyConfig, GroupConfig, ServiceType } from '../model/types.js';
 import { WebhookManager } from '../model/webhook.js';
 
@@ -13,7 +14,8 @@ import getVersion from '../tools/version.js';
 export type GroupAccessoryDependency = {
     Service: ServiceType,
     Characteristic: CharacteristicType,
-    accessory: PlatformAccessory,
+    platformAccessory: PlatformAccessory,
+    conditionManager: ConditionManager,
     log: Log
 }
 
@@ -27,10 +29,10 @@ export class GroupAccessory {
 
   constructor(dependency: GroupAccessoryDependency, config: GroupConfig, webhookManager: WebhookManager) {
 
-    dependency.accessory.getService(dependency.Service.AccessoryInformation)!
+    dependency.platformAccessory.getService(dependency.Service.AccessoryInformation)!
       .setCharacteristic(dependency.Characteristic.Manufacturer, PLUGIN_ALIAS)
       .setCharacteristic(dependency.Characteristic.Model, GroupAccessory.name)
-      .setCharacteristic(dependency.Characteristic.SerialNumber, dependency.accessory.UUID)
+      .setCharacteristic(dependency.Characteristic.SerialNumber, dependency.platformAccessory.UUID)
       .setCharacteristic(dependency.Characteristic.FirmwareRevision, getVersion());
 
     const keepSubtypes = new Set<string>();
@@ -56,9 +58,9 @@ export class GroupAccessory {
       this.accessories.push(dummyAccessory);
     };
 
-    for (const service of [...dependency.accessory.services]) {
+    for (const service of [...dependency.platformAccessory.services]) {
       if (service.subtype && !keepSubtypes.has(service.subtype)) {
-        dependency.accessory.removeService(service);
+        dependency.platformAccessory.removeService(service);
       }
     }
   }

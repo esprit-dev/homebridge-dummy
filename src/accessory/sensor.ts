@@ -46,20 +46,20 @@ export class SensorAccessory extends Timeout {
       return new SensorAccessory(sensor, dependency);
     }
 
-    SensorAccessory.removeUnwantedServices(dependency.Service, dependency.accessory);
+    SensorAccessory.removeUnwantedServices(dependency.Service, dependency.platformAccessory);
 
     return;
   }
 
-  private static removeUnwantedServices(Service: ServiceType, accessory: PlatformAccessory, keep?: SensorType) {
+  private static removeUnwantedServices(Service: ServiceType, platformAccessory: PlatformAccessory, keep?: SensorType) {
     for (const type of Object.values(SensorType)) {
       if (type === keep) {
         continue;
       }
 
-      const existingService = accessory.getService(Service[type]);
+      const existingService = platformAccessory.getService(Service[type]);
       if (existingService) {
-        accessory.removeService(existingService);
+        platformAccessory.removeService(existingService);
       }
     }
   }
@@ -67,13 +67,14 @@ export class SensorAccessory extends Timeout {
   private constructor(private readonly config: SensorConfig, dependency: DummyAddonDependency) {
     super(dependency);
 
-    this.service = dependency.accessory.getService(dependency.Service[config.type]) || dependency.accessory.addService(dependency.Service[config.type]);
+    this.service = dependency.platformAccessory.getService(dependency.Service[config.type]) ||
+      dependency.platformAccessory.addService(dependency.Service[config.type]);
 
     const characteristicInstance = dependency.Characteristic[this.sensorInfo.characteristic];
     this.service.getCharacteristic(characteristicInstance)
       .onGet(this.onGet.bind(this));
 
-    SensorAccessory.removeUnwantedServices(dependency.Service, dependency.accessory, config.type);
+    SensorAccessory.removeUnwantedServices(dependency.Service, dependency.platformAccessory, config.type);
   }
 
   private async onGet(): Promise<CharacteristicValue> {
