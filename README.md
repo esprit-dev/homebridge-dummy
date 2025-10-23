@@ -283,7 +283,11 @@ For `TargetTemperature` you may optionally supply a `unit` (either 'F' or 'C') t
 
 ## Credits
 
-Special thanks to [@nfarina](https://github.com/sponsors/nfarina) for creating the original version of this plugin and maintaining it for almost 10 (!!!) years
+[@jotzet79](https://github.com/sponsors/jotzet79) for German translations
+
+[@Silverdragon122](https://github.com/sponsors/Silverdragon122) for Russian translations
+
+[@dcompane](https://github.com/sponsors/dcompane) for Spanish translations
 
 [Keryan Belahcene](https://www.instagram.com/keryan.me) for creating the [Flume](https://github.com/homebridge-plugins/homebridge-flume) banner image which was adapted for use with this plugin
 
@@ -292,5 +296,7 @@ Schedule feature inspired by [Homebridge Schedule](https://github.com/kbrashears
 Sensor feature inspired by [Homebridge-Delay-Switch](https://github.com/nitaybz/homebridge-delay-switch#readme) by [@nitaybz](https://github.com/sponsors/nitaybz)
 
 Command feature inspired by [homebridge-cmdtrigger](https://github.com/hallos/homebridge-cmdtrigger) by [@hallos](https://github.com/sponsors/hallos)
+
+Special thanks to [@nfarina](https://github.com/sponsors/nfarina) for creating the original version of this plugin and maintaining it for almost 10 (!!!) years
 
 And to the amazing creators/contributors of [Homebridge](https://homebridge.io) who made this plugin possible!
