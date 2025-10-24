@@ -5,7 +5,7 @@ import { Translation } from '../i18n/i18n.js';
 import { PLUGIN_ALIAS } from '../homebridge/settings.js';
 
 import { DummyPlatformConfig } from '../model/types.js';
-import { ScheduleType } from '../model/enums.js';
+import { DefaultOnState, ScheduleType } from '../model/enums.js';
 
 declare const homebridge: IHomebridgePluginUi;
 
@@ -131,6 +131,12 @@ async function migrateDeprecatedFields(configs: DummyPlatformConfig[]) {
 
   configs.forEach( (config) => {
     config.accessories?.forEach( (accessoryConfig) => {
+
+      if ('defaultOn' in accessoryConfig) {
+        (accessoryConfig as OnOffConfig).defaultState = accessoryConfig.defaultOn ? DefaultOnState.ON : DefaultOnState.OFF;
+        accessoryConfig.defaultOn = undefined;
+        changed = true;
+      }
 
       const currentSensor = accessoryConfig.sensor;
       if (typeof currentSensor === 'string') {

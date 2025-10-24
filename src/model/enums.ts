@@ -34,6 +34,11 @@ export enum SensorCharacteristic {
   SmokeDetected = 'SmokeDetected',
 }
 
+export enum DefaultOnState {
+  ON = 'on',
+  OFF = 'off',
+}
+
 export enum DefaultLockState {
   LOCKED = 'locked',
   UNLOCKED = 'unlocked',

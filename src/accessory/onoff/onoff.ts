@@ -8,7 +8,7 @@ import { OnOffConfig } from '../../model/types.js';
 import { Webhook } from '../../model/webhook.js';
 
 import { storageGet_Deprecated, Storage } from '../../tools/storage.js';
-import { WebhookCommand } from '../../model/enums.js';
+import { DefaultOnState, WebhookCommand } from '../../model/enums.js';
 
 export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extends DummyAccessory<C> {
 
@@ -17,7 +17,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
   constructor(dependency: DummyAccessoryDependency<C>) {
     super(dependency);
 
-    this.on = this.defaultOn;
+    this.on = this.defaultState;
 
     this.accessoryService.getCharacteristic(dependency.Characteristic.On)
       .onGet(this.getOn.bind(this))
@@ -51,7 +51,12 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
     await this.setOn(on);
   }
 
-  private get defaultOn(): boolean {
+  private get defaultState(): boolean {
+
+    if (this.config.defaultState) {
+      return this.config.defaultState === DefaultOnState.ON ? true : false;
+    }
+
     return this.config.defaultOn ? true : false;
   }
 
@@ -77,7 +82,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
       await Storage.set(this.defaultStateStorageKey, this.on);
     }
 
-    if (this.on !== this.defaultOn) {
+    if (this.on !== this.defaultState) {
       this.startTimer();
     } else {
       this.cancelTimer();
@@ -87,22 +92,22 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
 
     if (this.sensor) {
       if (!this.sensor.timerControlled) {
-        this.sensor.active = this.on !== this.defaultOn;
-      } else if (this.on !== this.defaultOn) {
+        this.sensor.active = this.on !== this.defaultState;
+      } else if (this.on !== this.defaultState) {
         this.sensor.active = false;
       }
     }
   }
 
   override async trigger(): Promise<void> {
-    if (this.on === this.defaultOn) {
+    if (this.on === this.defaultState) {
       await this.setOn(!this.on);
     }
   }
 
   override async reset(): Promise<void> {
-    if (this.on !== this.defaultOn) {
-      await this.setOn(this.defaultOn);
+    if (this.on !== this.defaultState) {
+      await this.setOn(this.defaultState);
       if (this.sensor?.timerControlled) {
         this.sensor.active = true;
       }

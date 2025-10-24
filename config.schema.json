@@ -251,10 +251,10 @@
               "minimum": 0,
               "maximum": 100
             },
-            "defaultOn": {
-              "type": "number",
+            "defaultState": {
+              "type": "string",
               "title": "${config.title.defaultState}",
-              "enum": [1, 0],
+              "enum": ["on", "off"],
               "enumNames": ["${config.enumNames.on}", "${config.enumNames.off}"]
             },
             "defaultLockState": {
@@ -348,15 +348,15 @@
               "items": [
                 {
                   "key": "accessories[].name",
-                  "flex": "1 1 33%"
+                  "flex": "0 0 33%"
                 },
                 {
                   "key": "accessories[].type",
-                  "flex": "1 1 33%"
+                  "flex": "0 0 33%"
                 },
                 {
                   "key": "accessories[].groupName",
-                  "flex": "1 1 33%"
+                  "flex": "0 0 33%"
                 }
               ]
             },
@@ -364,7 +364,7 @@
               "type": "fieldset",
               "notitle": true,
               "condition": {
-                "functionBody": "return model.accessories?.[arguments[1]]?.type !== undefined;"
+                "functionBody": "return model.accessories?.[arguments[1]]?.type;"
               },
               "items": [
                 {
@@ -376,7 +376,7 @@
                   },
                   "items": [
                     {
-                      "key": "accessories[].defaultOn",
+                      "key": "accessories[].defaultState",
                       "flex": "0 0 33%"
                     },
                     {
@@ -479,7 +479,7 @@
               "title": "${config.title.schedule}",
               "description": "${config.description.schedule}",
               "condition": {
-                "functionBody": "const type = model.accessories?.[arguments[1]]?.type; return type !== undefined && type !== 'Thermostat';"
+                "functionBody": "const type = model.accessories?.[arguments[1]]?.type; return type && type !== 'Thermostat';"
               },
               "items": [
                 {
@@ -489,18 +489,18 @@
                   "items": [
                     {
                       "key": "accessories[].schedule.type",
-                      "flex": "1 1 33%"
+                      "flex": "0 0 33%"
                     },
                     {
                       "key": "accessories[].schedule.interval",
-                      "flex": "1 1 33%",
+                      "flex": "0 0 33%",
                       "condition": {
                           "functionBody": "return model.accessories?.[arguments[1]]?.schedule?.type === 'INTERVAL';"
                       }
                     },
                     {
                       "key": "accessories[].schedule.units",
-                      "flex": "1 1 33%",
+                      "flex": "0 0 33%",
                       "condition": {
                           "functionBody": "return model.accessories?.[arguments[1]]?.schedule?.type === 'INTERVAL';"
                       }
@@ -517,11 +517,11 @@
                   "items": [
                     {
                       "key": "accessories[].schedule.cron",
-                      "flex": "1 1 33%"
+                      "flex": "0 0 33%"
                     },
                     {
                       "key": "accessories[].schedule.cronCustom",
-                      "flex": "1 1 67%",
+                      "flex": "0 0 67%",
                       "condition": {
                           "functionBody": "return model.accessories?.[arguments[1]]?.schedule?.cron === 'CRON_CUSTOM';"
                       }
@@ -531,7 +531,7 @@
                 {
                   "key": "accessories[].schedule.random",
                   "condition": {
-                      "functionBody": "const schedule = model.accessories?.[arguments[1]]?.schedule; return schedule?.type === 'INTERVAL' && schedule?.interval !== undefined;"
+                      "functionBody": "const schedule = model.accessories?.[arguments[1]]?.schedule; return schedule?.type === 'INTERVAL' && schedule?.interval;"
                   }
                 }
               ]
@@ -541,7 +541,7 @@
               "title": "${config.title.timer}",
               "description": "${config.description.timer}",
               "condition": {
-                "functionBody": "const type = model.accessories?.[arguments[1]]?.type; return type !== undefined && type !== 'Thermostat';"
+                "functionBody": "const type = model.accessories?.[arguments[1]]?.type; return type && type !== 'Thermostat';"
               },
               "items": [
                 {
@@ -551,11 +551,11 @@
                   "items": [
                     {
                       "key": "accessories[].timer.delay",
-                      "flex": "1 1 33%"
+                      "flex": "0 0 33%"
                     },
                     {
                       "key": "accessories[].timer.units",
-                      "flex": "1 1 33%"
+                      "flex": "0 0 33%"
                     }
                   ]
                 },
@@ -563,14 +563,14 @@
                   "type": "fieldset",
                   "notitle": true,
                   "condition": {
-                    "functionBody": "return model.accessories?.[arguments[1]]?.timer?.delay !== undefined;"
+                    "functionBody": "return model.accessories?.[arguments[1]]?.timer?.delay;"
                   },
                   "items": [
                     "accessories[].timer.random",
                     {
                       "key": "accessories[].sensor.timerControlled",
                       "condition": {
-                          "functionBody": "return model.accessories?.[arguments[1]]?.sensor?.type !== undefined;"
+                          "functionBody": "return model.accessories?.[arguments[1]]?.sensor?.type;"
                       }
                     }
                   ]
@@ -582,7 +582,7 @@
               "title": "${config.title.limiter}",
               "description": "${config.description.limiter}",
               "condition": {
-                "functionBody": "const type = model.accessories?.[arguments[1]]?.type; return type !== undefined && type !== 'Thermostat';"
+                "functionBody": "const type = model.accessories?.[arguments[1]]?.type; return type && type !== 'Thermostat';"
               },
               "items": [
                 {
@@ -592,15 +592,15 @@
                   "items": [
                     {
                       "key": "accessories[].limiter.limit",
-                      "flex": "1 1 33%"
+                      "flex": "0 0 33%"
                     },
                     {
                       "key": "accessories[].limiter.units",
-                      "flex": "1 1 33%"
+                      "flex": "0 0 33%"
                     },
                     {
                       "key": "accessories[].limiter.period",
-                      "flex": "1 1 33%"
+                      "flex": "0 0 33%"
                     }
                   ]
                 }
@@ -611,7 +611,7 @@
               "title": "${config.title.commands}",
               "description": "${config.description.commands}",
               "condition": {
-                "functionBody": "return model.accessories?.[arguments[1]]?.type !== undefined;"
+                "functionBody": "return model.accessories?.[arguments[1]]?.type;"
               },
               "items": [
                 {

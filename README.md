@@ -124,7 +124,7 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
                 "period": "HOUR | DAY | WEEK | MONTH",
             },
             "temperatureUnits": "C" | "F",
-            "defaultOn": true | false,
+            "defaultState": "on" | "off",
             "defaultBrightness": 0-100,
             "defaultLockState": "locked" | "unlocked",
             "defaultPosition": "open" | "closed",
@@ -223,7 +223,7 @@ Execute arbitrary commands (e.g. curl) when the accessory changes state
 
 ### Defaults
 - `temperatureUnits` - Units to use for thermostats, either 'C' or 'F'
-- `defaultOn` — Initial value. Default _ON_ = true, default _OFF_ = false
+- `defaultState` — Initial value, either "on" or "off"
 - `defaultBrightness` — If set, lightbulb will have additional dimmer settings with this default brightness percentage
 - `defaultLockState` - The initial value for the lock, "locked" or "unlocked"
 - `defaultPosition` — Initial position for the door/garage/window/blinds, "open" or "closed"
