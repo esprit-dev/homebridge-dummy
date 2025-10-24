@@ -35,8 +35,8 @@ export enum SensorCharacteristic {
 }
 
 export enum ConditionOperator {
-  AND = 'AND',
-  OR = 'OR'
+  AND = 'and',
+  OR = 'or'
 }
 
 export enum OnState {

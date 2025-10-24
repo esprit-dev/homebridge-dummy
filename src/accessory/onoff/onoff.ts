@@ -49,6 +49,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
 
     const on = await storageGet_Deprecated(this.defaultStateStorageKey);
     if (on === undefined) {
+      await this.registerStateChange();
       return;
     }
 
@@ -62,6 +63,10 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
     }
 
     return this.config.defaultOn ? true : false;
+  }
+
+  private async registerStateChange() {
+    await this.onStateChange(this.on ? OnState.ON : OnState.OFF);
   }
 
   private async getOn(): Promise<CharacteristicValue> {
@@ -102,7 +107,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
       }
     }
 
-    await this.onStateChange(value ? OnState.ON : OnState.OFF);
+    await this.registerStateChange();
   }
 
   override async trigger(): Promise<void> {

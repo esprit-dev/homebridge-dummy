@@ -2,7 +2,7 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-## 1.4.0-beta.0 (XXXX-XX-XX)
+## 1.4.0-beta.0 (2025-10-24)
 
 ### ‼️ WARNING ‼️ — If upgrading from v0.9.2 or earlier, [READ THIS FIRST](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#v10-migration)
 
@@ -10,8 +10,14 @@ All notable changes to homebridge-dummy will be documented in this file.
 
 I plan to remove `Thermostat` as a supported accessory type from a future version. If you use `Thermostat`, please add your use case to [this ticket](https://github.com/mpatfield/homebridge-dummy/issues/207) and I will help you find an alternative.
 
+### Added
+- Trigger Conditions ([docs](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#trigger-conditions)) - Trigger an accessory based on the state changes of other Homebridge Dummy accessories
+    - ⚠️ Config UI for conditions is highly experimental. Please [open a ticket](https://github.com/mpatfield/homebridge-dummy/issues/new/choose) if you see any unusal behavior.
+    - I am curious to know if and how you are using this feature, so please drop a note in the [Discord](https://discord.com/channels/432663330281226270/1406798847279366214) channel
+
 ### Changed
-TODO defaultOn deprecated for defaultState
+- `defaultOn` has been deprecated in favor of `defaultState` for `Lightbulb`, `Outlet`, and `Switch`
+    - This is backwards compatible so no manual edits are necessary
 
 ## 1.3.2 (2025-10-24)
 

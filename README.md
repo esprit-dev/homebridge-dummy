@@ -123,6 +123,16 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
                 "units": "MILLISECONDS | SECONDS | MINUTES | HOURS",
                 "period": "HOUR | DAY | WEEK | MONTH",
             },
+            "conditions": {
+                "operator": "and | or",
+                "operands" [
+                    {
+                        "accessoryId": "string",
+                        "accessoryState": "on | off | open | closed | locked | unlocked",
+                    }
+                    …
+                ]
+            },
             "temperatureUnits": "C" | "F",
             "defaultState": "on" | "off",
             "defaultBrightness": 0-100,
@@ -220,6 +230,26 @@ Execute arbitrary commands (e.g. curl) when the accessory changes state
 - `lockCommand` - Arbitrary command to execute when lock mechanism is locked
 - `unlockCommand` - Arbitrary command to execute when lock mechanism is unlocked
 - `commandTemperature` - Arbitrary command to execute when temperature changes
+
+### Trigger Conditions
+
+You can trigger an accessory whenever a set of conditions are satisfied, for example, when other Homebridge Dummy accessories turn on.
+
+There are two logical operators to trigger the target accessory when ALL ("and") or ANY ("or") of a set of conditions are satisfied. This is set using `operator`.
+
+You can have an arbitrarily long list of conditions and they are checked in order.
+
+Note that due to limitations of HomeKit and Homebridge, it is only possible to check the states of other Homebridge Dummy accessories. One possible workaround is to set up duplicate accessories in Homebridge Dummy and use Automation to mirror the states.
+
+For example, if I have a physical door lock I want to "watch", then I can setup a `LockMechanism` accessory in Homebridge Dummy and create two automations to change the state of my dummy lock whenever the physical door lock is unlocked or locked.
+
+#### Conditions Object
+- `operator` - "and" to require ALL conditions to be satisfied, and "or" ANY
+- `operands` - A list of accessories to "watch" for state changes to see if conditions are satisfied
+
+#### Operand Object
+- `accessoryId` - The id of the accessory to watch for state changes
+- `accessoryState` - The desired accessory state to make this condition "true"
 
 ### Defaults
 - `temperatureUnits` - Units to use for thermostats, either 'C' or 'F'

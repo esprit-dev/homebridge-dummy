@@ -82,6 +82,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
 
     const position = await storageGet_Deprecated(this.defaultStateStorageKey);
     if (position === undefined) {
+      await this.registerStateChange();
       return;
     }
 
@@ -94,6 +95,10 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
 
   private async getState(): Promise<CharacteristicValue> {
     return this.Characteristic.PositionState.STOPPED;
+  }
+
+  private async registerStateChange() {
+    await this.onStateChange(this.position === this.positionClosed ? Position.CLOSED : Position.OPEN);
   }
 
   private async getPosition(): Promise<CharacteristicValue> {
@@ -137,7 +142,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
       }
     }
 
-    await this.onStateChange(targetPosition === this.positionClosed ? Position.CLOSED : Position.OPEN);
+    await this.registerStateChange();
   }
 
   override async trigger(): Promise<void> {

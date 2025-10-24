@@ -229,7 +229,7 @@
           "operator": {
             "type": "string",
             "title": "${config.title.operator}",
-            "enum": [ "AND", "OR"],
+            "enum": [ "and", "or"],
             "enumNames": ["${config.enumNames.operatorAnd}", "${config.enumNames.operatorOr}"]
           },
           "operands": {

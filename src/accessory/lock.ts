@@ -43,6 +43,7 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
 
     const state = await storageGet_Deprecated(this.defaultStateStorageKey);
     if (state === undefined) {
+      await this.registerStateChange();
       return;
     }
 
@@ -66,6 +67,10 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
   private get defaultLockState(): CharacteristicValue {
     return this.config.defaultLockState === LockState.UNLOCKED ?
       this.Characteristic.LockTargetState.UNSECURED : this.Characteristic.LockTargetState.SECURED;
+  }
+
+  private async registerStateChange() {
+    await this.onStateChange(this.state === this.Characteristic.LockTargetState.SECURED ? LockState.LOCKED : LockState.UNLOCKED);
   }
 
   protected async getState(): Promise<CharacteristicValue> {
@@ -107,7 +112,7 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
       }
     }
 
-    await this.onStateChange(value === this.Characteristic.LockTargetState.SECURED ? LockState.LOCKED : LockState.UNLOCKED);
+    await this.registerStateChange();
   }
 
   override async trigger(): Promise<void> {
