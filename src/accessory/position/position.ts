@@ -18,7 +18,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
     super(dependency);
 
     if (!isValidPosition(dependency.config.defaultPosition)) {
-      this.log.warning(strings.position.badDefault, this.name, `'${dependency.config.defaultPosition}'`, printableValues(DefaultPosition));
+      this.log.warning(strings.position.badDefault, this.name, `'${dependency.config.defaultPosition}'`, printableValues(Position));
     }
 
     this.position = this.defaultPosition;
@@ -89,7 +89,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
   }
 
   private get defaultPosition(): CharacteristicValue {
-    return this.config.defaultPosition === DefaultPosition.OPEN ? this.positionOpen : this.positionClosed;
+    return this.config.defaultPosition === Position.OPEN ? this.positionOpen : this.positionClosed;
   }
 
   private async getState(): Promise<CharacteristicValue> {

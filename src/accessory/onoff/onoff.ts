@@ -12,10 +12,14 @@ import { DefaultOnState, WebhookCommand } from '../../model/enums.js';
 
 export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extends DummyAccessory<C> {
 
-  private on: boolean;
+  private on: CharacteristicValue;
 
   constructor(dependency: DummyAccessoryDependency<C>) {
     super(dependency);
+
+    if (!isValidOnState(this.config.defaultState)) {
+      this.log.warning(strings.onOff.badDefault, this.name, `'${dependency.config.defaultState}'`, printableValues(OnState));
+    }
 
     this.on = this.defaultState;
 
@@ -51,10 +55,10 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
     await this.setOn(on);
   }
 
-  private get defaultState(): boolean {
+  private get defaultState(): CharacteristicValue {
 
     if (this.config.defaultState) {
-      return this.config.defaultState === DefaultOnState.ON ? true : false;
+      return this.config.defaultState === OnState.ON ? true : false;
     }
 
     return this.config.defaultOn ? true : false;
@@ -76,7 +80,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
       }
     }
 
-    this.on = value as boolean;
+    this.on = value;
 
     if (this.isStateful) {
       await Storage.set(this.defaultStateStorageKey, this.on);

@@ -34,6 +34,7 @@ const en = {
   },
 
   onOff: {
+    badDefault: '%s has invalid default on state %s. Must be one of: %s', // accessory name, input, list of state names
     stateOff: '%s is off', // accessory name
     stateOn: '%s is on', // accessory name
   },

@@ -34,28 +34,34 @@ export enum SensorCharacteristic {
   SmokeDetected = 'SmokeDetected',
 }
 
-export enum DefaultOnState {
+export enum OnState {
   ON = 'on',
   OFF = 'off',
 }
 
-export enum DefaultLockState {
+export function isValidOnState(input?: OnState): boolean {
+  return input === undefined || Object.values(OnState).includes(input);
+}
+
+export enum LockState {
   LOCKED = 'locked',
   UNLOCKED = 'unlocked',
 }
 
-export function isValidLockState(input?: DefaultLockState): boolean {
-  return input === undefined || Object.values(DefaultLockState).includes(input);
+export function isValidLockState(input?: LockState): boolean {
+  return input === undefined || Object.values(LockState).includes(input);
 }
 
-export enum DefaultPosition {
+export enum Position {
   OPEN = 'open',
   CLOSED = 'closed',
 }
 
-export function isValidPosition(input?: DefaultPosition): boolean {
-  return input === undefined || Object.values(DefaultPosition).includes(input);
+export function isValidPosition(input?: Position): boolean {
+  return input === undefined || Object.values(Position).includes(input);
 }
+
+export type AccessoryState = OnState | LockState | Position;
 
 export enum DefaultThermostatState {
   AUTO = 'auto',

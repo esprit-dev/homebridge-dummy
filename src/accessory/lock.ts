@@ -4,7 +4,7 @@ import { DummyAccessory, DummyAccessoryDependency } from './base.js';
 
 import { strings } from '../i18n/i18n.js';
 
-import { AccessoryType, DefaultLockState, isValidLockState, printableValues, WebhookCommand }  from '../model/enums.js';
+import { AccessoryType, LockState, isValidLockState, printableValues, WebhookCommand }  from '../model/enums.js';
 import { LockConfig } from '../model/types.js';
 import { Webhook } from '../model/webhook.js';
 
@@ -18,7 +18,7 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
     super(dependency);
 
     if (!isValidLockState(this.config.defaultLockState)) {
-      this.log.warning(strings.lock.badDefault, this.name, `'${dependency.config.defaultLockState}'`, printableValues(DefaultLockState));
+      this.log.warning(strings.lock.badDefault, this.name, `'${dependency.config.defaultLockState}'`, printableValues(LockState));
     }
 
     this.state = this.defaultLockState;
@@ -64,7 +64,7 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
   }
 
   private get defaultLockState(): CharacteristicValue {
-    return this.config.defaultLockState === DefaultLockState.UNLOCKED ?
+    return this.config.defaultLockState === LockState.UNLOCKED ?
       this.Characteristic.LockTargetState.UNSECURED : this.Characteristic.LockTargetState.SECURED;
   }
 

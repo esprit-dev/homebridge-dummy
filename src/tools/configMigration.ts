@@ -8,7 +8,7 @@ import { strings } from '../i18n/i18n.js';
 
 import { LEGACY_ALIAS, PLATFORM_NAME } from '../homebridge/settings.js';
 
-import { AccessoryType, DefaultOnState, TimeUnits }  from '../model/enums.js';
+import { AccessoryType, OnState, TimeUnits }  from '../model/enums.js';
 import { DummyConfig, DummyPlatformConfig, LegacyAccessoryConfig, LightbulbConfig, OnOffConfig } from '../model/types.js';
 
 function migrateAccessory(legacyConfig: LegacyAccessoryConfig): DummyConfig {
@@ -22,7 +22,7 @@ function migrateAccessory(legacyConfig: LegacyAccessoryConfig): DummyConfig {
 
   if (legacyConfig.reverse) {
     const onOffConfig = dummyConfig as OnOffConfig;
-    onOffConfig.defaultState = DefaultOnState.ON;
+    onOffConfig.defaultState = OnState.ON;
   }
 
   if (legacyConfig.dimmer) {
