@@ -44,6 +44,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
 
     if (!this.isStateful) {
       this.accessoryService.updateCharacteristic(this.Characteristic.On, this.on);
+      await this.registerStateChange();
       return;
     }
 

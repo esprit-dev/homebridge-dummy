@@ -81,7 +81,8 @@ export abstract class DummyAccessory<C extends DummyConfig> {
 
     this._limiter = Limiter.new(addonDependency, dependency.config.limiter);
 
-    dependency.conditionManager.register(name, this.identifier, dependency.config.conditions, this.trigger.bind(this), disableLogging);
+    dependency.conditionManager.register(name, this.identifier, dependency.config.conditions,
+      this.trigger.bind(this), this._timer ? undefined : this.reset.bind(this), disableLogging);
 
     const serviceInstance = dependency.Service[this.getAccessoryType()];
 

@@ -38,6 +38,7 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
     if (!this.isStateful) {
       this.accessoryService.updateCharacteristic(this.Characteristic.LockTargetState, this.state);
       this.accessoryService.updateCharacteristic(this.Characteristic.LockCurrentState, this.state);
+      await this.registerStateChange();
       return;
     }
 

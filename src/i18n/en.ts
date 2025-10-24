@@ -15,7 +15,7 @@ const en = {
     currentResult: 'Current result is %s', // boolean
     evaluatingConditions: 'Evaluating conditions for %s', // accessory name
     satisfied: '%s conditions have been satisfied. Triggering…', // accessory name
-    notSatisfied: '%s conditions have not yet been satisfied', // accessory name
+    notSatisfied: '%s conditions not satisfied', // accessory name
     selfReference: '%s is not allowed to reference itself as a triggering condition', // accessory name
     statesEqual: 'Current and desired states are both %s', // state name
     statesNotEqual: 'Current state %s is not equivalent to desired state %s', // state name, state name

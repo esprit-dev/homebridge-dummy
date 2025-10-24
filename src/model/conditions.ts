@@ -9,7 +9,8 @@ type Target = {
     name: string,
     identifier: string,
     conditions: ConditionsConfig,
-    trigger:  () => Promise<void>,
+    trigger: () => Promise<void>,
+    reset: (() => Promise<void>) | undefined,
     disableLogging: boolean,
 }
 
@@ -22,7 +23,8 @@ export class ConditionManager {
 
   constructor(private readonly log: Log) {}
 
-  public register(name: string, identifier: string, conditions: ConditionsConfig | undefined, trigger:  () => Promise<void>, disableLogging: boolean) {
+  public register(name: string, identifier: string, conditions: ConditionsConfig | undefined,
+    trigger: () => Promise<void>, reset: (() => Promise<void>) | undefined, disableLogging: boolean) {
 
     if (conditions === undefined) {
       return;
@@ -47,7 +49,7 @@ export class ConditionManager {
       return;
     }
 
-    const target = { name, identifier, conditions, trigger, disableLogging };
+    const target = { name, identifier, conditions, trigger, reset, disableLogging };
     this.targets.set(identifier, target);
 
     for (const operand of conditions.operands) {
@@ -82,6 +84,7 @@ export class ConditionManager {
         await target.trigger();
       } else {
         this.log.ifVerbose(strings.conditions.notSatisfied, target.name);
+        await target.reset?.();
       }
     }
   }

@@ -239,6 +239,8 @@ There are two logical operators to trigger the target accessory when ALL ("and")
 
 You can have an arbitrarily long list of conditions and they are checked in order.
 
+If target accessory is not setup to auto-reset with a timer, then it will immediately return to it's default setting as soon as the conditions are no longer met.
+
 Note that due to limitations of HomeKit and Homebridge, it is only possible to check the states of other Homebridge Dummy accessories. One possible workaround is to set up duplicate accessories in Homebridge Dummy and use Automation to mirror the states.
 
 For example, if I have a physical door lock I want to "watch", then I can setup a `LockMechanism` accessory in Homebridge Dummy and create two automations to change the state of my dummy lock whenever the physical door lock is unlocked or locked.

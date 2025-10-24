@@ -77,6 +77,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
     if (!this.isStateful) {
       this.accessoryService.updateCharacteristic(this.targetCharacteristic, this.position);
       this.accessoryService.updateCharacteristic(this.currentCharacteristic, this.position);
+      await this.registerStateChange();
       return;
     }
 
