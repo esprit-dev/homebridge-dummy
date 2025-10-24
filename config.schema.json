@@ -205,6 +205,53 @@
             }
           }
         ]
+      },
+      "operand": {
+        "type": "object",
+        "properties": {
+          "accessoryId": {
+            "type": "string",
+            "title": "${config.title.accessory}",
+            "required": true
+          },
+          "accessoryState": {
+            "type": "string",
+            "title": "${config.title.accessoryState}",
+            "enum": [ "on", "off", "open", "closed", "locked", "unlocked" ],
+            "enumNames": [ "${config.enumNames.on}", "${config.enumNames.off}", "${config.enumNames.open}", "${config.enumNames.closed}", "${config.enumNames.secured}", "${config.enumNames.unsecured}" ],
+            "required": true
+          }
+        }
+      },
+      "conditions": {
+        "type": "object",
+        "properties": {
+          "operator": {
+            "type": "string",
+            "title": "${config.title.operator}",
+            "enum": [ "AND", "OR"],
+            "enumNames": ["${config.enumNames.operatorAnd}", "${config.enumNames.operatorOr}"]
+          },
+          "operands": {
+            "type": "array",
+            "minItems":1,
+            "items": { "$ref": "#/definitions/operand" }
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "operator": {
+                }
+              },
+              "required": ["operator"]
+            },
+            "then": {
+              "required": ["operands"]
+            }
+          }
+        ]
       }
     },
     "properties": {
@@ -239,6 +286,7 @@
             "timer": { "$ref": "#/definitions/timer" },
             "schedule": { "$ref": "#/definitions/schedule" },
             "limiter": { "$ref": "#/definitions/limiter" },
+            "conditions": { "$ref": "#/definitions/conditions" },
             "temperatureUnits": {
               "type": "string",
               "title": "${config.title.units}",
@@ -601,6 +649,56 @@
                     {
                       "key": "accessories[].limiter.period",
                       "flex": "0 0 33%"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "fieldset",
+              "title": "${config.title.conditions}",
+              "description": "${config.description.conditions}",
+              "condition": {
+                "functionBody": "const type = model.accessories?.[arguments[1]]?.type; return model.accessories?.length > 1 && type && type !== 'Thermostat'"
+              },
+              "items": [
+                {
+                  "type": "div",
+                  "displayFlex": true,
+                  "flex-direction": "row",
+                  "items": [
+                    {
+                      "key": "accessories[].conditions.operator",
+                      "flex": "0 0 67%"
+                    }
+                  ]
+                },
+                {
+                  "type": "array",
+                  "title": "${config.title.condition}",
+                  "notitle": true,
+                  "condition": {
+                    "functionBody": "return model.accessories?.[arguments[1]]?.conditions?.operator;"
+                  },
+                  "key": "accessories[].conditions.operands",
+                  "items": [
+                    {
+                      "type": "div",
+                      "displayFlex": true,
+                      "flex-direction": "row",
+                      "items": [
+                        {
+                          "key": "accessories[].conditions.operands[].accessoryId",
+                          "flex": "0 0 50%"
+                        },
+                        {
+                          "key": "accessories[].conditions.operands[].accessoryState",
+                          "flex": "0 0 50%",
+                          "condition": {
+                            "functionBody": "return model.accessories?.[arguments[1][0]]?.conditions?.operands?.[arguments[1][1]]?.accessoryId;"
+                          }
+                        }
+                      ]
                     }
                   ]
                 }

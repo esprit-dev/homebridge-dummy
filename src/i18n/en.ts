@@ -11,6 +11,18 @@ const en = {
     executed: '%s executed command', // accessory name
   },
 
+  conditions: {
+    currentResult: 'Current result is %s', // boolean
+    evaluatingConditions: 'Evaluating conditions for %s', // accessory name
+    satisfied: '%s conditions have been satisfied. Triggering…', // accessory name
+    notSatisfied: '%s conditions have not yet been satisfied', // accessory name
+    selfReference: '%s is not allowed to reference itself as a triggering condition', // accessory name
+    statesEqual: 'Current and desired states are both %s', // state name
+    statesNotEqual: 'Current state %s is not equivalent to desired state %s', // state name, state name
+    stateUnknown: 'Cannot yet evalutate conditions because state for %s is unknown', // accessory id
+    statesUnrelated: 'Desired condition state %s is being compared to current state %s. Was this a typo?', // state name, state name
+  },
+
   lightbulb: {
     brightness: '%s brightness is %d%', // accessory name, number
     stateOn: '%s is on, brightness is %d%', // accessory name, number
@@ -83,6 +95,7 @@ const en = {
     description: {
       commands: 'Execute arbitrary commands (e.g. curl) when the accessory changes state',
       cron: 'Visit crontab.guru for help',
+      conditions: 'Set the accessory to its opposite (non-default) value when the specified conditions are met',
       limiter: 'Restrict the total time this accessory can be set to its non-default value, for each specified period',
       random: 'Time will be randomized with the above value as a maximum',
       schedule: 'Set the accessory to its opposite (non-default) value at specified interval or times',
@@ -116,10 +129,13 @@ const en = {
       minutely: 'Every Minute',
       month: 'Month',
       monthly: 'Monthly',
+      none: 'None',
       occupancySensor: 'Occupancy',
       off: 'Off',
       on: 'On',
       open: 'Open',
+      operatorAnd: 'ALL conditions are met', // proceeded by "Trigger when…"
+      operatorOr: 'ANY conditions are met', // proceeded by "Trigger when…"
       outlet: 'Outlet',
       milliseconds: 'Milliseconds',
       minutes: 'Minutes',
@@ -155,6 +171,7 @@ const en = {
 
     title: {
       accessory: 'Accessory',
+      accessoryState: 'State',
       commandClose: 'Close Command',
       commandOff: 'Off Command',
       commandOn: 'On Command',
@@ -163,6 +180,8 @@ const en = {
       commands: 'Commands',
       commandTemperature: 'Temperature Changed Command',
       commandUnlock: 'Unlock Command',
+      condition: 'Condition',
+      conditions: 'Trigger Conditions',
       cron: 'Cron',
       cronCustom: 'Custom Cron',
       defaultBrightness: 'Default Brightness',
@@ -177,6 +196,7 @@ const en = {
       limit: 'Limit',
       limiter: 'Time Limit',
       name: 'Name',
+      operator: 'Trigger when…',
       period: 'Per',
       preset: 'Preset',
       random: 'Randomize',

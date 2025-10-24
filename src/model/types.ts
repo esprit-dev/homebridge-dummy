@@ -4,8 +4,8 @@ export type ServiceType = typeof import('homebridge').Service;
 export type CharacteristicType = typeof import('homebridge').Characteristic;
 
 import {
-  AccessoryState, AccessoryType, LockState, OnState, Position, DefaultThermostatState,
-  ScheduleType, SensorType, TemperatureUnits, TimePeriod, TimeUnits,
+  AccessoryState, AccessoryType, ConditionOperator, DefaultThermostatState, LockState,
+  OnState, Position, ScheduleType, SensorType, TemperatureUnits, TimePeriod, TimeUnits,
 } from './enums.js';
 
 export type LegacyAccessoryConfig = AccessoryConfig & {
@@ -58,6 +58,16 @@ export type LimiterConfig = Assertable & {
   period: TimePeriod,
 }
 
+export type Operand = Assertable & {
+  accessoryId: string,
+  accessoryState: AccessoryState,
+}
+
+export type ConditionsConfig = Assertable & {
+  operator: ConditionOperator,
+  operands: Operand[],
+}
+
 export type DummyConfig = {
   id: string,
   name: string,
@@ -67,6 +77,7 @@ export type DummyConfig = {
   timer?: TimerConfig,
   schedule?: ScheduleConfig,
   limiter?: LimiterConfig,
+  conditions?: ConditionsConfig,
   resetOnRestart?: boolean,
   enableWebook?: boolean,
   disableLogging?: boolean,

@@ -86,7 +86,7 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
 
     const groupAccessories = new Map<string, GroupConfig>();
 
-    const conditionManager = new ConditionManager();
+    const conditionManager = new ConditionManager(this.log);
 
     for (const accessoryConfig of accessories) {
 

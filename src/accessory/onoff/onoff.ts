@@ -8,7 +8,7 @@ import { OnOffConfig } from '../../model/types.js';
 import { Webhook } from '../../model/webhook.js';
 
 import { storageGet_Deprecated, Storage } from '../../tools/storage.js';
-import { DefaultOnState, WebhookCommand } from '../../model/enums.js';
+import { isValidOnState, OnState, printableValues, WebhookCommand } from '../../model/enums.js';
 
 export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extends DummyAccessory<C> {
 
@@ -101,6 +101,8 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
         this.sensor.active = false;
       }
     }
+
+    await this.onStateChange(value ? OnState.ON : OnState.OFF);
   }
 
   override async trigger(): Promise<void> {

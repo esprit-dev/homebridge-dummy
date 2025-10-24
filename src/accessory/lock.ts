@@ -106,6 +106,8 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
         this.sensor.active = false;
       }
     }
+
+    await this.onStateChange(value === this.Characteristic.LockTargetState.SECURED ? LockState.LOCKED : LockState.UNLOCKED);
   }
 
   override async trigger(): Promise<void> {

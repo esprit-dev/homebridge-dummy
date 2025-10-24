@@ -4,8 +4,8 @@ import { Translation } from '../i18n/i18n.js';
 
 import { PLUGIN_ALIAS } from '../homebridge/settings.js';
 
-import { DummyPlatformConfig, OnOffConfig } from '../model/types.js';
-import { OnState, ScheduleType } from '../model/enums.js';
+import { DummyConfig, DummyPlatformConfig, OnOffConfig } from '../model/types.js';
+import { AccessoryType, OnState, ScheduleType } from '../model/enums.js';
 
 declare const homebridge: IHomebridgePluginUi;
 
@@ -125,6 +125,178 @@ async function updateConfigsWithUUIDs(configs: DummyPlatformConfig[]) {
   }
 }
 
+function findNextByName(element: Element, name: string): Element | null {
+  const walker = window.parent.document.createTreeWalker(window.parent.document.body, NodeFilter.SHOW_ELEMENT);
+
+  let found = false;
+  while (walker.nextNode()) {
+    if (walker.currentNode === element) {
+      found = true;
+      break;
+    }
+  }
+
+  while (found && walker.nextNode()) {
+    const node = walker.currentNode as Element;
+    if (node.getAttribute('name') === name) {
+      return node;
+    }
+  }
+
+  return null;
+}
+
+let accessories: DummyConfig[] = [];
+async function updateConditionDropdowns(strings: Translation, configs?: DummyPlatformConfig[]) {
+
+  const accessoryIdInputs = window.parent.document.querySelectorAll('[name="accessoryId"]');
+  if (accessoryIdInputs.length === 0) {
+    return;
+  }
+
+  if (configs === undefined) {
+    configs = await homebridge.getPluginConfig() as DummyPlatformConfig[];
+  }
+
+  const newAccessories: DummyConfig[] = [];
+
+  for (const config of configs) {
+    const populated = (config.accessories ?? []).filter( (accessory) => accessory.id && accessory.name && accessory.type !== AccessoryType.Thermostat);
+    newAccessories.push(...populated);
+  }
+
+  let accessoriesChanged = false;
+  if (accessories.length !== newAccessories.length) {
+    accessories = newAccessories;
+    accessoriesChanged = true;
+  } else {
+    accessories.forEach( (accessory, index) => {
+      const compare = newAccessories[index];
+      if (accessory.name !== compare.name || accessory.type !== compare.type || accessory.id !== compare.id) {
+        accessories = newAccessories;
+        accessoriesChanged = true;
+      }
+    });
+  }
+
+  accessoryIdInputs.forEach(element => {
+
+    const idInput = element as HTMLInputElement;
+
+    let accessorySelect = idInput.parentElement?.querySelector('select.form-select[data-accessory-name-select="true"]') as HTMLSelectElement;
+
+    if (accessorySelect && accessorySelect.dataset.accessoryNameSelect !== 'true') {
+      console.error('Unable to retrieve accessory name selector');
+      return;
+    }
+
+    if (!accessorySelect) {
+      accessorySelect = document.createElement('select');
+      accessorySelect.className = 'form-select';
+
+      accessorySelect.dataset.accessoryNameSelect = 'true';
+
+      idInput.hidden = true;
+
+      accessorySelect.addEventListener('change', () => {
+        if (accessorySelect.selectedIndex === 0) {
+          idInput.value = '';
+        } else {
+          const accessoryId = accessories[accessorySelect.selectedIndex - 1].id;
+          idInput.value = accessoryId;
+        }
+        idInput.dispatchEvent(new Event('input', { bubbles: true }));
+      });
+
+      idInput.parentElement?.appendChild(accessorySelect);
+    }
+
+    if (accessoriesChanged || accessorySelect.length === 0) {
+
+      accessorySelect.length = 0;
+
+      const noneOption = document.createElement('option');
+      noneOption.text =  strings.config.enumNames.none;
+      accessorySelect.add(noneOption);
+
+      accessories.forEach(accessory => {
+        const option = document.createElement('option');
+        option.text = accessory.name;
+        accessorySelect.add(option);
+      });
+    }
+
+    const accessoryIndex = idInput.value.length ? accessories.findIndex( (accessory) => accessory.id === idInput.value) : -1;
+    if (accessoryIndex === -1) {
+      accessorySelect.selectedIndex = 0;
+    } else {
+      accessorySelect.selectedIndex = accessoryIndex + 1;
+
+      const accessory = accessories[accessoryIndex];
+
+      const stateSelect = findNextByName(accessorySelect, 'accessoryState') as HTMLSelectElement;
+      if (!stateSelect) {
+        console.error('Unable to find accessory state selector');
+        return;
+      }
+
+      if (stateSelect.length !== 6) {
+        console.error('Accessory state selector has an unexpected number of options');
+        return;
+      }
+
+      const onOption = stateSelect.options[0];
+      const offOption = stateSelect.options[1];
+      const openOption = stateSelect.options[2];
+      const closedOption = stateSelect.options[3];
+      const lockedOption = stateSelect.options[4];
+      const unlockedOption = stateSelect.options[5];
+
+      onOption.hidden = true;
+      offOption.hidden = true;
+      openOption.hidden = true;
+      closedOption.hidden = true;
+      lockedOption.hidden = true;
+      unlockedOption.hidden = true;
+
+      switch (accessory.type) {
+      case AccessoryType.Lightbulb:
+      case AccessoryType.Outlet:
+      case AccessoryType.Switch:
+        onOption.hidden = false;
+        offOption.hidden = false;
+        if (stateSelect.selectedIndex !== 0 && stateSelect.selectedIndex !== 1) {
+          stateSelect.selectedIndex = -1;
+          stateSelect.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+        break;
+      case AccessoryType.Door:
+      case AccessoryType.GarageDoorOpener:
+      case AccessoryType.Window:
+      case AccessoryType.WindowCovering:
+        openOption.hidden = false;
+        closedOption.hidden = false;
+        if (stateSelect.selectedIndex !== 2 && stateSelect.selectedIndex !== 3) {
+          stateSelect.selectedIndex = -1;
+          stateSelect.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+        break;
+      case AccessoryType.LockMechanism:
+        if (stateSelect.selectedIndex !== 4 && stateSelect.selectedIndex !== 5) {
+          stateSelect.selectedIndex = -1;
+          stateSelect.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+        lockedOption.hidden = false;
+        unlockedOption.hidden = false;
+        break;
+      case AccessoryType.Thermostat:
+      default:
+        return;
+      }
+    }
+  });
+}
+
 async function migrateDeprecatedFields(configs: DummyPlatformConfig[]) {
 
   let changed = false;
@@ -171,6 +343,7 @@ function showSettings(strings: Translation) {
   const observer = new MutationObserver(() => {
     translateSchema(strings);
     updateAccessoryNames(strings);
+    updateConditionDropdowns(strings);
   });
 
   observer.observe(
@@ -181,6 +354,7 @@ function showSettings(strings: Translation) {
   homebridge.addEventListener('configChanged', async (evt: Event) => {
     const configs = (evt as MessageEvent).data as DummyPlatformConfig[];
     await updateConfigsWithUUIDs(configs);
+    await updateConditionDropdowns(strings, configs);
   });
 
   homebridge.showSchemaForm();

@@ -4,7 +4,7 @@ import { DummyAccessory, DummyAccessoryDependency } from '../base.js';
 
 import { strings } from '../../i18n/i18n.js';
 
-import { DefaultPosition, isValidPosition, printableValues, WebhookCommand } from '../../model/enums.js';
+import { Position, isValidPosition, printableValues, WebhookCommand } from '../../model/enums.js';
 import { PositionConfig } from '../../model/types.js';
 import { Webhook } from '../../model/webhook.js';
 
@@ -136,6 +136,8 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
         this.sensor.active = false;
       }
     }
+
+    await this.onStateChange(targetPosition === this.positionClosed ? Position.CLOSED : Position.OPEN);
   }
 
   override async trigger(): Promise<void> {

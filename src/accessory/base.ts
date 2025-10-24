@@ -9,7 +9,7 @@ import { SensorAccessory } from './sensor.js';
 import { strings } from '../i18n/i18n.js';
 
 import { ConditionManager } from '../model/conditions.js';
-import { AccessoryType } from '../model/enums.js';
+import { AccessoryState, AccessoryType } from '../model/enums.js';
 import { CharacteristicType, DummyConfig, ServiceType } from '../model/types.js';
 import { Webhook } from '../model/webhook.js';
 
@@ -60,14 +60,17 @@ export abstract class DummyAccessory<C extends DummyConfig> {
     private readonly dependency: DummyAccessoryDependency<C>,
   ) {
 
+    const name = dependency.config.name;
+    const disableLogging = dependency.config.disableLogging === true;
+
     const addonDependency: DummyAddonDependency =  {
       Service: dependency.Service,
       Characteristic: dependency.Characteristic,
       platformAccessory: dependency.platformAccessory,
       identifier: this.identifier,
-      caller: dependency.config.name,
+      caller: name,
       log: dependency.log,
-      disableLogging: dependency.config.disableLogging === true,
+      disableLogging: disableLogging,
     };
 
     this.sensor = SensorAccessory.new(addonDependency, dependency.config.sensor);
@@ -78,14 +81,16 @@ export abstract class DummyAccessory<C extends DummyConfig> {
 
     this._limiter = Limiter.new(addonDependency, dependency.config.limiter);
 
+    dependency.conditionManager.register(name, this.identifier, dependency.config.conditions, this.trigger.bind(this), disableLogging);
+
     const serviceInstance = dependency.Service[this.getAccessoryType()];
 
     if (dependency.isGrouped) {
 
       let accessoryService = dependency.platformAccessory.getServiceById(serviceInstance, this.identifier);
       if (!accessoryService) {
-        accessoryService = dependency.platformAccessory.addService(serviceInstance, dependency.config.name, this.identifier);
-        accessoryService.setCharacteristic(dependency.Characteristic.ConfiguredName, dependency.config.name);
+        accessoryService = dependency.platformAccessory.addService(serviceInstance, name, this.identifier);
+        accessoryService.setCharacteristic(dependency.Characteristic.ConfiguredName, name);
       }
 
       this.accessoryService = accessoryService;
@@ -94,8 +99,8 @@ export abstract class DummyAccessory<C extends DummyConfig> {
     }
 
     dependency.platformAccessory.getService(dependency.Service.AccessoryInformation)!
-      .setCharacteristic(dependency.Characteristic.Name, dependency.config.name)
-      .setCharacteristic(dependency.Characteristic.ConfiguredName, dependency.config.name)
+      .setCharacteristic(dependency.Characteristic.Name, name)
+      .setCharacteristic(dependency.Characteristic.ConfiguredName, name)
       .setCharacteristic(dependency.Characteristic.Manufacturer, PLUGIN_ALIAS)
       .setCharacteristic(dependency.Characteristic.Model, dependency.config.type)
       .setCharacteristic(dependency.Characteristic.SerialNumber, this.identifier)
@@ -208,6 +213,10 @@ export abstract class DummyAccessory<C extends DummyConfig> {
       typeof err.stdout === 'string' &&
       'stderr' in err &&
       typeof err.stderr === 'string';
+  }
+
+  protected async onStateChange(state: AccessoryState) {
+    await this.dependency.conditionManager.onStateChange(this.identifier, state);
   }
 
   protected logIfDesired(message: string, ...parameters: (string | number)[]) {
