@@ -37,7 +37,10 @@
             "title": "${config.title.delay}",
             "minimum": 1
           },
-          "units": { "$ref": "#/definitions/units" },
+          "units": {
+            "$ref": "#/definitions/units",
+            "required": true
+          },
           "random": {
             "type": "boolean",
             "title": "${config.title.random}",
@@ -158,13 +161,15 @@
             "type": "string",
             "title": "${config.title.units}",
             "enum": [ "SECONDS", "MINUTES", "HOURS"],
-            "enumNames": ["${config.enumNames.seconds}", "${config.enumNames.minutes}", "${config.enumNames.hours}"]
+            "enumNames": ["${config.enumNames.seconds}", "${config.enumNames.minutes}", "${config.enumNames.hours}"],
+            "required": true
           },
           "period": {
             "type": "string",
             "title": "${config.title.period}",
             "enum": [ "HOUR", "DAY", "WEEK", "MONTH"],
-            "enumNames": ["${config.enumNames.hour}", "${config.enumNames.day}", "${config.enumNames.week}", "${config.enumNames.month}"]
+            "enumNames": ["${config.enumNames.hour}", "${config.enumNames.day}", "${config.enumNames.week}", "${config.enumNames.month}"],
+            "required": true
           }
         },
         "allOf": [
@@ -603,7 +608,10 @@
                     },
                     {
                       "key": "accessories[].timer.units",
-                      "flex": "0 0 33%"
+                      "flex": "0 0 33%",
+                      "condition": {
+                        "functionBody": "return model.accessories?.[arguments[1]]?.timer?.delay;"
+                      }
                     }
                   ]
                 },
@@ -644,11 +652,17 @@
                     },
                     {
                       "key": "accessories[].limiter.units",
-                      "flex": "0 0 33%"
+                      "flex": "0 0 33%",
+                      "condition": {
+                        "functionBody": "return model.accessories?.[arguments[1]]?.limiter?.limit;"
+                      }
                     },
                     {
                       "key": "accessories[].limiter.period",
-                      "flex": "0 0 33%"
+                      "flex": "0 0 33%",
+                      "condition": {
+                        "functionBody": "return model.accessories?.[arguments[1]]?.limiter?.limit;"
+                      }
                     }
                   ]
                 }
