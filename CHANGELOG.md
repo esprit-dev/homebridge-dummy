@@ -2,13 +2,13 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-## 1.3.2-beta.1 (2025-10-21)
+## 1.3.2 (2025-10-24)
 
-### ‼️ WARNING ‼️ If upgrading from v0.9.2 or earlier, [READ THIS FIRST](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#v10-migration)
+### ‼️ WARNING ‼️ — If upgrading from v0.9.2 or earlier, [READ THIS FIRST](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#v10-migration)
 
-### ⚠️ Feedback Request
+### ⚠️ Upcoming Breaking Change
 
-I am considering the removal of Thermostat as a supported accessory type from a future version. If you use Thermostat, please add your use case to [this ticket](https://github.com/mpatfield/homebridge-dummy/issues/207).
+I plan to remove `Thermostat` as a supported accessory type from a future version. If you use `Thermostat`, please add your use case to [this ticket](https://github.com/mpatfield/homebridge-dummy/issues/207) and I will help you find an alternative.
 
 ### Added
 - Support for `GarageDoorOpener`
