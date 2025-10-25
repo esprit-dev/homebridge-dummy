@@ -199,10 +199,10 @@ async function updateConditionDropdowns(strings: Translation, configs?: DummyPla
       idInput.hidden = true;
 
       accessorySelect.addEventListener('change', () => {
-        if (accessorySelect.selectedIndex === 0) {
+        if (accessorySelect.selectedIndex === -1) {
           idInput.value = '';
         } else {
-          const accessoryId = accessories[accessorySelect.selectedIndex - 1].id;
+          const accessoryId = accessories[accessorySelect.selectedIndex].id;
           idInput.value = accessoryId;
         }
         idInput.dispatchEvent(new Event('input', { bubbles: true }));
@@ -215,10 +215,6 @@ async function updateConditionDropdowns(strings: Translation, configs?: DummyPla
 
       accessorySelect.length = 0;
 
-      const noneOption = document.createElement('option');
-      noneOption.text =  strings.config.enumNames.none;
-      accessorySelect.add(noneOption);
-
       accessories.forEach(accessory => {
         const option = document.createElement('option');
         option.text = accessory.name;
@@ -228,9 +224,9 @@ async function updateConditionDropdowns(strings: Translation, configs?: DummyPla
 
     const accessoryIndex = idInput.value.length ? accessories.findIndex( (accessory) => accessory.id === idInput.value) : -1;
     if (accessoryIndex === -1) {
-      accessorySelect.selectedIndex = 0;
+      accessorySelect.selectedIndex = -1;
     } else {
-      accessorySelect.selectedIndex = accessoryIndex + 1;
+      accessorySelect.selectedIndex = accessoryIndex ;
 
       const accessory = accessories[accessoryIndex];
 
