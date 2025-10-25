@@ -91,6 +91,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
       let accessoryService = dependency.platformAccessory.getServiceById(serviceInstance, this.identifier);
       if (!accessoryService) {
         accessoryService = dependency.platformAccessory.addService(serviceInstance, name, this.identifier);
+        accessoryService.addOptionalCharacteristic(dependency.Characteristic.ConfiguredName);
         accessoryService.setCharacteristic(dependency.Characteristic.ConfiguredName, name);
       }
 
