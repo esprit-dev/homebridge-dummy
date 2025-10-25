@@ -14,6 +14,8 @@ I plan to remove `Thermostat` as a supported accessory type from a future versio
 - Trigger Conditions ([docs](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#trigger-conditions)) - Trigger an accessory based on the state changes of other Homebridge Dummy accessories
     - ⚠️ Config UI for conditions is highly experimental. Please [open a ticket](https://github.com/mpatfield/homebridge-dummy/issues/new/choose) if you see any unusal behavior.
     - I am curious to know if and how you are using this feature, so please drop a note in the [Discord](https://discord.com/channels/432663330281226270/1406798847279366214) channel
+- Fade Out option for `Lightbulb` brightness
+    - Can be used as a simple "count-down"
 
 ### Changed
 - `defaultOn` has been deprecated in favor of `defaultState` for `Lightbulb`, `Outlet`, and `Switch`

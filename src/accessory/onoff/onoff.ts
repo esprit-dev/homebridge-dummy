@@ -74,7 +74,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
     return this.on;
   }
 
-  private async setOn(value: CharacteristicValue): Promise<void> {
+  protected async setOn(value: CharacteristicValue): Promise<void> {
 
     if (this.on !== value) {
       this.logIfDesired(this.logMessageForOnState(value));

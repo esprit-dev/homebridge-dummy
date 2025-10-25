@@ -164,9 +164,16 @@ export abstract class DummyAccessory<C extends DummyConfig> {
   }
 
   protected startTimer() {
-    this._timer?.start(this.reset.bind(this));
+    if (this._timer) {
+      const delay = this._timer.start(this.reset.bind(this));
+      this.onTimerStarted(delay);
+    }
+
     this._limiter?.start(this.reset.bind(this));
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  protected onTimerStarted(_delay: number) {}
 
   protected cancelTimer() {
     this._timer?.cancel();

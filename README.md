@@ -136,6 +136,7 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
             "temperatureUnits": "C" | "F",
             "defaultState": "on" | "off",
             "defaultBrightness": 0-100,
+            "fadeOut": true | false,
             "defaultLockState": "locked" | "unlocked",
             "defaultPosition": "open" | "closed",
             "defaultThermostatState": "auto" | "heat" | "cool" | "off",
@@ -257,6 +258,7 @@ For example, if I have a physical door lock I want to "watch", then I can setup 
 - `temperatureUnits` - Units to use for thermostats, either 'C' or 'F'
 - `defaultState` — Initial value, either "on" or "off"
 - `defaultBrightness` — If set, lightbulb will have additional dimmer settings with this default brightness percentage
+- `fadeOut` - Fade smoothly instead of abruptly from 100% to off. Requires `defaultBrightness` and `timer` to be defined.
 - `defaultLockState` - The initial value for the lock, "locked" or "unlocked"
 - `defaultPosition` — Initial position for the door/garage/window/blinds, "open" or "closed"
 - `defaultThermostatState` - The initial state for the thermostat, "auto", "heat", "cool", or "off"

@@ -95,6 +95,7 @@ export type OutletConfig = OnOffConfig & {
 
 export type LightbulbConfig = OnOffConfig & {
   defaultBrightness?: CharacteristicValue,
+  fadeOut?: boolean,
 }
 
 export type SwitchConfig = OnOffConfig & {

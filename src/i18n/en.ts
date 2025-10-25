@@ -61,10 +61,10 @@ const en = {
     badType: '%s has invalid schedule type %s. Must be one of: %s', // accessory name, input, list of type names
     badUnits: '%s schedule has invalid time units %s. Must be one of: %s', // accessory name, input, list of unit names
     cron: '%s starting schedule cronjob', // accessory name
-    intervalMilliseconds: '%s scheduled for %s milliseconds', // accessory name, number
-    intervalSeconds: '%s scheduled for %s seconds', // accessory name, number
-    intervalMinutes: '%s scheduled for %s minutes', // accessory name, number
-    intervalHours: '% scheduled for %s hours', // accessory name, number
+    intervalMilliseconds: '%s will trigger in %s milliseconds', // accessory name, number
+    intervalSeconds: '%s will trigger in %s seconds', // accessory name, number
+    intervalMinutes: '%s will trigger in %s minutes', // accessory name, number
+    intervalHours: '% will trigger in %s hours', // accessory name, number
   },
 
   thermostat: {
@@ -84,10 +84,10 @@ const en = {
     cancel: 'Cancelled the timer for %s', // accessory name
     expired: '%s timer expired while restarting. Returning to default state…', // accessory name
     resume: '%s resuming timer', // accessory name
-    setMilliseconds: '%s is waiting %s milliseconds', // accessory name, number
-    setSeconds: '%s is waiting %s seconds', // accessory name, number
-    setMinutes: '%s is waiting %s minutes', // accessory name, number
-    setHours: '%s is waiting %s hours', // accessory name, number
+    setMilliseconds: '%s will reset in %s milliseconds', // accessory name, number
+    setSeconds: '%s will reset in %s seconds', // accessory name, number
+    setMinutes: '%s will reset in %s minutes', // accessory name, number
+    setHours: '%s will reset in %s hours', // accessory name, number
   },
 
   config: {
@@ -96,6 +96,7 @@ const en = {
       commands: 'Execute arbitrary commands (e.g. curl) when the accessory changes state',
       cron: 'Visit crontab.guru for help',
       conditions: 'Set the accessory to its opposite (non-default) value when the specified conditions are met',
+      fadeOut: 'Lightbulb will count down rather than abruptly going from 100% to off',
       limiter: 'Restrict the total time this accessory can be set to its non-default value, for each specified period',
       random: 'Time will be randomized with the above value as a maximum',
       schedule: 'Set the accessory to its opposite (non-default) value at specified interval or times',
@@ -191,6 +192,7 @@ const en = {
       delay: 'Delay',
       disableLogging: 'Disable Logging',
       enableWebook: 'Enable Webhook',
+      fadeOut: 'Fade Out',
       groupName: 'Group Name',
       interval: 'Interval',
       limit: 'Limit',

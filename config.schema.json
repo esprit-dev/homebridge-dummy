@@ -304,6 +304,11 @@
               "minimum": 0,
               "maximum": 100
             },
+            "fadeOut": {
+              "type": "boolean",
+              "title": "${config.title.fadeOut}",
+              "description": "${config.description.fadeOut}"
+            },
             "defaultState": {
               "type": "string",
               "title": "${config.title.defaultState}",
@@ -440,7 +445,7 @@
                       "key": "accessories[].defaultBrightness",
                       "flex": "0 0 33%",
                       "condition": {
-                        "functionBody": "return ['Lightbulb'].includes(model.accessories?.[arguments[1]]?.type);"
+                        "functionBody": "return model.accessories?.[arguments[1]]?.type === 'Lightbulb';"
                       }
                     }
                   ]
@@ -623,6 +628,13 @@
                   },
                   "items": [
                     "accessories[].timer.random",
+                    {
+                      "key": "accessories[].fadeOut",
+                      "flex": "1 0 33%",
+                      "condition": {
+                        "functionBody": "return model.accessories?.[arguments[1]]?.defaultBrightness !== undefined && model.accessories?.[arguments[1]]?.defaultState !== 'on' && model.accessories?.[arguments[1]]?.timer?.delay !== undefined;"
+                      }
+                    },
                     {
                       "key": "accessories[].sensor.timerControlled",
                       "condition": {

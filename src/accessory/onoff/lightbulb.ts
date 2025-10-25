@@ -10,6 +10,8 @@ import { AccessoryType, WebhookCommand } from '../../model/enums.js';
 import { LightbulbConfig } from '../../model/types.js';
 import { Webhook } from '../../model/webhook.js';
 
+import { Fader } from '../../timeout/fader.js';
+
 import { storageGet_Deprecated, Storage } from '../../tools/storage.js';
 
 const NO_BRIGHTNESS = -1;
@@ -17,6 +19,8 @@ const NO_BRIGHTNESS = -1;
 export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
 
   private brightness: CharacteristicValue;
+
+  private fader = new Fader();
 
   constructor(dependency: DummyAccessoryDependency<LightbulbConfig>) {
     super(dependency);
@@ -83,8 +87,16 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
     }
   }
 
+  override async setOn(value: CharacteristicValue): Promise<void> {
+    super.setOn(value);
+
+    if (!value) {
+      this.accessoryService.updateCharacteristic(this.Characteristic.Brightness, this.brightness);
+    }
+  }
+
   private async getBrightness(): Promise<CharacteristicValue> {
-    return this.brightness;
+    return this.fader.value ?? this.brightness;
   }
 
   private async setBrightness(value: CharacteristicValue) {
@@ -94,6 +106,9 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
     }
 
     this.brightness = value;
+    if (this.fader.isFading) {
+      this.startTimer();
+    }
 
     this.logIfDesired(strings.lightbulb.brightness, this.brightness.toString());
 
@@ -102,5 +117,26 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
     }
 
     this.accessoryService.updateCharacteristic(this.Characteristic.Brightness, this.brightness);
+  }
+
+  override onTimerStarted(delay: number) {
+
+    if (this.config.fadeOut !== true) {
+      return;
+    }
+
+    this.fader.start(Number(this.brightness), delay, (value) => {
+      this.accessoryService.updateCharacteristic(this.Characteristic.Brightness, value);
+    });
+  }
+
+  override cancelTimer() {
+    this.fader.cancel();
+    super.cancelTimer();
+  }
+
+  override teardown(): void {
+    this.fader.teardown();
+    super.teardown();
   }
 }

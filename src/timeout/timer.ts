@@ -42,7 +42,7 @@ export class Timer extends Timeout {
     Storage.set(this.timerStorageKey, value);
   }
 
-  public start(callback:  () => Promise<void>) {
+  public start(callback:  () => Promise<void>): number {
 
     super.reset();
 
@@ -74,6 +74,8 @@ export class Timer extends Timeout {
       this.reset();
       await callback();
     }, delay);
+
+    return delay;
   }
 
   override reset() {
