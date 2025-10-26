@@ -2,7 +2,7 @@
   "name": "homebridge-dummy",
   "platform": "HomebridgeDummy",
   "displayName": "Homebridge Dummy",
-  "description": "Create Homebridge accessories to help with automation and control — scheduling, delays, sensors, commands, webhooks, and more",
+  "description": "Create accessories to help with HomeKit automation and control — scheduling, delays, sensors, commands, conditions, webhooks, and more",
   "type": "module",
   "version": "1.4.0-beta.1",
   "homepage": "https://github.com/mpatfield/homebridge-dummy#readme",
