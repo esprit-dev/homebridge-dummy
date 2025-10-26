@@ -214,19 +214,55 @@
       "operand": {
         "type": "object",
         "properties": {
+          "type": {
+            "type": "string",
+            "title": "${config.title.type}",
+            "enum": [ "ACCESSORY", "LOG_WATCHER" ],
+            "enumNames": [ "${config.enumNames.accessory}", "${config.enumNames.logWatcher}" ]
+          },
           "accessoryId": {
             "type": "string",
-            "title": "${config.title.accessory}",
-            "required": true
+            "title": "${config.title.accessory}"
           },
           "accessoryState": {
             "type": "string",
             "title": "${config.title.accessoryState}",
             "enum": [ "on", "off", "open", "closed", "locked", "unlocked" ],
-            "enumNames": [ "${config.enumNames.on}", "${config.enumNames.off}", "${config.enumNames.open}", "${config.enumNames.closed}", "${config.enumNames.secured}", "${config.enumNames.unsecured}" ],
-            "required": true
+            "enumNames": [ "${config.enumNames.on}", "${config.enumNames.off}", "${config.enumNames.open}", "${config.enumNames.closed}", "${config.enumNames.secured}", "${config.enumNames.unsecured}" ]
+          },
+          "pattern": {
+            "type": "string",
+            "title": "${config.title.pattern}"
           }
-        }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "type": {
+                  "const": "ACCESSORY"
+                }
+              },
+              "required": ["type"]
+            },
+            "then": {
+              "required": ["accessoryId", "accessoryState"]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "type": {
+                  "const": "LOG_WATCHER"
+                }
+              },
+              "required": ["type"]
+            },
+            "then": {
+              "required": ["pattern"]
+            }
+          }
+        ]
       },
       "conditions": {
         "type": "object",
@@ -560,7 +596,7 @@
                       "key": "accessories[].schedule.units",
                       "flex": "0 0 33%",
                       "condition": {
-                          "functionBody": "return model.accessories?.[arguments[1]]?.schedule?.type === 'INTERVAL';"
+                          "functionBody": "return model.accessories?.[arguments[1]]?.schedule?.interval !== undefined;"
                       }
                     }
                   ]
@@ -709,20 +745,75 @@
                   "key": "accessories[].conditions.operands",
                   "items": [
                     {
-                      "type": "div",
-                      "displayFlex": true,
-                      "flex-direction": "row",
+                      "type": "fieldset",
+                      "notitle": true,
                       "items": [
                         {
-                          "key": "accessories[].conditions.operands[].accessoryId",
-                          "flex": "0 0 50%"
-                        },
-                        {
-                          "key": "accessories[].conditions.operands[].accessoryState",
-                          "flex": "0 0 50%",
-                          "condition": {
-                            "functionBody": "return model.accessories?.[arguments[1][0]]?.conditions?.operands?.[arguments[1][1]]?.accessoryId;"
-                          }
+                          "type": "div",
+                          "displayFlex": true,
+                          "flex-direction": "row",
+                          "items": [
+                            {
+                              "type": "fieldset",
+                              "notitle": true,
+                              "flex": "0 0 33%",
+                              "items": [
+                                {
+                                  "type": "div",
+                                  "displayFlex": true,
+                                  "flex-direction": "row",
+                                  "items": [
+                                    {
+                                      "key": "accessories[].conditions.operands[].type",
+                                      "flex": "0 0 100%"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "fieldset",
+                              "notitle": true,
+                              "flex": "0 0 67%",
+                              "items": [
+                                {
+                                  "type": "div",
+                                  "displayFlex": true,
+                                  "flex-direction": "row",
+                                  "condition": {
+                                    "functionBody": "return model.accessories?.[arguments[1][0]]?.conditions?.operands?.[arguments[1][1]]?.type === 'ACCESSORY';"
+                                  },
+                                  "items": [
+                                    {
+                                      "key": "accessories[].conditions.operands[].accessoryId",
+                                      "flex": "0 0 50%"
+                                    },
+                                    {
+                                      "key": "accessories[].conditions.operands[].accessoryState",
+                                      "flex": "0 0 50%",
+                                      "condition": {
+                                        "functionBody": "return model.accessories?.[arguments[1][0]]?.conditions?.operands?.[arguments[1][1]]?.accessoryId;"
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "div",
+                                  "displayFlex": true,
+                                  "flex-direction": "row",
+                                  "condition": {
+                                    "functionBody": "return model.accessories?.[arguments[1][0]]?.conditions?.operands?.[arguments[1][1]]?.type === 'LOG_WATCHER';"
+                                  },
+                                  "items": [
+                                    {
+                                      "key": "accessories[].conditions.operands[].pattern",
+                                      "flex": "0 0 100%"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
                         }
                       ]
                     }
