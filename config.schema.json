@@ -547,39 +547,44 @@
                   "items": [
                     {
                       "key": "accessories[].schedule.type",
-                      "flex": "0 0 33%"
+                      "flex": "0 0 auto"
+                    },
+                    {
+                      "type": "div",
+                      "flex": "0 0 5px"
                     },
                     {
                       "key": "accessories[].schedule.interval",
-                      "flex": "0 0 33%",
+                      "flex": "0 0 auto",
                       "condition": {
                           "functionBody": "return model.accessories?.[arguments[1]]?.schedule?.type === 'INTERVAL';"
                       }
                     },
                     {
+                      "type": "div",
+                      "flex": "0 0 5px"
+                    },
+                    {
                       "key": "accessories[].schedule.units",
-                      "flex": "0 0 33%",
+                      "flex": "0 0 auto",
                       "condition": {
                           "functionBody": "return model.accessories?.[arguments[1]]?.schedule?.interval !== undefined;"
                       }
-                    }
-                  ]
-                },
-                {
-                  "type": "div",
-                  "displayFlex": true,
-                  "flex-direction": "row",
-                  "condition": {
-                      "functionBody": "return model.accessories?.[arguments[1]]?.schedule?.type === 'CRON';"
-                  },
-                  "items": [
+                    },
                     {
                       "key": "accessories[].schedule.cron",
-                      "flex": "0 0 33%"
+                      "flex": "0 0 auto",
+                      "condition": {
+                          "functionBody": "return model.accessories?.[arguments[1]]?.schedule?.type === 'CRON';"
+                      }
+                    },
+                    {
+                      "type": "div",
+                      "flex": "0 0 5px"
                     },
                     {
                       "key": "accessories[].schedule.cronCustom",
-                      "flex": "0 0 67%",
+                      "flex": "1 0 auto",
                       "condition": {
                           "functionBody": "return model.accessories?.[arguments[1]]?.schedule?.cron === 'CRON_CUSTOM';"
                       }
@@ -695,36 +700,36 @@
                   "items": [
                     {
                       "key": "accessories[].conditions.operator",
-                      "flex": "0 0 67%"
+                      "flex": "0 0 auto"
                     }
                   ]
-                },
+                }
+              ]
+            },
+            {
+              "type": "array",
+              "title": "${config.title.condition}",
+              "notitle": true,
+              "condition": {
+                "functionBody": "return model.accessories?.[arguments[1]]?.conditions?.operator;"
+              },
+              "key": "accessories[].conditions.operands",
+              "items": [
                 {
-                  "type": "array",
-                  "title": "${config.title.condition}",
-                  "notitle": true,
-                  "condition": {
-                    "functionBody": "return model.accessories?.[arguments[1]]?.conditions?.operator;"
-                  },
-                  "key": "accessories[].conditions.operands",
+                  "type": "div",
+                  "displayFlex": true,
+                  "flex-direction": "row",
                   "items": [
                     {
-                      "type": "div",
-                      "displayFlex": true,
-                      "flex-direction": "row",
-                      "items": [
-                        {
-                          "key": "accessories[].conditions.operands[].accessoryId",
-                          "flex": "0 0 50%"
-                        },
-                        {
-                          "key": "accessories[].conditions.operands[].accessoryState",
-                          "flex": "0 0 50%",
-                          "condition": {
-                            "functionBody": "return model.accessories?.[arguments[1][0]]?.conditions?.operands?.[arguments[1][1]]?.accessoryId;"
-                          }
-                        }
-                      ]
+                      "key": "accessories[].conditions.operands[].accessoryId",
+                      "flex": "0 0 auto"
+                    },
+                    {
+                      "key": "accessories[].conditions.operands[].accessoryState",
+                      "flex": "0 0 auto",
+                      "condition": {
+                        "functionBody": "return model.accessories?.[arguments[1][0]]?.conditions?.operands?.[arguments[1][1]]?.accessoryId;"
+                      }
                     }
                   ]
                 }
