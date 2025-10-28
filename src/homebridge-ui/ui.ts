@@ -236,18 +236,20 @@ async function updateConditionDropdowns(strings: Translation, configs?: DummyPla
         return;
       }
 
-      if (stateSelect.length !== 6) {
+      if (stateSelect.length !== 7) {
         console.error('Accessory state selector has an unexpected number of options');
         return;
       }
 
-      const onOption = stateSelect.options[0];
-      const offOption = stateSelect.options[1];
-      const openOption = stateSelect.options[2];
-      const closedOption = stateSelect.options[3];
-      const lockedOption = stateSelect.options[4];
-      const unlockedOption = stateSelect.options[5];
+      const noneOption = stateSelect.options[0];
+      const onOption = stateSelect.options[1];
+      const offOption = stateSelect.options[2];
+      const openOption = stateSelect.options[3];
+      const closedOption = stateSelect.options[4];
+      const lockedOption = stateSelect.options[5];
+      const unlockedOption = stateSelect.options[6];
 
+      noneOption.hidden = true;
       onOption.hidden = true;
       offOption.hidden = true;
       openOption.hidden = true;
@@ -261,7 +263,7 @@ async function updateConditionDropdowns(strings: Translation, configs?: DummyPla
       case AccessoryType.Switch:
         onOption.hidden = false;
         offOption.hidden = false;
-        if (stateSelect.selectedIndex !== 0 && stateSelect.selectedIndex !== 1) {
+        if (stateSelect.selectedIndex !== 1 && stateSelect.selectedIndex !== 2) {
           stateSelect.selectedIndex = -1;
           stateSelect.dispatchEvent(new Event('change', { bubbles: true }));
         }
@@ -272,13 +274,13 @@ async function updateConditionDropdowns(strings: Translation, configs?: DummyPla
       case AccessoryType.WindowCovering:
         openOption.hidden = false;
         closedOption.hidden = false;
-        if (stateSelect.selectedIndex !== 2 && stateSelect.selectedIndex !== 3) {
+        if (stateSelect.selectedIndex !== 3 && stateSelect.selectedIndex !== 4) {
           stateSelect.selectedIndex = -1;
           stateSelect.dispatchEvent(new Event('change', { bubbles: true }));
         }
         break;
       case AccessoryType.LockMechanism:
-        if (stateSelect.selectedIndex !== 4 && stateSelect.selectedIndex !== 5) {
+        if (stateSelect.selectedIndex !== 5 && stateSelect.selectedIndex !== 6) {
           stateSelect.selectedIndex = -1;
           stateSelect.dispatchEvent(new Event('change', { bubbles: true }));
         }

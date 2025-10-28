@@ -26,7 +26,8 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
   private readonly platformAccessories: Map<string, PlatformAccessory> = new Map();
   private readonly dummyAccessories: (DummyAccessory<DummyConfig> | GroupAccessory)[] = [];
 
-  private webhookManager: WebhookManager;
+  private readonly webhookManager: WebhookManager;
+  private readonly conditionManager: ConditionManager;
 
   constructor(
     logger: Logger,
@@ -42,6 +43,7 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
 
     this.log = new Log(logger, config.verbose === true);
     this.webhookManager = new WebhookManager(this.Characteristic, this.log, config.webhookPort);
+    this.conditionManager = new ConditionManager(this.log, api.user.storagePath());
 
     this.log.always(
       'v%s | System %s | Node %s | HB v%s | HAPNodeJS v%s',
@@ -70,6 +72,7 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
     this.dummyAccessories.forEach( accessory => {
       accessory.teardown();
     });
+    this.conditionManager.teardown();
   }
 
   private async setup(): Promise<void> {
@@ -85,8 +88,6 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
     }
 
     const groupAccessories = new Map<string, GroupConfig>();
-
-    const conditionManager = new ConditionManager(this.log);
 
     for (const accessoryConfig of accessories) {
 
@@ -107,7 +108,7 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
         Characteristic: this.Characteristic,
         platformAccessory: platformAccessory,
         config: accessoryConfig,
-        conditionManager: conditionManager,
+        conditionManager: this.conditionManager,
         log: this.log,
         isGrouped: false,
       };
@@ -137,7 +138,7 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
         Service: this.Service,
         Characteristic: this.Characteristic,
         platformAccessory: platformAccessory,
-        conditionManager: conditionManager,
+        conditionManager: this.conditionManager,
         log: this.log,
       };
 

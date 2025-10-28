@@ -12,10 +12,13 @@ const en = {
   },
 
   conditions: {
+    andMultipleLogs: '%s cannot have mutiple log triggers using the "ALL" operator', // accessory name
     currentResult: 'Current result is %s', // boolean
     evaluatingConditions: 'Evaluating conditions for %s', // accessory name
     satisfied: '%s conditions have been satisfied. Triggering…', // accessory name
     notSatisfied: '%s conditions not satisfied', // accessory name
+    patternAndConditions: '%s log condition found a pattern match. Checking other conditions…', // accessory name
+    patternMatch: '%s log condition found a pattern match. Triggering…', // accessory name
     selfReference: '%s is not allowed to reference itself as a triggering condition', // accessory name
     statesEqual: 'Current and desired states are both %s', // state name
     statesNotEqual: 'Current state %s is not equivalent to desired state %s', // state name, state name
@@ -43,6 +46,11 @@ const en = {
     badDefault: '%s has invalid default lock state %s. Must be one of: %s', // accessory name, input, list of state names
     secured: '%s is locked', // accessory name
     unsecured: '%s is unlocked', // accessory name
+  },
+
+  logWatcher: {
+    error: 'Log watcher encountered an error: %s', // error
+    missingFile: 'Unable to find log file at path %s', // file path
   },
 
   onOff: {
@@ -105,6 +113,7 @@ const en = {
     },
 
     enumNames: {
+      accessory: 'Accessory',
       auto: 'Auto',
       carbonDioxideSensor:'Carbon Dioxide',
       carbonMonoxideSensor: 'Carbon Monoxide',
@@ -127,6 +136,7 @@ const en = {
       leakSensor: 'Leak',
       lightbulb: 'Lightbulb',
       lockMechanism: 'Lock',
+      log: 'Log Watcher',
       minutely: 'Every Minute',
       month: 'Month',
       monthly: 'Monthly',
@@ -201,6 +211,7 @@ const en = {
       maximumTemperature: 'Max Temperature',
       name: 'Name',
       operator: 'Trigger when…',
+      pattern: 'Search String or RegEx',
       period: 'Per',
       preset: 'Preset',
       random: 'Randomize',

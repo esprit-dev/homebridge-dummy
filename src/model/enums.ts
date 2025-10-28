@@ -39,6 +39,11 @@ export enum ConditionOperator {
   OR = 'or'
 }
 
+export enum OperandType {
+  ACCESSORY = 'ACCESSORY',
+  LOG = 'LOG',
+}
+
 export enum OnState {
   ON = 'on',
   OFF = 'off',

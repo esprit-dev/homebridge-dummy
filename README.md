@@ -238,13 +238,23 @@ Execute arbitrary commands (e.g. curl) when the accessory changes state
 
 You can trigger an accessory whenever a set of conditions are satisfied, for example, when other Homebridge Dummy accessories turn on.
 
-There are two logical operators to trigger the target accessory when ALL ("and") or ANY ("or") of a set of conditions are satisfied. This is set using `operator`.
+There are two logical operators to trigger the target accessory when all (`AND`) or any (`OR`) of a set of conditions are satisfied. This is set using `operator`.
 
 You can have an arbitrarily long list of conditions and they are checked in order.
 
 If target accessory is not setup to auto-reset with a timer, then it will immediately return to it's default setting as soon as the conditions are no longer met.
 
-Note that due to limitations of HomeKit and Homebridge, it is only possible to check the states of other Homebridge Dummy accessories. One possible workaround is to set up duplicate accessories in Homebridge Dummy and use Automation to mirror the states.
+Note that due to limitations of HomeKit and Homebridge, it is only possible to check the states of other Homebridge Dummy accessories.
+
+One workaround is to use the `LOG` operand type which will watch the Homebridge log for the specified string or regex.
+
+`LOG` based conditions are stateless triggers. If it is the only condition or the conditions `operator` is `OR`, then it will fire immediately. If there are other `AND` conditions, then it will not fire unless all other conditions are satisfied.
+
+For example, if I have `LOG` condition "A" and `ACCESSORY` condition "B" for when "B" is turned "On", then if "B" is "Off"" and the pattern is found in the log, "A" will not trigger.
+
+Note that `LOG` triggers are not instantenous and may take several seconds to fire.
+
+Another workaround for non-Dummy accessories is to set up duplicate accessories in Homebridge Dummy and use Automation to mirror the states.
 
 For example, if I have a physical door lock I want to "watch", then I can setup a `LockMechanism` accessory in Homebridge Dummy and create two automations to change the state of my dummy lock whenever the physical door lock is unlocked or locked.
 
@@ -334,6 +344,8 @@ Schedule feature inspired by [Homebridge Schedule](https://github.com/kbrashears
 Sensor feature inspired by [Homebridge-Delay-Switch](https://github.com/nitaybz/homebridge-delay-switch#readme) by [@nitaybz](https://github.com/sponsors/nitaybz)
 
 Command feature inspired by [homebridge-cmdtrigger](https://github.com/hallos/homebridge-cmdtrigger) by [@hallos](https://github.com/sponsors/hallos)
+
+Log watch trigger feature inspired by [hb-virtual-switch](https://github.com/Plankske/hb-virtual-switch/) by [@Plankske](https://github.com/sponsors/Plankske)
 
 Special thanks to [@nfarina](https://github.com/sponsors/nfarina) for creating the original version of this plugin and maintaining it for almost 10 (!!!) years
 

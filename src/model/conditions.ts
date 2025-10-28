@@ -1,9 +1,11 @@
+import { AccessoryState, ConditionOperator, getStateType, OperandType } from './enums.js';
 import { ConditionsConfig } from './types.js';
-import { AccessoryState, ConditionOperator, getStateType } from './enums.js';
+
+import { strings } from '../i18n/i18n.js';
 
 import { Log } from '../tools/log.js';
+import { LogWatcher } from '../tools/logWatcher.js';
 import { assert } from '../tools/validation.js';
-import { strings } from '../i18n/i18n.js';
 
 type Target = {
     name: string,
@@ -21,7 +23,15 @@ export class ConditionManager {
 
   private readonly triggerStates = new Map<string, AccessoryState>();
 
-  constructor(private readonly log: Log) {}
+  private readonly logWatcher: LogWatcher;
+
+  constructor(private readonly log: Log, storagePath: string) {
+    this.logWatcher = new LogWatcher(log, storagePath);
+  }
+
+  public teardown() {
+    this.logWatcher.teardown();
+  }
 
   public register(name: string, identifier: string, conditions: ConditionsConfig | undefined,
     trigger: () => Promise<void>, reset: (() => Promise<void>) | undefined, disableLogging: boolean) {
@@ -34,15 +44,32 @@ export class ConditionManager {
       return;
     }
 
+    let logTypeCount = 0;
+
     let valid = true;
     for (const operand of conditions.operands) {
-      valid = valid && assert(this.log, name, operand, 'accessoryId', 'accessoryState');
+      valid = valid && assert(this.log, name, operand, 'type');
+
+      switch(operand.type) {
+      case OperandType.ACCESSORY:
+        valid = valid && assert(this.log, name, operand, 'accessoryId', 'accessoryState');
+        break;
+      case OperandType.LOG:
+        logTypeCount++;
+        valid = valid && assert(this.log, name, operand, 'pattern');
+        break;
+      }
 
       if (operand.accessoryId === identifier) {
         this.log.error(strings.conditions.selfReference, name);
         valid = false;
         break;
       }
+    }
+
+    if (logTypeCount > 1 && conditions.operator === ConditionOperator.AND) {
+      this.log.error(strings.conditions.andMultipleLogs, name);
+      return;
     }
 
     if (!valid) {
@@ -53,9 +80,18 @@ export class ConditionManager {
     this.targets.set(identifier, target);
 
     for (const operand of conditions.operands) {
-      const targetList = this.triggersToTargets.get(operand.accessoryId) ?? [];
-      targetList.push(identifier);
-      this.triggersToTargets.set(operand.accessoryId, targetList);
+
+      switch(operand.type) {
+      case OperandType.ACCESSORY: {
+        const targetList = this.triggersToTargets.get(operand.accessoryId!) ?? [];
+        targetList.push(identifier);
+        this.triggersToTargets.set(operand.accessoryId!, targetList);
+        break;
+      }
+      case OperandType.LOG:
+        this.logWatcher.registerPattern(operand.pattern!, () => this.onPatternMatch(target));
+        break;
+      }
     }
   }
 
@@ -77,7 +113,7 @@ export class ConditionManager {
 
       this.log.ifVerbose(strings.conditions.evaluatingConditions, target.name);
 
-      if (this.evaluateConditions(target.conditions)) {
+      if (this.evaluateConditions(target.conditions, false)) {
         if (!target.disableLogging) {
           this.log.always(strings.conditions.satisfied, target.name);
         }
@@ -89,20 +125,51 @@ export class ConditionManager {
     }
   }
 
-  private evaluateConditions(conditions: ConditionsConfig): boolean {
+  private onPatternMatch(target: Target) {
+
+    if (target.conditions.operands.length === 1 || target.conditions.operator === ConditionOperator.OR) {
+      this.log.ifVerbose(strings.conditions.patternMatch, target.name);
+      target.trigger();
+      return;
+    }
+
+    this.log.ifVerbose(strings.conditions.patternAndConditions, target.name);
+    if (!this.evaluateConditions(target.conditions, true)) {
+      this.log.ifVerbose(strings.conditions.notSatisfied, target.name);
+      return;
+    }
+
+    if (!target.disableLogging) {
+      this.log.always(strings.conditions.satisfied, target.name);
+    }
+
+    target.trigger();
+  }
+
+  private evaluateConditions(conditions: ConditionsConfig, ignoreLogType: boolean): boolean {
 
     let result: boolean | undefined;
 
     for (const operand of conditions.operands) {
 
-      const currentState = this.triggerStates.get(operand.accessoryId);
+      if (operand.type === OperandType.LOG) {
+
+        if (ignoreLogType || conditions.operator === ConditionOperator.OR) {
+          continue;
+        }
+
+        result = false;
+        break;
+      }
+
+      const currentState = this.triggerStates.get(operand.accessoryId!);
       if (!currentState) {
         this.log.ifVerbose(strings.conditions.stateUnknown, `'${operand.accessoryId}'`);
         result = false;
         break;
       }
 
-      const operandResult = this.compareStates(currentState, operand.accessoryState);
+      const operandResult = this.compareStates(currentState, operand.accessoryState!);
 
       switch(conditions.operator) {
       case ConditionOperator.AND:
@@ -116,7 +183,7 @@ export class ConditionManager {
       this.log.ifVerbose(strings.conditions.currentResult, `'${String(result)}'`);
     }
 
-    return result ?? false;
+    return result ?? true;
   }
 
   private compareStates(current: AccessoryState, desired: AccessoryState): boolean {

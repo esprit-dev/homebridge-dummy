@@ -59,8 +59,10 @@ export type LimiterConfig = Assertable & {
 }
 
 export type Operand = Assertable & {
-  accessoryId: string,
-  accessoryState: AccessoryState,
+  type: string,
+  accessoryId?: string,
+  accessoryState?: AccessoryState,
+  pattern?: string,
 }
 
 export type ConditionsConfig = Assertable & {

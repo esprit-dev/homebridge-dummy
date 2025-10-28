@@ -214,19 +214,56 @@
       "operand": {
         "type": "object",
         "properties": {
+          "type": {
+            "type": "string",
+            "title": "${config.title.type}",
+            "enum": [ "ACCESSORY", "LOG" ],
+            "enumNames": [ "${config.enumNames.accessory}", "${config.enumNames.log}" ],
+            "required": true
+          },
           "accessoryId": {
             "type": "string",
-            "title": "${config.title.accessory}",
-            "required": true
+            "title": "${config.title.accessory}"
           },
           "accessoryState": {
             "type": "string",
             "title": "${config.title.accessoryState}",
             "enum": [ "on", "off", "open", "closed", "locked", "unlocked" ],
-            "enumNames": [ "${config.enumNames.on}", "${config.enumNames.off}", "${config.enumNames.open}", "${config.enumNames.closed}", "${config.enumNames.secured}", "${config.enumNames.unsecured}" ],
-            "required": true
+            "enumNames": [ "${config.enumNames.on}", "${config.enumNames.off}", "${config.enumNames.open}", "${config.enumNames.closed}", "${config.enumNames.secured}", "${config.enumNames.unsecured}" ]
+          },
+          "pattern": {
+            "type": "string",
+            "title": "${config.title.pattern}"
           }
-        }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "type": {
+                  "const": "ACCESSORY"
+                }
+              },
+              "required": ["type"]
+            },
+            "then": {
+              "required": ["accessoryId", "accessoryState"]
+            }
+          },
+          {
+            "if": {
+                "properties": {
+                    "type": {
+                        "const": "LOG"
+                    }
+                },
+                "required": ["type"]
+            },
+            "then": {
+                "required": ["pattern"]
+            }
+          }
+        ]
       },
       "conditions": {
         "type": "object",
@@ -747,14 +784,36 @@
                   "flex-direction": "row",
                   "items": [
                     {
-                      "key": "accessories[].conditions.operands[].accessoryId",
+                      "key": "accessories[].conditions.operands[].type",
                       "flex": "0 0 auto"
+                    },
+                    {
+                      "type": "div",
+                      "flex": "0 0 5px"
+                    },
+                    {
+                      "key": "accessories[].conditions.operands[].accessoryId",
+                      "flex": "0 0 auto",
+                      "condition": {
+                        "functionBody": "return model.accessories?.[arguments[1][0]]?.conditions?.operands?.[arguments[1][1]]?.type === 'ACCESSORY';"
+                      }
+                    },
+                    {
+                      "type": "div",
+                      "flex": "0 0 5px"
                     },
                     {
                       "key": "accessories[].conditions.operands[].accessoryState",
                       "flex": "0 0 auto",
                       "condition": {
                         "functionBody": "return model.accessories?.[arguments[1][0]]?.conditions?.operands?.[arguments[1][1]]?.accessoryId;"
+                      }
+                    },
+                    {
+                      "key": "accessories[].conditions.operands[].pattern",
+                      "flex": "1 0 auto",
+                      "condition": {
+                        "functionBody": "return model.accessories?.[arguments[1][0]]?.conditions?.operands?.[arguments[1][1]]?.type === 'LOG';"
                       }
                     }
                   ]
