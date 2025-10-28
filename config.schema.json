@@ -294,7 +294,7 @@
             "conditions": { "$ref": "#/definitions/conditions" },
             "temperatureUnits": {
               "type": "string",
-              "title": "${config.title.units}",
+              "title": "${config.title.temperatureUnits}",
               "enum": ["C", "F"],
               "enumNames": ["${config.enumNames.celsius}", "${config.enumNames.fahrenheit}"]
             },
@@ -336,6 +336,14 @@
             "defaultTemperature": {
               "type": "number",
               "title": "${config.title.defaultTemperature}"
+            },
+            "minimumTemperature": {
+              "type": "number",
+              "title": "${config.title.minimumTemperature}"
+            },
+            "maximumTemperature": {
+              "type": "number",
+              "title": "${config.title.maximumTemperature}"
             },
             "commandOn": {
               "type": "string",
@@ -495,15 +503,33 @@
                   },
                   "items": [
                     {
-                      "key": "accessories[].temperatureUnits",
-                      "flex": "0 0 33%"
-                    },
-                    {
                       "key": "accessories[].defaultThermostatState",
                       "flex": "0 0 33%"
                     },
                     {
+                      "key": "accessories[].temperatureUnits",
+                      "flex": "0 0 33%"
+                    }
+                  ]
+                },
+                                {
+                  "type": "div",
+                  "displayFlex": true,
+                  "flex-direction": "row",
+                  "condition": {
+                    "functionBody": "return ['Thermostat'].includes(model.accessories?.[arguments[1]]?.type);"
+                  },
+                  "items": [
+                    {
                       "key": "accessories[].defaultTemperature",
+                      "flex": "0 0 33%"
+                    },
+                    {
+                      "key": "accessories[].minimumTemperature",
+                      "flex": "0 0 33%"
+                    },
+                    {
+                      "key": "accessories[].maximumTemperature",
                       "flex": "0 0 33%"
                     }
                   ]

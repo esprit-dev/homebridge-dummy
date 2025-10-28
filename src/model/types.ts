@@ -111,6 +111,8 @@ export type ThermostatConfig = DummyConfig & {
   temperatureUnits?: TemperatureUnits
   defaultThermostatState?: DefaultThermostatState;
   defaultTemperature?: number;
+  minimumTemperature?: number,
+  maximumTemperature?: number,
   commandOn?: string,
   commandOff?: string,
   commandTemperature?: string,

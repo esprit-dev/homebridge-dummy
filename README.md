@@ -141,6 +141,8 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
             "defaultPosition": "open" | "closed",
             "defaultThermostatState": "auto" | "heat" | "cool" | "off",
             "defaultTemperature": number,
+            "minimumTemperature": number,
+            "maximumTemperature": number,
             "commandOn": "string",
             "commandOff": "string",
             "commandLock": "string",
@@ -263,6 +265,8 @@ For example, if I have a physical door lock I want to "watch", then I can setup 
 - `defaultPosition` — Initial position for the door/garage/window/blinds, "open" or "closed"
 - `defaultThermostatState` - The initial state for the thermostat, "auto", "heat", "cool", or "off"
 - `defaultTemperature` - The default temperature for the thermostat in `temperatureUnits` defined above
+- `minimumTemperature` - Defines a minimum temperature
+- `maximumTemperature` - Defines a maximum temperature
 
 ### Options
 - `enableWebook` - Turn on webhooks for this accessory. See [Webhooks](https://github.com/mpatfield/homebridge-dummy#webhooks) section below for details.

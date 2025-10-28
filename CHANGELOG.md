@@ -2,19 +2,16 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-## 1.4.0-beta.2 (2025-10-26)
+## 1.4.0-beta.3 (2025-10-26)
 
 ### ‼️ WARNING ‼️ — If upgrading from v0.9.2 or earlier, [READ THIS FIRST](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#v10-migration)
-
-### ⚠️ Upcoming Breaking Change
-
-I plan to remove `Thermostat` as a supported accessory type from a future version. If you use `Thermostat`, please add your use case to [this ticket](https://github.com/mpatfield/homebridge-dummy/issues/207) and I will help you find an alternative.
 
 ### Added
 - [Trigger Conditions](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#trigger-conditions) to change the state of an accessory based on state changes of other Homebridge Dummy accessories
     - ⚠️ Config UI for conditions is highly experimental. Please [open a ticket](https://github.com/mpatfield/homebridge-dummy/issues/new/choose) if you see any unusal behavior.
 - `GET` requests for [Webhooks](https://github.com/mpatfield/homebridge-dummy#webhooks) (previously only `POST`)
 - Fade Out option for `Lightbulb` brightness to emulate a simple "count-down"
+- Min/max temperature settings for `Thermostat`
 
 ### Changed
 - `defaultOn` has been deprecated in favor of `defaultState` for `Lightbulb`, `Outlet`, and `Switch`

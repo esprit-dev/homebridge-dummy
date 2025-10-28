@@ -14,6 +14,8 @@ import { storageGet_Deprecated, Storage } from '../tools/storage.js';
 import { fromCelsius, toCelsius } from '../tools/temperature.js';
 
 const DEFAULT_TEMPERATURE = 20;
+const DEFAULT_MINIMUM = 10;
+const DEFAULT_MAXIMUM = 38;
 
 export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
 
@@ -63,12 +65,17 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
       .onGet(this.getState.bind(this))
       .onSet(this.setState.bind(this));
 
+    const minTemp = dependency.config.minimumTemperature ? toCelsius(dependency.config.minimumTemperature, this.units) : DEFAULT_MINIMUM;
+    const maxTemp = dependency.config.maximumTemperature ? toCelsius(dependency.config.maximumTemperature, this.units) : DEFAULT_MAXIMUM;
+
     this.accessoryService.getCharacteristic(dependency.Characteristic.CurrentTemperature)
-      .onGet(this.getTemperature.bind(this));
+      .onGet(this.getTemperature.bind(this))
+      .setProps({ minValue: minTemp, maxValue: maxTemp });
 
     this.accessoryService.getCharacteristic(dependency.Characteristic.TargetTemperature)
       .onGet(this.getTemperature.bind(this))
-      .onSet(this.setTemperature.bind(this));
+      .onSet(this.setTemperature.bind(this))
+      .setProps({ minValue: minTemp, maxValue: maxTemp });
 
     this.initializeThermostat();
   }
