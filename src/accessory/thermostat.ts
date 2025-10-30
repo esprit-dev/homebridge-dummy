@@ -1,20 +1,21 @@
-import { CharacteristicValue, PlatformAccessory } from 'homebridge';
+import { CharacteristicValue } from 'homebridge';
 
-import { DummyAccessory } from './base.js';
+import { DummyAccessory, DummyAccessoryDependency } from './base.js';
 
 import { strings } from '../i18n/i18n.js';
 
 import {
   AccessoryType, DefaultThermostatState, isValidTemperatureUnits, isValidThermostatState,
   printableValues, TemperatureUnits, WebhookCommand }  from '../model/enums.js';
-import { CharacteristicType, ServiceType, ThermostatConfig } from '../model/types.js';
+import { ThermostatConfig } from '../model/types.js';
 import { Webhook } from '../model/webhook.js';
 
-import { Log } from '../tools/log.js';
 import { storageGet_Deprecated, Storage } from '../tools/storage.js';
 import { fromCelsius, toCelsius } from '../tools/temperature.js';
 
 const DEFAULT_TEMPERATURE = 20;
+const DEFAULT_MINIMUM = 10;
+const DEFAULT_MAXIMUM = 38;
 
 export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
 
@@ -26,39 +27,32 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
   private state: CharacteristicValue;
   private temperature: CharacteristicValue;
 
-  constructor(
-    Service: ServiceType,
-    Characteristic: CharacteristicType,
-    accessory: PlatformAccessory,
-    config: ThermostatConfig,
-    log: Log,
-    isGrouped: boolean,
-  ) {
-    super(Service, Characteristic, accessory, config, log, isGrouped);
+  constructor(dependency: DummyAccessoryDependency<ThermostatConfig>) {
+    super(dependency);
 
-    this.STATE_AUTO = Characteristic.TargetHeatingCoolingState.AUTO;
-    this.STATE_COOL = Characteristic.TargetHeatingCoolingState.COOL;
-    this.STATE_HEAT = Characteristic.TargetHeatingCoolingState.HEAT;
-    this.STATE_OFF = Characteristic.TargetHeatingCoolingState.OFF;
+    this.STATE_AUTO = dependency.Characteristic.TargetHeatingCoolingState.AUTO;
+    this.STATE_COOL = dependency.Characteristic.TargetHeatingCoolingState.COOL;
+    this.STATE_HEAT = dependency.Characteristic.TargetHeatingCoolingState.HEAT;
+    this.STATE_OFF = dependency.Characteristic.TargetHeatingCoolingState.OFF;
 
-    if (!isValidTemperatureUnits(config.temperatureUnits)) {
-      this.log.warning(strings.thermostat.badUnits, this.name, `'${config.temperatureUnits}'`, printableValues(TemperatureUnits));
+    if (!isValidTemperatureUnits(dependency.config.temperatureUnits)) {
+      this.log.warning(strings.thermostat.badUnits, this.name, `'${dependency.config.temperatureUnits}'`, printableValues(TemperatureUnits));
     }
 
-    if (!isValidThermostatState(config.defaultThermostatState)) {
-      this.log.warning(strings.thermostat.badDefault, this.name, `'${config.defaultThermostatState}'`, printableValues(DefaultThermostatState));
+    if (!isValidThermostatState(dependency.config.defaultThermostatState)) {
+      this.log.warning(strings.thermostat.badDefault, this.name, `'${dependency.config.defaultThermostatState}'`, printableValues(DefaultThermostatState));
     }
 
     this.state = this.defaultState;
     this.temperature = this.defaultTemperature;
 
-    this.accessoryService.getCharacteristic(this.Characteristic.TemperatureDisplayUnits)
+    this.accessoryService.getCharacteristic(dependency.Characteristic.TemperatureDisplayUnits)
       .onGet(this.getUnits.bind(this));
 
-    this.accessoryService.getCharacteristic(this.Characteristic.CurrentHeatingCoolingState)
+    this.accessoryService.getCharacteristic(dependency.Characteristic.CurrentHeatingCoolingState)
       .onGet(this.getCurrentState.bind(this));
 
-    this.accessoryService.getCharacteristic(this.Characteristic.TargetHeatingCoolingState)
+    this.accessoryService.getCharacteristic(dependency.Characteristic.TargetHeatingCoolingState)
       .setProps({
         minStep: 1,
         validValues:[
@@ -71,12 +65,17 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
       .onGet(this.getState.bind(this))
       .onSet(this.setState.bind(this));
 
-    this.accessoryService.getCharacteristic(this.Characteristic.CurrentTemperature)
-      .onGet(this.getTemperature.bind(this));
+    const minTemp = dependency.config.minimumTemperature ? toCelsius(dependency.config.minimumTemperature, this.units) : DEFAULT_MINIMUM;
+    const maxTemp = dependency.config.maximumTemperature ? toCelsius(dependency.config.maximumTemperature, this.units) : DEFAULT_MAXIMUM;
 
-    this.accessoryService.getCharacteristic(this.Characteristic.TargetTemperature)
+    this.accessoryService.getCharacteristic(dependency.Characteristic.CurrentTemperature)
       .onGet(this.getTemperature.bind(this))
-      .onSet(this.setTemperature.bind(this));
+      .setProps({ minValue: minTemp, maxValue: maxTemp });
+
+    this.accessoryService.getCharacteristic(dependency.Characteristic.TargetTemperature)
+      .onGet(this.getTemperature.bind(this))
+      .onSet(this.setTemperature.bind(this))
+      .setProps({ minValue: minTemp, maxValue: maxTemp });
 
     this.initializeThermostat();
   }
@@ -208,8 +207,8 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
     this.accessoryService.updateCharacteristic(this.Characteristic.CurrentTemperature, this.temperature);
   }
 
-  override async schedule(): Promise<void> {
-    throw new Error(strings.thermostat.unsupportedFunction.replace('%s', `${this.schedule.name}()`));
+  override async trigger(): Promise<void> {
+    throw new Error(strings.thermostat.unsupportedFunction.replace('%s', `${this.trigger.name}()`));
   }
 
   override async reset(): Promise<void> {

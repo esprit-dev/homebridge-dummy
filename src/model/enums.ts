@@ -34,22 +34,58 @@ export enum SensorCharacteristic {
   SmokeDetected = 'SmokeDetected',
 }
 
-export enum DefaultLockState {
+export enum ConditionOperator {
+  AND = 'and',
+  OR = 'or'
+}
+
+export enum OperandType {
+  ACCESSORY = 'ACCESSORY',
+  LOG = 'LOG',
+}
+
+export enum OnState {
+  ON = 'on',
+  OFF = 'off',
+}
+
+export function isValidOnState(input?: OnState): boolean {
+  return input === undefined || Object.values(OnState).includes(input);
+}
+
+export enum LockState {
   LOCKED = 'locked',
   UNLOCKED = 'unlocked',
 }
 
-export function isValidLockState(input?: DefaultLockState): boolean {
-  return input === undefined || Object.values(DefaultLockState).includes(input);
+export function isValidLockState(input?: LockState): boolean {
+  return input === undefined || Object.values(LockState).includes(input);
 }
 
-export enum DefaultPosition {
+export enum Position {
   OPEN = 'open',
   CLOSED = 'closed',
 }
 
-export function isValidPosition(input?: DefaultPosition): boolean {
-  return input === undefined || Object.values(DefaultPosition).includes(input);
+export function isValidPosition(input?: Position): boolean {
+  return input === undefined || Object.values(Position).includes(input);
+}
+
+export type AccessoryState = OnState | Position | LockState;
+
+export function getStateType(input: AccessoryState): typeof OnState | typeof LockState | typeof Position | undefined {
+
+  if (isValidOnState(input as OnState)) {
+    return OnState;
+  }
+
+  if (isValidPosition(input as Position)) {
+    return Position;
+  }
+
+  if (isValidLockState(input as LockState)) {
+    return LockState;
+  }
 }
 
 export enum DefaultThermostatState {

@@ -1,14 +1,23 @@
 import { PlatformAccessory } from 'homebridge';
 
-import { DummyAccessory } from './base.js';
+import { DummyAccessory, DummyAccessoryDependency } from './base.js';
 import { createDummyAccessory } from './helpers.js';
 
+import { ConditionManager } from '../model/conditions.js';
 import { CharacteristicType, DummyConfig, GroupConfig, ServiceType } from '../model/types.js';
 import { WebhookManager } from '../model/webhook.js';
 
 import { Log } from '../tools/log.js';
 import { PLATFORM_NAME, PLUGIN_ALIAS } from '../homebridge/settings.js';
 import getVersion from '../tools/version.js';
+
+export type GroupAccessoryDependency = {
+    Service: ServiceType,
+    Characteristic: CharacteristicType,
+    platformAccessory: PlatformAccessory,
+    conditionManager: ConditionManager,
+    log: Log
+}
 
 export class GroupAccessory {
 
@@ -18,26 +27,25 @@ export class GroupAccessory {
 
   private readonly accessories: (DummyAccessory<DummyConfig>)[] = [];
 
-  constructor(
-    Service: ServiceType,
-    Characteristic: CharacteristicType,
-    accessory: PlatformAccessory,
-    config: GroupConfig,
-    log: Log,
-    webhookManager: WebhookManager,
-  ) {
+  constructor(dependency: GroupAccessoryDependency, config: GroupConfig, webhookManager: WebhookManager) {
 
-    accessory.getService(Service.AccessoryInformation)!
-      .setCharacteristic(Characteristic.Manufacturer, PLUGIN_ALIAS)
-      .setCharacteristic(Characteristic.Model, GroupAccessory.name)
-      .setCharacteristic(Characteristic.SerialNumber, accessory.UUID)
-      .setCharacteristic(Characteristic.FirmwareRevision, getVersion());
+    dependency.platformAccessory.getService(dependency.Service.AccessoryInformation)!
+      .setCharacteristic(dependency.Characteristic.Manufacturer, PLUGIN_ALIAS)
+      .setCharacteristic(dependency.Characteristic.Model, GroupAccessory.name)
+      .setCharacteristic(dependency.Characteristic.SerialNumber, dependency.platformAccessory.UUID)
+      .setCharacteristic(dependency.Characteristic.FirmwareRevision, getVersion());
 
     const keepSubtypes = new Set<string>();
 
     for (const dummyConfig of config.accessories) {
 
-      const dummyAccessory = createDummyAccessory(Service, Characteristic, accessory, dummyConfig, log, true);
+      const accessoryDependency: DummyAccessoryDependency<DummyConfig> = {
+        ...dependency,
+        config: dummyConfig,
+        isGrouped: true,
+      };
+
+      const dummyAccessory = createDummyAccessory(accessoryDependency);
       if (!dummyAccessory) {
         continue;
       }
@@ -50,9 +58,9 @@ export class GroupAccessory {
       this.accessories.push(dummyAccessory);
     };
 
-    for (const service of [...accessory.services]) {
+    for (const service of [...dependency.platformAccessory.services]) {
       if (service.subtype && !keepSubtypes.has(service.subtype)) {
-        accessory.removeService(service);
+        dependency.platformAccessory.removeService(service);
       }
     }
   }

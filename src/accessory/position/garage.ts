@@ -1,25 +1,16 @@
-import { PlatformAccessory } from 'homebridge';
-
 import { PositionAccessory } from './position.js';
 
-import { AccessoryType, WebhookCommand } from '../../model/enums.js';
-import { CharacteristicType, GarageDoorConfig, ServiceType } from '../../model/types.js';
+import { DummyAccessoryDependency } from '../base.js';
 
-import { Log } from '../../tools/log.js';
+import { AccessoryType, WebhookCommand } from '../../model/enums.js';
+import { GarageDoorConfig } from '../../model/types.js';
 
 export class GarageDoorAccessory extends PositionAccessory<GarageDoorConfig> {
 
-  constructor(
-    Service: ServiceType,
-    Characteristic: CharacteristicType,
-    accessory: PlatformAccessory,
-    config: GarageDoorConfig,
-    log: Log,
-    isGrouped: boolean,
-  ) {
-    super(Service, Characteristic, accessory, config, log, isGrouped);
+  constructor(dependency: DummyAccessoryDependency<GarageDoorConfig>) {
+    super(dependency);
 
-    this.accessoryService.getCharacteristic(Characteristic.ObstructionDetected)
+    this.accessoryService.getCharacteristic(dependency.Characteristic.ObstructionDetected)
       .onGet( async () => false );
   }
 

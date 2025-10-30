@@ -123,13 +123,26 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
                 "units": "MILLISECONDS | SECONDS | MINUTES | HOURS",
                 "period": "HOUR | DAY | WEEK | MONTH",
             },
+            "conditions": {
+                "operator": "and | or",
+                "operands" [
+                    {
+                        "accessoryId": "string",
+                        "accessoryState": "on | off | open | closed | locked | unlocked",
+                    }
+                    …
+                ]
+            },
             "temperatureUnits": "C" | "F",
-            "defaultOn": true | false,
+            "defaultState": "on" | "off",
             "defaultBrightness": 0-100,
+            "fadeOut": true | false,
             "defaultLockState": "locked" | "unlocked",
             "defaultPosition": "open" | "closed",
             "defaultThermostatState": "auto" | "heat" | "cool" | "off",
             "defaultTemperature": number,
+            "minimumTemperature": number,
+            "maximumTemperature": number,
             "commandOn": "string",
             "commandOff": "string",
             "commandLock": "string",
@@ -221,14 +234,49 @@ Execute arbitrary commands (e.g. curl) when the accessory changes state
 - `unlockCommand` - Arbitrary command to execute when lock mechanism is unlocked
 - `commandTemperature` - Arbitrary command to execute when temperature changes
 
+### Trigger Conditions
+
+You can trigger an accessory whenever a set of conditions are satisfied, for example, when other Homebridge Dummy accessories turn on.
+
+There are two logical operators to trigger the target accessory when all (`AND`) or any (`OR`) of a set of conditions are satisfied. This is set using `operator`.
+
+You can have an arbitrarily long list of conditions and they are checked in order.
+
+If target accessory is not setup to auto-reset with a timer, then it will immediately return to it's default setting as soon as the conditions are no longer met.
+
+Note that due to limitations of HomeKit and Homebridge, it is only possible to check the states of other Homebridge Dummy accessories.
+
+One workaround is to use the `LOG` operand type which will watch the Homebridge log for the specified string or regex.
+
+`LOG` based conditions are stateless triggers. If it is the only condition or the conditions `operator` is `OR`, then it will fire immediately. If there are other `AND` conditions, then it will not fire unless all other conditions are satisfied.
+
+For example, if I have `LOG` condition "A" and `ACCESSORY` condition "B" for when "B" is turned "On", then if "B" is "Off"" and the pattern is found in the log, "A" will not trigger.
+
+Note that `LOG` triggers are not instantenous and may take several seconds to fire.
+
+Another workaround for non-Dummy accessories is to set up duplicate accessories in Homebridge Dummy and use Automation to mirror the states.
+
+For example, if I have a physical door lock I want to "watch", then I can setup a `LockMechanism` accessory in Homebridge Dummy and create two automations to change the state of my dummy lock whenever the physical door lock is unlocked or locked.
+
+#### Conditions Object
+- `operator` - "and" to require ALL conditions to be satisfied, and "or" ANY
+- `operands` - A list of accessories to "watch" for state changes to see if conditions are satisfied
+
+#### Operand Object
+- `accessoryId` - The id of the accessory to watch for state changes
+- `accessoryState` - The desired accessory state to make this condition "true"
+
 ### Defaults
 - `temperatureUnits` - Units to use for thermostats, either 'C' or 'F'
-- `defaultOn` — Initial value. Default _ON_ = true, default _OFF_ = false
+- `defaultState` — Initial value, either "on" or "off"
 - `defaultBrightness` — If set, lightbulb will have additional dimmer settings with this default brightness percentage
+- `fadeOut` - Fade smoothly instead of abruptly from 100% to off. Requires `defaultBrightness` and `timer` to be defined.
 - `defaultLockState` - The initial value for the lock, "locked" or "unlocked"
 - `defaultPosition` — Initial position for the door/garage/window/blinds, "open" or "closed"
 - `defaultThermostatState` - The initial state for the thermostat, "auto", "heat", "cool", or "off"
 - `defaultTemperature` - The default temperature for the thermostat in `temperatureUnits` defined above
+- `minimumTemperature` - Defines a minimum temperature
+- `maximumTemperature` - Defines a maximum temperature
 
 ### Options
 - `enableWebook` - Turn on webhooks for this accessory. See [Webhooks](https://github.com/mpatfield/homebridge-dummy#webhooks) section below for details.
@@ -241,23 +289,7 @@ You can optionally enable webhooks on an accessory by choosing `Enable Webhooks`
 
 If at least one accessory has webhooks enabled, then Homebridge Dummy will start a webhook server on startup. The default port is `63743`, e.g. `http://localhost:63743/`. To change the port, add `webhookPort` to the top level Homebridge Dummy config (see above).
 
-Incoming requests must be valid JSON and include the id of the accessory, the desired command, and the value to set.
-
-For example, to turn a switch on the JSON request should look like this:
-
-```json
-{
-    "id": "17a62a7b",
-    "command": "On",
-    "value": true
-}
-```
-
-Here's how you would call it from the command line.
-
-```
-curl -X POST http://localhost:63743/ -H "Content-Type: application/json" -d '{"id": "17a62a7b", "command": "On", "value": true}
-```
+Incoming requests must include the `id` of the accessory, the desired `command`, and the `value` to set.
 
 The accessory `id` can be found in the plugin JSON config.
 
@@ -269,16 +301,32 @@ Here are the possible values for `command` and their respective valid `value`
 - `TargetHeatingCoolingState` - 0 (OFF), 1 (HEAT), 2 (COOL), 3 (AUTO)
 - `TargetPosition` - number from 0-100
 - `TargetTemperature` - number between 10°C and 38°C
+    - For `TargetTemperature` you may optionally supply a `unit` (either 'F' or 'C') to allow you to pass in Fahrenheit or Celsius units.
 
-For `TargetTemperature` you may optionally supply a `unit` (either 'F' or 'C') to allow you to pass in Fahrenheit or Celsius units.
+#### GET Example
+
+```
+http://localhost:63743/?id=ACCESSORY_ID&command=On&value=true
+```
+
+### POST Example
+
+POST requrests must be valid JSON.
+
+For example, to turn a switch on the JSON request should look like this:
 
 ```json
 {
-    "id": "18a35b6c",
-    "command": "TargetTemperature",
-    "value": 72,
-    "unit": "F"
+    "id": "ACCESSORY_ID",
+    "command": "On",
+    "value": true
 }
+```
+
+Here's how you would call it from the command line.
+
+```
+curl -X POST http://localhost:63743/ -H "Content-Type: application/json" -d '{"id": "ACCESSORY_ID", "command": "On", "value": true}
 ```
 
 ## Credits
@@ -296,6 +344,8 @@ Schedule feature inspired by [Homebridge Schedule](https://github.com/kbrashears
 Sensor feature inspired by [Homebridge-Delay-Switch](https://github.com/nitaybz/homebridge-delay-switch#readme) by [@nitaybz](https://github.com/sponsors/nitaybz)
 
 Command feature inspired by [homebridge-cmdtrigger](https://github.com/hallos/homebridge-cmdtrigger) by [@hallos](https://github.com/sponsors/hallos)
+
+Log watch trigger feature inspired by [hb-virtual-switch](https://github.com/Plankske/hb-virtual-switch/) by [@Plankske](https://github.com/sponsors/Plankske)
 
 Special thanks to [@nfarina](https://github.com/sponsors/nfarina) for creating the original version of this plugin and maintaining it for almost 10 (!!!) years
 

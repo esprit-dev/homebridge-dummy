@@ -4,8 +4,8 @@ export type ServiceType = typeof import('homebridge').Service;
 export type CharacteristicType = typeof import('homebridge').Characteristic;
 
 import {
-  AccessoryType, DefaultLockState, DefaultPosition, DefaultThermostatState,
-  ScheduleType, SensorType, TemperatureUnits, TimePeriod, TimeUnits,
+  AccessoryState, AccessoryType, ConditionOperator, DefaultThermostatState, LockState,
+  OnState, Position, ScheduleType, SensorType, TemperatureUnits, TimePeriod, TimeUnits,
 } from './enums.js';
 
 export type LegacyAccessoryConfig = AccessoryConfig & {
@@ -58,6 +58,18 @@ export type LimiterConfig = Assertable & {
   period: TimePeriod,
 }
 
+export type Operand = Assertable & {
+  type: string,
+  accessoryId?: string,
+  accessoryState?: AccessoryState,
+  pattern?: string,
+}
+
+export type ConditionsConfig = Assertable & {
+  operator: ConditionOperator,
+  operands: Operand[],
+}
+
 export type DummyConfig = {
   id: string,
   name: string,
@@ -67,13 +79,15 @@ export type DummyConfig = {
   timer?: TimerConfig,
   schedule?: ScheduleConfig,
   limiter?: LimiterConfig,
+  conditions?: ConditionsConfig,
   resetOnRestart?: boolean,
   enableWebook?: boolean,
   disableLogging?: boolean,
 }
 
 export type OnOffConfig = DummyConfig & {
-  defaultOn?: CharacteristicValue,
+  defaultOn?: CharacteristicValue, // Deprecated
+  defaultState?: OnState,
   commandOn?: string,
   commandOff?: string,
 }
@@ -83,13 +97,14 @@ export type OutletConfig = OnOffConfig & {
 
 export type LightbulbConfig = OnOffConfig & {
   defaultBrightness?: CharacteristicValue,
+  fadeOut?: boolean,
 }
 
 export type SwitchConfig = OnOffConfig & {
 }
 
 export type LockConfig = DummyConfig & {
-  defaultLockState?: DefaultLockState;
+  defaultLockState?: LockState;
   commandLock?: string,
   commandUnlock?: string,
 }
@@ -98,13 +113,15 @@ export type ThermostatConfig = DummyConfig & {
   temperatureUnits?: TemperatureUnits
   defaultThermostatState?: DefaultThermostatState;
   defaultTemperature?: number;
+  minimumTemperature?: number,
+  maximumTemperature?: number,
   commandOn?: string,
   commandOff?: string,
   commandTemperature?: string,
 }
 
 export type PositionConfig = DummyConfig & {
-  defaultPosition?: DefaultPosition,
+  defaultPosition?: Position,
   commandOpen?: string,
   commandClose?: string,
 }

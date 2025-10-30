@@ -2,9 +2,9 @@
   "name": "homebridge-dummy",
   "platform": "HomebridgeDummy",
   "displayName": "Homebridge Dummy",
-  "description": "Create Homebridge accessories to help with automation and control — scheduling, delays, sensors, commands, webhooks, and more",
+  "description": "Create accessories to help with HomeKit automation and control — scheduling, delays, sensors, commands, conditions, webhooks, and more",
   "type": "module",
-  "version": "1.3.2",
+  "version": "1.4.0-beta.6",
   "homepage": "https://github.com/mpatfield/homebridge-dummy#readme",
   "repository": {
     "type": "git",
@@ -33,6 +33,7 @@
     "hoobs-plugin",
     "homekit",
     "dummy",
+    "virtual",
     "automation",
     "timer",
     "delay",
@@ -41,13 +42,21 @@
     "command",
     "cmd",
     "cmdtrigger",
+    "conditions",
+    "conditional",
+    "logic",
+    "logical",
+    "rule",
+    "rules",
+    "sequence",
+    "trigger",
     "http",
     "webhook",
     "sensor"
   ],
   "engines": {
     "homebridge": "^1.8.0 || ^2.0.0-beta.0",
-    "node": "^18.20.4 || ^20.18.0 || ^22.10.0"
+    "node": "^20 || ^22 || ^24"
   },
   "dependencies": {
     "@homebridge/plugin-ui-utils": "^2.0.2",
@@ -56,7 +65,8 @@
     "express": "^5.1.0",
     "homebridge-lib": "^7.1.8",
     "lodash.merge": "^4.6.2",
-    "node-persist": "^4.0.4"
+    "node-persist": "^4.0.4",
+    "tail-file": "^1.4.16"
   },
   "devDependencies": {
     "@types/escape-html": "^1.0.4",

@@ -1,5 +1,7 @@
 import { CronJob, validateCronExpression } from 'cron';
 
+import { DummyAddonDependency } from '../accessory/base.js';
+
 import { DelayLogStrings, Timeout } from './timeout.js';
 
 import { strings } from '../i18n/i18n.js';
@@ -7,61 +9,53 @@ import { strings } from '../i18n/i18n.js';
 import { isValidTimeUnits, printableValues, ScheduleType, TimeUnits }  from '../model/enums.js';
 import { ScheduleConfig } from '../model/types.js';
 
-import { Log } from '../tools/log.js';
 import { assert } from '../tools/validation.js';
 
 const CRON_CUSTOM = 'CRON_CUSTOM';
 
 export class Schedule extends Timeout {
 
-  static new(schedule: ScheduleConfig, caller: string,  log: Log, disableLogging: boolean, callback:  () => Promise<void>): Schedule | undefined {
+  static new(dependency: DummyAddonDependency, config: ScheduleConfig | undefined, callback:  () => Promise<void>): Schedule | undefined {
 
-    if (!assert(log, caller, schedule, 'type')) {
+    if (config === undefined || !assert(dependency.log, dependency.caller, config, 'type')) {
       return;
     }
 
-    switch(schedule.type) {
+    switch(config.type) {
     case ScheduleType.INTERVAL:
-      if (!assert(log, caller, schedule, 'interval', 'units')) {
+      if (!assert(dependency.log, dependency.caller, config, 'interval', 'units')) {
         return;
       }
 
-      if (!isValidTimeUnits(schedule.units!)) {
-        log.error(strings.schedule.badUnits, caller, `'${schedule.units}'`, printableValues(TimeUnits));
+      if (!isValidTimeUnits(config.units!)) {
+        dependency.log.error(strings.schedule.badUnits, dependency.caller, `'${config.units}'`, printableValues(TimeUnits));
         return;
       }
 
       break;
     case ScheduleType.CRON:
-      if (!assert(log, caller, schedule, 'cron')) {
+      if (!assert(dependency.log, dependency.caller, config, 'cron')) {
         return;
       }
 
-      if (schedule.cron === CRON_CUSTOM && !assert(log, caller, schedule, 'cronCustom')) {
+      if (config.cron === CRON_CUSTOM && !assert(dependency.log, dependency.caller, config, 'cronCustom')) {
         return;
       }
       break;
     default:
-      log.error(strings.schedule.badType, caller, `'${schedule.type}'`, printableValues(ScheduleType));
+      dependency.log.error(strings.schedule.badType, dependency.caller, `'${config.type}'`, printableValues(ScheduleType));
       return;
     }
 
-    return new Schedule(schedule, caller, log, disableLogging, callback);
+    return new Schedule(dependency, config, callback);
   }
 
   private cronjob?: CronJob;
 
-  private constructor(
-    private readonly schedule: ScheduleConfig,
-    caller: string,
-    log: Log,
-    disableLogging: boolean,
-    private readonly callback:  () => Promise<void>,
-  ) {
+  private constructor(dependency: DummyAddonDependency, private readonly config: ScheduleConfig, private readonly callback:  () => Promise<void>) {
+    super(dependency);
 
-    super(caller, log, disableLogging);
-
-    switch(this.schedule.type) {
+    switch(this.config.type) {
     case ScheduleType.INTERVAL:
       this.startTimeout();
       break;
@@ -82,7 +76,7 @@ export class Schedule extends Timeout {
       strings.schedule.intervalHours,
     );
 
-    const delay = this.getDelay(this.schedule.interval!, this.schedule.units!, this.schedule.random, logStrings);
+    const delay = this.getDelay(this.config.interval!, this.config.units!, this.config.random, logStrings);
 
     this.timeout = setTimeout(async () => {
       this.reset();
@@ -93,9 +87,9 @@ export class Schedule extends Timeout {
 
   private startCron() {
 
-    let cron = this.schedule.cron!;
+    let cron = this.config.cron!;
     if (cron === CRON_CUSTOM) {
-      cron = this.schedule.cronCustom!;
+      cron = this.config.cronCustom!;
     }
 
     if (!validateCronExpression(cron).valid) {

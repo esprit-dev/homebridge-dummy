@@ -1,41 +1,33 @@
-import { CharacteristicValue, PlatformAccessory } from 'homebridge';
+import { CharacteristicValue } from 'homebridge';
 
-import { DummyAccessory } from './base.js';
+import { DummyAccessory, DummyAccessoryDependency } from './base.js';
 
 import { strings } from '../i18n/i18n.js';
 
-import { AccessoryType, DefaultLockState, isValidLockState, printableValues, WebhookCommand }  from '../model/enums.js';
-import { CharacteristicType, LockConfig, ServiceType } from '../model/types.js';
+import { AccessoryType, LockState, isValidLockState, printableValues, WebhookCommand }  from '../model/enums.js';
+import { LockConfig } from '../model/types.js';
 import { Webhook } from '../model/webhook.js';
 
-import { Log } from '../tools/log.js';
 import { storageGet_Deprecated, Storage } from '../tools/storage.js';
 
 export class LockAccessory extends DummyAccessory<LockConfig> {
 
   private state: CharacteristicValue;
 
-  constructor(
-    Service: ServiceType,
-    Characteristic: CharacteristicType,
-    accessory: PlatformAccessory,
-    config: LockConfig,
-    log: Log,
-    isGrouped: boolean,
-  ) {
-    super(Service, Characteristic, accessory, config, log, isGrouped);
+  constructor(dependency: DummyAccessoryDependency<LockConfig>) {
+    super(dependency);
 
     if (!isValidLockState(this.config.defaultLockState)) {
-      this.log.warning(strings.lock.badDefault, this.name, `'${config.defaultLockState}'`, printableValues(DefaultLockState));
+      this.log.warning(strings.lock.badDefault, this.name, `'${dependency.config.defaultLockState}'`, printableValues(LockState));
     }
 
     this.state = this.defaultLockState;
 
-    this.accessoryService.getCharacteristic(Characteristic.LockTargetState)
+    this.accessoryService.getCharacteristic(dependency.Characteristic.LockTargetState)
       .onGet(this.getState.bind(this))
       .onSet(this.setState.bind(this));
 
-    this.accessoryService.getCharacteristic(Characteristic.LockCurrentState)
+    this.accessoryService.getCharacteristic(dependency.Characteristic.LockCurrentState)
       .onGet(this.getState.bind(this));
 
     this.initializeState();
@@ -46,11 +38,13 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
     if (!this.isStateful) {
       this.accessoryService.updateCharacteristic(this.Characteristic.LockTargetState, this.state);
       this.accessoryService.updateCharacteristic(this.Characteristic.LockCurrentState, this.state);
+      await this.registerStateChange();
       return;
     }
 
     const state = await storageGet_Deprecated(this.defaultStateStorageKey);
     if (state === undefined) {
+      await this.registerStateChange();
       return;
     }
 
@@ -72,8 +66,12 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
   }
 
   private get defaultLockState(): CharacteristicValue {
-    return this.config.defaultLockState === DefaultLockState.UNLOCKED ?
+    return this.config.defaultLockState === LockState.UNLOCKED ?
       this.Characteristic.LockTargetState.UNSECURED : this.Characteristic.LockTargetState.SECURED;
+  }
+
+  private async registerStateChange() {
+    await this.onStateChange(this.state === this.Characteristic.LockTargetState.SECURED ? LockState.LOCKED : LockState.UNLOCKED);
   }
 
   protected async getState(): Promise<CharacteristicValue> {
@@ -114,9 +112,11 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
         this.sensor.active = false;
       }
     }
+
+    await this.registerStateChange();
   }
 
-  override async schedule(): Promise<void> {
+  override async trigger(): Promise<void> {
     if (this.state === this.defaultLockState) {
       const opposite = this.state === this.Characteristic.LockTargetState.SECURED ?
         this.Characteristic.LockTargetState.UNSECURED : this.Characteristic.LockTargetState.SECURED;

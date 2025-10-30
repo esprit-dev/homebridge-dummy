@@ -3,11 +3,11 @@ import { CharacteristicValue, PlatformAccessory, Service } from 'homebridge';
 import { strings } from '../i18n/i18n.js';
 
 import { SensorType, SensorCharacteristic, isValidSensorType, printableValues }  from '../model/enums.js';
-import { CharacteristicType, ServiceType, SensorConfig } from '../model/types.js';
+import { ServiceType, SensorConfig } from '../model/types.js';
 
 import { Timeout } from '../timeout/timeout.js';
 
-import { Log } from '../tools/log.js';
+import { DummyAddonDependency } from './base.js';
 
 type SensorStrings = { active: string, inactive: string };
 type SensorInfo = { characteristic: SensorCharacteristic, strings: SensorStrings };
@@ -28,15 +28,7 @@ export class SensorAccessory extends Timeout {
 
   private _active: number = 0;
 
-  static new(
-    Service: ServiceType,
-    Characteristic: CharacteristicType,
-    accessory: PlatformAccessory,
-    caller: string,
-    log: Log,
-    disableLogging: boolean,
-    sensor?: SensorConfig | SensorType,
-  ): SensorAccessory | undefined {
+  static new(dependency: DummyAddonDependency, sensor?: SensorConfig | SensorType): SensorAccessory | undefined {
 
     if (sensor) {
 
@@ -47,50 +39,42 @@ export class SensorAccessory extends Timeout {
       }
 
       if (!isValidSensorType(sensor.type)) {
-        log.error(strings.sensor.badType, caller, `'${sensor.type}'`, printableValues(SensorType));
+        dependency.log.error(strings.sensor.badType, dependency.caller, `'${sensor.type}'`, printableValues(SensorType));
         return;
       }
 
-      return new SensorAccessory(sensor, Service, Characteristic, accessory, caller, log, disableLogging);
+      return new SensorAccessory(sensor, dependency);
     }
 
-    SensorAccessory.removeUnwantedServices(Service, accessory);
+    SensorAccessory.removeUnwantedServices(dependency.Service, dependency.platformAccessory);
 
     return;
   }
 
-  private static removeUnwantedServices(Service: ServiceType, accessory: PlatformAccessory, keep?: SensorType) {
+  private static removeUnwantedServices(Service: ServiceType, platformAccessory: PlatformAccessory, keep?: SensorType) {
     for (const type of Object.values(SensorType)) {
       if (type === keep) {
         continue;
       }
 
-      const existingService = accessory.getService(Service[type]);
+      const existingService = platformAccessory.getService(Service[type]);
       if (existingService) {
-        accessory.removeService(existingService);
+        platformAccessory.removeService(existingService);
       }
     }
   }
 
-  private constructor(
-    private readonly config: SensorConfig,
-    Service: ServiceType,
-    private readonly Characteristic: CharacteristicType,
-    accessory: PlatformAccessory,
-    caller: string,
-    log: Log,
-    disableLogging: boolean,
-  ) {
+  private constructor(private readonly config: SensorConfig, dependency: DummyAddonDependency) {
+    super(dependency);
 
-    super(caller, log, disableLogging);
+    this.service = dependency.platformAccessory.getService(dependency.Service[config.type]) ||
+      dependency.platformAccessory.addService(dependency.Service[config.type]);
 
-    this.service = accessory.getService(Service[config.type]) || accessory.addService(Service[config.type]);
-
-    const characteristicInstance = Characteristic[this.sensorInfo.characteristic];
+    const characteristicInstance = dependency.Characteristic[this.sensorInfo.characteristic];
     this.service.getCharacteristic(characteristicInstance)
       .onGet(this.onGet.bind(this));
 
-    SensorAccessory.removeUnwantedServices(Service, accessory, config.type);
+    SensorAccessory.removeUnwantedServices(dependency.Service, dependency.platformAccessory, config.type);
   }
 
   private async onGet(): Promise<CharacteristicValue> {
@@ -119,7 +103,7 @@ export class SensorAccessory extends Timeout {
 
     this._active = isActive ? 1 : 0;
 
-    const characteristicInstance = this.Characteristic[this.sensorInfo.characteristic];
+    const characteristicInstance = this.dependency.Characteristic[this.sensorInfo.characteristic];
     this.service.updateCharacteristic(characteristicInstance, this._active);
 
     this.logIfDesired(isActive ? this.sensorInfo.strings.active :this.sensorInfo.strings.inactive);

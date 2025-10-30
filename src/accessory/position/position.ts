@@ -1,38 +1,30 @@
-import { CharacteristicValue, PlatformAccessory } from 'homebridge';
+import { CharacteristicValue } from 'homebridge';
 
-import { DummyAccessory } from '../base.js';
+import { DummyAccessory, DummyAccessoryDependency } from '../base.js';
 
 import { strings } from '../../i18n/i18n.js';
 
-import { DefaultPosition, isValidPosition, printableValues, WebhookCommand } from '../../model/enums.js';
-import { CharacteristicType, PositionConfig, ServiceType } from '../../model/types.js';
+import { Position, isValidPosition, printableValues, WebhookCommand } from '../../model/enums.js';
+import { PositionConfig } from '../../model/types.js';
 import { Webhook } from '../../model/webhook.js';
 
-import { Log } from '../../tools/log.js';
 import { storageGet_Deprecated, Storage } from '../../tools/storage.js';
 
 export abstract class PositionAccessory<C extends PositionConfig = PositionConfig> extends DummyAccessory<PositionConfig> {
 
   private position: CharacteristicValue;
 
-  constructor(
-    Service: ServiceType,
-    Characteristic: CharacteristicType,
-    accessory: PlatformAccessory,
-    config: C,
-    log: Log,
-    isGrouped: boolean,
-  ) {
-    super(Service, Characteristic, accessory, config, log, isGrouped);
+  constructor(dependency: DummyAccessoryDependency<C>) {
+    super(dependency);
 
-    if (!isValidPosition(config.defaultPosition)) {
-      this.log.warning(strings.position.badDefault, this.name, `'${config.defaultPosition}'`, printableValues(DefaultPosition));
+    if (!isValidPosition(dependency.config.defaultPosition)) {
+      this.log.warning(strings.position.badDefault, this.name, `'${dependency.config.defaultPosition}'`, printableValues(Position));
     }
 
     this.position = this.defaultPosition;
 
     if (this.hasPositionState) {
-      this.accessoryService.getCharacteristic(Characteristic.PositionState)
+      this.accessoryService.getCharacteristic(dependency.Characteristic.PositionState)
         .onGet(this.getState.bind(this));
     }
 
@@ -85,11 +77,13 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
     if (!this.isStateful) {
       this.accessoryService.updateCharacteristic(this.targetCharacteristic, this.position);
       this.accessoryService.updateCharacteristic(this.currentCharacteristic, this.position);
+      await this.registerStateChange();
       return;
     }
 
     const position = await storageGet_Deprecated(this.defaultStateStorageKey);
     if (position === undefined) {
+      await this.registerStateChange();
       return;
     }
 
@@ -97,11 +91,15 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
   }
 
   private get defaultPosition(): CharacteristicValue {
-    return this.config.defaultPosition === DefaultPosition.OPEN ? this.positionOpen : this.positionClosed;
+    return this.config.defaultPosition === Position.OPEN ? this.positionOpen : this.positionClosed;
   }
 
   private async getState(): Promise<CharacteristicValue> {
     return this.Characteristic.PositionState.STOPPED;
+  }
+
+  private async registerStateChange() {
+    await this.onStateChange(this.position === this.positionClosed ? Position.CLOSED : Position.OPEN);
   }
 
   private async getPosition(): Promise<CharacteristicValue> {
@@ -144,9 +142,11 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
         this.sensor.active = false;
       }
     }
+
+    await this.registerStateChange();
   }
 
-  override async schedule(): Promise<void> {
+  override async trigger(): Promise<void> {
     if (this.position === this.defaultPosition) {
       const opposite = this.position === this.positionClosed ? this.positionOpen : this.positionClosed;
       await this.setPosition(opposite);

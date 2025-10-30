@@ -1,33 +1,29 @@
-import { CharacteristicValue, PlatformAccessory } from 'homebridge';
+import { CharacteristicValue } from 'homebridge';
 
-import { DummyAccessory } from '../base.js';
+import { DummyAccessory, DummyAccessoryDependency } from '../base.js';
 
 import { strings } from '../../i18n/i18n.js';
 
-import { CharacteristicType, OnOffConfig, ServiceType } from '../../model/types.js';
+import { OnOffConfig } from '../../model/types.js';
 import { Webhook } from '../../model/webhook.js';
 
-import { Log } from '../../tools/log.js';
 import { storageGet_Deprecated, Storage } from '../../tools/storage.js';
-import { WebhookCommand } from '../../model/enums.js';
+import { isValidOnState, OnState, printableValues, WebhookCommand } from '../../model/enums.js';
 
 export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extends DummyAccessory<C> {
 
-  private on: boolean;
+  private on: CharacteristicValue;
 
-  constructor(
-    Service: ServiceType,
-    Characteristic: CharacteristicType,
-    accessory: PlatformAccessory,
-    config: C,
-    log: Log,
-    isGrouped: boolean,
-  ) {
-    super(Service, Characteristic, accessory, config, log, isGrouped);
+  constructor(dependency: DummyAccessoryDependency<C>) {
+    super(dependency);
 
-    this.on = this.defaultOn;
+    if (!isValidOnState(this.config.defaultState)) {
+      this.log.warning(strings.onOff.badDefault, this.name, `'${dependency.config.defaultState}'`, printableValues(OnState));
+    }
 
-    this.accessoryService.getCharacteristic(Characteristic.On)
+    this.on = this.defaultState;
+
+    this.accessoryService.getCharacteristic(dependency.Characteristic.On)
       .onGet(this.getOn.bind(this))
       .onSet(this.setOn.bind(this));
 
@@ -48,26 +44,37 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
 
     if (!this.isStateful) {
       this.accessoryService.updateCharacteristic(this.Characteristic.On, this.on);
+      await this.registerStateChange();
       return;
     }
 
     const on = await storageGet_Deprecated(this.defaultStateStorageKey);
     if (on === undefined) {
+      await this.registerStateChange();
       return;
     }
 
     await this.setOn(on);
   }
 
-  private get defaultOn(): boolean {
+  private get defaultState(): CharacteristicValue {
+
+    if (this.config.defaultState) {
+      return this.config.defaultState === OnState.ON ? true : false;
+    }
+
     return this.config.defaultOn ? true : false;
+  }
+
+  private async registerStateChange() {
+    await this.onStateChange(this.on ? OnState.ON : OnState.OFF);
   }
 
   private async getOn(): Promise<CharacteristicValue> {
     return this.on;
   }
 
-  private async setOn(value: CharacteristicValue): Promise<void> {
+  protected async setOn(value: CharacteristicValue): Promise<void> {
 
     if (this.on !== value) {
       this.logIfDesired(this.logMessageForOnState(value));
@@ -79,13 +86,13 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
       }
     }
 
-    this.on = value as boolean;
+    this.on = value;
 
     if (this.isStateful) {
       await Storage.set(this.defaultStateStorageKey, this.on);
     }
 
-    if (this.on !== this.defaultOn) {
+    if (this.on !== this.defaultState) {
       this.startTimer();
     } else {
       this.cancelTimer();
@@ -95,22 +102,24 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
 
     if (this.sensor) {
       if (!this.sensor.timerControlled) {
-        this.sensor.active = this.on !== this.defaultOn;
-      } else if (this.on !== this.defaultOn) {
+        this.sensor.active = this.on !== this.defaultState;
+      } else if (this.on !== this.defaultState) {
         this.sensor.active = false;
       }
     }
+
+    await this.registerStateChange();
   }
 
-  override async schedule(): Promise<void> {
-    if (this.on === this.defaultOn) {
+  override async trigger(): Promise<void> {
+    if (this.on === this.defaultState) {
       await this.setOn(!this.on);
     }
   }
 
   override async reset(): Promise<void> {
-    if (this.on !== this.defaultOn) {
-      await this.setOn(this.defaultOn);
+    if (this.on !== this.defaultState) {
+      await this.setOn(this.defaultState);
       if (this.sensor?.timerControlled) {
         this.sensor.active = true;
       }

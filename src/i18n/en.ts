@@ -11,6 +11,21 @@ const en = {
     executed: '%s executed command', // accessory name
   },
 
+  conditions: {
+    andMultipleLogs: '%s cannot have mutiple log triggers using the "ALL" operator', // accessory name
+    currentResult: 'Current result is %s', // boolean
+    evaluatingConditions: 'Evaluating conditions for %s', // accessory name
+    satisfied: '%s conditions have been satisfied. Triggering…', // accessory name
+    notSatisfied: '%s conditions not satisfied', // accessory name
+    patternAndConditions: '%s log condition found a pattern match. Checking other conditions…', // accessory name
+    patternMatch: '%s log condition found a pattern match. Triggering…', // accessory name
+    selfReference: '%s is not allowed to reference itself as a triggering condition', // accessory name
+    statesEqual: 'Current and desired states are both %s', // state name
+    statesNotEqual: 'Current state %s is not equivalent to desired state %s', // state name, state name
+    stateUnknown: 'Cannot yet evalutate conditions because state for %s is unknown', // accessory id
+    statesUnrelated: 'Desired condition state %s is being compared to current state %s. Was this a typo?', // state name, state name
+  },
+
   lightbulb: {
     brightness: '%s brightness is %d%', // accessory name, number
     stateOn: '%s is on, brightness is %d%', // accessory name, number
@@ -33,7 +48,13 @@ const en = {
     unsecured: '%s is unlocked', // accessory name
   },
 
+  logWatcher: {
+    error: 'Log watcher encountered an error: %s', // error
+    missingFile: 'Unable to find log file at path %s', // file path
+  },
+
   onOff: {
+    badDefault: '%s has invalid default on state %s. Must be one of: %s', // accessory name, input, list of state names
     stateOff: '%s is off', // accessory name
     stateOn: '%s is on', // accessory name
   },
@@ -48,10 +69,10 @@ const en = {
     badType: '%s has invalid schedule type %s. Must be one of: %s', // accessory name, input, list of type names
     badUnits: '%s schedule has invalid time units %s. Must be one of: %s', // accessory name, input, list of unit names
     cron: '%s starting schedule cronjob', // accessory name
-    intervalMilliseconds: '%s scheduled for %s milliseconds', // accessory name, number
-    intervalSeconds: '%s scheduled for %s seconds', // accessory name, number
-    intervalMinutes: '%s scheduled for %s minutes', // accessory name, number
-    intervalHours: '% scheduled for %s hours', // accessory name, number
+    intervalMilliseconds: '%s will trigger in %s milliseconds', // accessory name, number
+    intervalSeconds: '%s will trigger in %s seconds', // accessory name, number
+    intervalMinutes: '%s will trigger in %s minutes', // accessory name, number
+    intervalHours: '% will trigger in %s hours', // accessory name, number
   },
 
   thermostat: {
@@ -71,10 +92,10 @@ const en = {
     cancel: 'Cancelled the timer for %s', // accessory name
     expired: '%s timer expired while restarting. Returning to default state…', // accessory name
     resume: '%s resuming timer', // accessory name
-    setMilliseconds: '%s is waiting %s milliseconds', // accessory name, number
-    setSeconds: '%s is waiting %s seconds', // accessory name, number
-    setMinutes: '%s is waiting %s minutes', // accessory name, number
-    setHours: '%s is waiting %s hours', // accessory name, number
+    setMilliseconds: '%s will reset in %s milliseconds', // accessory name, number
+    setSeconds: '%s will reset in %s seconds', // accessory name, number
+    setMinutes: '%s will reset in %s minutes', // accessory name, number
+    setHours: '%s will reset in %s hours', // accessory name, number
   },
 
   config: {
@@ -82,6 +103,8 @@ const en = {
     description: {
       commands: 'Execute arbitrary commands (e.g. curl) when the accessory changes state',
       cron: 'Visit crontab.guru for help',
+      conditions: 'Set the accessory to its opposite (non-default) value when the specified conditions are met',
+      fadeOut: 'Lightbulb will count down rather than abruptly going from 100% to off',
       limiter: 'Restrict the total time this accessory can be set to its non-default value, for each specified period',
       random: 'Time will be randomized with the above value as a maximum',
       schedule: 'Set the accessory to its opposite (non-default) value at specified interval or times',
@@ -90,6 +113,7 @@ const en = {
     },
 
     enumNames: {
+      accessory: 'Accessory',
       auto: 'Auto',
       carbonDioxideSensor:'Carbon Dioxide',
       carbonMonoxideSensor: 'Carbon Monoxide',
@@ -112,13 +136,17 @@ const en = {
       leakSensor: 'Leak',
       lightbulb: 'Lightbulb',
       lockMechanism: 'Lock',
+      log: 'Log Watcher',
       minutely: 'Every Minute',
       month: 'Month',
       monthly: 'Monthly',
+      none: 'None',
       occupancySensor: 'Occupancy',
       off: 'Off',
       on: 'On',
       open: 'Open',
+      operatorAnd: 'ALL conditions are met', // proceeded by "Trigger when…"
+      operatorOr: 'ANY conditions are met', // proceeded by "Trigger when…"
       outlet: 'Outlet',
       milliseconds: 'Milliseconds',
       minutes: 'Minutes',
@@ -154,6 +182,7 @@ const en = {
 
     title: {
       accessory: 'Accessory',
+      accessoryState: 'State',
       commandClose: 'Close Command',
       commandOff: 'Off Command',
       commandOn: 'On Command',
@@ -162,6 +191,8 @@ const en = {
       commands: 'Commands',
       commandTemperature: 'Temperature Changed Command',
       commandUnlock: 'Unlock Command',
+      condition: 'Condition',
+      conditions: 'Trigger Conditions',
       cron: 'Cron',
       cronCustom: 'Custom Cron',
       defaultBrightness: 'Default Brightness',
@@ -171,17 +202,23 @@ const en = {
       delay: 'Delay',
       disableLogging: 'Disable Logging',
       enableWebook: 'Enable Webhook',
+      fadeOut: 'Fade Out',
       groupName: 'Group Name',
       interval: 'Interval',
       limit: 'Limit',
       limiter: 'Time Limit',
+      minimumTemperature: 'Min Temperature',
+      maximumTemperature: 'Max Temperature',
       name: 'Name',
+      operator: 'Trigger when…',
+      pattern: 'Search String or RegEx',
       period: 'Per',
       preset: 'Preset',
       random: 'Randomize',
       resetOnRestart: 'Reset on Restart',
       schedule: 'Schedule',
       sensor: 'Attach Sensor',
+      temperatureUnits: 'Temperature Units',
       timer: 'Auto-Reset Timer',
       timerControlled: 'Activate Sensor on Auto-Reset',
       type: 'Type',

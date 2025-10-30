@@ -1,14 +1,17 @@
-import { CharacteristicValue, PlatformAccessory } from 'homebridge';
+import { CharacteristicValue } from 'homebridge';
 
 import { OnOffAccessory } from './onoff.js';
+
+import { DummyAccessoryDependency } from '../base.js';
 
 import { strings } from '../../i18n/i18n.js';
 
 import { AccessoryType, WebhookCommand } from '../../model/enums.js';
-import { CharacteristicType, LightbulbConfig, ServiceType } from '../../model/types.js';
+import { LightbulbConfig } from '../../model/types.js';
 import { Webhook } from '../../model/webhook.js';
 
-import { Log } from '../../tools/log.js';
+import { Fader } from '../../timeout/fader.js';
+
 import { storageGet_Deprecated, Storage } from '../../tools/storage.js';
 
 const NO_BRIGHTNESS = -1;
@@ -17,21 +20,16 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
 
   private brightness: CharacteristicValue;
 
-  constructor(
-    Service: ServiceType,
-    Characteristic: CharacteristicType,
-    accessory: PlatformAccessory,
-    config: LightbulbConfig,
-    log: Log,
-    isGrouped: boolean,
-  ) {
-    super(Service, Characteristic, accessory, config, log, isGrouped);
+  private fader = new Fader();
+
+  constructor(dependency: DummyAccessoryDependency<LightbulbConfig>) {
+    super(dependency);
 
     this.brightness = this.config.defaultBrightness ?? NO_BRIGHTNESS;
 
     if (this.isDimmer) {
 
-      this.accessoryService.getCharacteristic(this.Characteristic.Brightness)
+      this.accessoryService.getCharacteristic(dependency.Characteristic.Brightness)
         .onGet(this.getBrightness.bind(this))
         .onSet(this.setBrightness.bind(this));
 
@@ -89,8 +87,16 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
     }
   }
 
+  override async setOn(value: CharacteristicValue): Promise<void> {
+    super.setOn(value);
+
+    if (!value) {
+      this.accessoryService.updateCharacteristic(this.Characteristic.Brightness, this.brightness);
+    }
+  }
+
   private async getBrightness(): Promise<CharacteristicValue> {
-    return this.brightness;
+    return this.fader.value ?? this.brightness;
   }
 
   private async setBrightness(value: CharacteristicValue) {
@@ -100,6 +106,9 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
     }
 
     this.brightness = value;
+    if (this.fader.isFading) {
+      this.startTimer();
+    }
 
     this.logIfDesired(strings.lightbulb.brightness, this.brightness.toString());
 
@@ -108,5 +117,26 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
     }
 
     this.accessoryService.updateCharacteristic(this.Characteristic.Brightness, this.brightness);
+  }
+
+  override onTimerStarted(delay: number) {
+
+    if (this.config.fadeOut !== true) {
+      return;
+    }
+
+    this.fader.start(Number(this.brightness), delay, (value) => {
+      this.accessoryService.updateCharacteristic(this.Characteristic.Brightness, value);
+    });
+  }
+
+  override cancelTimer() {
+    this.fader.cancel();
+    super.cancelTimer();
+  }
+
+  override teardown(): void {
+    this.fader.teardown();
+    super.teardown();
   }
 }
