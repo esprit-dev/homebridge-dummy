@@ -2,7 +2,7 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-## 1.4.0-beta.4 (2025-10-26)
+## 1.4.0-beta.5 (2025-10-30)
 
 ### ‼️ WARNING ‼️ — If upgrading from v0.9.2 or earlier, [READ THIS FIRST](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#v10-migration)
 
@@ -14,6 +14,7 @@ All notable changes to homebridge-dummy will be documented in this file.
 - Min/max temperature settings for `Thermostat`
 
 ### Changed
+- ⚠️ Dropped [official support](https://github.com/homebridge/homebridge/wiki/How-To-Update-Node.js) for Node.js v18 and added Node.js v24
 - `defaultOn` has been deprecated in favor of `defaultState` for `Lightbulb`, `Outlet`, and `Switch`
     - This is backwards compatible so no manual edits are necessary
 
