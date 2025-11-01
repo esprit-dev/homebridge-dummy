@@ -2,7 +2,7 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-## 1.4.0-beta.7 (2025-10-30)
+## 1.4.0 (2025-10-30)
 
 ### ‼️ WARNING ‼️ — If upgrading from v0.9.2 or earlier, [READ THIS FIRST](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#v10-migration)
 
@@ -18,6 +18,11 @@ All notable changes to homebridge-dummy will be documented in this file.
 - `defaultOn` has been deprecated in favor of `defaultState` for `Lightbulb`, `Outlet`, and `Switch`
     - This is backwards compatible so no manual edits are necessary
 - Updated dependencies
+
+### Notes
+After further consideration, I will continue to support `Thermostat` as an accessory type. Thanks to everybody who participated in the [discussion](https://github.com/mpatfield/homebridge-dummy/issues/207).
+
+Would you like to see Homebridge Dummy in your language? Please consider [getting involved](https://github.com/mpatfield/homebridge-dummy/issues/105). No coding experience required!
 
 ## 1.3.2 (2025-10-24)
 
@@ -48,9 +53,6 @@ All notable changes to homebridge-dummy will be documented in this file.
 ### Changed
 - Running timers are resumed and sensor states are restored after plugin/Homebridge restart ([#189](https://github.com/mpatfield/homebridge-dummy/issues/189)) ([#191](https://github.com/mpatfield/homebridge-dummy/issues/191))
 - Improved error messaging for invalid config values
-
-### Notes
-Would you like to see Homebridge Dummy in your language? Please consider [getting involved](https://github.com/mpatfield/homebridge-dummy/issues/105). No coding experience required!
 
 ## 1.2.0 (2025-10-02)
 
