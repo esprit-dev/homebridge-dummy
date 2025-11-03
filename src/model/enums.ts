@@ -120,6 +120,12 @@ export function isValidTimeUnits(input: TimeUnits): boolean {
 export enum ScheduleType {
   INTERVAL = 'INTERVAL',
   CRON = 'CRON',
+  DAWN = 'DAWN',
+  DUSK = 'DUSK',
+  GOLDEN_HOUR = 'GOLDEN_HOUR',
+  NIGHT = 'NIGHT',
+  SUNRISE = 'SUNRISE',
+  SUNSET = 'SUNSET',
 }
 
 export enum TemperatureUnits {

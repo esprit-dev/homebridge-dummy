@@ -2,9 +2,17 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-## 1.4.0 (2025-11-01)
+## 1.4.1-beta.1 (2025-11-03)
 
 ### ‼️ WARNING ‼️ — If upgrading from v0.9.2 or earlier, [READ THIS FIRST](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#v10-migration)
+
+### Added
+- Schedule settings for sunrise, sunset, dawn, dusk, golden hour, or night, with optional offset
+
+### Notes
+Would you like to see Homebridge Dummy in your language? Please consider [getting involved](https://github.com/mpatfield/homebridge-dummy/issues/105). No coding experience required!
+
+## 1.4.0 (2025-11-01)
 
 ### Added
 - [Trigger Conditions](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#trigger-conditions) to change the state of an accessory based on state changes of other Homebridge Dummy accessories or keywords in the Homebridge log
@@ -21,8 +29,6 @@ All notable changes to homebridge-dummy will be documented in this file.
 
 ### Notes
 After further consideration, I will continue to support `Thermostat` as an accessory type. Thanks to everybody who participated in the [discussion](https://github.com/mpatfield/homebridge-dummy/issues/207).
-
-Would you like to see Homebridge Dummy in your language? Please consider [getting involved](https://github.com/mpatfield/homebridge-dummy/issues/105). No coding experience required!
 
 ## 1.3.2 (2025-10-24)
 

@@ -73,6 +73,7 @@ const en = {
     intervalSeconds: '%s will trigger in %s seconds', // accessory name, number
     intervalMinutes: '%s will trigger in %s minutes', // accessory name, number
     intervalHours: '% will trigger in %s hours', // accessory name, number
+    sunTime: '%s will trigger at %s', // accessory name, time
   },
 
   thermostat: {
@@ -124,10 +125,13 @@ const en = {
       cron: 'Cron',
       custom: 'Custom',
       daily: 'Daily',
+      dawn: 'Dawn',
       day: 'Day',
       door: 'Door',
+      dusk: 'Dusk',
       fahrenheit: '°F',
       garageDoorOpener: 'Garage Door',
+      goldenHour: 'Golden Hour',
       heat: 'Heat',
       hour: 'Hour',
       hourly: 'Hourly',
@@ -151,10 +155,13 @@ const en = {
       milliseconds: 'Milliseconds',
       minutes: 'Minutes',
       motionSensor: 'Motion',
+      night: 'Night',
       secondly: 'Every Second',
       seconds: 'Seconds',
       secured: 'Locked',
       smokeSensor: 'Smoke',
+      sunrise: 'Sunrise',
+      sunset: 'Sunset',
       switch: 'Switch',
       thermostat: 'Thermostat',
       unsecured: 'Unlocked',
@@ -205,11 +212,14 @@ const en = {
       fadeOut: 'Fade Out',
       groupName: 'Group Name',
       interval: 'Interval',
+      latitude: 'Latitude',
       limit: 'Limit',
       limiter: 'Time Limit',
+      longitude: 'Longitude',
       minimumTemperature: 'Min Temperature',
       maximumTemperature: 'Max Temperature',
       name: 'Name',
+      offset: 'Offset',
       operator: 'Trigger when…',
       pattern: 'Search String or RegEx',
       period: 'Per',

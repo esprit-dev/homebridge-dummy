@@ -80,8 +80,8 @@
           "type": {
             "type": "string",
             "title": "${config.title.type}",
-            "enum": [ "INTERVAL", "CRON"],
-            "enumNames": ["${config.enumNames.interval}", "${config.enumNames.cron}"]
+            "enum": [ "INTERVAL", "CRON", "SUNRISE", "SUNSET", "DAWN", "DUSK", "GOLDEN_HOUR", "NIGHT"],
+            "enumNames": ["${config.enumNames.interval}", "${config.enumNames.cron}", "${config.enumNames.sunrise}", "${config.enumNames.sunset}", "${config.enumNames.dawn}", "${config.enumNames.dusk}", "${config.enumNames.goldenHour}", "${config.enumNames.night}"]
           },
           "interval": {
             "type": "integer",
@@ -105,6 +105,20 @@
             "title": "${config.title.cronCustom}",
             "placeholder": "* * * * * *",
             "pattern": "(^((\\*\\/)?([0-5]?[0-9])((,|-|\\/)([0-5]?[0-9]))*|\\*)\\s((\\*\\/)?((2[0-3]|1[0-9]|[0-9]|00))((,|-|\\/)(2[0-3]|1[0-9]|[0-9]|00))*|\\*)\\s((\\*\\/)?([1-9]|[12][0-9]|3[01])((,|-|\\/)([1-9]|[12][0-9]|3[01]))*|\\*)\\s((\\*\\/)?([1-9]|1[0-2])((,|-|\\/)([1-9]|1[0-2]))*|\\*|(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec))\\s((\\*\\/)?[0-6]((,|-|\\/)[0-6])*|\\*|00|(sun|mon|tue|wed|thu|fri|sat))$)"
+          },
+          "offset": {
+            "type": "number",
+            "title": "${config.title.offset}",
+            "enum": [-45, -30, -20, -15, -10, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 10, 15, 20, 30, 45],
+            "enumNames": ["-45 ${config.enumNames.minutes}", "-30 ${config.enumNames.minutes}", "-20 ${config.enumNames.minutes}", "-15 ${config.enumNames.minutes}", "-10 ${config.enumNames.minutes}", "-5 ${config.enumNames.minutes}", "-4 ${config.enumNames.minutes}", "-3 ${config.enumNames.minutes}", "-2 ${config.enumNames.minutes}", "-1 ${config.enumNames.minutes}", "+1 ${config.enumNames.minutes}", "+2 ${config.enumNames.minutes}", "+3 ${config.enumNames.minutes}", "+4 ${config.enumNames.minutes}", "+5 ${config.enumNames.minutes}", "+10 ${config.enumNames.minutes}", "+15 ${config.enumNames.minutes}", "+20 ${config.enumNames.minutes}", "+30 ${config.enumNames.minutes}", "+45 ${config.enumNames.minutes}"]
+          },
+          "latitude": {
+            "type": "number",
+            "title": "${config.title.latitude}"
+          },
+          "longitude": {
+            "type": "number",
+            "title": "${config.title.longitude}"
           }
         },
         "allOf": [
@@ -143,6 +157,18 @@
             },
             "then": {
               "required": ["cronCustom"]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "type": {
+                  "enum": ["SUNRISE", "SUNSET", "DAWN", "DUSK", "GOLDEN_HOUR", "NIGHT"]
+                }
+              }
+            },
+            "then": {
+              "required": ["latitude", "longitude"]
             }
           }
         ]
@@ -650,6 +676,35 @@
                       "flex": "1 0 auto",
                       "condition": {
                           "functionBody": "return model.accessories?.[arguments[1]]?.schedule?.cron === 'CRON_CUSTOM';"
+                      }
+                    },
+                    {
+                      "key": "accessories[].schedule.offset",
+                      "flex": "0 1 auto",
+                      "condition": {
+                          "functionBody": "return ['SUNRISE', 'SUNSET', 'DAWN', 'DUSK', 'GOLDEN_HOUR', 'NIGHT'].includes(model.accessories?.[arguments[1]]?.schedule?.type);"
+                      }
+                    },
+                    {
+                      "type": "div",
+                      "flex": "0 0 5px"
+                    },
+                    {
+                      "key": "accessories[].schedule.latitude",
+                      "flex": "0 1 auto",
+                      "condition": {
+                          "functionBody": "return ['SUNRISE', 'SUNSET', 'DAWN', 'DUSK', 'GOLDEN_HOUR', 'NIGHT'].includes(model.accessories?.[arguments[1]]?.schedule?.type);"
+                      }
+                    },
+                    {
+                      "type": "div",
+                      "flex": "0 0 5px"
+                    },
+                    {
+                      "key": "accessories[].schedule.longitude",
+                      "flex": "0 1 auto",
+                      "condition": {
+                          "functionBody": "return ['SUNRISE', 'SUNSET', 'DAWN', 'DUSK', 'GOLDEN_HOUR', 'NIGHT'].includes(model.accessories?.[arguments[1]]?.schedule?.type);"
                       }
                     }
                   ]

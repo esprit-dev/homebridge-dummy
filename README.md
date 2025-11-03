@@ -107,11 +107,14 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
                 "random": true | false
             },
             "schedule": {
-                "type": "INTERVAL" | "CRON",
+                "type": "INTERVAL" | "CRON" | "SUNRISE" | "SUNSET" | "DAWN" | "DUSK" | "GOLDEN_HOUR" | "NIGHT",
                 "interval": number,
                 "units": "MILLISECONDS | SECONDS | MINUTES | HOURS",
                 "random": true | false,
-                "cron": "string"
+                "cron": "string",
+                "offset": number,
+                "latitude": number,
+                "longitude": number
             },
             "sensor": {
                 "type": "CarbonDioxideSensor | CarbonMonoxideSensor | ContactSensor | LeakSensor | MotionSensor | OccupancySensor | SmokeSensor",
@@ -195,13 +198,16 @@ Return the accessory to its default value after the specified delay
 ### Schedule
 Set the accessory to its opposite (non-default) value at specified interval or times
 
-- `schedule.type` — Automatically set the accessory to it's non-default value
+- `schedule.type` — One of `INTERVAL`, `CRON`, `SUNRISE`, `SUNSET`, `DAWN`, `DUSK`, `GOLDEN_HOUR`, `NIGHT`
 - `schedule.interval` — Trigger the accessory after this many milliseconds/seconds/minutes/hours. *Required if `schedule.type` = `INTERVAL`
 - `schedule.units` — The units to use for the interval (`MILLISECONDS`, `SECONDS`, `MINUTES`, or `HOURS`) *Required if `schedule.type` = `INTERVAL`
 - `schedule.random` — If true, the interval will be randomized with a maximum value of `schedule.interval`
 - `schedule.cron` — One of `@secondly`, `@minutely`, `@hourly`, `@daily`, `@weekly`, `@weekdays`, `@weekends`, `@monthly`, `@yearly`, or `CUSTOM_CRON`. *Required if `schedule.type` = `CRON`
 - `schedule.cronCustom` - Custom cron string for triggering the accessory. *Required if `schedule.cron` = `CUSTOM_CRON`
     - See [crontab.guru](http://crontab.guru) for help
+- `schedule.offset` - Add or subtract this value from the caluclated sun position for `SUNRISE`, `SUNSET`, etc.
+- `schedule.latitude` - Latitude used to calculate sun position *Required if `schedule.type` is `SUNRISE`, `SUNSET`, etc.
+- `schedule.longitude` - Longitude used to calculate sun position *Required if `schedule.type` is `SUNRISE`, `SUNSET`, etc.
 
 ### Limiter
 Restrict the total time this accessory can be set to its non-default value, for each specified period
@@ -340,6 +346,8 @@ curl -X POST http://localhost:63743/ -H "Content-Type: application/json" -d '{"i
 [Keryan Belahcene](https://www.instagram.com/keryan.me) for creating the [Flume](https://github.com/homebridge-plugins/homebridge-flume) banner image which was adapted for use with this plugin
 
 Schedule feature inspired by [Homebridge Schedule](https://github.com/kbrashears5/typescript-homebridge-schedule) by [@kbrashears5](https://github.com/sponsors/kbrashears5)
+
+Scheduling based on sun times (sunrise, sunset, etc.) inspired by [Homebridge Virtual Accessories](https://github.com/justjam2013/homebridge-virtual-accessories) by [@justjam2013](https://github.com/sponsors/justjam2013)
 
 Sensor feature inspired by [Homebridge-Delay-Switch](https://github.com/nitaybz/homebridge-delay-switch#readme) by [@nitaybz](https://github.com/sponsors/nitaybz)
 

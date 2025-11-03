@@ -38,6 +38,9 @@ export type ScheduleConfig = Assertable & {
   random?: boolean,
   cron?: string,
   cronCustom?: string,
+  offset?: number,
+  latitude?: number,
+  longitude?: number,
 }
 
 export type TimerConfig = Assertable & {

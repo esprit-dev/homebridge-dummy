@@ -1,4 +1,5 @@
 import { CronJob, validateCronExpression } from 'cron';
+import SunCalc from 'suncalc';
 
 import { DummyAddonDependency } from '../accessory/base.js';
 
@@ -42,6 +43,16 @@ export class Schedule extends Timeout {
         return;
       }
       break;
+    case ScheduleType.DAWN:
+    case ScheduleType.DUSK:
+    case ScheduleType.GOLDEN_HOUR:
+    case ScheduleType.NIGHT:
+    case ScheduleType.SUNRISE:
+    case ScheduleType.SUNSET:
+      if (!assert(dependency.log, dependency.caller, config, 'latitude', 'longitude')) {
+        return;
+      }
+      break;
     default:
       dependency.log.error(strings.schedule.badType, dependency.caller, `'${config.type}'`, printableValues(ScheduleType));
       return;
@@ -57,6 +68,12 @@ export class Schedule extends Timeout {
 
     switch(this.config.type) {
     case ScheduleType.INTERVAL:
+    case ScheduleType.DAWN:
+    case ScheduleType.DUSK:
+    case ScheduleType.GOLDEN_HOUR:
+    case ScheduleType.NIGHT:
+    case ScheduleType.SUNRISE:
+    case ScheduleType.SUNSET:
       this.startTimeout();
       break;
     case ScheduleType.CRON:
@@ -69,6 +86,15 @@ export class Schedule extends Timeout {
 
     this.reset();
 
+    this.timeout = setTimeout(async () => {
+      this.reset();
+      await this.callback();
+      this.startTimeout();
+    }, this.delay);
+  }
+
+  private get delay(): number {
+
     const logStrings = DelayLogStrings(
       strings.schedule.intervalMilliseconds,
       strings.schedule.intervalSeconds,
@@ -76,13 +102,61 @@ export class Schedule extends Timeout {
       strings.schedule.intervalHours,
     );
 
-    const delay = this.getDelay(this.config.interval!, this.config.units!, this.config.random, logStrings);
+    switch (this.config.type) {
+    case ScheduleType.INTERVAL:
+      return this.getDelay(this.config.interval!, this.config.units!, this.config.random, logStrings);
+    case ScheduleType.DAWN:
+    case ScheduleType.DUSK:
+    case ScheduleType.GOLDEN_HOUR:
+    case ScheduleType.NIGHT:
+    case ScheduleType.SUNRISE:
+    case ScheduleType.SUNSET:
+      return this.getSunDelay();
+    }
 
-    this.timeout = setTimeout(async () => {
-      this.reset();
-      await this.callback();
-      this.startTimeout();
-    }, delay);
+    throw new Error(`Cannot get delay for type '${this.config.type}'`);
+  }
+
+  private getSunDelay(): number {
+
+    const date = new Date();
+    let eventDate = this.getSunEventDate(date);
+
+    if (eventDate.getTime() - date.getTime() <= 0) {
+      date.setDate(date.getDate() + 1);
+      eventDate = this.getSunEventDate(date);
+    }
+
+    const minutesOffset = this.config.offset;
+    if (minutesOffset !== undefined) {
+      eventDate.setMinutes(eventDate.getMinutes() + minutesOffset);
+    }
+
+    this.logIfDesired(strings.schedule.sunTime, eventDate.toLocaleTimeString());
+
+    return eventDate.getTime() - Date.now();
+  }
+
+  private getSunEventDate(date: Date): Date {
+
+    const times = SunCalc.getTimes(date, this.config.latitude!, this.config.longitude!);
+
+    switch (this.config.type) {
+    case ScheduleType.DAWN:
+      return times.dawn;
+    case ScheduleType.DUSK:
+      return times.dusk;
+    case ScheduleType.GOLDEN_HOUR:
+      return times.goldenHour;
+    case ScheduleType.NIGHT:
+      return times.night;
+    case ScheduleType.SUNRISE:
+      return times.sunrise;
+    case ScheduleType.SUNSET:
+      return times.sunset;
+    }
+
+    throw new Error(`Cannot get sun delay for time type '${this.config.type}'`);
   }
 
   private startCron() {
