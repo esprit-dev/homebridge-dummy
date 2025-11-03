@@ -6,7 +6,7 @@ import { strings } from '../i18n/i18n.js';
 
 import {
   AccessoryType, DefaultThermostatState, isValidTemperatureUnits, isValidThermostatState,
-  printableValues, TemperatureUnits, WebhookCommand }  from '../model/enums.js';
+  printableValues, TemperatureUnits, WebhookCharacteristic }  from '../model/enums.js';
 import { ThermostatConfig } from '../model/types.js';
 import { Webhook } from '../model/webhook.js';
 
@@ -110,17 +110,19 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
     return AccessoryType.Thermostat;
   }
 
-  override webhooks(): Webhook[] {
+  override get webhooks(): Webhook[] {
 
     return [
 
-      new Webhook(this.identifier, WebhookCommand.TargetHeatingCoolingState,
+      new Webhook(this.identifier, WebhookCharacteristic.TargetHeatingCoolingState,
+        () => this.state,
         (value) => {
           this.setState(value);
           return this.stateLogTemplateForCV(value).replace('%s', this.name);
         }),
 
-      new Webhook(this.identifier, WebhookCommand.TargetTemperature,
+      new Webhook(this.identifier, WebhookCharacteristic.TargetTemperature,
+        () => this.temperature,
         (value) => {
           this.setTemperature(value);
           return this.temperatureLogTemplateForCV(value).replace('%s', this.name);

@@ -4,7 +4,7 @@ import { DummyAccessory, DummyAccessoryDependency } from './base.js';
 
 import { strings } from '../i18n/i18n.js';
 
-import { AccessoryType, LockState, isValidLockState, printableValues, WebhookCommand }  from '../model/enums.js';
+import { AccessoryType, LockState, isValidLockState, printableValues, WebhookCharacteristic }  from '../model/enums.js';
 import { LockConfig } from '../model/types.js';
 import { Webhook } from '../model/webhook.js';
 
@@ -55,9 +55,10 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
     return AccessoryType.LockMechanism;
   }
 
-  override webhooks(): Webhook[] {
+  override get webhooks(): Webhook[] {
     return [
-      new Webhook(this.identifier, WebhookCommand.LockTargetState,
+      new Webhook(this.identifier, WebhookCharacteristic.LockTargetState,
+        () => this.state,
         (value) => {
           this.setState(value);
           return this.logTemplateForCV(value).replace('%s', this.name);

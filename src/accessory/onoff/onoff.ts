@@ -8,7 +8,7 @@ import { OnOffConfig } from '../../model/types.js';
 import { Webhook } from '../../model/webhook.js';
 
 import { storageGet_Deprecated, Storage } from '../../tools/storage.js';
-import { isValidOnState, OnState, printableValues, WebhookCommand } from '../../model/enums.js';
+import { isValidOnState, OnState, printableValues, WebhookCharacteristic } from '../../model/enums.js';
 
 export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extends DummyAccessory<C> {
 
@@ -30,9 +30,10 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
     this.initializeOn();
   }
 
-  override webhooks(): Webhook[] {
+  override get webhooks(): Webhook[] {
     return [
-      new Webhook(this.identifier, WebhookCommand.On,
+      new Webhook(this.identifier, WebhookCharacteristic.On,
+        () => this.on,
         (value) => {
           this.setOn(value);
           return this.logMessageForOnState(value).replace('%s', this.name);

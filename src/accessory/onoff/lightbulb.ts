@@ -6,7 +6,7 @@ import { DummyAccessoryDependency } from '../base.js';
 
 import { strings } from '../../i18n/i18n.js';
 
-import { AccessoryType, WebhookCommand } from '../../model/enums.js';
+import { AccessoryType, WebhookCharacteristic } from '../../model/enums.js';
 import { LightbulbConfig } from '../../model/types.js';
 import { Webhook } from '../../model/webhook.js';
 
@@ -53,10 +53,11 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
     return AccessoryType.Lightbulb;
   }
 
-  override webhooks(): Webhook[] {
+  override get webhooks(): Webhook[] {
     return [
-      ...super.webhooks(),
-      new Webhook(this.identifier, WebhookCommand.Brightness,
+      ...super.webhooks,
+      new Webhook(this.identifier, WebhookCharacteristic.Brightness,
+        () => this.brightness,
         (value) => {
           this.setBrightness(value);
           return strings.lightbulb.brightness.replace('%s', this.name).replace('%d', value.toString());

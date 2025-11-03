@@ -9,6 +9,10 @@ All notable changes to homebridge-dummy will be documented in this file.
 ### Added
 - Schedule settings for sunrise, sunset, dawn, dusk, golden hour, or night, with optional offset
 
+### Changed
+- [Webhooks](https://github.com/mpatfield/homebridge-dummy#webhooks) now look for `get` or `set` instead of `command`
+    - This is backwards compatible so no manual edits are necessary
+
 ### Notes
 Would you like to see Homebridge Dummy in your language? Please consider [getting involved](https://github.com/mpatfield/homebridge-dummy/issues/105). No coding experience required!
 

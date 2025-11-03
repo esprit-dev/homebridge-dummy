@@ -254,7 +254,6 @@ const overrides = {
 
   webhook: {
     badUnits: 'Dieser %s Webhook-Befehl weist ungültige Temperatureinheiten %s auf. Muss eine der folgenden sein:',
-    missing: 'Dem Request fehlen die folgenden Felder:',
     received: 'Webhook-Befehl empfangen',
     register: 'Registriere Gerät mit ID %s für Webhook-Befehl %s',
     started: 'Webhook-Server läuft und lauscht auf Port %s',
@@ -262,8 +261,8 @@ const overrides = {
     stopping: 'Fahre Webhook-Server herunter...',
     validRange: 'Der %s Webhook-Befehl erwartet einen Zahlenwert zwischen %s und %s',
     validValues: 'Gültige Werte für den %s Webhook-Befehl sind:',
-    unregisteredCommand: 'Es sind keine Geräte für den Webhook-Befehl %s registriert. Haben Sie \'Webhook aktivieren\' für dieses Gerät eingeschaltet?',
-    unsupportedCommand: 'Der Webhook-Befehl %s wird nicht unterstützt',
+    unregisteredCharacteristic: 'Es sind keine Geräte für den Webhook-Befehl %s registriert. Haben Sie \'Webhook aktivieren\' für dieses Gerät eingeschaltet?',
+    unsupportedCharacteristic: 'Der Webhook-Befehl %s wird nicht unterstützt',
     unregisteredId: 'Es ist kein Gerät für Webhooks mit der ID %s registriert. Die korrekte ID finden Sie in der JSON-Konfiguration.',
   },
 };

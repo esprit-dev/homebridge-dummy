@@ -295,11 +295,11 @@ You can optionally enable webhooks on an accessory by choosing `Enable Webhooks`
 
 If at least one accessory has webhooks enabled, then Homebridge Dummy will start a webhook server on startup. The default port is `63743`, e.g. `http://localhost:63743/`. To change the port, add `webhookPort` to the top level Homebridge Dummy config (see above).
 
-Incoming requests must include the `id` of the accessory, the desired `command`, and the `value` to set.
+Incoming requests must include the `id` of the accessory. The accessory `id` can be found in the plugin JSON config.
 
-The accessory `id` can be found in the plugin JSON config.
+You can either `get` or `set` the value of the accessory. `set` commands require a `value` to set.
 
-Here are the possible values for `command` and their respective valid `value`
+Here are the possible values for `get` or `set` and their respective valid `value`
 
 - `Brightness` - number from 0-100
 - `LockTargetState` - 0 (UNSECURED) or 1 (SECURED)
@@ -309,30 +309,55 @@ Here are the possible values for `command` and their respective valid `value`
 - `TargetTemperature` - number between 10°C and 38°C
     - For `TargetTemperature` you may optionally supply a `unit` (either 'F' or 'C') to allow you to pass in Fahrenheit or Celsius units.
 
-#### GET Example
+#### Examples using HTTP GET
+
+Here is an example to get the on/off state for a switch:
 
 ```
-http://localhost:63743/?id=ACCESSORY_ID&command=On&value=true
+http://localhost:63743/?id=ACCESSORY_ID&get=On
 ```
 
-### POST Example
+Returns `{ "value": false }`
 
-POST requrests must be valid JSON.
+And here is an example to set the brightness of a lightbulb:
 
-For example, to turn a switch on the JSON request should look like this:
+```
+http://localhost:63743/?id=ACCESSORY_ID&set=Brightness&value=42
+```
+
+Returns `{ "success": "Accessory Name is on, brightness is 42%" }`
+
+### Examples using HTTP POST
+
+POST requests must be valid JSON. Here is an example of the JSON needed to get the on/off state for a switch:
 
 ```json
 {
     "id": "ACCESSORY_ID",
-    "command": "On",
-    "value": true
+    "get": "On"
 }
 ```
 
-Here's how you would call it from the command line.
+Here's how you would call it from the command line:
 
 ```
-curl -X POST http://localhost:63743/ -H "Content-Type: application/json" -d '{"id": "ACCESSORY_ID", "command": "On", "value": true}
+curl -X POST http://localhost:63743/ -H "Content-Type: application/json" -d '{"id": "ACCESSORY_ID", "get": "On" }
+```
+
+Here is an example of the JSON needed to set the brightness of a lightbulb:
+
+```json
+{
+    "id": "ACCESSORY_ID",
+    "set": "Brightness",
+    "value": 42
+}
+```
+
+Here's how you would call it from the command line:
+
+```
+curl -X POST http://localhost:63743/ -H "Content-Type: application/json" -d '{"id": "ACCESSORY_ID", "set": "Brightness", "value": 42 }
 ```
 
 ## Credits

@@ -4,7 +4,7 @@ import { DummyAccessory, DummyAccessoryDependency } from '../base.js';
 
 import { strings } from '../../i18n/i18n.js';
 
-import { Position, isValidPosition, printableValues, WebhookCommand } from '../../model/enums.js';
+import { Position, isValidPosition, printableValues, WebhookCharacteristic } from '../../model/enums.js';
 import { PositionConfig } from '../../model/types.js';
 import { Webhook } from '../../model/webhook.js';
 
@@ -59,12 +59,13 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
   }
 
   protected get webhookCommand() {
-    return WebhookCommand.TargetPosition;
+    return WebhookCharacteristic.TargetPosition;
   }
 
-  override webhooks(): Webhook[] {
+  override get webhooks(): Webhook[] {
     return [
       new Webhook(this.identifier, this.webhookCommand,
+        () => this.position,
         (value) => {
           this.setPosition(value);
           return this.logTemplateForCV(value).replace('%s', this.name);

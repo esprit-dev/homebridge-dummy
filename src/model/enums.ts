@@ -137,7 +137,7 @@ export function isValidTemperatureUnits(input?: TemperatureUnits): boolean {
   return input === undefined || Object.values(TemperatureUnits).includes(input);
 }
 
-export enum WebhookCommand {
+export enum WebhookCharacteristic {
   Brightness = 'Brightness',
   LockTargetState = 'LockTargetState',
   On = 'On',

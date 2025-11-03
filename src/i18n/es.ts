@@ -257,7 +257,6 @@ const overrides = {
 
   webhook: {
     badUnits: 'El comando del webhook de %s tiene unidades de temperatura inválidas %s. Debe ser uno de:',
-    missing: 'La solicitud no contiene los siguientes campos:',
     received: 'Comando webhook recibido',
     register: 'Registrando accesorio con id %s para el comando webhook %s',
     started: 'Servidor webhook en ejecución y escuchando en el puerto %s',
@@ -265,8 +264,8 @@ const overrides = {
     stopping: 'Deteniendo el servidor webhook…',
     validRange: 'El comando webhook %s espera un valor numérico entre %s y %s',
     validValues: 'Los valores válidos para el comando webhook %s son:',
-    unregisteredCommand: 'No hay accesorios registrados para el comando del webhook %s. Hizo click en \'Activar Webhook\' para este accesorio?',
-    unsupportedCommand: 'El comando webhook %s no está permitido',
+    unregisteredCharacteristic: 'No hay accesorios registrados para el comando del webhook %s. Hizo click en \'Activar Webhook\' para este accesorio?',
+    unsupportedCharacteristic: 'El comando webhook %s no está permitido',
     unregisteredId: 'No hay ningún accesorio registrado para webhooks con el id %s. Puede encontrar el id correcto en la configuración JSON.',
   },
 };

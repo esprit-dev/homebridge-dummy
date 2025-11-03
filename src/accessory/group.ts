@@ -51,7 +51,7 @@ export class GroupAccessory {
       }
 
       if (dummyConfig.enableWebook) {
-        webhookManager.registerAccessory(dummyAccessory);
+        webhookManager.registerWebhooks(dummyAccessory.webhooks);
       }
 
       keepSubtypes.add(dummyAccessory.subtype!);

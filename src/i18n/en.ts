@@ -299,7 +299,9 @@ const en = {
   webhook: {
     badPort: 'Port for the webhook server must be a number. Falling back to default %d', // number
     badUnits: 'The %s webhook command has invalid temperature units %s. Must be one of:', // accessory name, input, list of unit names
-    missing: 'Request is missing the following fields:',
+    missingId: 'Request is missing id',
+    missingCharacteristic: 'Request is missing a get or set command, e.g. `set=Brightness`',
+    missingValue: '`set` requests require a `value`',
     received: 'Webhook command received',
     register: 'Registering accessory with id %s for webhook command %s', // id, command
     started: 'Webhook server listening on port %s', // port number
@@ -307,8 +309,8 @@ const en = {
     stopping: 'Shutting down webhook server…',
     validRange: 'The %s webhook command expects a number value between %s and %s', // command name, number, number
     validValues: 'Valid values for the %s webhook command are:', // command name
-    unregisteredCommand: 'There are no accessories registered for the webhook command %s. Did you \'Enable Webhook\' for this accessory?', // command name
-    unsupportedCommand: 'The webhook command %s is not supported', // value
+    unregisteredCharacteristic: 'There are no accessories registered for %s. Did you `Enable Webhook` for this accessory?', // command name
+    unsupportedCharacteristic: 'The webhook command %s is not supported', // value
     unregisteredId: 'There is no accessory registered for webhooks with the id %s. You can find the correct id in the JSON config.', // id
   },
 };

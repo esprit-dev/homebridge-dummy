@@ -134,7 +134,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
     this._limiter?.teardown();
   }
 
-  public abstract webhooks(): Webhook[];
+  public abstract get webhooks(): Webhook[];
 
   protected get config(): C {
     return this.dependency.config;
