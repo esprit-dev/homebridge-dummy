@@ -90,7 +90,7 @@ export function getDelay(
   return time;
 }
 
-export abstract class Timeout {
+export class Timeout {
 
   protected timeout?: NodeJS.Timeout;
 
