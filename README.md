@@ -295,7 +295,7 @@ Note that `LOG` triggers are not instantenous and may take several seconds to fi
 
 There is also a `PING` operand type that allows you to set the state based on the reachability of a particular `pingHost`.
 
-- `type` - `LOG`
+- `type` - `PING`
 - `pingHost` - the host to ping, e.g. `192.168.0.1` or `example.com`
 - `pingInterval` - The raw interval to check the reachability of the above host (default 60 seconds)
 - `pingUnits` - The units to use for interval above
