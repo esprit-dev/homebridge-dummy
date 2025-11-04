@@ -228,11 +228,11 @@ export class WebhookManager {
       return;
     }
 
-    if (byId.length > 1) {
-      throw new Error(`Expected only one webhook for charactersitic/id but got ${byId.length}`);
+    if (byCharacteristic.length > 1) {
+      throw new Error(`Expected only one webhook for charactersitic/id but got ${byCharacteristic.length}`);
     }
 
-    return byId[0];
+    return byCharacteristic[0];
   }
 
   private isValidValue(value: CharacteristicValue, validValues: (number | boolean)[]): boolean {
