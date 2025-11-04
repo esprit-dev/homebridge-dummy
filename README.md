@@ -132,6 +132,10 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
                     {
                         "accessoryId": "string",
                         "accessoryState": "on | off | open | closed | locked | unlocked",
+                        "pattern": "string",
+                        "pingHost": "string",
+                        "pingInterval": number,
+                        "pingUnits": "MILLISECONDS | SECONDS | MINUTES | HOURS"
                     }
                     …
                 ]
@@ -240,38 +244,6 @@ Execute arbitrary commands (e.g. curl) when the accessory changes state
 - `unlockCommand` - Arbitrary command to execute when lock mechanism is unlocked
 - `commandTemperature` - Arbitrary command to execute when temperature changes
 
-### Trigger Conditions
-
-You can trigger an accessory whenever a set of conditions are satisfied, for example, when other Homebridge Dummy accessories turn on.
-
-There are two logical operators to trigger the target accessory when all (`AND`) or any (`OR`) of a set of conditions are satisfied. This is set using `operator`.
-
-You can have an arbitrarily long list of conditions and they are checked in order.
-
-If target accessory is not setup to auto-reset with a timer, then it will immediately return to it's default setting as soon as the conditions are no longer met.
-
-Note that due to limitations of HomeKit and Homebridge, it is only possible to check the states of other Homebridge Dummy accessories.
-
-One workaround is to use the `LOG` operand type which will watch the Homebridge log for the specified string or regex.
-
-`LOG` based conditions are stateless triggers. If it is the only condition or the conditions `operator` is `OR`, then it will fire immediately. If there are other `AND` conditions, then it will not fire unless all other conditions are satisfied.
-
-For example, if I have `LOG` condition "A" and `ACCESSORY` condition "B" for when "B" is turned "On", then if "B" is "Off"" and the pattern is found in the log, "A" will not trigger.
-
-Note that `LOG` triggers are not instantenous and may take several seconds to fire.
-
-Another workaround for non-Dummy accessories is to set up duplicate accessories in Homebridge Dummy and use Automation to mirror the states.
-
-For example, if I have a physical door lock I want to "watch", then I can setup a `LockMechanism` accessory in Homebridge Dummy and create two automations to change the state of my dummy lock whenever the physical door lock is unlocked or locked.
-
-#### Conditions Object
-- `operator` - "and" to require ALL conditions to be satisfied, and "or" ANY
-- `operands` - A list of accessories to "watch" for state changes to see if conditions are satisfied
-
-#### Operand Object
-- `accessoryId` - The id of the accessory to watch for state changes
-- `accessoryState` - The desired accessory state to make this condition "true"
-
 ### Defaults
 - `temperatureUnits` - Units to use for thermostats, either 'C' or 'F'
 - `defaultState` — Initial value, either "on" or "off"
@@ -288,6 +260,45 @@ For example, if I have a physical door lock I want to "watch", then I can setup 
 - `enableWebook` - Turn on webhooks for this accessory. See [Webhooks](https://github.com/mpatfield/homebridge-dummy#webhooks) section below for details.
 - `resetOnRestart` _ If true, accessory will return to default state when Homebridge restarts
 - `disableLogging` — If true, state changes will not be logged
+
+## Trigger Conditions
+
+You can trigger an accessory whenever a set of conditions are satisfied. There are two logical operators to trigger the target accessory when all (`AND`) or any (`OR`) of a set of conditions are satisfied. You may have an arbitrarily long list of conditions and they are checked in order.
+
+- `conditions.operator` - `AND` to trigger when all conditions to be satisfied, `OR` to trigger when any conditions are satisfied
+- `conditions.operands` - A list of conditions as defined below
+
+### Accessory Triggers
+
+You can trigger an accessory when one more more other Homebridge Dummy accessories change state using the `ACCESSORY` operand type. Accessories will immediately return to their default setting as soon as the conditions are no longer satisfied unless an accessory also has an auto-reset timer.
+
+Note that due to limitations of HomeKit and Homebridge, it is only possible to check the states of other Homebridge Dummy accessories. One workaround for non-Dummy accessories is to set up duplicate accessories in Homebridge Dummy and use Automation to mirror the states. For example, if I have a physical door lock I want to "watch", then I can setup a `LockMechanism` accessory in Homebridge Dummy and create two automations to change the state of my dummy lock whenever the physical door lock is unlocked or locked.
+
+- `type` - `ACCESSORY`
+- `accessoryId` - The id of the accessory to watch for state changes
+- `accessoryState` - The desired accessory state to make this condition true, e.g. "on", "off", "open", "closed", "locked", "unlocked"
+
+### Log Watcher
+
+Another workaround to the above limitation is to use the `LOG` operand type which will watch the Homebridge log for the specified string or regex.
+
+`LOG` based conditions are stateless triggers. If it is the only condition or the conditions `operator` is `OR`, then it will fire immediately. If there are other `AND` conditions, then it will not fire unless all other conditions are satisfied.
+
+For example, if I have `LOG` condition "A" and `ACCESSORY` condition "B" for when "B" is turned "On", then if "B" is "Off"" and the pattern is found in the log, "A" will not trigger.
+
+Note that `LOG` triggers are not instantenous and may take several seconds to fire.
+
+- `type` - `LOG`
+- `pattern` - a literal string or regex to watch for
+
+### Reachability/Ping
+
+There is also a `PING` operand type that allows you to set the state based on the reachability of a particular `pingHost`.
+
+- `type` - `LOG`
+- `pingHost` - the host to ping, e.g. `192.168.0.1` or `example.com`
+- `pingInterval` - The raw interval to check the reachability of the above host (default 60 seconds)
+- `pingUnits` - The units to use for interval above
 
 ## Webhooks
 
@@ -309,7 +320,7 @@ Here are the possible values for `get` or `set` and their respective valid `valu
 - `TargetTemperature` - number between 10°C and 38°C
     - For `TargetTemperature` you may optionally supply a `unit` (either 'F' or 'C') to allow you to pass in Fahrenheit or Celsius units.
 
-#### Examples using HTTP GET
+### Using GET Requests
 
 Here is an example to get the on/off state for a switch:
 
@@ -327,7 +338,7 @@ http://localhost:63743/?id=ACCESSORY_ID&set=Brightness&value=42
 
 Returns `{ "success": "Accessory Name is on, brightness is 42%" }`
 
-### Examples using HTTP POST
+### Using POST Requests
 
 POST requests must be valid JSON. Here is an example of the JSON needed to get the on/off state for a switch:
 
@@ -372,7 +383,7 @@ curl -X POST http://localhost:63743/ -H "Content-Type: application/json" -d '{"i
 
 Schedule feature inspired by [Homebridge Schedule](https://github.com/kbrashears5/typescript-homebridge-schedule) by [@kbrashears5](https://github.com/sponsors/kbrashears5)
 
-Scheduling based on sun times (sunrise, sunset, etc.) inspired by [Homebridge Virtual Accessories](https://github.com/justjam2013/homebridge-virtual-accessories) by [@justjam2013](https://github.com/sponsors/justjam2013)
+Scheduling based on sun times (sunrise, sunset, etc.) and reachability (ping) conditions inspired by [Homebridge Virtual Accessories](https://github.com/justjam2013/homebridge-virtual-accessories) by [@justjam2013](https://github.com/sponsors/justjam2013)
 
 Sensor feature inspired by [Homebridge-Delay-Switch](https://github.com/nitaybz/homebridge-delay-switch#readme) by [@nitaybz](https://github.com/sponsors/nitaybz)
 
