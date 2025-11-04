@@ -243,8 +243,8 @@
           "type": {
             "type": "string",
             "title": "${config.title.type}",
-            "enum": [ "ACCESSORY", "LOG" ],
-            "enumNames": [ "${config.enumNames.accessory}", "${config.enumNames.log}" ],
+            "enum": [ "ACCESSORY", "LOG", "PING" ],
+            "enumNames": [ "${config.enumNames.accessory}", "${config.enumNames.log}", "${config.enumNames.ping}" ],
             "required": true
           },
           "accessoryId": {
@@ -260,6 +260,18 @@
           "pattern": {
             "type": "string",
             "title": "${config.title.pattern}"
+          },
+          "pingHost": {
+            "type": "string",
+            "title": "${config.title.pingHost}"
+          },
+          "pingInterval": {
+            "type": "integer",
+            "title": "${config.title.pingInterval}",
+            "minimum": 1
+          },
+          "pingUnits": {
+            "$ref": "#/definitions/units"
           }
         },
         "allOf": [
@@ -279,14 +291,51 @@
           {
             "if": {
                 "properties": {
-                    "type": {
-                        "const": "LOG"
-                    }
+                  "type": {
+                      "const": "LOG"
+                  }
                 },
                 "required": ["type"]
             },
             "then": {
                 "required": ["pattern"]
+            }
+          },
+          {
+            "if": {
+                "properties": {
+                  "type": {
+                      "const": "PING"
+                  }
+                },
+                "required": ["type"]
+            },
+            "then": {
+                "required": ["pingHost"]
+            }
+          },
+          {
+            "if": {
+                "properties": {
+                  "pingInterval": {
+                  }
+                },
+                "required": ["pingInterval"]
+            },
+            "then": {
+                "required": ["pingUnits"]
+            }
+          },
+          {
+            "if": {
+                "properties": {
+                  "pingUnits": {
+                  }
+                },
+                "required": ["pingUnits"]
+            },
+            "then": {
+                "required": ["pingInterval"]
             }
           }
         ]
@@ -639,19 +688,11 @@
                       "flex": "0 0 auto"
                     },
                     {
-                      "type": "div",
-                      "flex": "0 0 5px"
-                    },
-                    {
                       "key": "accessories[].schedule.interval",
                       "flex": "0 0 auto",
                       "condition": {
                           "functionBody": "return model.accessories?.[arguments[1]]?.schedule?.type === 'INTERVAL';"
                       }
-                    },
-                    {
-                      "type": "div",
-                      "flex": "0 0 5px"
                     },
                     {
                       "key": "accessories[].schedule.units",
@@ -668,10 +709,6 @@
                       }
                     },
                     {
-                      "type": "div",
-                      "flex": "0 0 5px"
-                    },
-                    {
                       "key": "accessories[].schedule.cronCustom",
                       "flex": "1 0 auto",
                       "condition": {
@@ -686,19 +723,11 @@
                       }
                     },
                     {
-                      "type": "div",
-                      "flex": "0 0 5px"
-                    },
-                    {
                       "key": "accessories[].schedule.latitude",
                       "flex": "0 1 auto",
                       "condition": {
                           "functionBody": "return ['SUNRISE', 'SUNSET', 'DAWN', 'DUSK', 'GOLDEN_HOUR', 'NIGHT'].includes(model.accessories?.[arguments[1]]?.schedule?.type);"
                       }
-                    },
-                    {
-                      "type": "div",
-                      "flex": "0 0 5px"
                     },
                     {
                       "key": "accessories[].schedule.longitude",
@@ -843,10 +872,6 @@
                       "flex": "0 0 auto"
                     },
                     {
-                      "type": "div",
-                      "flex": "0 0 5px"
-                    },
-                    {
                       "key": "accessories[].conditions.operands[].accessoryId",
                       "flex": "0 0 auto",
                       "condition": {
@@ -854,14 +879,31 @@
                       }
                     },
                     {
-                      "type": "div",
-                      "flex": "0 0 5px"
-                    },
-                    {
                       "key": "accessories[].conditions.operands[].accessoryState",
                       "flex": "0 0 auto",
                       "condition": {
                         "functionBody": "return model.accessories?.[arguments[1][0]]?.conditions?.operands?.[arguments[1][1]]?.accessoryId;"
+                      }
+                    },
+                    {
+                      "key": "accessories[].conditions.operands[].pingHost",
+                      "flex": "0 0 auto",
+                      "condition": {
+                        "functionBody": "return model.accessories?.[arguments[1][0]]?.conditions?.operands?.[arguments[1][1]]?.type === 'PING';"
+                      }
+                    },
+                    {
+                      "key": "accessories[].conditions.operands[].pingInterval",
+                      "flex": "0 1 auto",
+                      "condition": {
+                        "functionBody": "return model.accessories?.[arguments[1][0]]?.conditions?.operands?.[arguments[1][1]]?.pingHost !== undefined;"
+                      }
+                    },
+                    {
+                      "key": "accessories[].conditions.operands[].pingUnits",
+                      "flex": "0 1 auto",
+                      "condition": {
+                        "functionBody": "return model.accessories?.[arguments[1][0]]?.conditions?.operands?.[arguments[1][1]]?.pingInterval !== undefined;"
                       }
                     },
                     {

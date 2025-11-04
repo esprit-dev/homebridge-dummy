@@ -19,6 +19,7 @@ const en = {
     notSatisfied: '%s conditions not satisfied', // accessory name
     patternAndConditions: '%s log condition found a pattern match. Checking other conditions…', // accessory name
     patternMatch: '%s log condition found a pattern match. Triggering…', // accessory name
+    reachabilityUnknown: 'Cannot yet evalutate conditions because reachability for %s is unknown', // host
     selfReference: '%s is not allowed to reference itself as a triggering condition', // accessory name
     statesEqual: 'Current and desired states are both %s', // state name
     statesNotEqual: 'Current state %s is not equivalent to desired state %s', // state name, state name
@@ -63,6 +64,12 @@ const en = {
     badDefault: '%s has invalid default position %s. Must be one of: %s', // accessory name, input, list of position names
     closed: '%s is closed', // accessory name
     open: '%s is open', // accessory name
+  },
+
+  reachability: {
+    pingError: '`ping` error',
+    reachable: '%s is responsive', // host
+    unreachable: '%s is unresponsive', // host
   },
 
   schedule: {
@@ -152,6 +159,7 @@ const en = {
       operatorAnd: 'ALL conditions are met', // proceeded by "Trigger when…"
       operatorOr: 'ANY conditions are met', // proceeded by "Trigger when…"
       outlet: 'Outlet',
+      ping: 'Reachability',
       milliseconds: 'Milliseconds',
       minutes: 'Minutes',
       motionSensor: 'Motion',
@@ -223,6 +231,8 @@ const en = {
       operator: 'Trigger when…',
       pattern: 'Search String or RegEx',
       period: 'Per',
+      pingHost: 'Host',
+      pingInterval: 'Ping Interval',
       preset: 'Preset',
       random: 'Randomize',
       resetOnRestart: 'Reset on Restart',

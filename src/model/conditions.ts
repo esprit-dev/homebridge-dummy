@@ -5,6 +5,7 @@ import { strings } from '../i18n/i18n.js';
 
 import { Log } from '../tools/log.js';
 import { LogWatcher } from '../tools/logWatcher.js';
+import { Reachability } from '../tools/reachability.js';
 import { assert } from '../tools/validation.js';
 
 type Target = {
@@ -21,7 +22,10 @@ export class ConditionManager {
   private readonly targets = new Map<string, Target>();
   private readonly triggersToTargets = new Map<string, string[]>();
 
-  private readonly triggerStates = new Map<string, AccessoryState>();
+  private readonly accessoryStates = new Map<string, AccessoryState>();
+
+  private readonly reachabilityInstances: Reachability[] = [];
+  private readonly reachabilityStates = new Map<string, boolean>();
 
   private readonly logWatcher: LogWatcher;
 
@@ -31,6 +35,7 @@ export class ConditionManager {
 
   public teardown() {
     this.logWatcher.teardown();
+    this.reachabilityInstances.forEach((instance) => instance.teardown());
   }
 
   public register(name: string, identifier: string, conditions: ConditionsConfig | undefined,
@@ -57,6 +62,9 @@ export class ConditionManager {
       case OperandType.LOG:
         logTypeCount++;
         valid = valid && assert(this.log, name, operand, 'pattern');
+        break;
+      case OperandType.PING:
+        valid = valid && assert(this.log, name, operand, 'pingHost');
         break;
       }
 
@@ -91,6 +99,11 @@ export class ConditionManager {
       case OperandType.LOG:
         this.logWatcher.registerPattern(operand.pattern!, () => this.onPatternMatch(target));
         break;
+      case OperandType.PING:
+        this.reachabilityInstances.push(new Reachability(this.log, operand.pingHost!, operand.pingInterval, operand.pingUnits, (reachable) => {
+          this.onReachabilityChange(target, operand.pingHost!, reachable);
+        }));
+        break;
       }
     }
   }
@@ -102,7 +115,7 @@ export class ConditionManager {
       return;
     }
 
-    this.triggerStates.set(triggerId, state);
+    this.accessoryStates.set(triggerId, state);
 
     for (const targetId of targetIds) {
 
@@ -113,7 +126,7 @@ export class ConditionManager {
 
       this.log.ifVerbose(strings.conditions.evaluatingConditions, target.name);
 
-      if (this.evaluateConditions(target.conditions, false)) {
+      if (this.evaluateConditions(target.conditions)) {
         if (!target.disableLogging) {
           this.log.always(strings.conditions.satisfied, target.name);
         }
@@ -146,7 +159,21 @@ export class ConditionManager {
     target.trigger();
   }
 
-  private evaluateConditions(conditions: ConditionsConfig, ignoreLogType: boolean): boolean {
+  private async onReachabilityChange(target: Target, host: string, reachable: boolean) {
+    this.reachabilityStates.set(host, reachable);
+
+    if (this.evaluateConditions(target.conditions)) {
+      if (!target.disableLogging) {
+        this.log.always(strings.conditions.satisfied, target.name);
+      }
+      await target.trigger();
+    } else {
+      this.log.ifVerbose(strings.conditions.notSatisfied, target.name);
+      await target.reset?.();
+    }
+  }
+
+  private evaluateConditions(conditions: ConditionsConfig, ignoreLogType: boolean = false): boolean {
 
     let result: boolean | undefined;
 
@@ -162,14 +189,33 @@ export class ConditionManager {
         break;
       }
 
-      const currentState = this.triggerStates.get(operand.accessoryId!);
-      if (!currentState) {
-        this.log.ifVerbose(strings.conditions.stateUnknown, `'${operand.accessoryId}'`);
-        result = false;
-        break;
+      let operandResult: boolean | undefined;
+      if (operand.type === OperandType.ACCESSORY) {
+
+        const currentState = this.accessoryStates.get(operand.accessoryId!);
+        if (!currentState) {
+          this.log.ifVerbose(strings.conditions.stateUnknown, `'${operand.accessoryId}'`);
+          result = false;
+          break;
+        }
+
+        operandResult = this.compareStates(currentState, operand.accessoryState!);
+
+      } else if (operand.type === OperandType.PING) {
+
+        const currentReachability = this.reachabilityStates.get(operand.pingHost!);
+        if (currentReachability === undefined) {
+          this.log.ifVerbose(strings.conditions.reachabilityUnknown, `'${operand.pingHost}'`);
+          result = false;
+          break;
+        }
+
+        operandResult = currentReachability;
       }
 
-      const operandResult = this.compareStates(currentState, operand.accessoryState!);
+      if (operandResult === undefined) {
+        throw new Error('operandResult should never be undefined at this point');
+      }
 
       switch(conditions.operator) {
       case ConditionOperator.AND:

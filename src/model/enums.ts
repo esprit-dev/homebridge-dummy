@@ -42,6 +42,7 @@ export enum ConditionOperator {
 export enum OperandType {
   ACCESSORY = 'ACCESSORY',
   LOG = 'LOG',
+  PING = 'PING',
 }
 
 export enum OnState {
