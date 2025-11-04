@@ -127,11 +127,6 @@ export class Schedule extends Timeout {
       eventDate = this.getSunEventDate(date);
     }
 
-    const minutesOffset = this.config.offset;
-    if (minutesOffset !== undefined) {
-      eventDate.setMinutes(eventDate.getMinutes() + minutesOffset);
-    }
-
     this.logIfDesired(strings.schedule.sunTime, eventDate.toLocaleTimeString());
 
     return eventDate.getTime() - Date.now();
@@ -141,22 +136,35 @@ export class Schedule extends Timeout {
 
     const times = SunCalc.getTimes(date, this.config.latitude!, this.config.longitude!);
 
+    let eventDate: Date;
     switch (this.config.type) {
     case ScheduleType.DAWN:
-      return times.dawn;
+      eventDate = times.dawn;
+      break;
     case ScheduleType.DUSK:
-      return times.dusk;
+      eventDate = times.dusk;
+      break;
     case ScheduleType.GOLDEN_HOUR:
-      return times.goldenHour;
+      eventDate = times.goldenHour;
+      break;
     case ScheduleType.NIGHT:
-      return times.night;
+      eventDate = times.night;
+      break;
     case ScheduleType.SUNRISE:
-      return times.sunrise;
+      eventDate = times.sunrise;
+      break;
     case ScheduleType.SUNSET:
-      return times.sunset;
+      eventDate = times.sunset;
+      break;
+    default:
+      throw new Error(`Cannot get sun delay for time type '${this.config.type}'`);
     }
 
-    throw new Error(`Cannot get sun delay for time type '${this.config.type}'`);
+    if (this.config.offset) {
+      eventDate.setMinutes(eventDate.getMinutes() + this.config.offset);
+    }
+
+    return eventDate;
   }
 
   private startCron() {
