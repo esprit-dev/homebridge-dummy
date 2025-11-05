@@ -1,4 +1,3 @@
-import escape from 'escape-html';
 import express, { Request, Response } from 'express';
 import { CharacteristicValue } from 'homebridge';
 import { Server } from 'http';
@@ -133,7 +132,7 @@ export class WebhookManager {
     }
 
     const value = webhook.getter();
-    response.status(200).send(`{ "value": ${value} }\n`);
+    response.status(200).json({ value: value });
   }
 
   private setValue(response: Response, id: string, characteristic: WebhookCharacteristic, value: CharacteristicValue, temperatureUnits?: TemperatureUnits) {
@@ -211,7 +210,7 @@ export class WebhookManager {
     }
 
     const message = webhook.setter(value);
-    response.status(200).send(`{ "success": "${escape(message)}" }\n`);
+    response.status(200).json({ success: message });
   }
 
   private getWebhook(response: Response, id: string, characteristic: WebhookCharacteristic): Webhook | undefined {
@@ -251,7 +250,7 @@ export class WebhookManager {
 
   private onBadRequest(response: Response, errorMessage: string, alsoLog: boolean = true) {
 
-    response.status(400).send(`{ "error": "${escape(errorMessage)}" }\n`);
+    response.status(400).json({ error: errorMessage });
 
     if(alsoLog) {
       this.log.error(errorMessage);
