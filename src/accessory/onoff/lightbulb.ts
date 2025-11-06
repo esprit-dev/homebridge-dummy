@@ -88,8 +88,8 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
     }
   }
 
-  override async setOn(value: CharacteristicValue): Promise<void> {
-    super.setOn(value);
+  override async setOn(value: CharacteristicValue, syncOnly: boolean = false): Promise<void> {
+    super.setOn(value, syncOnly);
 
     if (!value) {
       this.accessoryService.updateCharacteristic(this.Characteristic.Brightness, this.brightness);
