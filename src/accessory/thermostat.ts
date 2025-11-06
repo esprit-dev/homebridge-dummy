@@ -116,15 +116,15 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
 
       new Webhook(this.identifier, WebhookCharacteristic.TargetHeatingCoolingState,
         () => this.state,
-        (value) => {
-          this.setState(value);
+        (value, syncOnly) => {
+          this.setState(value, syncOnly);
           return this.stateLogTemplateForCV(value).replace('%s', this.name);
         }),
 
       new Webhook(this.identifier, WebhookCharacteristic.TargetTemperature,
         () => this.temperature,
-        (value) => {
-          this.setTemperature(value);
+        (value, syncOnly) => {
+          this.setTemperature(value, syncOnly);
           return this.temperatureLogTemplateForCV(value).replace('%s', this.name);
         }),
     ];
@@ -164,15 +164,17 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
     return this.state;
   }
 
-  private async setState(value: CharacteristicValue) {
+  private async setState(value: CharacteristicValue, syncOnly: boolean = false) {
 
     if (this.state !== value) {
       this.logState(value);
 
-      if (this.config.commandOff && value === this.STATE_OFF) {
-        this.executeCommand(this.config.commandOff);
-      } else if (this.config.commandOn && this.state === this.STATE_OFF && value !== this.STATE_OFF) {
-        this.executeCommand(this.config.commandOn);
+      if (!syncOnly) {
+        if (this.config.commandOff && value === this.STATE_OFF) {
+          this.executeCommand(this.config.commandOff);
+        } else if (this.config.commandOn && this.state === this.STATE_OFF && value !== this.STATE_OFF) {
+          this.executeCommand(this.config.commandOn);
+        }
       }
     }
 
@@ -189,13 +191,15 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
     return this.temperature;
   }
 
-  private async setTemperature(value: CharacteristicValue) {
+  private async setTemperature(value: CharacteristicValue, syncOnly: boolean = false) {
 
     if (this.temperature !== value) {
       this.logTemperature(value);
 
-      if (this.config.commandTemperature) {
-        this.executeCommand(this.config.commandTemperature);
+      if (!syncOnly) {
+        if (this.config.commandTemperature) {
+          this.executeCommand(this.config.commandTemperature);
+        }
       }
     }
 

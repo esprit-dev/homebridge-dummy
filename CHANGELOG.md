@@ -2,18 +2,23 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-## 1.4.1 (2025-11-06)
+## 1.4.2-beta.0 (2025-11-06)
 
 ### ‼️ WARNING ‼️ — If upgrading from v0.9.2 or earlier, [READ THIS FIRST](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#v10-migration)
+
+### Added
+- `sync` [Webhooks](https://github.com/mpatfield/homebridge-dummy#webhooks) which suppress command execution
+
+### Notes
+Would you like to see Homebridge Dummy in your language? Please consider [getting involved](https://github.com/mpatfield/homebridge-dummy/issues/105). No coding experience required!
+
+## 1.4.1 (2025-11-06)
 
 ### Added
 - [Schedule](https://github.com/mpatfield/homebridge-dummy#schedule) settings for sunrise, sunset, dawn, dusk, golden hour, or night, with optional offset
 - [Reachability](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#reachabilityping) Trigger Condition
 - Fetch accessory state via [Webhooks](https://github.com/mpatfield/homebridge-dummy#webhooks)
     - `command` has been replaced by `get`/`set` - this is backwards compatible so no manual edits are necessary
-
-### Notes
-Would you like to see Homebridge Dummy in your language? Please consider [getting involved](https://github.com/mpatfield/homebridge-dummy/issues/105). No coding experience required!
 
 ## 1.4.0 (2025-11-01)
 

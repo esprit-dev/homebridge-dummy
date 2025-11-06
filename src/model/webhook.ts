@@ -18,7 +18,7 @@ const MINIMUM_TEMPERATURE = 10;
 const MAXIMUM_TEMPERATURE = 38;
 
 type WebhookGetter = () => (CharacteristicValue);
-type WebhookSetter = (value: CharacteristicValue) => (string);
+type WebhookSetter = (value: CharacteristicValue, syncOnly: boolean) => (string);
 
 export class Webhook {
 
@@ -108,7 +108,7 @@ export class WebhookManager {
       return;
     }
 
-    const characteristic: WebhookCharacteristic = data.set ?? data.command;
+    const characteristic: WebhookCharacteristic = data.set ?? data.sync ?? data.command;
     if (characteristic === undefined) {
       this.onBadRequest(response, strings.webhook.missingCharacteristic);
       return;
@@ -120,9 +120,8 @@ export class WebhookManager {
     }
 
     const value: CharacteristicValue = toPrimitive(data.value);
-    this.setValue(response, id, characteristic, value, data.units);
+    this.setValue(response, id, characteristic, value, characteristic === data.sync, data.units);
   }
-
 
   private getValue(response: Response, id: string, characteristic: WebhookCharacteristic) {
 
@@ -135,7 +134,10 @@ export class WebhookManager {
     response.status(200).json({ value: value });
   }
 
-  private setValue(response: Response, id: string, characteristic: WebhookCharacteristic, value: CharacteristicValue, temperatureUnits?: TemperatureUnits) {
+  private setValue(
+    response: Response, id: string, characteristic: WebhookCharacteristic, value: CharacteristicValue,
+    syncOnly: boolean, temperatureUnits?: TemperatureUnits,
+  ) {
 
     let validRequest: boolean;
     let requirements: string;
@@ -209,7 +211,7 @@ export class WebhookManager {
       return;
     }
 
-    const message = webhook.setter(value);
+    const message = webhook.setter(value, syncOnly);
     response.status(200).json({ success: message });
   }
 

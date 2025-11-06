@@ -34,8 +34,8 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
     return [
       new Webhook(this.identifier, WebhookCharacteristic.On,
         () => this.on,
-        (value) => {
-          this.setOn(value);
+        (value, syncOnly) => {
+          this.setOn(value, syncOnly);
           return this.logMessageForOnState(value).replace('%s', this.name);
         }),
     ];
@@ -75,15 +75,17 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
     return this.on;
   }
 
-  protected async setOn(value: CharacteristicValue): Promise<void> {
+  protected async setOn(value: CharacteristicValue, syncOnly: boolean = false): Promise<void> {
 
     if (this.on !== value) {
       this.logIfDesired(this.logMessageForOnState(value));
 
-      if (this.config.commandOn && value) {
-        this.executeCommand(this.config.commandOn);
-      } else if (this.config.commandOff && !value) {
-        this.executeCommand(this.config.commandOff);
+      if (!syncOnly) {
+        if (this.config.commandOn && value) {
+          this.executeCommand(this.config.commandOn);
+        } else if (this.config.commandOff && !value) {
+          this.executeCommand(this.config.commandOff);
+        }
       }
     }
 

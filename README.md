@@ -308,9 +308,9 @@ If at least one accessory has webhooks enabled, then Homebridge Dummy will start
 
 Incoming requests must include the `id` of the accessory. The accessory `id` can be found in the plugin JSON config.
 
-You can either `get` or `set` the value of the accessory. `set` commands require a `value` to set.
+You can `get`, `set`, or `sync` the value of the accessory. `set` and `sync` commands require a `value` to set.
 
-Here are the possible values for `get` or `set` and their respective valid `value`
+Here are the possible values for `get` or `set`/`sync` and their respective valid `value`
 
 - `Brightness` - number from 0-100
 - `LockTargetState` - 0 (UNSECURED) or 1 (SECURED)
@@ -319,6 +319,8 @@ Here are the possible values for `get` or `set` and their respective valid `valu
 - `TargetPosition` - number from 0-100
 - `TargetTemperature` - number between 10°C and 38°C
     - For `TargetTemperature` you may optionally supply a `unit` (either 'F' or 'C') to allow you to pass in Fahrenheit or Celsius units.
+
+`sync` is identical to `set` except that no commands are executed. This can be useful for situations where you want to avoid a looping behavior between the dummy accessory and source.
 
 ### Using GET Requests
 

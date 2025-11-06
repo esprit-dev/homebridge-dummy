@@ -66,8 +66,8 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
     return [
       new Webhook(this.identifier, this.webhookCommand,
         () => this.position,
-        (value) => {
-          this.setPosition(value);
+        (value, syncOnly) => {
+          this.setPosition(value, syncOnly);
           return this.logTemplateForCV(value).replace('%s', this.name);
         }),
     ];
@@ -107,17 +107,19 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
     return this.position;
   }
 
-  private async setPosition(value: CharacteristicValue): Promise<void> {
+  private async setPosition(value: CharacteristicValue, syncOnly: boolean = false): Promise<void> {
 
     const targetPosition = value === this.positionClosed ? this.positionClosed : this.positionOpen;
 
     if (this.position !== targetPosition) {
       this.logPosition(targetPosition);
 
-      if (this.config.commandOpen && targetPosition !== this.positionClosed) {
-        this.executeCommand(this.config.commandOpen);
-      } else if (this.config.commandClose && targetPosition === this.positionClosed) {
-        this.executeCommand(this.config.commandClose);
+      if (!syncOnly) {
+        if (this.config.commandOpen && targetPosition !== this.positionClosed) {
+          this.executeCommand(this.config.commandOpen);
+        } else if (this.config.commandClose && targetPosition === this.positionClosed) {
+          this.executeCommand(this.config.commandClose);
+        }
       }
     }
 

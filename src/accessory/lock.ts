@@ -59,8 +59,8 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
     return [
       new Webhook(this.identifier, WebhookCharacteristic.LockTargetState,
         () => this.state,
-        (value) => {
-          this.setState(value);
+        (value, syncOnly) => {
+          this.setState(value, syncOnly);
           return this.logTemplateForCV(value).replace('%s', this.name);
         }),
     ];
@@ -79,15 +79,17 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
     return this.state;
   }
 
-  protected async setState(value: CharacteristicValue): Promise<void> {
+  protected async setState(value: CharacteristicValue, syncOnly: boolean = false): Promise<void> {
 
     if (this.state !== value) {
       this.logLockState(value);
 
-      if (this.config.commandLock && value === this.Characteristic.LockTargetState.SECURED) {
-        this.executeCommand(this.config.commandLock);
-      } else if (this.config.commandUnlock && value === this.Characteristic.LockTargetState.UNSECURED) {
-        this.executeCommand(this.config.commandUnlock);
+      if (!syncOnly) {
+        if (this.config.commandLock && value === this.Characteristic.LockTargetState.SECURED) {
+          this.executeCommand(this.config.commandLock);
+        } else if (this.config.commandUnlock && value === this.Characteristic.LockTargetState.UNSECURED) {
+          this.executeCommand(this.config.commandUnlock);
+        }
       }
     }
 
