@@ -7,7 +7,7 @@ import { strings } from '../i18n/i18n.js';
 import { isValidTimeUnits, printableValues, TimePeriod, TimeUnits } from '../model/enums.js';
 import { LimiterConfig } from '../model/types.js';
 
-import { Storage } from '../tools/storage.js';
+import { Storage, Storage_Deprecated } from '../tools/storage.js';
 import { assert } from '../tools/validation.js';
 
 type Limit = { timeRemaining: number, resetTimestamp: number, startTimestamp?: number };
@@ -58,7 +58,7 @@ export default class Limiter extends Timeout {
   private constructor(dependency: DummyAddonDependency, private readonly config: LimiterConfig) {
     super(dependency);
 
-    const cache = Storage.get(this.limitStorageKey);
+    const cache = Storage.get(this.identifier, Limiter.name) ?? Storage_Deprecated.get(`${this.config.id ?? this.caller}:Limit`);
     if (cache === undefined) {
       return;
     }
@@ -73,9 +73,8 @@ export default class Limiter extends Timeout {
     this.limit.timeRemaining = Math.max(0, this.limit.timeRemaining - elapsedTime);
   }
 
-  private get limitStorageKey(): string {
-    const identifier = this.config.id ?? this.caller;
-    return `${identifier}:Limit`;
+  private get identifier(): string {
+    return this.config.id ?? this.caller;
   }
 
   public start(callback:  () => Promise<void>) {
@@ -161,7 +160,7 @@ export default class Limiter extends Timeout {
   }
 
   private storeLimit() {
-    Storage.set(this.limitStorageKey, this.limit);
+    Storage.set(this.identifier, Limiter.name, this.limit);
   }
 
   private logTimeRemaining() {

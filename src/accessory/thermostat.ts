@@ -5,12 +5,12 @@ import { DummyAccessory, DummyAccessoryDependency } from './base.js';
 import { strings } from '../i18n/i18n.js';
 
 import {
-  AccessoryType, DefaultThermostatState, isValidTemperatureUnits, isValidThermostatState,
+  AccessoryType, CharacteristicKey, DefaultThermostatState, isValidTemperatureUnits, isValidThermostatState,
   printableValues, TemperatureUnits, WebhookCharacteristic }  from '../model/enums.js';
 import { ThermostatConfig } from '../model/types.js';
 import { Webhook } from '../model/webhook.js';
 
-import { storageGet_Deprecated, Storage } from '../tools/storage.js';
+import { storageGet_Deprecated } from '../tools/storage.js';
 import { fromCelsius, toCelsius } from '../tools/temperature.js';
 
 const DEFAULT_TEMPERATURE = 20;
@@ -91,19 +91,15 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
       return;
     }
 
-    const state = await storageGet_Deprecated(this.defaultStateStorageKey);
+    const state = this.getStoredProperty(CharacteristicKey.TargetHeatingCoolingState) ?? await storageGet_Deprecated(`${this.identifier}:DefaultState`);
     if (state !== undefined) {
       await this.setState(state);
     }
 
-    const temperature = await storageGet_Deprecated(this.defaulTemperatureStorageKey);
+    const temperature = this.getStoredProperty(CharacteristicKey.TargetTemperature) ?? await storageGet_Deprecated(`${this.identifier}:Temperature`);
     if (temperature !== undefined) {
       await this.setTemperature(temperature);
     }
-  }
-
-  private get defaulTemperatureStorageKey(): string {
-    return `${this.identifier}:Temperature`;
   }
 
   override getAccessoryType(): AccessoryType {
@@ -180,9 +176,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
 
     this.state = value;
 
-    if (this.isStateful) {
-      await Storage.set(this.defaultStateStorageKey, this.state);
-    }
+    this.setStoredProperty(CharacteristicKey.TargetHeatingCoolingState, this.state);
 
     this.accessoryService.updateCharacteristic(this.Characteristic.TargetHeatingCoolingState, this.state);
   }
@@ -205,9 +199,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
 
     this.temperature = value;
 
-    if (this.isStateful) {
-      await Storage.set(this.defaulTemperatureStorageKey, this.temperature);
-    }
+    this.setStoredProperty(CharacteristicKey.TargetTemperature, this.temperature);
 
     this.accessoryService.updateCharacteristic(this.Characteristic.TargetTemperature, this.temperature);
     this.accessoryService.updateCharacteristic(this.Characteristic.CurrentTemperature, this.temperature);

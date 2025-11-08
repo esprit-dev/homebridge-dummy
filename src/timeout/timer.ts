@@ -7,7 +7,7 @@ import { TimerConfig } from '../model/types.js';
 
 import { strings } from '../i18n/i18n.js';
 
-import { Storage } from '../tools/storage.js';
+import { Storage, Storage_Deprecated } from '../tools/storage.js';
 import { assert } from '../tools/validation.js';
 
 export class Timer extends Timeout {
@@ -31,15 +31,12 @@ export class Timer extends Timeout {
   private constructor(dependency: DummyAddonDependency, private readonly config: TimerConfig) {
     super(dependency);
 
-    this.expiresTimestamp = Storage.get(this.timerStorageKey) as number;
-  }
-
-  private get timerStorageKey(): string {
-    return `${this.dependency.identifier}:Timer`;
+    const storedTimestamp = Storage.get(dependency.identifier, Timer.name) ?? Storage_Deprecated.get(`${dependency.identifier}:Timer`);
+    this.expiresTimestamp = storedTimestamp as number;
   }
 
   private storeExpiresTimestamp(value: number | undefined) {
-    Storage.set(this.timerStorageKey, value);
+    Storage.set(this.dependency.identifier, Timer.name, value);
   }
 
   public start(callback:  () => Promise<void>): number {

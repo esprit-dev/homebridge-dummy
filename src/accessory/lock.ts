@@ -4,11 +4,11 @@ import { DummyAccessory, DummyAccessoryDependency } from './base.js';
 
 import { strings } from '../i18n/i18n.js';
 
-import { AccessoryType, LockState, isValidLockState, printableValues, WebhookCharacteristic }  from '../model/enums.js';
+import { AccessoryType, LockState, isValidLockState, printableValues, WebhookCharacteristic, CharacteristicKey }  from '../model/enums.js';
 import { LockConfig } from '../model/types.js';
 import { Webhook } from '../model/webhook.js';
 
-import { storageGet_Deprecated, Storage } from '../tools/storage.js';
+import { storageGet_Deprecated } from '../tools/storage.js';
 
 export class LockAccessory extends DummyAccessory<LockConfig> {
 
@@ -42,7 +42,7 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
       return;
     }
 
-    const state = await storageGet_Deprecated(this.defaultStateStorageKey);
+    const state = this.getStoredProperty(CharacteristicKey.LockTargetState) ?? await storageGet_Deprecated(`${this.identifier}:DefaultState`);
     if (state === undefined) {
       await this.registerStateChange();
       return;
@@ -95,9 +95,7 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
 
     this.state = value;
 
-    if (this.isStateful) {
-      await Storage.set(this.defaultStateStorageKey, this.state);
-    }
+    this.setStoredProperty(CharacteristicKey.LockTargetState, this.state);
 
     if (this.state !== this.defaultLockState) {
       this.startTimer();

@@ -4,11 +4,11 @@ import { DummyAccessory, DummyAccessoryDependency } from '../base.js';
 
 import { strings } from '../../i18n/i18n.js';
 
+import { CharacteristicKey, isValidOnState, OnState, printableValues, WebhookCharacteristic } from '../../model/enums.js';
 import { OnOffConfig } from '../../model/types.js';
 import { Webhook } from '../../model/webhook.js';
 
-import { storageGet_Deprecated, Storage } from '../../tools/storage.js';
-import { isValidOnState, OnState, printableValues, WebhookCharacteristic } from '../../model/enums.js';
+import { storageGet_Deprecated } from '../../tools/storage.js';
 
 export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extends DummyAccessory<C> {
 
@@ -49,7 +49,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
       return;
     }
 
-    const on = await storageGet_Deprecated(this.defaultStateStorageKey);
+    const on = this.getStoredProperty(CharacteristicKey.On) ?? await storageGet_Deprecated(`${this.identifier}:DefaultState`);
     if (on === undefined) {
       await this.registerStateChange();
       return;
@@ -91,9 +91,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
 
     this.on = value;
 
-    if (this.isStateful) {
-      await Storage.set(this.defaultStateStorageKey, this.on);
-    }
+    this.setStoredProperty(CharacteristicKey.On, this.on);
 
     if (this.on !== this.defaultState) {
       this.startTimer();

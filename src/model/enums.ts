@@ -10,6 +10,16 @@ export enum AccessoryType {
   WindowCovering = 'WindowCovering'
 }
 
+export enum CharacteristicKey {
+  Brightness = 'Brightness',
+  LockTargetState = 'LockTargetState',
+  On = 'On',
+  TargetHeatingCoolingState = 'TargetHeatingCoolingState',
+  TargetDoorState = 'TargetDoorState',
+  TargetPosition = 'TargetPosition',
+  TargetTemperature = 'TargetTemperature',
+}
+
 export enum SensorType {
   CarbonDioxideSensor = 'CarbonDioxideSensor',
   CarbonMonoxideSensor = 'CarbonMonoxideSensor',

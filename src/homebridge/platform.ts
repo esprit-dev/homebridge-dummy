@@ -3,19 +3,19 @@ import { API, DynamicPlatformPlugin, Logger, PlatformAccessory } from 'homebridg
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings.js';
 
 import { DummyAccessory, DummyAccessoryDependency } from '../accessory/base.js';
-import { GroupAccessory, GroupAccessoryDependency } from '../accessory/group.js';
 import { createDummyAccessory } from '../accessory/helpers.js';
+import { GroupAccessory, GroupAccessoryDependency } from '../accessory/group.js';
 
 import { setLanguage, strings } from '../i18n/i18n.js';
 
+import { ConditionManager } from '../model/conditions.js';
 import { DummyConfig, DummyPlatformConfig, GroupConfig } from '../model/types.js';
+import { WebhookManager } from '../model/webhook.js';
 
 import { migrateAccessories } from '../tools/configMigration.js';
 import { Log } from '../tools/log.js';
-import getVersion from '../tools/version.js';
-import { WebhookManager } from '../model/webhook.js';
 import { Storage } from '../tools/storage.js';
-import { ConditionManager } from '../model/conditions.js';
+import getVersion from '../tools/version.js';
 
 export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
   private readonly Service;

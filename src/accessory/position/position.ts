@@ -4,11 +4,11 @@ import { DummyAccessory, DummyAccessoryDependency } from '../base.js';
 
 import { strings } from '../../i18n/i18n.js';
 
-import { Position, isValidPosition, printableValues, WebhookCharacteristic } from '../../model/enums.js';
+import { Position, isValidPosition, printableValues, WebhookCharacteristic, CharacteristicKey } from '../../model/enums.js';
 import { PositionConfig } from '../../model/types.js';
 import { Webhook } from '../../model/webhook.js';
 
-import { storageGet_Deprecated, Storage } from '../../tools/storage.js';
+import { storageGet_Deprecated } from '../../tools/storage.js';
 
 export abstract class PositionAccessory<C extends PositionConfig = PositionConfig> extends DummyAccessory<PositionConfig> {
 
@@ -50,6 +50,10 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
     return 100;
   }
 
+  protected get stateStorageKey() {
+    return CharacteristicKey.TargetPosition;
+  }
+
   protected get targetCharacteristic() {
     return this.Characteristic.TargetPosition;
   }
@@ -82,7 +86,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
       return;
     }
 
-    const position = await storageGet_Deprecated(this.defaultStateStorageKey);
+    const position = this.getStoredProperty(this.stateStorageKey) ?? await storageGet_Deprecated(`${this.identifier}:DefaultState`);
     if (position === undefined) {
       await this.registerStateChange();
       return;
@@ -125,9 +129,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
 
     this.position = targetPosition;
 
-    if (this.isStateful) {
-      await Storage.set(this.defaultStateStorageKey, this.position);
-    }
+    this.setStoredProperty(this.stateStorageKey, this.position);
 
     if (this.position !== this.defaultPosition) {
       this.startTimer();

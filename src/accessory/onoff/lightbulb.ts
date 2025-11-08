@@ -6,13 +6,13 @@ import { DummyAccessoryDependency } from '../base.js';
 
 import { strings } from '../../i18n/i18n.js';
 
-import { AccessoryType, WebhookCharacteristic } from '../../model/enums.js';
+import { AccessoryType, CharacteristicKey, WebhookCharacteristic } from '../../model/enums.js';
 import { LightbulbConfig } from '../../model/types.js';
 import { Webhook } from '../../model/webhook.js';
 
 import { Fader } from '../../timeout/fader.js';
 
-import { storageGet_Deprecated, Storage } from '../../tools/storage.js';
+import { storageGet_Deprecated } from '../../tools/storage.js';
 
 const NO_BRIGHTNESS = -1;
 
@@ -33,20 +33,12 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
         .onGet(this.getBrightness.bind(this))
         .onSet(this.setBrightness.bind(this));
 
-      if (this.isStateful && Storage.has(this.defaultBrightnessStorageKey)) {
-        this.brightness = Storage.get(this.defaultBrightnessStorageKey) ?? this.brightness;
-      } else {
-        this.initializeBrightness_Deprecated();
-      }
+      this.initializeBrightness();
     }
   }
 
   private get isDimmer(): boolean {
     return this.brightness !== NO_BRIGHTNESS;
-  }
-
-  private get defaultBrightnessStorageKey(): string {
-    return `${this.identifier}:Brightness`;
   }
 
   override getAccessoryType(): AccessoryType {
@@ -65,14 +57,14 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
     ];
   }
 
-  private async initializeBrightness_Deprecated() {
+  private async initializeBrightness() {
 
     if (!this.isStateful) {
       this.accessoryService.updateCharacteristic(this.Characteristic.Brightness, this.brightness);
       return;
     }
 
-    const brightness = await storageGet_Deprecated(this.defaultBrightnessStorageKey);
+    const brightness = this.getStoredProperty(CharacteristicKey.Brightness) ?? await storageGet_Deprecated(`${this.identifier}:Brightness`);
     if (brightness === undefined) {
       return;
     }
@@ -81,7 +73,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
   }
 
   override logMessageForOnState(value: CharacteristicValue): string {
-    if (this.isDimmer && value) {
+    if (this.isDimmer && value && this.brightness !== undefined) {
       return strings.lightbulb.stateOn.replace('%d', this.brightness.toLocaleString());
     } else {
       return super.logMessageForOnState(value);
@@ -113,9 +105,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
 
     this.logIfDesired(strings.lightbulb.brightness, this.brightness.toString());
 
-    if (this.isStateful) {
-      await Storage.set(this.defaultBrightnessStorageKey, this.brightness);
-    }
+    this.setStoredProperty(CharacteristicKey.Brightness, this.brightness);
 
     this.accessoryService.updateCharacteristic(this.Characteristic.Brightness, this.brightness);
   }

@@ -1,5 +1,5 @@
 import { exec, ExecException } from 'child_process';
-import { PlatformAccessory, Service } from 'homebridge';
+import { CharacteristicValue, PlatformAccessory, Service } from 'homebridge';
 import { promisify } from 'util';
 
 import { PLATFORM_NAME, PLUGIN_ALIAS } from '../homebridge/settings.js';
@@ -9,7 +9,7 @@ import { SensorAccessory } from './sensor.js';
 import { strings } from '../i18n/i18n.js';
 
 import { ConditionManager } from '../model/conditions.js';
-import { AccessoryState, AccessoryType } from '../model/enums.js';
+import { AccessoryState, AccessoryType, CharacteristicKey } from '../model/enums.js';
 import { CharacteristicType, DummyConfig, ServiceType } from '../model/types.js';
 import { Webhook } from '../model/webhook.js';
 
@@ -18,6 +18,7 @@ import { Schedule } from '../timeout/schedule.js';
 import { Timer } from '../timeout/timer.js';
 
 import { Log } from '../tools/log.js';
+import { Storage } from '../tools/storage.js';
 import getVersion from '../tools/version.js';
 
 export type DummyAccessoryDependency<C extends DummyConfig> = {
@@ -160,8 +161,16 @@ export abstract class DummyAccessory<C extends DummyConfig> {
     return this._schedule === undefined && !this.config.resetOnRestart;
   }
 
-  protected get defaultStateStorageKey(): string {
-    return `${this.identifier}:DefaultState`;
+  protected getStoredProperty(key: CharacteristicKey): CharacteristicValue | undefined {
+    return Storage.get(this.identifier, key);
+  }
+
+  protected setStoredProperty(key: CharacteristicKey, value: CharacteristicValue) {
+    if (!this.isStateful) {
+      return;
+    }
+
+    Storage.set(this.identifier, key, value);
   }
 
   protected startTimer() {
