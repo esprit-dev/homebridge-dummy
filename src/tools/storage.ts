@@ -30,6 +30,13 @@ export class Storage {
     }
   }
 
+  public static copy(): [string, [string, Storable][]][] {
+    return Array.from(STORAGE.entries()).map(([key, value]) => {
+      const valueArray = Array.from(value.entries());
+      return [key, valueArray] as [string, [string, Storable][]];
+    });
+  }
+
   public static get(identifier: string, key: string): Storable | undefined {
     return STORAGE.get(identifier)?.get(key);
   }

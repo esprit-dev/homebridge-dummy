@@ -2,12 +2,13 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-## 1.4.2-beta.0 (2025-11-06)
+## 1.4.2-beta.2 (2025-11-07)
 
 ### ‼️ WARNING ‼️ — If upgrading from v0.9.2 or earlier, [READ THIS FIRST](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#v10-migration)
 
 ### Added
 - `sync` [Webhooks](https://github.com/mpatfield/homebridge-dummy#webhooks) which suppress command execution
+- Accessory states can be accessed within commands via [Environment Variables](https://github.com/mpatfield/homebridge-dummy#environment-variables)
 
 ### Notes
 Would you like to see Homebridge Dummy in your language? Please consider [getting involved](https://github.com/mpatfield/homebridge-dummy/issues/105). No coding experience required!

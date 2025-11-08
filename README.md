@@ -244,6 +244,33 @@ Execute arbitrary commands (e.g. curl) when the accessory changes state
 - `unlockCommand` - Arbitrary command to execute when lock mechanism is unlocked
 - `commandTemperature` - Arbitrary command to execute when temperature changes
 
+#### Environment Variables
+
+Accessory states can be accessed within commands via environment variables which will have the form:
+
+`Dummy_[ACCESSORY_ID]_[CHARACTERISTIC]`
+
+`ACCESSORY_ID` will be sanitized to alphanumeric characters only. So, for example "cc5d51b8-40df-4889-89b4-3bbadd3749c0" will become "cc5d51b840df488989b43bbadd3749c0"
+
+`CHARACTERISTIC` will be one of the following depending on the accessory type:
+
+- `Brightness`
+- `LockTargetState`
+- `On`
+- `TargetHeatingCoolingState`
+- `TargetDoorState`
+- `TargetPosition`
+- `TargetTemperature`
+
+For example, here is how you would get the state of a switch.
+
+```
+$ echo $Dummy_cc5d51b840df488989b43bbadd3749c0_On
+> true
+```
+
+The easiest way to find all available variables is to create a switch that runs the command `printenv`
+
 ### Defaults
 - `temperatureUnits` - Units to use for thermostats, either 'C' or 'F'
 - `defaultState` — Initial value, either "on" or "off"

@@ -192,8 +192,26 @@ export abstract class DummyAccessory<C extends DummyConfig> {
 
   protected async executeCommand(command: string) {
 
+    const propertiesEnv = Storage.copy().reduce((accumulator, [identifier, values]) => {
+      values.forEach(([key, value]) => {
+        identifier = identifier.replace(/[^a-zA-Z0-9]/g, '');
+        if (identifier.length) {
+          const envKey = `Dummy_${identifier}_${key}`;
+          accumulator[envKey] = String(value);
+        }
+      });
+      return accumulator;
+    }, {} as { [key: string]: string });
+
+    const execOptions = {
+      env: {
+        ...process.env,
+        ...propertiesEnv,
+      },
+    };
+
     try {
-      const { stdout } = await this.execAsync(command);
+      const { stdout } = await this.execAsync(command, execOptions);
       const output = stdout.trim();
 
       if (output) {
