@@ -24,7 +24,8 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
   private readonly STATE_HEAT: CharacteristicValue;
   private readonly STATE_OFF: CharacteristicValue;
 
-  private state: CharacteristicValue;
+  private currentState: CharacteristicValue;
+  private targetState: CharacteristicValue;
   private temperature: CharacteristicValue;
 
   constructor(dependency: DummyAccessoryDependency<ThermostatConfig>) {
@@ -43,7 +44,8 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
       this.log.warning(strings.thermostat.badDefault, this.name, `'${dependency.config.defaultThermostatState}'`, printableValues(DefaultThermostatState));
     }
 
-    this.state = this.defaultState;
+    this.targetState = this.defaultState;
+    this.currentState = this.defaultState !== this.STATE_AUTO ? this.defaultState : this.STATE_OFF;
     this.temperature = this.defaultTemperature;
 
     this.accessoryService.getCharacteristic(dependency.Characteristic.TemperatureDisplayUnits)
@@ -62,7 +64,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
           this.STATE_AUTO,
         ],
       })
-      .onGet(this.getState.bind(this))
+      .onGet(this.getTargetState.bind(this))
       .onSet(this.setState.bind(this));
 
     const minTemp = dependency.config.minimumTemperature ? toCelsius(dependency.config.minimumTemperature, this.units) : DEFAULT_MINIMUM;
@@ -83,7 +85,8 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
   private async initializeThermostat() {
 
     if (!this.isStateful) {
-      this.accessoryService.updateCharacteristic(this.Characteristic.TargetHeatingCoolingState, this.state);
+      this.accessoryService.updateCharacteristic(this.Characteristic.TargetHeatingCoolingState, this.targetState);
+      this.accessoryService.updateCharacteristic(this.Characteristic.CurrentHeatingCoolingState, this.currentState);
 
       this.accessoryService.updateCharacteristic(this.Characteristic.TargetTemperature, this.temperature);
       this.accessoryService.updateCharacteristic(this.Characteristic.CurrentTemperature, this.temperature);
@@ -111,7 +114,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
     return [
 
       new Webhook(this.identifier, WebhookCharacteristic.TargetHeatingCoolingState,
-        () => this.state,
+        () => this.targetState,
         (value, syncOnly) => {
           this.setState(value, syncOnly);
           return this.stateLogTemplateForCV(value).replace('%s', this.name);
@@ -153,32 +156,35 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
   }
 
   protected async getCurrentState(): Promise<CharacteristicValue> {
-    return this.Characteristic.CurrentHeatingCoolingState.OFF;
+    return this.currentState;
   }
 
-  private async getState(): Promise<CharacteristicValue> {
-    return this.state;
+  private async getTargetState(): Promise<CharacteristicValue> {
+    return this.targetState;
   }
 
   private async setState(value: CharacteristicValue, syncOnly: boolean = false) {
 
-    if (this.state !== value) {
+    if (this.targetState !== value) {
       this.logState(value);
 
       if (!syncOnly) {
         if (this.config.commandOff && value === this.STATE_OFF) {
           this.executeCommand(this.config.commandOff);
-        } else if (this.config.commandOn && this.state === this.STATE_OFF && value !== this.STATE_OFF) {
+        } else if (this.config.commandOn && this.targetState === this.STATE_OFF && value !== this.STATE_OFF) {
           this.executeCommand(this.config.commandOn);
         }
       }
     }
 
-    this.state = value;
+    this.targetState = value;
 
-    this.setStoredProperty(CharacteristicKey.TargetHeatingCoolingState, this.state);
+    this.setStoredProperty(CharacteristicKey.TargetHeatingCoolingState, this.targetState);
 
-    this.accessoryService.updateCharacteristic(this.Characteristic.TargetHeatingCoolingState, this.state);
+    this.accessoryService.updateCharacteristic(this.Characteristic.TargetHeatingCoolingState, this.targetState);
+
+    this.currentState = this.targetState !== this.STATE_AUTO ? this.targetState : this.currentState;
+    this.accessoryService.updateCharacteristic(this.Characteristic.CurrentHeatingCoolingState, this.currentState);
   }
 
   private async getTemperature(): Promise<CharacteristicValue> {
