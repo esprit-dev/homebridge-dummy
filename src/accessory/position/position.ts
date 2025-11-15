@@ -6,7 +6,7 @@ import { strings } from '../../i18n/i18n.js';
 
 import { Position, isValidPosition, printableValues, WebhookCharacteristic, CharacteristicKey } from '../../model/enums.js';
 import { PositionConfig } from '../../model/types.js';
-import { Webhook } from '../../model/webhook.js';
+import { Range, Webhook } from '../../model/webhook.js';
 
 import { storageGet_Deprecated } from '../../tools/storage.js';
 
@@ -69,6 +69,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
   override get webhooks(): Webhook[] {
     return [
       new Webhook(this.identifier, this.webhookCommand,
+        new Range(0, 100),
         () => this.position,
         (value, syncOnly) => {
           this.setPosition(value, syncOnly);

@@ -8,7 +8,7 @@ import {
   AccessoryType, CharacteristicKey, DefaultThermostatState, isValidTemperatureUnits, isValidThermostatState,
   printableValues, TemperatureUnits, WebhookCharacteristic }  from '../model/enums.js';
 import { ThermostatConfig } from '../model/types.js';
-import { Webhook } from '../model/webhook.js';
+import { Range, Values, Webhook } from '../model/webhook.js';
 
 import { storageGet_Deprecated } from '../tools/storage.js';
 import { fromCelsius, toCelsius } from '../tools/temperature.js';
@@ -27,6 +27,9 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
   private currentState: CharacteristicValue;
   private targetState: CharacteristicValue;
   private temperature: CharacteristicValue;
+
+  private minimumTemperature: number;
+  private maximumTemperature: number;
 
   constructor(dependency: DummyAccessoryDependency<ThermostatConfig>) {
     super(dependency);
@@ -67,17 +70,17 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
       .onGet(this.getTargetState.bind(this))
       .onSet(this.setState.bind(this));
 
-    const minTemp = dependency.config.minimumTemperature ? toCelsius(dependency.config.minimumTemperature, this.units) : DEFAULT_MINIMUM;
-    const maxTemp = dependency.config.maximumTemperature ? toCelsius(dependency.config.maximumTemperature, this.units) : DEFAULT_MAXIMUM;
+    this.minimumTemperature = dependency.config.minimumTemperature ? toCelsius(dependency.config.minimumTemperature, this.units) : DEFAULT_MINIMUM;
+    this.maximumTemperature = dependency.config.maximumTemperature ? toCelsius(dependency.config.maximumTemperature, this.units) : DEFAULT_MAXIMUM;
 
     this.accessoryService.getCharacteristic(dependency.Characteristic.CurrentTemperature)
       .onGet(this.getTemperature.bind(this))
-      .setProps({ minValue: minTemp, maxValue: maxTemp });
+      .setProps({ minValue: this.minimumTemperature, maxValue: this.maximumTemperature });
 
     this.accessoryService.getCharacteristic(dependency.Characteristic.TargetTemperature)
       .onGet(this.getTemperature.bind(this))
       .onSet(this.setTemperature.bind(this))
-      .setProps({ minValue: minTemp, maxValue: maxTemp });
+      .setProps({ minValue: this.minimumTemperature, maxValue: this.maximumTemperature });
 
     this.initializeThermostat();
   }
@@ -114,6 +117,15 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
     return [
 
       new Webhook(this.identifier, WebhookCharacteristic.TargetHeatingCoolingState,
+        new Values(
+          [
+            this.Characteristic.TargetHeatingCoolingState.OFF,
+            this.Characteristic.TargetHeatingCoolingState.HEAT,
+            this.Characteristic.TargetHeatingCoolingState.COOL,
+            this.Characteristic.TargetHeatingCoolingState.AUTO,
+          ],
+          '0 (OFF), 1 (HEAT), 2 (COOL), 3 (AUTO)',
+        ),
         () => this.targetState,
         (value, syncOnly) => {
           this.setState(value, syncOnly);
@@ -121,8 +133,10 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
         }),
 
       new Webhook(this.identifier, WebhookCharacteristic.TargetTemperature,
+        new Range(fromCelsius(this.minimumTemperature, this.units), fromCelsius(this.maximumTemperature, this.units)),
         () => this.temperature,
         (value, syncOnly) => {
+          value = toCelsius(value as number, this.units);
           this.setTemperature(value, syncOnly);
           return this.temperatureLogTemplateForCV(value).replace('%s', this.name);
         }),

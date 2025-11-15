@@ -2,29 +2,33 @@ import express, { Request, Response } from 'express';
 import { CharacteristicValue } from 'homebridge';
 import { Server } from 'http';
 
-import { isValidTemperatureUnits, printableValues, TemperatureUnits, WebhookCharacteristic } from './enums.js';
-import { CharacteristicType } from './types.js';
+import { WebhookCharacteristic } from './enums.js';
 
 import { strings } from '../i18n/i18n.js';
 
 import { Log } from '../tools/log.js';
 import { toPrimitive } from '../tools/primitive.js';
-import { fromCelsius, toCelsius } from '../tools/temperature.js';
 import { assert } from '../tools/validation.js';
 
 const DEFAULT_PORT = 63743;
 
-const MINIMUM_TEMPERATURE = 10;
-const MAXIMUM_TEMPERATURE = 38;
-
 type WebhookGetter = () => (CharacteristicValue);
 type WebhookSetter = (value: CharacteristicValue, syncOnly: boolean) => (string);
+
+export class Range {
+  constructor(readonly min: number, readonly max: number) {}
+}
+
+export class Values {
+  constructor(readonly values: CharacteristicValue[], readonly asString: string) {}
+}
 
 export class Webhook {
 
   constructor(
     public readonly id: string,
     public readonly characteristic: WebhookCharacteristic,
+    public readonly validValues: Range | Values,
     public readonly getter: WebhookGetter,
     public readonly setter: WebhookSetter,
   ){}
@@ -37,7 +41,6 @@ export class WebhookManager {
   private readonly webhooks: Webhook[] = [];
 
   constructor(
-    private readonly Characteristic: CharacteristicType,
     private readonly log: Log,
     private readonly port: number | undefined,
   ) {
@@ -72,11 +75,11 @@ export class WebhookManager {
     exp.use(express.json());
 
     exp.get('/', (request, response) => {
-      this.requestHandler(request, response);
+      this.onRequest(request, response);
     });
 
     exp.post('/', (request, response) => {
-      this.requestHandler(request, response);
+      this.onRequest(request, response);
     });
 
     this.server = exp.listen(this.port, () => {
@@ -91,7 +94,7 @@ export class WebhookManager {
     });
   };
 
-  private requestHandler(request: Request, response: Response) {
+  private onRequest(request: Request, response: Response) {
 
     const data = { ...request.query, ...request.body };
     this.log.ifVerbose(`${strings.webhook.received}\n${JSON.stringify(data)}`);
@@ -120,7 +123,7 @@ export class WebhookManager {
     }
 
     const value: CharacteristicValue = toPrimitive(data.value);
-    this.setValue(response, id, characteristic, value, characteristic === data.sync, data.units);
+    this.setValue(response, id, characteristic, value, characteristic === data.sync);
   }
 
   private getValue(response: Response, id: string, characteristic: WebhookCharacteristic) {
@@ -135,79 +138,26 @@ export class WebhookManager {
   }
 
   private setValue(
-    response: Response, id: string, characteristic: WebhookCharacteristic, value: CharacteristicValue,
-    syncOnly: boolean, temperatureUnits?: TemperatureUnits,
-  ) {
-
-    let validRequest: boolean;
-    let requirements: string;
-    switch (characteristic) {
-    case WebhookCharacteristic.Brightness: {
-      validRequest = this.isValueWithinRange(value, 0, 100);
-      requirements = strings.webhook.validRange.replace('%s', characteristic).replace('%s', '0').replace('%s', '100');
-      break;
-    }
-    case WebhookCharacteristic.LockTargetState: {
-      validRequest = this.isValidValue(value, [this.Characteristic.LockTargetState.UNSECURED, this.Characteristic.LockTargetState.SECURED]);
-      const validValues = '0 (UNSECURED), 1 (SECURED)';
-      requirements = `${strings.webhook.validValues.replace('%s', characteristic)} ${validValues}`;
-      break;
-    }
-    case WebhookCharacteristic.On: {
-      validRequest = this.isValidValue(value, [true, false]);
-      requirements = `${strings.webhook.validValues.replace('%s', characteristic)} true, false`;
-      break;
-    }
-    case WebhookCharacteristic.TargetHeatingCoolingState: {
-      validRequest = this.isValidValue(value,
-        [
-          this.Characteristic.TargetHeatingCoolingState.OFF,
-          this.Characteristic.TargetHeatingCoolingState.HEAT,
-          this.Characteristic.TargetHeatingCoolingState.COOL,
-          this.Characteristic.TargetHeatingCoolingState.AUTO,
-        ],
-      );
-      const validValues = '0 (OFF), 1 (HEAT), 2 (COOL), 3 (AUTO)';
-      requirements = `${strings.webhook.validValues.replace('%s', characteristic)} ${validValues}`;
-      break;
-    }
-    case WebhookCharacteristic.TargetPosition: {
-      validRequest = this.isValueWithinRange(value, 0, 100);
-      requirements = strings.webhook.validRange.replace('%s', characteristic).replace('%s', '0').replace('%s', '100');
-      break;
-    }
-    case WebhookCharacteristic.TargetTemperature: {
-
-      if (!isValidTemperatureUnits(temperatureUnits)) {
-        validRequest = false;
-        requirements = `${strings.webhook.badUnits.replace('%s', characteristic)
-          .replace('%s', `\`${temperatureUnits}\``)} ${printableValues(TemperatureUnits)}`;
-        break;
-      }
-
-      const units = temperatureUnits ?? TemperatureUnits.CELSIUS;
-      const minTemp = fromCelsius(MINIMUM_TEMPERATURE, units);
-      const maxTemp = fromCelsius(MAXIMUM_TEMPERATURE, units);
-      validRequest = this.isValueWithinRange(value, minTemp, maxTemp);
-      requirements = strings.webhook.validRange.replace('%s', characteristic).replace('%s', `${minTemp}`).replace('%s', `${maxTemp}`);
-      if (validRequest) {
-        value = toCelsius(value as number, units);
-      }
-
-      break;
-    }
-    default:
-      this.onBadRequest(response, strings.webhook.unsupportedCharacteristic.replace('%s', characteristic));
-      return;
-    }
-
-    if (!validRequest) {
-      this.onBadRequest(response, requirements);
-      return;
-    }
+    response: Response, id: string, characteristic: WebhookCharacteristic, value: CharacteristicValue, syncOnly: boolean) {
 
     const webhook = this.getWebhook(response, id, characteristic);
     if (webhook === undefined) {
+      return;
+    }
+
+    if (webhook.validValues instanceof Range) {
+
+      const min = webhook.validValues.min;
+      const max = webhook.validValues.max;
+      if (typeof value !== 'number' || value < min || value > max) {
+        const message = strings.webhook.validRange.replace('%s', characteristic).replace('%s', `${min}`).replace('%s', `${max}`);
+        this.onBadRequest(response, message);
+        return;
+      }
+
+    } else if ( (typeof value !== 'boolean' && typeof value !== 'number') || !webhook.validValues.values.includes(value)) {
+      const message = `${strings.webhook.validValues.replace('%s', characteristic)} ${webhook.validValues.asString}`;
+      this.onBadRequest(response, message);
       return;
     }
 
@@ -234,20 +184,6 @@ export class WebhookManager {
     }
 
     return byCharacteristic[0];
-  }
-
-  private isValidValue(value: CharacteristicValue, validValues: (number | boolean)[]): boolean {
-    if (typeof value === 'boolean' || typeof value === 'number') {
-      return validValues.includes(value);
-    }
-    return false;
-  }
-
-  private isValueWithinRange(value: CharacteristicValue, min: number, max: number): boolean {
-    if (typeof value !== 'number') {
-      return false;
-    }
-    return value >= min && value <= max;
   }
 
   private onBadRequest(response: Response, errorMessage: string, alsoLog: boolean = true) {

@@ -345,7 +345,6 @@ Here are the possible values for `get` or `set`/`sync` and their respective vali
 - `TargetHeatingCoolingState` - 0 (OFF), 1 (HEAT), 2 (COOL), 3 (AUTO)
 - `TargetPosition` - number from 0-100
 - `TargetTemperature` - number between 10°C and 38°C
-    - For `TargetTemperature` you may optionally supply a `unit` (either 'F' or 'C') to allow you to pass in Fahrenheit or Celsius units.
 
 `sync` is identical to `set` except that no commands are executed. This can be useful for situations where you want to avoid a looping behavior between the dummy accessory and source.
 

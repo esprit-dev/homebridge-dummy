@@ -8,7 +8,7 @@ import { strings } from '../../i18n/i18n.js';
 
 import { AccessoryType, CharacteristicKey, WebhookCharacteristic } from '../../model/enums.js';
 import { LightbulbConfig } from '../../model/types.js';
-import { Webhook } from '../../model/webhook.js';
+import { Range, Webhook } from '../../model/webhook.js';
 
 import { Fader } from '../../timeout/fader.js';
 
@@ -49,6 +49,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
     return [
       ...super.webhooks,
       new Webhook(this.identifier, WebhookCharacteristic.Brightness,
+        new Range(0, 100),
         () => this.brightness,
         (value) => {
           this.setBrightness(value);
@@ -122,7 +123,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
   }
 
   override cancelTimer() {
-    this.fader.cancel();
+    this.fader?.cancel();
     super.cancelTimer();
   }
 

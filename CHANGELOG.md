@@ -2,9 +2,17 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-## 1.4.2 (2025-11-14)
+## 1.4.3-beta.0 (2025-11-15)
 
 ### ‼️ WARNING ‼️ — If upgrading from v0.9.2 or earlier, [READ THIS FIRST](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#v10-migration)
+
+### Fixed
+- `TargetTemperature` [Webhook](https://github.com/mpatfield/homebridge-dummy#webhooks) respects configured min/max ([#257](https://github.com/mpatfield/homebridge-dummy/issues/257))
+
+### Notes
+Would you like to see Homebridge Dummy in your language? Please consider [getting involved](https://github.com/mpatfield/homebridge-dummy/issues/105). No coding experience required!
+
+## 1.4.2 (2025-11-14)
 
 ### Added
 - `sync` [Webhooks](https://github.com/mpatfield/homebridge-dummy#webhooks) which suppress command execution
@@ -12,9 +20,6 @@ All notable changes to homebridge-dummy will be documented in this file.
 
 ### Changed
 - `Thermostat` - current state (i.e. HEAT/COOL/OFF) mirrors target state; previously always 'OFF'
-
-### Notes
-Would you like to see Homebridge Dummy in your language? Please consider [getting involved](https://github.com/mpatfield/homebridge-dummy/issues/105). No coding experience required!
 
 ## 1.4.1 (2025-11-06)
 

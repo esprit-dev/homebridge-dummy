@@ -42,7 +42,7 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
     this.Characteristic = api.hap.Characteristic;
 
     this.log = new Log(logger, config.verbose === true);
-    this.webhookManager = new WebhookManager(this.Characteristic, this.log, config.webhookPort);
+    this.webhookManager = new WebhookManager(this.log, config.webhookPort);
     this.conditionManager = new ConditionManager(this.log, api.user.storagePath());
 
     this.log.always(

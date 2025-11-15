@@ -1,7 +1,7 @@
 import { TemperatureUnits } from '../model/enums.js';
 
 const fahrenheitToCelsius = (fahrenheit: number): number => {
-  return Number(((fahrenheit - 32) * 5 / 9).toFixed(1));
+  return Number(((fahrenheit - 32) * 5 / 9));
 };
 const celsiusToFahrenheit = (celsius: number): number => {
   return Math.round((celsius * 9 / 5) + 32);

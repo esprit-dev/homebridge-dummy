@@ -6,7 +6,7 @@ import { strings } from '../i18n/i18n.js';
 
 import { AccessoryType, LockState, isValidLockState, printableValues, WebhookCharacteristic, CharacteristicKey }  from '../model/enums.js';
 import { LockConfig } from '../model/types.js';
-import { Webhook } from '../model/webhook.js';
+import { Values, Webhook } from '../model/webhook.js';
 
 import { storageGet_Deprecated } from '../tools/storage.js';
 
@@ -58,6 +58,7 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
   override get webhooks(): Webhook[] {
     return [
       new Webhook(this.identifier, WebhookCharacteristic.LockTargetState,
+        new Values([this.Characteristic.LockTargetState.UNSECURED, this.Characteristic.LockTargetState.SECURED], '0 (UNSECURED), 1 (SECURED)'),
         () => this.state,
         (value, syncOnly) => {
           this.setState(value, syncOnly);
