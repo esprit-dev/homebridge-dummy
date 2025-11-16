@@ -28,8 +28,8 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
   private targetState: CharacteristicValue;
   private temperature: CharacteristicValue;
 
-  private minimumTemperature: number;
-  private maximumTemperature: number;
+  private minTemp: number;
+  private maxTemp: number;
 
   constructor(dependency: DummyAccessoryDependency<ThermostatConfig>) {
     super(dependency);
@@ -70,17 +70,17 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
       .onGet(this.getTargetState.bind(this))
       .onSet(this.setState.bind(this));
 
-    this.minimumTemperature = dependency.config.minimumTemperature ? toCelsius(dependency.config.minimumTemperature, this.units) : DEFAULT_MINIMUM;
-    this.maximumTemperature = dependency.config.maximumTemperature ? toCelsius(dependency.config.maximumTemperature, this.units) : DEFAULT_MAXIMUM;
+    this.minTemp = dependency.config.minimumTemperature !== undefined ? toCelsius(dependency.config.minimumTemperature, this.units) : DEFAULT_MINIMUM;
+    this.maxTemp = dependency.config.maximumTemperature !== undefined ? toCelsius(dependency.config.maximumTemperature, this.units) : DEFAULT_MAXIMUM;
 
     this.accessoryService.getCharacteristic(dependency.Characteristic.CurrentTemperature)
       .onGet(this.getTemperature.bind(this))
-      .setProps({ minValue: this.minimumTemperature, maxValue: this.maximumTemperature });
+      .setProps({ minValue: this.minTemp, maxValue: this.maxTemp });
 
     this.accessoryService.getCharacteristic(dependency.Characteristic.TargetTemperature)
       .onGet(this.getTemperature.bind(this))
       .onSet(this.setTemperature.bind(this))
-      .setProps({ minValue: this.minimumTemperature, maxValue: this.maximumTemperature });
+      .setProps({ minValue: this.minTemp, maxValue: this.maxTemp });
 
     this.initializeThermostat();
   }
@@ -133,7 +133,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
         }),
 
       new Webhook(this.identifier, WebhookCharacteristic.TargetTemperature,
-        new Range(fromCelsius(this.minimumTemperature, this.units), fromCelsius(this.maximumTemperature, this.units)),
+        new Range(fromCelsius(this.minTemp, this.units), fromCelsius(this.maxTemp, this.units)),
         () => this.temperature,
         (value, syncOnly) => {
           value = toCelsius(value as number, this.units);
