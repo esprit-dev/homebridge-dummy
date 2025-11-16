@@ -34,11 +34,19 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
         .onSet(this.setBrightness.bind(this));
 
       this.initializeBrightness();
+
+    } else {
+
+      const brightnessCharacteristic = this.accessoryService.getCharacteristic(dependency.Characteristic.Brightness);
+
+      if (brightnessCharacteristic) {
+        this.accessoryService.removeCharacteristic(brightnessCharacteristic);
+      }
     }
   }
 
   private get isDimmer(): boolean {
-    return this.brightness !== NO_BRIGHTNESS;
+    return this.config.defaultBrightness !== undefined;
   }
 
   override getAccessoryType(): AccessoryType {
@@ -84,7 +92,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
   override async setOn(value: CharacteristicValue, syncOnly: boolean = false): Promise<void> {
     super.setOn(value, syncOnly);
 
-    if (!value) {
+    if (this.isDimmer && !value) {
       this.accessoryService.updateCharacteristic(this.Characteristic.Brightness, this.brightness);
     }
   }
