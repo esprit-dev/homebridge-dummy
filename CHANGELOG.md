@@ -2,12 +2,13 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-## 1.4.3-beta.0 (2025-11-15)
+## 1.4.3-beta.1 (2025-11-16)
 
 ### ‼️ WARNING ‼️ — If upgrading from v0.9.2 or earlier, [READ THIS FIRST](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#v10-migration)
 
 ### Fixed
 - `TargetTemperature` [Webhook](https://github.com/mpatfield/homebridge-dummy#webhooks) respects configured min/max ([#257](https://github.com/mpatfield/homebridge-dummy/issues/257))
+- Suppress `Lightbulb` warnings ([#258](https://github.com/mpatfield/homebridge-dummy/issues/258)) and avoid potential crash on startup
 
 ### Notes
 Would you like to see Homebridge Dummy in your language? Please consider [getting involved](https://github.com/mpatfield/homebridge-dummy/issues/105). No coding experience required!
