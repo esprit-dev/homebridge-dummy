@@ -131,7 +131,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
   }
 
   override cancelTimer() {
-    this.fader?.cancel();
+    this.fader.cancel();
     super.cancelTimer();
   }
 
