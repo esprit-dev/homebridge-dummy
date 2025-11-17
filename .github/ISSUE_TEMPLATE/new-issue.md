@@ -14,7 +14,7 @@ assignees: ''
 ### JSON Config
 
 ```json
-Paste json config here, removing any personal info
+PASTE JSON CONFIG HERE, REMOVING ANY PERSONAL INFO
 ```
 
 ### Homebridge Dummy Version
@@ -22,10 +22,10 @@ v1.4.X <!-- UPDATE THIS VERSION NUMBER -->
 
 Is this a new issue or did it happen in a prior version?
 
-Yes/No
+YES/NO
 
 ### Logs
 
 ```
-Paste any relevent log output here, removing any personal info
+PASTE ANY RELEVANT LOG OUTPUT HERE, REMOVING ANY PERSONAL INFO
 ```
