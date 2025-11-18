@@ -5,7 +5,7 @@ export type CharacteristicType = typeof import('homebridge').Characteristic;
 
 import {
   AccessoryState, AccessoryType, ConditionOperator, DefaultThermostatState, LockState, OnState,
-  OperandType, Position, ScheduleType, SensorType, TemperatureUnits, TimePeriod, TimeUnits,
+  OperandType, PingAvailability, Position, ScheduleType, SensorType, TemperatureUnits, TimePeriod, TimeUnits,
 } from './enums.js';
 
 export type LegacyAccessoryConfig = AccessoryConfig & {
@@ -67,6 +67,7 @@ export type Operand = Assertable & {
   accessoryState?: AccessoryState,
   pattern?: string,
   pingHost?: string,
+  pingAvailability?: PingAvailability,
   pingInterval?: number,
   pingUnits?: TimeUnits,
 }

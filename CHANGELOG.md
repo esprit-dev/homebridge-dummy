@@ -2,9 +2,13 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-## 1.4.3-beta.1 (2025-11-16)
+## 1.4.3-beta.3 (2025-11-18)
 
 ### ‼️ WARNING ‼️ — If upgrading from v0.9.2 or earlier, [READ THIS FIRST](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#v10-migration)
+
+### Added
+- MAC Address support for [Reachability](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#reachabilitypresence) conditions, useful for triggering events based on joining/leaving your local network
+    - ⚠️ Somewhat experimental so please [open a ticket](https://github.com/mpatfield/homebridge-dummy/issues/new/choose) if you have issues
 
 ### Fixed
 - `TargetTemperature` [Webhook](https://github.com/mpatfield/homebridge-dummy#webhooks) respects configured min/max ([#257](https://github.com/mpatfield/homebridge-dummy/issues/257))
@@ -27,7 +31,7 @@ Would you like to see Homebridge Dummy in your language? Please consider [gettin
 
 ### Added
 - [Schedule](https://github.com/mpatfield/homebridge-dummy#schedule) settings for sunrise, sunset, dawn, dusk, golden hour, or night, with optional offset
-- [Reachability](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#reachabilityping) Trigger Condition
+- [Reachability](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#reachabilitypresence) Trigger Condition
 - Fetch accessory state via [Webhooks](https://github.com/mpatfield/homebridge-dummy#webhooks)
     - `command` has been replaced by `get`/`set` - this is backwards compatible so no manual edits are necessary
 

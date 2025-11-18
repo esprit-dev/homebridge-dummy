@@ -1,3 +1,4 @@
+import ARPPing from 'arpping';
 import ping from 'ping';
 
 import { strings } from '../i18n/i18n.js';
@@ -10,9 +11,14 @@ import { Log } from '../tools/log.js';
 
 type ReachabilityCallback = (reachable: boolean) => (void);
 
+const MAC_REGEX = /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/;
+
 export class Reachability {
 
-  private host: string;
+  private macAddress?: string;
+  private networkAddress?: string;
+
+  private arpping?: ARPPing;
 
   protected timeout?: NodeJS.Timeout;
 
@@ -21,19 +27,23 @@ export class Reachability {
   constructor(
     private readonly log: Log,
     host: string,
-    interval: number | undefined,
-    units: TimeUnits | undefined,
+    private interval: number | undefined,
+    private units: TimeUnits | undefined,
     private readonly callback: ReachabilityCallback,
   ) {
 
-    this.host = this.normalizeHost(host);
+    if (MAC_REGEX.test(host)) {
+      this.macAddress = host.toLowerCase().replaceAll('-', ':');
+    } else {
+      try {
+        const url = new URL(host.includes('://') ? host : `http://${host}`);
+        this.networkAddress = url.hostname;
+      } catch {
+        this.networkAddress = host;
+      }
+    }
 
-    const delay = getDelay(interval ?? 60, units ?? TimeUnits.SECONDS);
-    this.timeout = setInterval(() => {
-      this.ping();
-    }, delay);
-
-    this.ping();
+    this.startInterval();
   }
 
   public teardown() {
@@ -41,32 +51,64 @@ export class Reachability {
     this.timeout = undefined;
   }
 
+  private get alive(): boolean {
+    return this._alive === true;
+  }
+
   private set alive(value: boolean) {
 
     if (this._alive !== value) {
-      this.log.ifVerbose(value ? strings.reachability.reachable : strings.reachability.unreachable, `'${this.host}'`);
+      this.log.ifVerbose(value ? strings.reachability.reachable : strings.reachability.unreachable, `'${this.macAddress ?? this.networkAddress}'`);
       this.callback(value);
     }
 
     this._alive = value;
   }
 
-  private async ping() {
-    try {
-      const response = await ping.promise.probe(this.host);
-      this.alive = response.alive;
-    } catch (err) {
-      this.log.error(strings.reachability.pingError, err);
-      this.teardown();
-    }
+  private async startInterval() {
+
+    const delay = getDelay(this.interval ?? 60, this.units ?? TimeUnits.SECONDS);
+
+    const runCheck = async () => {
+      await this.check();
+      this.timeout = setTimeout(runCheck, delay);
+    };
+
+    await runCheck();
   }
 
-  private normalizeHost(input: string) {
-    try {
-      const url = new URL(input.includes('://') ? input : `http://${input}`);
-      return url.hostname;
-    } catch {
-      return input;
+  private async check() {
+
+    if (this.networkAddress !== undefined) {
+
+      try {
+        this.alive = (await ping.promise.probe(this.networkAddress)).alive;
+      } catch (err) {
+        this.log.warning(strings.reachability.error, this.networkAddress, err);
+      }
+
+      if (!this.alive && this.macAddress !== undefined) {
+        this.networkAddress = undefined;
+      }
+
+      return;
+    }
+
+    if (this.macAddress !== undefined) {
+
+      if (this.arpping === undefined) {
+        this.arpping = new ARPPing({ useCache: false });
+      }
+
+      try {
+        const result = await this.arpping.searchByMacAddress([this.macAddress]);
+        const host = result.hosts.filter ( host => host.mac === this.macAddress).pop();
+        this.alive = host !== undefined;
+        this.networkAddress = host?.ip;
+
+      } catch (err) {
+        this.log.warning(strings.reachability.error, this.macAddress, err);
+      }
     }
   }
 }

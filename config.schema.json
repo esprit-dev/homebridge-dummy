@@ -265,6 +265,12 @@
             "type": "string",
             "title": "${config.title.pingHost}"
           },
+          "pingAvailability": {
+            "type": "string",
+            "title": "${config.title.pingAvailability}",
+            "enum": [ "AVAILABLE",  "NOT_AVAILABLE"],
+            "enumNames": [ "${config.enumNames.available}", "${config.enumNames.notAvailable}" ]
+          },
           "pingInterval": {
             "type": "integer",
             "title": "${config.title.pingInterval}",
@@ -311,31 +317,7 @@
                 "required": ["type"]
             },
             "then": {
-                "required": ["pingHost"]
-            }
-          },
-          {
-            "if": {
-                "properties": {
-                  "pingInterval": {
-                  }
-                },
-                "required": ["pingInterval"]
-            },
-            "then": {
-                "required": ["pingUnits"]
-            }
-          },
-          {
-            "if": {
-                "properties": {
-                  "pingUnits": {
-                  }
-                },
-                "required": ["pingUnits"]
-            },
-            "then": {
-                "required": ["pingInterval"]
+                "required": ["pingHost", "pingAvailability", "pingInterval", "pingUnits"]
             }
           }
         ]
@@ -837,7 +819,7 @@
               "title": "${config.title.conditions}",
               "description": "${config.description.conditions}",
               "condition": {
-                "functionBody": "const type = model.accessories?.[arguments[1]]?.type; return model.accessories?.length > 1 && type && type !== 'Thermostat'"
+                "functionBody": "const type = model.accessories?.[arguments[1]]?.type; return type && type !== 'Thermostat'"
               },
               "items": [
                 {
@@ -886,31 +868,38 @@
                       }
                     },
                     {
+                      "key": "accessories[].conditions.operands[].pattern",
+                      "flex": "1 0 auto",
+                      "condition": {
+                        "functionBody": "return model.accessories?.[arguments[1][0]]?.conditions?.operands?.[arguments[1][1]]?.type === 'LOG';"
+                      }
+                    },
+                    {
                       "key": "accessories[].conditions.operands[].pingHost",
-                      "flex": "0 0 auto",
+                      "flex": "0 0 28%",
+                      "condition": {
+                        "functionBody": "return model.accessories?.[arguments[1][0]]?.conditions?.operands?.[arguments[1][1]]?.type === 'PING';"
+                      }
+                    },
+                    {
+                      "key": "accessories[].conditions.operands[].pingAvailability",
+                      "flex": "0 0 22%",
                       "condition": {
                         "functionBody": "return model.accessories?.[arguments[1][0]]?.conditions?.operands?.[arguments[1][1]]?.type === 'PING';"
                       }
                     },
                     {
                       "key": "accessories[].conditions.operands[].pingInterval",
-                      "flex": "0 1 auto",
+                      "flex": "0 0 10%",
                       "condition": {
-                        "functionBody": "return model.accessories?.[arguments[1][0]]?.conditions?.operands?.[arguments[1][1]]?.pingHost !== undefined;"
+                        "functionBody": "return model.accessories?.[arguments[1][0]]?.conditions?.operands?.[arguments[1][1]]?.type === 'PING';"
                       }
                     },
                     {
                       "key": "accessories[].conditions.operands[].pingUnits",
-                      "flex": "0 1 auto",
+                      "flex": "0 0 20%",
                       "condition": {
-                        "functionBody": "return model.accessories?.[arguments[1][0]]?.conditions?.operands?.[arguments[1][1]]?.pingInterval !== undefined;"
-                      }
-                    },
-                    {
-                      "key": "accessories[].conditions.operands[].pattern",
-                      "flex": "1 0 auto",
-                      "condition": {
-                        "functionBody": "return model.accessories?.[arguments[1][0]]?.conditions?.operands?.[arguments[1][1]]?.type === 'LOG';"
+                        "functionBody": "return model.accessories?.[arguments[1][0]]?.conditions?.operands?.[arguments[1][1]]?.type === 'PING';"
                       }
                     }
                   ]

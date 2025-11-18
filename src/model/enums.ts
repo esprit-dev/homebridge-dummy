@@ -55,6 +55,11 @@ export enum OperandType {
   PING = 'PING',
 }
 
+export enum PingAvailability {
+  AVAILABLE = 'AVAILABLE',
+  NOT_AVAILABLE = 'NOT_AVAILABLE'
+}
+
 export enum OnState {
   ON = 'on',
   OFF = 'off',

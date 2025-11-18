@@ -1,4 +1,4 @@
-import { AccessoryState, ConditionOperator, getStateType, OperandType } from './enums.js';
+import { AccessoryState, ConditionOperator, getStateType, OperandType, PingAvailability } from './enums.js';
 import { ConditionsConfig } from './types.js';
 
 import { strings } from '../i18n/i18n.js';
@@ -210,7 +210,7 @@ export class ConditionManager {
           break;
         }
 
-        operandResult = currentReachability;
+        operandResult = currentReachability === (operand.pingAvailability !== PingAvailability.NOT_AVAILABLE);
       }
 
       if (operandResult === undefined) {

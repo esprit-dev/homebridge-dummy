@@ -5,7 +5,7 @@
 
 <span align="center">
 
-# homebridge-dummy
+# Homebridge Dummy
 
 Homebridge plugin to create fake accessories for assisting with advanced Apple HomeKit automations
 
@@ -13,8 +13,6 @@ Homebridge plugin to create fake accessories for assisting with advanced Apple H
 [![Discord](https://img.shields.io/discord/432663330281226270?color=728ED5&logo=discord&label=discord)](https://discord.com/channels/432663330281226270/1406798847279366214)\
 [![npm](https://img.shields.io/npm/dw/homebridge-dummy)](https://www.npmjs.com/package/homebridge-dummy)
 [![npm](https://img.shields.io/npm/dt/homebridge-dummy)](https://www.npmjs.com/package/homebridge-dummy)
-
-
 
 </span>
 
@@ -30,7 +28,7 @@ Any issues or damage resulting from use of this plugin are not the fault of the 
 
 ### Why?
 
-The original HomebridgeDummy was written almost 10 years ago and uses the now deprecated [Accessory Plugin](https://developers.homebridge.io/#/api/accessory-plugins) architecture.
+The original Homebridge Dummy was written almost 10 years ago and uses the now deprecated [Accessory Plugin](https://developers.homebridge.io/#/api/accessory-plugins) architecture.
 
 While this still works okay for now, migrating the code to use [Platform Plugins](https://developers.homebridge.io/#/api/platform-plugins) will future-proof Homebridge Dummy and allow for more modern and robust design patterns.
 
@@ -134,6 +132,7 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
                         "accessoryState": "on | off | open | closed | locked | unlocked",
                         "pattern": "string",
                         "pingHost": "string",
+                        "pingAvailability": "AVAILABLE | NOT_AVAILABLE"
                         "pingInterval": number,
                         "pingUnits": "MILLISECONDS | SECONDS | MINUTES | HOURS"
                     }
@@ -318,14 +317,50 @@ Note that `LOG` triggers are not instantenous and may take several seconds to fi
 - `type` - `LOG`
 - `pattern` - a literal string or regex to watch for
 
-### Reachability/Ping
+### Reachability/Presence
 
-There is also a `PING` operand type that allows you to set the state based on the reachability of a particular `pingHost`.
+There is also a `PING` operand type that allows you to set the state based on the reachability/presence of a particular `pingHost`.
 
 - `type` - `PING`
-- `pingHost` - the host to ping, e.g. `192.168.0.1` or `example.com`
+- `pingHost` - the host to ping, e.g. `192.168.0.1` or `example.com` or `aa:11:bb:22:cc:33`
+- `pingAvailability` - Indicates whether being `AVAILABLE` or `NOT_AVAILABLE` satisfies the condition
 - `pingInterval` - The raw interval to check the reachability of the above host (default 60 seconds)
 - `pingUnits` - The units to use for interval above
+
+Using MAC Address is particularly useful for triggering events based on joining or leaving your local network.
+
+If you want to use this for "arriving" or "leaving" a location, it is not recommended to use a single presence accessory for both. This is because a device such as a phone can connect and disconnect frequently from the network when the screen is off, so the switch will toggle back and forth.
+
+Instead, it's recommended to choose one and use an auto-reset timer.
+
+```json
+{
+    "id": "a52da73e-f854-4a57-b90d-6ba14d8f1d72",
+    "name": "Home",
+    "type": "Switch",
+    "timer": {
+        "delay": 10,
+        "units": "MINUTES",
+        "random": false
+    },
+    "conditions": {
+        "operator": "and",
+        "operands": [
+            {
+                "type": "PING",
+                "pingHost": "aa:11:bb:22:cc:33",
+                "pingAvailability": "AVAILABLE",
+                "pingInterval": 15,
+                "pingUnits": "SECONDS"
+            }
+        ]
+    }
+}
+```
+
+The above example will check every 15 seconds to see if your device is on your network. You can use this to trigger an event soon after you join your network. The switch will only turn off when the device hasn't connected within 10 minutes.
+
+To trigger an event soon after you leave the network, create a duplicate accessory with `"pingAvailability": "NOT_AVAILBLE"`.
 
 ## Webhooks
 
@@ -403,6 +438,8 @@ curl -X POST http://localhost:63743/ -H "Content-Type: application/json" -d '{"i
 
 [@jotzet79](https://github.com/sponsors/jotzet79) for German translations
 
+[@kozmajanos](https://github.com/sponsors/kozmajanos) for Hungarian translations
+
 [@Silverdragon122](https://github.com/sponsors/Silverdragon122) for Russian translations
 
 [@dcompane](https://github.com/sponsors/dcompane) for Spanish translations
@@ -415,9 +452,11 @@ Scheduling based on sun times (sunrise, sunset, etc.) and reachability (ping) co
 
 Sensor feature inspired by [Homebridge-Delay-Switch](https://github.com/nitaybz/homebridge-delay-switch#readme) by [@nitaybz](https://github.com/sponsors/nitaybz)
 
-Command feature inspired by [homebridge-cmdtrigger](https://github.com/hallos/homebridge-cmdtrigger) by [@hallos](https://github.com/sponsors/hallos)
+Command feature inspired by [Cmd Trigger Plugin](https://github.com/hallos/homebridge-cmdtrigger) by [@hallos](https://github.com/sponsors/hallos)
 
-Log watch trigger feature inspired by [hb-virtual-switch](https://github.com/Plankske/hb-virtual-switch/) by [@Plankske](https://github.com/sponsors/Plankske)
+Log watch trigger feature inspired by [Homebridge Virtual Switches](https://github.com/Plankske/hb-virtual-switch/) by [@Plankske](https://github.com/sponsors/Plankske)
+
+Network presence condition inspired by [homebridge-network-presence](https://github.com/nitaybz/homebridge-network-presence) by [nitaybz](https://github.com/sponsors/nitaybz)
 
 Special thanks to [@nfarina](https://github.com/sponsors/nfarina) for creating the original version of this plugin and maintaining it for almost 10 (!!!) years
 

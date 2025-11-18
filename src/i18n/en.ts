@@ -67,7 +67,7 @@ const en = {
   },
 
   reachability: {
-    pingError: '`ping` error',
+    error: 'An error occurred when checking if %s is reachable', // host
     reachable: '%s is responsive', // host
     unreachable: '%s is unresponsive', // host
   },
@@ -122,6 +122,7 @@ const en = {
 
     enumNames: {
       accessory: 'Accessory',
+      available: 'Available',
       auto: 'Auto',
       carbonDioxideSensor:'Carbon Dioxide',
       carbonMonoxideSensor: 'Carbon Monoxide',
@@ -164,6 +165,7 @@ const en = {
       minutes: 'Minutes',
       motionSensor: 'Motion',
       night: 'Night',
+      notAvailable: 'Not Available',
       secondly: 'Every Second',
       seconds: 'Seconds',
       secured: 'Locked',
@@ -231,8 +233,9 @@ const en = {
       operator: 'Trigger when…',
       pattern: 'Search String or RegEx',
       period: 'Per',
+      pingAvailability: 'State',
       pingHost: 'Host',
-      pingInterval: 'Ping Interval',
+      pingInterval: 'Interval',
       preset: 'Preset',
       random: 'Randomize',
       resetOnRestart: 'Reset on Restart',
