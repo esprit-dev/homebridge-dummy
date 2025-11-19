@@ -327,7 +327,7 @@ There is also a `PING` operand type that allows you to set the state based on th
 - `pingInterval` - The raw interval to check the reachability of the above host (default 60 seconds)
 - `pingUnits` - The units to use for interval above
 
-Using MAC Address is particularly useful for triggering events based on joining or leaving your local network.
+This can be particularly useful for triggering events based on joining or leaving your local network.
 
 If you want to use this for "arriving" or "leaving" a location, it is not recommended to use a single presence accessory for both. This is because a device such as a phone can connect and disconnect frequently from the network when the screen is off, so the switch will toggle back and forth.
 
@@ -348,7 +348,7 @@ Instead, it's recommended to choose one and use an auto-reset timer.
         "operands": [
             {
                 "type": "PING",
-                "pingHost": "aa:11:bb:22:cc:33",
+                "pingHost": "192.168.1.42",
                 "pingAvailability": "AVAILABLE",
                 "pingInterval": 15,
                 "pingUnits": "SECONDS"
@@ -361,6 +361,8 @@ Instead, it's recommended to choose one and use an auto-reset timer.
 The above example will check every 15 seconds to see if your device is on your network. You can use this to trigger an event soon after you join your network. The switch will only turn off when the device hasn't connected within 10 minutes.
 
 To trigger an event soon after you leave the network, create a duplicate accessory with `"pingAvailability": "NOT_AVAILBLE"`.
+
+Note that while MAC Addresses are supported, it is a much more network intensive operation. It is preferred to use a fixed IP address where possible for best performance.
 
 ## Webhooks
 

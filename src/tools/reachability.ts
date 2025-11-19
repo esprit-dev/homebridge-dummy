@@ -5,7 +5,7 @@ import { strings } from '../i18n/i18n.js';
 
 import { TimeUnits } from '../model/enums.js';
 
-import { getDelay } from '../timeout/timeout.js';
+import { DAY, getDelay } from '../timeout/timeout.js';
 
 import { Log } from '../tools/log.js';
 
@@ -17,6 +17,8 @@ export class Reachability {
 
   private macAddress?: string;
   private networkAddress?: string;
+
+  private networkAddressExpiry?: number;
 
   private arpping?: ARPPing;
 
@@ -87,7 +89,7 @@ export class Reachability {
         this.log.warning(strings.reachability.error, this.networkAddress, err);
       }
 
-      if (!this.alive && this.macAddress !== undefined) {
+      if (!this.alive && this.networkAddressExpiry !== undefined && Date.now() > this.networkAddressExpiry) {
         this.networkAddress = undefined;
       }
 
@@ -105,7 +107,7 @@ export class Reachability {
         const host = result.hosts.filter ( host => host.mac === this.macAddress).pop();
         this.alive = host !== undefined;
         this.networkAddress = host?.ip;
-
+        this.networkAddressExpiry = Date.now() + DAY;
       } catch (err) {
         this.log.warning(strings.reachability.error, this.macAddress, err);
       }
