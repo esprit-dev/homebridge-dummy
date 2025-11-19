@@ -119,11 +119,9 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
   }
 
   override async trigger(): Promise<void> {
-    if (this.state === this.defaultLockState) {
-      const opposite = this.state === this.Characteristic.LockTargetState.SECURED ?
-        this.Characteristic.LockTargetState.UNSECURED : this.Characteristic.LockTargetState.SECURED;
-      await this.setState(opposite);
-    }
+    const opposite = this.defaultLockState === this.Characteristic.LockTargetState.SECURED ?
+      this.Characteristic.LockTargetState.UNSECURED : this.Characteristic.LockTargetState.SECURED;
+    await this.setState(opposite);
   }
 
   override async reset(): Promise<void> {

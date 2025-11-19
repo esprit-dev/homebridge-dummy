@@ -153,10 +153,8 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
   }
 
   override async trigger(): Promise<void> {
-    if (this.position === this.defaultPosition) {
-      const opposite = this.position === this.positionClosed ? this.positionOpen : this.positionClosed;
-      await this.setPosition(opposite);
-    }
+    const opposite = this.defaultPosition === this.positionClosed ? this.positionOpen : this.positionClosed;
+    await this.setPosition(opposite);
   }
 
   override async reset(): Promise<void> {

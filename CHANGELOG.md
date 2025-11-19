@@ -15,6 +15,9 @@ All notable changes to homebridge-dummy will be documented in this file.
 - Suppress `Lightbulb` warnings ([#258](https://github.com/mpatfield/homebridge-dummy/issues/258)) and avoid potential crash on startup
 - `Thermostat` issue when setting `minimumTemperature` to zero ([#259](https://github.com/mpatfield/homebridge-dummy/issues/259))
 
+### Changed
+- Triggering accessory via `Schedule` resets any `Auto-Reset Timer`
+
 ### Notes
 Would you like to see Homebridge Dummy in your language? Please consider [getting involved](https://github.com/mpatfield/homebridge-dummy/issues/105). No coding experience required!
 
