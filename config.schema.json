@@ -680,7 +680,7 @@
                       "key": "accessories[].schedule.units",
                       "flex": "0 0 auto",
                       "condition": {
-                          "functionBody": "return model.accessories?.[arguments[1]]?.schedule?.interval !== undefined;"
+                          "functionBody": "return model.accessories?.[arguments[1]]?.schedule?.type === 'INTERVAL';"
                       }
                     },
                     {
