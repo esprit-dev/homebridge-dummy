@@ -12,7 +12,7 @@ All notable changes to homebridge-dummy will be documented in this file.
 
 ### Fixed
 - `TargetTemperature` [Webhook](https://github.com/mpatfield/homebridge-dummy#webhooks) respects configured min/max ([#257](https://github.com/mpatfield/homebridge-dummy/issues/257))
-- Suppress `Lightbulb` warnings ([#258](https://github.com/mpatfield/homebridge-dummy/issues/258)) and avoid potential crash on startup
+- Suppress `Lightbulb` warnings ([#258](https://github.com/mpatfield/homebridge-dummy/issues/258)) and avoid potential crash on startup ([#266](https://github.com/mpatfield/homebridge-dummy/issues/266))
 - `Thermostat` issue when setting `minimumTemperature` to zero ([#259](https://github.com/mpatfield/homebridge-dummy/issues/259))
 
 ### Changed
