@@ -9,13 +9,12 @@ import { SensorAccessory } from './sensor.js';
 import { strings } from '../i18n/i18n.js';
 
 import { ConditionManager } from '../model/conditions.js';
-import { AccessoryState, AccessoryType, CharacteristicKey } from '../model/enums.js';
+import { AccessoryState, AccessoryType, CharacteristicKey, ScheduleType } from '../model/enums.js';
 import { CharacteristicType, DummyConfig, ServiceType } from '../model/types.js';
 import { Webhook } from '../model/webhook.js';
 
 import Limiter from '../timeout/limiter.js';
 import { Schedule } from '../timeout/schedule.js';
-import { Timer } from '../timeout/timer.js';
 
 import { Log } from '../tools/log.js';
 import { Storage } from '../tools/storage.js';
@@ -52,7 +51,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
   protected readonly accessoryService: Service;
 
   private readonly _schedule?: Schedule;
-  private readonly _timer?: Timer;
+  private readonly _autoReset?: Schedule;
   private readonly _limiter?: Limiter;
 
   private readonly execAsync = promisify(exec);
@@ -76,14 +75,15 @@ export abstract class DummyAccessory<C extends DummyConfig> {
 
     this.sensor = SensorAccessory.new(addonDependency, dependency.config.sensor);
 
-    this._timer = Timer.new(addonDependency, dependency.config.timer);
+    this._schedule = Schedule.new(addonDependency, dependency.config.schedule, strings.schedule, 'Schedule', this.trigger.bind(this));
 
-    this._schedule = Schedule.new(addonDependency, dependency.config.schedule, this.trigger.bind(this));
+    this._autoReset = Schedule.new(addonDependency, dependency.config.autoReset ?? dependency.config.timer,
+      strings.autoReset, 'AutoReset', this.reset.bind(this));
 
     this._limiter = Limiter.new(addonDependency, dependency.config.limiter);
 
     dependency.conditionManager.register(name, this.identifier, dependency.config.conditions,
-      this.trigger.bind(this), this._timer ? undefined : this.reset.bind(this), disableLogging);
+      this.trigger.bind(this), this._autoReset ? undefined : this.reset.bind(this), disableLogging);
 
     const serviceInstance = dependency.Service[this.getAccessoryType()];
 
@@ -130,8 +130,8 @@ export abstract class DummyAccessory<C extends DummyConfig> {
   }
 
   public teardown() {
-    this._timer?.teardown();
     this._schedule?.teardown();
+    this._autoReset?.teardown();
     this._limiter?.teardown();
   }
 
@@ -158,7 +158,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
   }
 
   protected get isStateful(): boolean {
-    return this._schedule === undefined && !this.config.resetOnRestart;
+    return (this._schedule === undefined || this.config.schedule?.type === ScheduleType.TIMEOUT) && !this.config.resetOnRestart;
   }
 
   protected getStoredProperty(key: CharacteristicKey): CharacteristicValue | undefined {
@@ -173,9 +173,10 @@ export abstract class DummyAccessory<C extends DummyConfig> {
     Storage.set(this.identifier, key, value);
   }
 
-  protected startTimer() {
-    if (this._timer) {
-      const delay = this._timer.start(this.reset.bind(this));
+  protected onTriggered() {
+
+    const delay = this._autoReset?.startTimeout();
+    if (delay !== undefined) {
       this.onTimerStarted(delay);
     }
 
@@ -185,8 +186,9 @@ export abstract class DummyAccessory<C extends DummyConfig> {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected onTimerStarted(_delay: number) {}
 
-  protected cancelTimer() {
-    this._timer?.cancel();
+  protected onReset() {
+    this._schedule?.startTimeout();
+    this._autoReset?.cancel();
     this._limiter?.cancel();
   }
 

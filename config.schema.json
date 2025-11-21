@@ -29,63 +29,18 @@
           }
         }
       },
-      "timer": {
-        "type": "object",
-        "properties": {
-          "delay": {
-            "type": "integer",
-            "title": "${config.title.delay}",
-            "minimum": 1
-          },
-          "units": {
-            "$ref": "#/definitions/units",
-            "required": true
-          },
-          "random": {
-            "type": "boolean",
-            "title": "${config.title.random}",
-            "description": "${config.description.random}"
-          }
-        },
-        "allOf": [
-          {
-            "if": {
-              "properties": {
-                "delay": {
-                }
-              },
-              "required": ["delay"]
-            },
-            "then": {
-              "required": ["units"]
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "units" : {
-                }
-              },
-              "required": [ "units" ]
-            },
-            "then": {
-              "required": [ "delay"]
-            }
-          }
-        ]
-      },
       "schedule": {
         "type": "object",
         "properties": {
           "type": {
             "type": "string",
             "title": "${config.title.type}",
-            "enum": [ "INTERVAL", "CRON", "SUNRISE", "SUNSET", "DAWN", "DUSK", "GOLDEN_HOUR", "NIGHT"],
-            "enumNames": ["${config.enumNames.interval}", "${config.enumNames.cron}", "${config.enumNames.sunrise}", "${config.enumNames.sunset}", "${config.enumNames.dawn}", "${config.enumNames.dusk}", "${config.enumNames.goldenHour}", "${config.enumNames.night}"]
+            "enum": [ "TIMEOUT", "INTERVAL", "CRON", "SUNRISE", "SUNSET", "DAWN", "DUSK", "GOLDEN_HOUR", "NIGHT"],
+            "enumNames": ["${config.enumNames.timeout}", "${config.enumNames.interval}", "${config.enumNames.cron}", "${config.enumNames.sunrise}", "${config.enumNames.sunset}", "${config.enumNames.dawn}", "${config.enumNames.dusk}", "${config.enumNames.goldenHour}", "${config.enumNames.night}"]
           },
-          "interval": {
+          "time": {
             "type": "integer",
-            "title": "${config.title.interval}",
+            "title": "${config.title.time}",
             "minimum": 1
           },
           "units": { "$ref": "#/definitions/units" },
@@ -126,12 +81,12 @@
             "if": {
               "properties": {
                 "type": {
-                  "const": "INTERVAL"
+                  "enum": ["TIMEOUT", "INTERVAL"]
                 }
               }
             },
             "then": {
-              "required": ["interval", "units"]
+              "required": ["time", "units"]
             }
           },
           {
@@ -382,8 +337,8 @@
               "title": "${config.title.groupName}"
             },
             "sensor": { "$ref": "#/definitions/sensor" },
-            "timer": { "$ref": "#/definitions/timer" },
             "schedule": { "$ref": "#/definitions/schedule" },
+            "autoReset": { "$ref": "#/definitions/schedule" },
             "limiter": { "$ref": "#/definitions/limiter" },
             "conditions": { "$ref": "#/definitions/conditions" },
             "temperatureUnits": {
@@ -645,7 +600,7 @@
                       "key": "accessories[].resetOnRestart",
                       "flex": "0 1 33%",
                       "condition": {
-                        "functionBody": "return model.accessories?.[arguments[1]]?.schedule?.type === undefined && model.accessories?.[arguments[1]]?.timer?.delay === undefined;"
+                        "functionBody": "const accessory = model.accessories?.[arguments[1]]; return accessory?.schedule?.type === undefined && accessory.autoReset?.type === undefined;"
                       }
                     }
                   ]
@@ -670,17 +625,17 @@
                       "flex": "0 0 auto"
                     },
                     {
-                      "key": "accessories[].schedule.interval",
+                      "key": "accessories[].schedule.time",
                       "flex": "0 0 auto",
                       "condition": {
-                          "functionBody": "return model.accessories?.[arguments[1]]?.schedule?.type === 'INTERVAL';"
+                          "functionBody": "return ['TIMEOUT', 'INTERVAL'].includes(model.accessories?.[arguments[1]]?.schedule?.type);"
                       }
                     },
                     {
                       "key": "accessories[].schedule.units",
                       "flex": "0 0 auto",
                       "condition": {
-                          "functionBody": "return model.accessories?.[arguments[1]]?.schedule?.type === 'INTERVAL';"
+                          "functionBody": "return ['TIMEOUT', 'INTERVAL'].includes(model.accessories?.[arguments[1]]?.schedule?.type);"
                       }
                     },
                     {
@@ -723,15 +678,15 @@
                 {
                   "key": "accessories[].schedule.random",
                   "condition": {
-                      "functionBody": "const schedule = model.accessories?.[arguments[1]]?.schedule; return schedule?.type === 'INTERVAL' && schedule?.interval;"
+                      "functionBody": "const schedule = model.accessories?.[arguments[1]]?.schedule; return ['TIMEOUT', 'INTERVAL'].includes(schedule?.type) && schedule?.time;"
                   }
                 }
               ]
             },
             {
               "type": "fieldset",
-              "title": "${config.title.timer}",
-              "description": "${config.description.timer}",
+              "title": "${config.title.autoReset}",
+              "description": "${config.description.autoReset}",
               "condition": {
                 "functionBody": "const type = model.accessories?.[arguments[1]]?.type; return type && type !== 'Thermostat';"
               },
@@ -742,40 +697,65 @@
                   "flex-direction": "row",
                   "items": [
                     {
-                      "key": "accessories[].timer.delay",
-                      "flex": "0 0 33%"
+                      "key": "accessories[].autoReset.type",
+                      "flex": "0 0 auto"
                     },
                     {
-                      "key": "accessories[].timer.units",
-                      "flex": "0 0 33%",
+                      "key": "accessories[].autoReset.time",
+                      "flex": "0 0 auto",
                       "condition": {
-                        "functionBody": "return model.accessories?.[arguments[1]]?.timer?.delay;"
+                          "functionBody": "return ['TIMEOUT', 'INTERVAL'].includes(model.accessories?.[arguments[1]]?.autoReset?.type);"
+                      }
+                    },
+                    {
+                      "key": "accessories[].autoReset.units",
+                      "flex": "0 0 auto",
+                      "condition": {
+                          "functionBody": "return ['TIMEOUT', 'INTERVAL'].includes(model.accessories?.[arguments[1]]?.autoReset?.type);"
+                      }
+                    },
+                    {
+                      "key": "accessories[].autoReset.cron",
+                      "flex": "0 0 auto",
+                      "condition": {
+                          "functionBody": "return model.accessories?.[arguments[1]]?.autoReset?.type === 'CRON';"
+                      }
+                    },
+                    {
+                      "key": "accessories[].autoReset.cronCustom",
+                      "flex": "1 0 auto",
+                      "condition": {
+                          "functionBody": "return model.accessories?.[arguments[1]]?.autoReset?.cron === 'CRON_CUSTOM';"
+                      }
+                    },
+                    {
+                      "key": "accessories[].autoReset.offset",
+                      "flex": "0 1 auto",
+                      "condition": {
+                          "functionBody": "return ['SUNRISE', 'SUNSET', 'DAWN', 'DUSK', 'GOLDEN_HOUR', 'NIGHT'].includes(model.accessories?.[arguments[1]]?.autoReset?.type);"
+                      }
+                    },
+                    {
+                      "key": "accessories[].autoReset.latitude",
+                      "flex": "0 1 auto",
+                      "condition": {
+                          "functionBody": "return ['SUNRISE', 'SUNSET', 'DAWN', 'DUSK', 'GOLDEN_HOUR', 'NIGHT'].includes(model.accessories?.[arguments[1]]?.autoReset?.type);"
+                      }
+                    },
+                    {
+                      "key": "accessories[].autoReset.longitude",
+                      "flex": "0 1 auto",
+                      "condition": {
+                          "functionBody": "return ['SUNRISE', 'SUNSET', 'DAWN', 'DUSK', 'GOLDEN_HOUR', 'NIGHT'].includes(model.accessories?.[arguments[1]]?.autoReset?.type);"
                       }
                     }
                   ]
                 },
                 {
-                  "type": "fieldset",
-                  "notitle": true,
+                  "key": "accessories[].autoReset.random",
                   "condition": {
-                    "functionBody": "return model.accessories?.[arguments[1]]?.timer?.delay;"
-                  },
-                  "items": [
-                    "accessories[].timer.random",
-                    {
-                      "key": "accessories[].fadeOut",
-                      "flex": "1 0 33%",
-                      "condition": {
-                        "functionBody": "return model.accessories?.[arguments[1]]?.defaultBrightness !== undefined && model.accessories?.[arguments[1]]?.defaultState !== 'on' && model.accessories?.[arguments[1]]?.timer?.delay !== undefined;"
-                      }
-                    },
-                    {
-                      "key": "accessories[].sensor.timerControlled",
-                      "condition": {
-                          "functionBody": "return model.accessories?.[arguments[1]]?.sensor?.type;"
-                      }
-                    }
-                  ]
+                      "functionBody": "const autoReset = model.accessories?.[arguments[1]]?.autoReset; return ['TIMEOUT', 'INTERVAL'].includes(autoReset?.type) && autoReset?.time;"
+                  }
                 }
               ]
             },

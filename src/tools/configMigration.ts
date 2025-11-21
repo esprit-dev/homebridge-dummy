@@ -8,7 +8,7 @@ import { strings } from '../i18n/i18n.js';
 
 import { LEGACY_ALIAS, PLATFORM_NAME } from '../homebridge/settings.js';
 
-import { AccessoryType, OnState, TimeUnits }  from '../model/enums.js';
+import { AccessoryType, OnState, ScheduleType, TimeUnits }  from '../model/enums.js';
 import { DummyConfig, DummyPlatformConfig, LegacyAccessoryConfig, LightbulbConfig, OnOffConfig } from '../model/types.js';
 
 function migrateAccessory(legacyConfig: LegacyAccessoryConfig): DummyConfig {
@@ -32,8 +32,9 @@ function migrateAccessory(legacyConfig: LegacyAccessoryConfig): DummyConfig {
   }
 
   if (!legacyConfig.stateful && legacyConfig.time) {
-    dummyConfig.timer = {
-      delay: legacyConfig.time,
+    dummyConfig.autoReset = {
+      type: ScheduleType.TIMEOUT,
+      time: legacyConfig.time,
       units: TimeUnits.MILLISECONDS,
       random: legacyConfig.random,
     };

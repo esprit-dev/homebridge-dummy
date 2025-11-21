@@ -33,7 +33,7 @@ export type Assertable = {
 
 export type ScheduleConfig = Assertable & {
   type: ScheduleType,
-  interval?: number,
+  time?: number,
   units?: TimeUnits,
   random?: boolean,
   cron?: string,
@@ -41,8 +41,15 @@ export type ScheduleConfig = Assertable & {
   offset?: number,
   latitude?: number,
   longitude?: number,
+  /**
+   * @deprecated
+   */
+  interval?: number
 }
 
+/**
+ * @deprecated
+ */
 export type TimerConfig = Assertable & {
   delay: number,
   units: TimeUnits,
@@ -83,20 +90,27 @@ export type DummyConfig = {
   type: AccessoryType,
   groupName?: string,
   sensor?: SensorType | SensorConfig,
-  timer?: TimerConfig,
   schedule?: ScheduleConfig,
+  autoReset?: ScheduleConfig,
   limiter?: LimiterConfig,
   conditions?: ConditionsConfig,
   resetOnRestart?: boolean,
   enableWebook?: boolean,
   disableLogging?: boolean,
+  /**
+   * @deprecated
+   */
+  timer?: TimerConfig,
 }
 
 export type OnOffConfig = DummyConfig & {
-  defaultOn?: CharacteristicValue, // Deprecated
   defaultState?: OnState,
   commandOn?: string,
   commandOff?: string,
+  /**
+   * @deprecated
+   */
+  defaultOn?: CharacteristicValue,
 }
 
 export type OutletConfig = OnOffConfig & {

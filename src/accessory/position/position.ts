@@ -133,9 +133,9 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
     this.setStoredProperty(this.stateStorageKey, this.position);
 
     if (this.position !== this.defaultPosition) {
-      this.startTimer();
+      this.onTriggered();
     } else {
-      this.cancelTimer();
+      this.onReset();
     }
 
     this.accessoryService.updateCharacteristic(this.targetCharacteristic, this.position);

@@ -2,9 +2,22 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-## 1.4.3 (2025-11-20)
+## 1.5.0-beta.0 (2025-11-21)
 
 ### ‼️ WARNING ‼️ — If upgrading from v0.9.2 or earlier, [READ THIS FIRST](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#v10-migration)
+
+### Added
+- Auto-Reset now supports the same options as Schedule — delay, interval, sun-based options, and cron
+    - ⚠️ This required significant under-the-hood changes, so please [open a ticket](https://github.com/mpatfield/homebridge-dummy/issues/new/choose) if you have issues
+
+### Changed
+- Deprecated `timer` in favor of `autoReset` (see above)
+    - This is backwards compatible so no manual json config edits are necessary
+
+### Notes
+Would you like to see Homebridge Dummy in your language? Please consider [getting involved](https://github.com/mpatfield/homebridge-dummy/issues/105). No coding experience required!
+
+## 1.4.3 (2025-11-20)
 
 ### Added
 - MAC Address support for [Reachability](https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#reachabilitypresence) conditions, useful for triggering events based on joining/leaving your local network
@@ -17,9 +30,6 @@ All notable changes to homebridge-dummy will be documented in this file.
 
 ### Changed
 - Triggering accessory via `Schedule` resets any `Auto-Reset Timer`
-
-### Notes
-Would you like to see Homebridge Dummy in your language? Please consider [getting involved](https://github.com/mpatfield/homebridge-dummy/issues/105). No coding experience required!
 
 ## 1.4.2 (2025-11-14)
 

@@ -2,8 +2,22 @@ const en = {
 
   accessory: {
     badValueType: '%s expected type %s but was %s', // accessory name, variable type, variable type
-    invalidCron: '%s has an invalid cron expression %s', // accessory name, cron string
     missingRequired: '%s is missing required field %s', // accessory name, variable name
+  },
+
+  autoReset: {
+    badType: '%s has invalid auto-reset type %s. Must be one of: %s', // accessory name, input, list of type names
+    badUnits: '%s auto-reset has invalid time units %s. Must be one of: %s', // accessory name, input, list of unit names
+    cancel: 'Cancelled auto-reset timer for %s', // accessory name
+    cron: '%s starting auto-reset cronjob', // accessory name
+    expired: '%s auto-reset timer expired while restarting. Returning to default state…', // accessory name
+    invalidCron: '%s auto-reset has an invalid cron expression %s', // accessory name, cron string
+    resume: '%s resuming auto-reset timer', // accessory name
+    sunTime: '%s will reset at %s', // accessory name, time
+    timeMilliseconds: '%s will reset in %s milliseconds', // accessory name, number
+    timeSeconds: '%s will reset in %s seconds', // accessory name, number
+    timeMinutes: '%s will reset in %s minutes', // accessory name, number
+    timeHours: '%s will reset in %s hours', // accessory name, number
   },
 
   command: {
@@ -75,12 +89,16 @@ const en = {
   schedule: {
     badType: '%s has invalid schedule type %s. Must be one of: %s', // accessory name, input, list of type names
     badUnits: '%s schedule has invalid time units %s. Must be one of: %s', // accessory name, input, list of unit names
+    cancel: 'Cancelled schedule timer for %s', // accessory name
     cron: '%s starting schedule cronjob', // accessory name
-    intervalMilliseconds: '%s will trigger in %s milliseconds', // accessory name, number
-    intervalSeconds: '%s will trigger in %s seconds', // accessory name, number
-    intervalMinutes: '%s will trigger in %s minutes', // accessory name, number
-    intervalHours: '% will trigger in %s hours', // accessory name, number
+    expired: '%s schedule timer expired while restarting. Setting to non-default state…', // accessory name
+    invalidCron: '%s schedule has an invalid cron expression %s', // accessory name, cron string
+    resume: '%s resuming schedule timer', // accessory name
     sunTime: '%s will trigger at %s', // accessory name, time
+    timeMilliseconds: '%s will trigger in %s milliseconds', // accessory name, number
+    timeSeconds: '%s will trigger in %s seconds', // accessory name, number
+    timeMinutes: '%s will trigger in %s minutes', // accessory name, number
+    timeHours: '% will trigger in %s hours', // accessory name, number
   },
 
   thermostat: {
@@ -95,28 +113,17 @@ const en = {
     unsupportedFunction: '%s is unsupported for thermostats', // function name
   },
 
-  timer: {
-    badUnits: '%s timer has invalid time units %s. Must be one of: %s', // accessory name, input, list of unit names
-    cancel: 'Cancelled the timer for %s', // accessory name
-    expired: '%s timer expired while restarting. Returning to default state…', // accessory name
-    resume: '%s resuming timer', // accessory name
-    setMilliseconds: '%s will reset in %s milliseconds', // accessory name, number
-    setSeconds: '%s will reset in %s seconds', // accessory name, number
-    setMinutes: '%s will reset in %s minutes', // accessory name, number
-    setHours: '%s will reset in %s hours', // accessory name, number
-  },
-
   config: {
 
     description: {
+      autoReset: 'Returns the accessory to its default value',
       commands: 'Execute arbitrary commands (e.g. curl) when the accessory changes state',
       cron: 'Visit crontab.guru for help',
       conditions: 'Set the accessory to its opposite (non-default) value when the specified conditions are met',
       fadeOut: 'Lightbulb will count down rather than abruptly going from 100% to off',
       limiter: 'Restrict the total time this accessory can be set to its non-default value, for each specified period',
       random: 'Time will be randomized with the above value as a maximum',
-      schedule: 'Set the accessory to its opposite (non-default) value at specified interval or times',
-      timer: 'Return the accessory to its default value after the specified delay',
+      schedule: 'Sets the accessory to its opposite (non-default) value',
       timerControlled: 'Instead of mirroring accessory, sensor will be activated when accessory auto-resets',
     },
 
@@ -144,7 +151,7 @@ const en = {
       hour: 'Hour',
       hourly: 'Hourly',
       hours: 'Hours',
-      interval: 'Interval',
+      interval: 'Repeating Interval',
       leakSensor: 'Leak',
       lightbulb: 'Lightbulb',
       lockMechanism: 'Lock',
@@ -173,6 +180,7 @@ const en = {
       sunrise: 'Sunrise',
       sunset: 'Sunset',
       switch: 'Switch',
+      timeout: 'After Delay',
       thermostat: 'Thermostat',
       unsecured: 'Unlocked',
       week: 'Week',
@@ -200,6 +208,7 @@ const en = {
     title: {
       accessory: 'Accessory',
       accessoryState: 'State',
+      autoReset: 'Auto-Reset',
       commandClose: 'Close Command',
       commandOff: 'Off Command',
       commandOn: 'On Command',
@@ -216,7 +225,6 @@ const en = {
       defaultPosition: 'Default Position',
       defaultState: 'Default State',
       defaultTemperature: 'Default Temperature',
-      delay: 'Delay',
       disableLogging: 'Disable Logging',
       enableWebook: 'Enable Webhook',
       fadeOut: 'Fade Out',
@@ -242,7 +250,7 @@ const en = {
       schedule: 'Schedule',
       sensor: 'Attach Sensor',
       temperatureUnits: 'Temperature Units',
-      timer: 'Auto-Reset Timer',
+      time: 'Time',
       timerControlled: 'Activate Sensor on Auto-Reset',
       type: 'Type',
       units: 'Units',

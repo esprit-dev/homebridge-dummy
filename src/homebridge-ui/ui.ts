@@ -325,6 +325,24 @@ async function migrateDeprecatedFields(configs: DummyPlatformConfig[]) {
         };
         changed = true;
       }
+
+      if (schedule?.interval !== undefined) {
+        schedule.time = schedule?.interval;
+        schedule.interval = undefined;
+        changed = true;
+      }
+
+      const timer = accessoryConfig.timer;
+      if (timer !== undefined) {
+        accessoryConfig.autoReset = {
+          type: ScheduleType.TIMEOUT,
+          time: timer.delay,
+          units: timer.units,
+          random: timer.random,
+        };
+        accessoryConfig.timer = undefined;
+        changed = true;
+      }
     });
   });
 

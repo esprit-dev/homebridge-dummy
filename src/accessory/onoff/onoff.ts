@@ -97,9 +97,9 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
     this.setStoredProperty(CharacteristicKey.On, this.on);
 
     if (this.on !== this.defaultState) {
-      this.startTimer();
+      this.onTriggered();
     } else {
-      this.cancelTimer();
+      this.onReset();
     }
 
     this.accessoryService.updateCharacteristic(this.Characteristic.On, this.on);

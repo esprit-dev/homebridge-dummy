@@ -99,14 +99,19 @@ Using the Homebridge Config UI is the easiest way to set up this plugin. However
             "name": "string",
             "type": "Door | GarageDoorOpener | Lightbulb | LockMechanism | Outlet | Switch | Thermostat | Window | WindowCovering",
             "groupName": "string",
-            "timer": {
-                "delay": number,
-                "units": "MILLISECONDS | SECONDS | MINUTES | HOURS",
-                "random": true | false
-            },
             "schedule": {
-                "type": "INTERVAL" | "CRON" | "SUNRISE" | "SUNSET" | "DAWN" | "DUSK" | "GOLDEN_HOUR" | "NIGHT",
-                "interval": number,
+                "type": "TIMEOUT" | "INTERVAL" | "CRON" | "SUNRISE" | "SUNSET" | "DAWN" | "DUSK" | "GOLDEN_HOUR" | "NIGHT",
+                "time": number,
+                "units": "MILLISECONDS | SECONDS | MINUTES | HOURS",
+                "random": true | false,
+                "cron": "string",
+                "offset": number,
+                "latitude": number,
+                "longitude": number
+            },
+            "autoReset": {
+                "type": "TIMEOUT" | "INTERVAL" | "CRON" | "SUNRISE" | "SUNSET" | "DAWN" | "DUSK" | "GOLDEN_HOUR" | "NIGHT",
+                "time": number,
                 "units": "MILLISECONDS | SECONDS | MINUTES | HOURS",
                 "random": true | false,
                 "cron": "string",
@@ -191,26 +196,33 @@ Valid values for `type` are:
 
 ⚠️ Adding/removing/changing the group name will require you to reconfigure any HomeKit scenes or automations
 
-### Timer
-Return the accessory to its default value after the specified delay
-
-- `timer.delay` — If defined, the switch will automatically toggle after this many milliseconds/seconds/minutes/hours
-- `timer.units` — The units to use for delay above (`MILLISECONDS`, `SECONDS`, `MINUTES`, or `HOURS`). *Required if delay is set.
-- `timer.random` — If true, the delay will be randomized with a maximum value of `timer.delay`
-
 ### Schedule
-Set the accessory to its opposite (non-default) value at specified interval or times
+Set the accessory to its opposite (non-default) value at specific times
 
-- `schedule.type` — One of `INTERVAL`, `CRON`, `SUNRISE`, `SUNSET`, `DAWN`, `DUSK`, `GOLDEN_HOUR`, `NIGHT`
-- `schedule.interval` — Trigger the accessory after this many milliseconds/seconds/minutes/hours. *Required if `schedule.type` = `INTERVAL`
-- `schedule.units` — The units to use for the interval (`MILLISECONDS`, `SECONDS`, `MINUTES`, or `HOURS`) *Required if `schedule.type` = `INTERVAL`
-- `schedule.random` — If true, the interval will be randomized with a maximum value of `schedule.interval`
+- `schedule.type` — One of `TIMEOUT`, `INTERVAL`, `CRON`, `SUNRISE`, `SUNSET`, `DAWN`, `DUSK`, `GOLDEN_HOUR`, `NIGHT`
+- `schedule.time` — Trigger the accessory after this many milliseconds/seconds/minutes/hours. *Required if `schedule.type` = `TIMEOUT` | `INTERVAL`
+- `schedule.units` — The units to use for the time (`MILLISECONDS`, `SECONDS`, `MINUTES`, or `HOURS`) *Required if `schedule.type` = `TIMEOUT` | `INTERVAL`
+- `schedule.random` — If true, the time will be randomized with a maximum value of `schedule.time`
 - `schedule.cron` — One of `@secondly`, `@minutely`, `@hourly`, `@daily`, `@weekly`, `@weekdays`, `@weekends`, `@monthly`, `@yearly`, or `CUSTOM_CRON`. *Required if `schedule.type` = `CRON`
 - `schedule.cronCustom` - Custom cron string for triggering the accessory. *Required if `schedule.cron` = `CUSTOM_CRON`
     - See [crontab.guru](http://crontab.guru) for help
 - `schedule.offset` - Add or subtract this value from the caluclated sun position for `SUNRISE`, `SUNSET`, etc.
 - `schedule.latitude` - Latitude used to calculate sun position *Required if `schedule.type` is `SUNRISE`, `SUNSET`, etc.
 - `schedule.longitude` - Longitude used to calculate sun position *Required if `schedule.type` is `SUNRISE`, `SUNSET`, etc.
+
+### Auto-Reset
+Return the accessory to its default value at specific times
+
+- `autoReset.type` — One of `TIMEOUT`, `INTERVAL`, `CRON`, `SUNRISE`, `SUNSET`, `DAWN`, `DUSK`, `GOLDEN_HOUR`, `NIGHT`
+- `autoReset.time` — Trigger the accessory after this many milliseconds/seconds/minutes/hours. *Required if `autoReset.type` = `TIMEOUT` | `INTERVAL`
+- `autoReset.units` — The units to use for the time (`MILLISECONDS`, `SECONDS`, `MINUTES`, or `HOURS`) *Required if `autoReset.type` = `TIMEOUT` | `INTERVAL`
+- `autoReset.random` — If true, the time will be randomized with a maximum value of `autoReset.time`
+- `autoReset.cron` — One of `@secondly`, `@minutely`, `@hourly`, `@daily`, `@weekly`, `@weekdays`, `@weekends`, `@monthly`, `@yearly`, or `CUSTOM_CRON`. *Required if `autoReset.type` = `CRON`
+- `autoReset.cronCustom` - Custom cron string for triggering the accessory. *Required if `autoReset.cron` = `CUSTOM_CRON`
+    - See [crontab.guru](http://crontab.guru) for help
+- `autoReset.offset` - Add or subtract this value from the caluclated sun position for `SUNRISE`, `SUNSET`, etc.
+- `autoReset.latitude` - Latitude used to calculate sun position *Required if `autoReset.type` is `SUNRISE`, `SUNSET`, etc.
+- `autoReset.longitude` - Longitude used to calculate sun position *Required if `autoReset.type` is `SUNRISE`, `SUNSET`, etc.
 
 ### Limiter
 Restrict the total time this accessory can be set to its non-default value, for each specified period
@@ -223,7 +235,7 @@ Restrict the total time this accessory can be set to its non-default value, for 
 
 ### Sensor
 - `sensor.type` - Optionally attach a sensor that mirrors the state of the parent accessory
-- `sensor.timerControlled` - If true, sensor will be activated if accessory is reset by timer but not if it is reset manually
+- `sensor.timerControlled` - If true, sensor will be activated if accessory is reset automatically but not if it is reset manually
 
 Valid values for sensor are:
 - `CarbonDioxideSensor`
@@ -274,7 +286,7 @@ The easiest way to find all available variables is to create a switch that runs 
 - `temperatureUnits` - Units to use for thermostats, either 'C' or 'F'
 - `defaultState` — Initial value, either "on" or "off"
 - `defaultBrightness` — If set, lightbulb will have additional dimmer settings with this default brightness percentage
-- `fadeOut` - Fade smoothly instead of abruptly from 100% to off. Requires `defaultBrightness` and `timer` to be defined.
+- `fadeOut` - Fade smoothly instead of abruptly from 100% to off. Requires `defaultBrightness` and `autoReset` to be defined.
 - `defaultLockState` - The initial value for the lock, "locked" or "unlocked"
 - `defaultPosition` — Initial position for the door/garage/window/blinds, "open" or "closed"
 - `defaultThermostatState` - The initial state for the thermostat, "auto", "heat", "cool", or "off"
@@ -296,7 +308,7 @@ You can trigger an accessory whenever a set of conditions are satisfied. There a
 
 ### Accessory Triggers
 
-You can trigger an accessory when one more more other Homebridge Dummy accessories change state using the `ACCESSORY` operand type. Accessories will immediately return to their default setting as soon as the conditions are no longer satisfied unless an accessory also has an auto-reset timer.
+You can trigger an accessory when one more more other Homebridge Dummy accessories change state using the `ACCESSORY` operand type. Accessories will immediately return to their default setting as soon as the conditions are no longer satisfied unless an accessory also has `autoReset` defined.
 
 Note that due to limitations of HomeKit and Homebridge, it is only possible to check the states of other Homebridge Dummy accessories. One workaround for non-Dummy accessories is to set up duplicate accessories in Homebridge Dummy and use Automation to mirror the states. For example, if I have a physical door lock I want to "watch", then I can setup a `LockMechanism` accessory in Homebridge Dummy and create two automations to change the state of my dummy lock whenever the physical door lock is unlocked or locked.
 
@@ -331,15 +343,16 @@ This can be particularly useful for triggering events based on joining or leavin
 
 If you want to use this for "arriving" or "leaving" a location, it is not recommended to use a single presence accessory for both. This is because a device such as a phone can connect and disconnect frequently from the network when the screen is off, so the switch will toggle back and forth.
 
-Instead, it's recommended to choose one and use an auto-reset timer.
+Instead, it's recommended to choose one and use `autoReset`.
 
 ```json
 {
     "id": "a52da73e-f854-4a57-b90d-6ba14d8f1d72",
     "name": "Home",
     "type": "Switch",
-    "timer": {
-        "delay": 10,
+    "autoReset": {
+        "type": "TIMEOUT",
+        "time": 10,
         "units": "MINUTES",
         "random": false
     },

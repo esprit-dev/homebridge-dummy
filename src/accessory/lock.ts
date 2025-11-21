@@ -99,9 +99,9 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
     this.setStoredProperty(CharacteristicKey.LockTargetState, this.state);
 
     if (this.state !== this.defaultLockState) {
-      this.startTimer();
+      this.onTriggered();
     } else {
-      this.cancelTimer();
+      this.onReset();
     }
 
     this.accessoryService.updateCharacteristic(this.Characteristic.LockTargetState, this.state);

@@ -134,6 +134,7 @@ export function isValidTimeUnits(input: TimeUnits): boolean {
 }
 
 export enum ScheduleType {
+  TIMEOUT = 'TIMEOUT',
   INTERVAL = 'INTERVAL',
   CRON = 'CRON',
   DAWN = 'DAWN',
