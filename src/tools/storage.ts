@@ -62,14 +62,23 @@ export class Storage {
   }
 }
 
+/**
+ * @deprecated
+ */
 export async function storageGet_Deprecated(key: string): Promise<Storable | undefined> {
   return Storage_Deprecated.get(key) ?? await storage.get(key);
 }
 
+/**
+ * @deprecated
+ */
 export class Storage_Deprecated {
 
   private static readonly bucket = new Map<string, Storable>();
 
+  /**
+   * @deprecated
+   */
   static async init() {
     const bucketJson = await storage.get('Storage.bucket');
     if (bucketJson === undefined) {
@@ -86,6 +95,9 @@ export class Storage_Deprecated {
     }
   }
 
+  /**
+   * @deprecated
+   */
   public static get(key: string): Storable | undefined {
     return Storage_Deprecated.bucket.get(key);
   }
