@@ -2,9 +2,20 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-## 1.5.0 (2025-11-21)
+## 1.5.1 (2025-11-21)
 
 ### ‼️ WARNING ‼️ — If upgrading from v0.9.2 or earlier, [READ THIS FIRST](https://github.com/mpatfield/homebridge-dummy/wiki/Migration)
+
+-----
+
+### Changed
+- Streamline v0.9.2 -> v1.5.1 migration flow
+- Updated dependencies
+
+### Notes
+Would you like to see Homebridge Dummy in your language? Please consider [getting involved](https://github.com/mpatfield/homebridge-dummy/issues/105). No coding experience required!
+
+## 1.5.0 (2025-11-21)
 
 ### Added
 - Auto-Reset now supports the same options as Schedule — delay, interval, sun-based options, and cron
@@ -13,9 +24,6 @@ All notable changes to homebridge-dummy will be documented in this file.
 ### Changed
 - Deprecated `timer` in favor of `autoReset` (see above)
     - This is backwards compatible, so no manual JSON config edits are necessary
-
-### Notes
-Would you like to see Homebridge Dummy in your language? Please consider [getting involved](https://github.com/mpatfield/homebridge-dummy/issues/105). No coding experience required!
 
 ## 1.4.3 (2025-11-20)
 

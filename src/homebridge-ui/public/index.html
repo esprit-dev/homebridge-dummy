@@ -20,8 +20,8 @@
 </div>
 
 <div id="intro" class="text-center" style="display: none;">
-  <p class="lead" i18n="thankYou" i18n_replace="dummy"></p></br>
-  <p class="lead" i18n="migrate"></p></br>
+  <p class="lead" i18n="thankYou" i18n_replace="dummy"></p>
+  <p class="lead" i18n="migrating"></p>
   <button type="button" class="btn btn-secondary" id="showSettings" i18n="no"></button>&nbsp;&nbsp;
   <button type="button" class="btn btn-secondary" id="showMigration" i18n="yes"></button>
 </div>
@@ -29,18 +29,15 @@
 <div id="migration" class="text-center" style="display: none;">
   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Achtung.svg/330px-Achtung.svg.png" width="100px"/>
   </br></br>
-  <h5><p class="text-danger" i18n="migrationDetails1" i18n_replace="dummy"></p></h5>
-  <p class="lead" i18n="migrationDetails2"></p>
+  <h1><p class="text-danger" i18n="migrationInstructions1" i18n_replace="dummy"></p></h1>
+  <h1><a href="https://github.com/mpatfield/homebridge-dummy/wiki/Migration"><p i18n="migrationInstructions2"></p></a></h1>
   <hr/>
   <br/>
-  <p class="lead" i18n="migrationDetails3" i18n_replace="dummy"></p>
+  <p class="lead" i18n="migrationInstructions3"></p>
+  <p class="lead" i18n="migrationInstructions4"></p>
   <br/>
-  <p class="lead" i18n="migrationDetails4"></p>
-  <br/>
-  <button type="button" class="btn btn-secondary" id="skipMigration" i18n="no"></button>&nbsp;&nbsp;
-  <button type="button" class="btn btn-secondary" id="doMigration" i18n="yes"></button>
-  </br></br></br>
-  <em><p i18n="migrationDetails5" i18n_replace="migration"></p></em></br>
+  <button type="button" class="btn btn-secondary" id="doMigration" i18n="automatically"></button>&nbsp;&nbsp;
+  <button type="button" class="btn btn-secondary" id="skipMigration" i18n="manually"></button>
 </div>
 
 <script src="ui.js?v=__VERSION__"></script>
