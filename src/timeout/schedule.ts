@@ -104,6 +104,7 @@ export class Schedule extends Timeout {
 
     const storedTimestamp = Storage.get(dependency.identifier, timeoutKey) ?? Storage.get(dependency.identifier, 'Timer');
     this.timeoutExpiration = storedTimestamp as number;
+    Storage.set(dependency.identifier, 'Timer', undefined);
 
     switch(this.config.type) {
     case ScheduleType.TIMEOUT:
@@ -179,6 +180,8 @@ export class Schedule extends Timeout {
     if (this.timeoutExpiration !== undefined) {
 
       const timeRemaining = this.timeoutExpiration - Date.now();
+      this.timeoutExpiration = undefined;
+
       if (timeRemaining > 0) {
         this.logIfDesired(this.strings.resume);
         return timeRemaining;
