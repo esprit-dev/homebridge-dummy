@@ -83,6 +83,8 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
     if (this.on !== value) {
       this.logIfDesired(this.logMessageForOnState(value));
 
+      this.setStoredProperty(CharacteristicKey.On, value);
+
       if (!syncOnly) {
         if (this.config.commandOn && value) {
           this.executeCommand(this.config.commandOn);
@@ -93,8 +95,6 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
     }
 
     this.on = value;
-
-    this.setStoredProperty(CharacteristicKey.On, this.on);
 
     if (this.on !== this.defaultState) {
       this.onTriggered();

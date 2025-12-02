@@ -166,10 +166,6 @@ export abstract class DummyAccessory<C extends DummyConfig> {
   }
 
   protected setStoredProperty(key: CharacteristicKey, value: CharacteristicValue) {
-    if (!this.isStateful) {
-      return;
-    }
-
     Storage.set(this.identifier, key, value);
   }
 

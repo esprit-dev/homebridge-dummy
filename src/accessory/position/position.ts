@@ -119,6 +119,8 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
     if (this.position !== targetPosition) {
       this.logPosition(targetPosition);
 
+      this.setStoredProperty(this.stateStorageKey, targetPosition);
+
       if (!syncOnly) {
         if (this.config.commandOpen && targetPosition !== this.positionClosed) {
           this.executeCommand(this.config.commandOpen);
@@ -129,8 +131,6 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
     }
 
     this.position = targetPosition;
-
-    this.setStoredProperty(this.stateStorageKey, this.position);
 
     if (this.position !== this.defaultPosition) {
       this.onTriggered();

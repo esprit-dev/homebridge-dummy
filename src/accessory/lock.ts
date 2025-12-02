@@ -85,6 +85,8 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
     if (this.state !== value) {
       this.logLockState(value);
 
+      this.setStoredProperty(CharacteristicKey.LockTargetState, value);
+
       if (!syncOnly) {
         if (this.config.commandLock && value === this.Characteristic.LockTargetState.SECURED) {
           this.executeCommand(this.config.commandLock);
@@ -95,8 +97,6 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
     }
 
     this.state = value;
-
-    this.setStoredProperty(CharacteristicKey.LockTargetState, this.state);
 
     if (this.state !== this.defaultLockState) {
       this.onTriggered();

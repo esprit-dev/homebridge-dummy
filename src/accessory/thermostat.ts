@@ -182,6 +182,8 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
     if (this.targetState !== value) {
       this.logState(value);
 
+      this.setStoredProperty(CharacteristicKey.TargetHeatingCoolingState, value);
+
       if (!syncOnly) {
         if (this.config.commandOff && value === this.STATE_OFF) {
           this.executeCommand(this.config.commandOff);
@@ -192,8 +194,6 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
     }
 
     this.targetState = value;
-
-    this.setStoredProperty(CharacteristicKey.TargetHeatingCoolingState, this.targetState);
 
     this.accessoryService.updateCharacteristic(this.Characteristic.TargetHeatingCoolingState, this.targetState);
 
@@ -210,6 +210,8 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
     if (this.temperature !== value) {
       this.logTemperature(value);
 
+      this.setStoredProperty(CharacteristicKey.TargetTemperature, value);
+
       if (!syncOnly) {
         if (this.config.commandTemperature) {
           this.executeCommand(this.config.commandTemperature);
@@ -218,8 +220,6 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
     }
 
     this.temperature = value;
-
-    this.setStoredProperty(CharacteristicKey.TargetTemperature, this.temperature);
 
     this.accessoryService.updateCharacteristic(this.Characteristic.TargetTemperature, this.temperature);
     this.accessoryService.updateCharacteristic(this.Characteristic.CurrentTemperature, this.temperature);
