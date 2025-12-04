@@ -7,6 +7,7 @@ import { LockAccessory } from './lock.js';
 import { OutletAccessory } from './onoff/outlet.js';
 import { SwitchAccessory } from './onoff/switch.js';
 import { ThermostatAccessory } from './thermostat.js';
+import { ValveAccessory } from './valve.js';
 import { WindowAccessory } from './position/window.js';
 
 import { strings } from '../i18n/i18n.js';
@@ -31,6 +32,8 @@ export function createDummyAccessory(dependency: DummyAccessoryDependency<DummyC
     return new SwitchAccessory(dependency);
   case AccessoryType.Thermostat:
     return new ThermostatAccessory(dependency);
+  case AccessoryType.Valve:
+    return new ValveAccessory(dependency);
   case AccessoryType.Window:
     return new WindowAccessory(dependency);
   case AccessoryType.WindowCovering:

@@ -2,20 +2,21 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-## 1.5.3-beta.0 (2025-12-02)
+## 1.5.3-beta.1 (2025-12-02)
 
 ### ‼️ WARNING ‼️ — If upgrading from v0.9.2 or earlier, [READ THIS FIRST](https://github.com/mpatfield/homebridge-dummy/wiki/Migration).
 *There is now an [option](https://github.com/mpatfield/homebridge-dummy/wiki/Migration#migrating-gradually) to run both old and new versions of Homebridge Dummy in parallel if you want to migrate gradually*
 
 -----
 
+### Added
+- `Valve` accessory type
+
 ### Fixed
 - Stale stored properties in commands ([#277](https://github.com/mpatfield/homebridge-dummy/issues/277)) — Thanks for the report, [@1wmatrejek](https://github.com/sponsors/1wmatrejek)!
 
 ### Notes
 Would you like to see Homebridge Dummy in your language? Please consider [getting involved](https://github.com/mpatfield/homebridge-dummy/issues/105). No coding experience required!
-
-#277
 
 ## 1.5.2 (2025-11-28)
 

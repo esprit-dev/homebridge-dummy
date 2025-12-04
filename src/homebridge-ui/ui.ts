@@ -261,6 +261,7 @@ async function updateConditionDropdowns(strings: Translation, configs?: DummyPla
       case AccessoryType.Lightbulb:
       case AccessoryType.Outlet:
       case AccessoryType.Switch:
+      case AccessoryType.Valve:
         onOption.hidden = false;
         offOption.hidden = false;
         if (stateSelect.selectedIndex !== 1 && stateSelect.selectedIndex !== 2) {

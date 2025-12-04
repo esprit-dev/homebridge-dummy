@@ -113,6 +113,10 @@ const en = {
     unsupportedFunction: '%s is unsupported for thermostats', // function name
   },
 
+  valve: {
+    badType: '%s has invalid valve type %s. Must be one of: %s', // accessory name, input, list of type names
+  },
+
   config: {
 
     automatically: 'Automatically',
@@ -147,13 +151,16 @@ const en = {
       door: 'Door',
       dusk: 'Dusk',
       fahrenheit: '°F',
+      faucet: 'Faucet',
       garageDoorOpener: 'Garage Door',
+      generic: 'Generic',
       goldenHour: 'Golden Hour',
       heat: 'Heat',
       hour: 'Hour',
       hourly: 'Hourly',
       hours: 'Hours',
       interval: 'Repeating Interval',
+      irrigation: 'Irrigation',
       leakSensor: 'Leak',
       lightbulb: 'Lightbulb',
       lockMechanism: 'Lock',
@@ -178,6 +185,7 @@ const en = {
       secondly: 'Every Second',
       seconds: 'Seconds',
       secured: 'Locked',
+      shower: 'Shower',
       smokeSensor: 'Smoke',
       sunrise: 'Sunrise',
       sunset: 'Sunset',
@@ -185,6 +193,7 @@ const en = {
       timeout: 'After Delay',
       thermostat: 'Thermostat',
       unsecured: 'Unlocked',
+      valve: 'Valve',
       week: 'Week',
       weekdays: 'Weekdays',
       weekends: 'Weekends',
@@ -256,6 +265,7 @@ const en = {
       timerControlled: 'Activate Sensor on Auto-Reset',
       type: 'Type',
       units: 'Units',
+      valveType: 'Valve Type',
     },
   },
 

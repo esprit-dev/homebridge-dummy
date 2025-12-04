@@ -6,6 +6,7 @@ export enum AccessoryType {
   Outlet = 'Outlet',
   Switch = 'Switch',
   Thermostat = 'Thermostat',
+  Valve = 'Valve',
   Window = 'Window',
   WindowCovering = 'WindowCovering'
 }
@@ -152,6 +153,17 @@ export enum TemperatureUnits {
 
 export function isValidTemperatureUnits(input?: TemperatureUnits): boolean {
   return input === undefined || Object.values(TemperatureUnits).includes(input);
+}
+
+export enum ValveType {
+  FAUCET = 'faucet',
+  GENERIC = 'generic',
+  IRRIGATION = 'irrigation',
+  SHOWER = 'shower',
+}
+
+export function isValidValveType(input?: ValveType): boolean {
+  return input === undefined || Object.values(ValveType).includes(input);
 }
 
 export function printableValues<T>(o: { [s: string]: T; } | ArrayLike<T>): string {

@@ -329,8 +329,8 @@
             "type": {
               "type": "string",
               "title": "${config.title.type}",
-              "enum": ["Door", "GarageDoorOpener", "Lightbulb", "LockMechanism", "Outlet", "Switch", "Thermostat", "Window", "WindowCovering"],
-              "enumNames": ["${config.enumNames.door}", "${config.enumNames.garageDoorOpener}", "${config.enumNames.lightbulb}", "${config.enumNames.lockMechanism}", "${config.enumNames.outlet}", "${config.enumNames.switch}", "${config.enumNames.thermostat}", "${config.enumNames.window}", "${config.enumNames.windowCovering}"]
+              "enum": ["Door", "GarageDoorOpener", "Lightbulb", "LockMechanism", "Outlet", "Switch", "Thermostat", "Valve", "Window", "WindowCovering"],
+              "enumNames": ["${config.enumNames.door}", "${config.enumNames.garageDoorOpener}", "${config.enumNames.lightbulb}", "${config.enumNames.lockMechanism}", "${config.enumNames.outlet}", "${config.enumNames.switch}", "${config.enumNames.thermostat}", "${config.enumNames.valve}", "${config.enumNames.window}", "${config.enumNames.windowCovering}"]
             },
             "groupName": {
               "type": "string",
@@ -393,6 +393,12 @@
             "maximumTemperature": {
               "type": "number",
               "title": "${config.title.maximumTemperature}"
+            },
+            "valveType": {
+              "type": "string",
+              "title": "${config.title.valveType}",
+              "enum": ["generic", "faucet", "irrigation", "shower"],
+              "enumNames": ["${config.enumNames.generic}", "${config.enumNames.faucet}", "${config.enumNames.irrigation}", "${config.enumNames.shower}"]
             },
             "commandOn": {
               "type": "string",
@@ -561,7 +567,7 @@
                     }
                   ]
                 },
-                                {
+                {
                   "type": "div",
                   "displayFlex": true,
                   "flex-direction": "row",
@@ -579,6 +585,24 @@
                     },
                     {
                       "key": "accessories[].maximumTemperature",
+                      "flex": "0 0 33%"
+                    }
+                  ]
+                },
+                {
+                  "type": "div",
+                  "displayFlex": true,
+                  "flex-direction": "row",
+                  "condition": {
+                    "functionBody": "return ['Valve'].includes(model.accessories?.[arguments[1]]?.type);"
+                  },
+                  "items": [
+                    {
+                      "key": "accessories[].defaultState",
+                      "flex": "0 0 33%"
+                    },
+                    {
+                      "key": "accessories[].valveType",
                       "flex": "0 0 33%"
                     }
                   ]
@@ -897,13 +921,13 @@
                 {
                   "key": "accessories[].commandOn",
                   "condition": {
-                    "functionBody": "return ['Lightbulb','Outlet','Switch','Thermostat'].includes(model.accessories?.[arguments[1]]?.type);"
+                    "functionBody": "return ['Lightbulb','Outlet','Switch','Thermostat','Valve'].includes(model.accessories?.[arguments[1]]?.type);"
                   }
                 },
                 {
                   "key": "accessories[].commandOff",
                   "condition": {
-                    "functionBody": "return ['Lightbulb','Outlet','Switch','Thermostat'].includes(model.accessories?.[arguments[1]]?.type);"
+                    "functionBody": "return ['Lightbulb','Outlet','Switch','Thermostat','Valve'].includes(model.accessories?.[arguments[1]]?.type);"
                   }
                 },
                 {
