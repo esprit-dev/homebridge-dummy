@@ -2,7 +2,7 @@ import { PositionAccessory } from './position.js';
 
 import { DummyAccessoryDependency } from '../base.js';
 
-import { AccessoryType, CharacteristicKey, WebhookCharacteristic } from '../../model/enums.js';
+import { AccessoryType, CharacteristicKey } from '../../model/enums.js';
 import { GarageDoorConfig } from '../../model/types.js';
 
 export class GarageDoorAccessory extends PositionAccessory<GarageDoorConfig> {
@@ -43,6 +43,6 @@ export class GarageDoorAccessory extends PositionAccessory<GarageDoorConfig> {
   }
 
   override get webhookCommand() {
-    return WebhookCharacteristic.TargetDoorState;
+    return CharacteristicKey.TargetDoorState;
   }
 }

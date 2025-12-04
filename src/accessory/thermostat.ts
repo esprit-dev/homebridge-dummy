@@ -6,7 +6,7 @@ import { strings } from '../i18n/i18n.js';
 
 import {
   AccessoryType, CharacteristicKey, DefaultThermostatState, isValidTemperatureUnits, isValidThermostatState,
-  printableValues, TemperatureUnits, WebhookCharacteristic }  from '../model/enums.js';
+  printableValues, TemperatureUnits }  from '../model/enums.js';
 import { ThermostatConfig } from '../model/types.js';
 import { Range, Values, Webhook } from '../model/webhook.js';
 
@@ -116,7 +116,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
 
     return [
 
-      new Webhook(this.identifier, WebhookCharacteristic.TargetHeatingCoolingState,
+      new Webhook(this.identifier, CharacteristicKey.TargetHeatingCoolingState,
         new Values(
           [
             this.Characteristic.TargetHeatingCoolingState.OFF,
@@ -132,7 +132,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
           return this.stateLogTemplateForCV(value).replace('%s', this.name);
         }),
 
-      new Webhook(this.identifier, WebhookCharacteristic.TargetTemperature,
+      new Webhook(this.identifier, CharacteristicKey.TargetTemperature,
         new Range(fromCelsius(this.minTemp, this.units), fromCelsius(this.maxTemp, this.units)),
         () => this.temperature,
         (value, syncOnly) => {

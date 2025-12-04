@@ -4,7 +4,7 @@ import { DummyAccessory, DummyAccessoryDependency } from '../base.js';
 
 import { strings } from '../../i18n/i18n.js';
 
-import { CharacteristicKey, isValidOnState, OnState, printableValues, WebhookCharacteristic } from '../../model/enums.js';
+import { CharacteristicKey, isValidOnState, OnState, printableValues } from '../../model/enums.js';
 import { OnOffConfig } from '../../model/types.js';
 import { Values, Webhook } from '../../model/webhook.js';
 
@@ -32,7 +32,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
 
   override get webhooks(): Webhook[] {
     return [
-      new Webhook(this.identifier, WebhookCharacteristic.On,
+      new Webhook(this.identifier, CharacteristicKey.On,
         new Values( [true, false], 'true, false'),
         () => this.on,
         (value, syncOnly) => {

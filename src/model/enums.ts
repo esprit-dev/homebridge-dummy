@@ -154,16 +154,6 @@ export function isValidTemperatureUnits(input?: TemperatureUnits): boolean {
   return input === undefined || Object.values(TemperatureUnits).includes(input);
 }
 
-export enum WebhookCharacteristic {
-  Brightness = 'Brightness',
-  LockTargetState = 'LockTargetState',
-  On = 'On',
-  TargetDoorState = 'TargetDoorState',
-  TargetHeatingCoolingState = 'TargetHeatingCoolingState',
-  TargetPosition = 'TargetPosition',
-  TargetTemperature = 'TargetTemperature',
-}
-
 export function printableValues<T>(o: { [s: string]: T; } | ArrayLike<T>): string {
   return Object.values(o).map(value => `'${value}'`).join(', ');
 }
