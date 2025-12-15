@@ -102,9 +102,6 @@ const en = {
   },
 
   temperature: {
-    badUnits: '%s has invalid temperature units %s. Must be one of: %s', // accessory name, input, list of unit names
-    temperatureC: '%s set to %d°C', // accessory name, number
-    temperatureF: '%s set to %d°F', // accessory name, number
     unsupportedFunction: '%s is unsupported for temperature sensors', // function name
   },
 
@@ -275,6 +272,7 @@ const en = {
 
   sensor: {
 
+    badTemperatureUnits: '%s has invalid temperature units %s. Must be one of: %s', // accessory name, input, list of unit names
     badType: '%s has invalid sensor type %s. Must be one of: %s', // accessory name, input, list of type names
 
     carbonDioxide: {
@@ -311,6 +309,9 @@ const en = {
       active: '%s detected smoke', // accessory name
       inactive: '%s stopped detecting smoke', // accessory name
     },
+
+    temperatureC: '%s set to %d°C', // accessory name, number
+    temperatureF: '%s set to %d°F', // accessory name, number
   },
 
   startup: {
