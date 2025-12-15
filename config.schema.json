@@ -329,8 +329,8 @@
             "type": {
               "type": "string",
               "title": "${config.title.type}",
-              "enum": ["Door", "GarageDoorOpener", "Lightbulb", "LockMechanism", "Outlet", "Switch", "Thermostat", "Valve", "Window", "WindowCovering"],
-              "enumNames": ["${config.enumNames.door}", "${config.enumNames.garageDoorOpener}", "${config.enumNames.lightbulb}", "${config.enumNames.lockMechanism}", "${config.enumNames.outlet}", "${config.enumNames.switch}", "${config.enumNames.thermostat}", "${config.enumNames.valve}", "${config.enumNames.window}", "${config.enumNames.windowCovering}"]
+              "enum": ["Door", "GarageDoorOpener", "HumiditySensor", "Lightbulb", "LockMechanism", "Outlet", "Switch", "TemperatureSensor", "Thermostat", "Valve", "Window", "WindowCovering"],
+              "enumNames": ["${config.enumNames.door}", "${config.enumNames.garageDoorOpener}", "${config.enumNames.humiditySensor}", "${config.enumNames.lightbulb}", "${config.enumNames.lockMechanism}", "${config.enumNames.outlet}", "${config.enumNames.switch}", "${config.enumNames.temperatureSensor}", "${config.enumNames.thermostat}", "${config.enumNames.valve}", "${config.enumNames.window}", "${config.enumNames.windowCovering}"]
             },
             "groupName": {
               "type": "string",
@@ -423,6 +423,10 @@
             "commandClose": {
               "type": "string",
               "title": "${config.title.commandClose}"
+            },
+            "commandHumidity": {
+              "type": "string",
+              "title": "${config.title.commandHumidity}"
             },
             "commandTemperature": {
               "type": "string",
@@ -553,17 +557,20 @@
                   "type": "div",
                   "displayFlex": true,
                   "flex-direction": "row",
-                  "condition": {
-                    "functionBody": "return ['Thermostat'].includes(model.accessories?.[arguments[1]]?.type);"
-                  },
                   "items": [
                     {
-                      "key": "accessories[].defaultThermostatState",
-                      "flex": "0 0 33%"
+                      "key": "accessories[].temperatureUnits",
+                      "flex": "0 0 33%",
+                      "condition": {
+                        "functionBody": "return ['TemperatureSensor','Thermostat'].includes(model.accessories?.[arguments[1]]?.type);"
+                      }
                     },
                     {
-                      "key": "accessories[].temperatureUnits",
-                      "flex": "0 0 33%"
+                      "key": "accessories[].defaultThermostatState",
+                      "flex": "0 0 33%",
+                      "condition": {
+                        "functionBody": "return ['Thermostat'].includes(model.accessories?.[arguments[1]]?.type);"
+                      }
                     }
                   ]
                 },
@@ -636,7 +643,7 @@
               "title": "${config.title.schedule}",
               "description": "${config.description.schedule}",
               "condition": {
-                "functionBody": "const type = model.accessories?.[arguments[1]]?.type; return type && type !== 'Thermostat';"
+                "functionBody": "const type = model.accessories?.[arguments[1]]?.type; return type && !['HumiditySensor','TemperatureSensor','Thermostat'].includes(type);"
               },
               "items": [
                 {
@@ -712,7 +719,7 @@
               "title": "${config.title.autoReset}",
               "description": "${config.description.autoReset}",
               "condition": {
-                "functionBody": "const type = model.accessories?.[arguments[1]]?.type; return type && type !== 'Thermostat';"
+                "functionBody": "const type = model.accessories?.[arguments[1]]?.type; return type && !['HumiditySensor','TemperatureSensor','Thermostat'].includes(type);"
               },
               "items": [
                 {
@@ -788,7 +795,7 @@
               "title": "${config.title.limiter}",
               "description": "${config.description.limiter}",
               "condition": {
-                "functionBody": "const type = model.accessories?.[arguments[1]]?.type; return type && type !== 'Thermostat';"
+                "functionBody": "const type = model.accessories?.[arguments[1]]?.type; return type && !['HumiditySensor','TemperatureSensor','Thermostat'].includes(type);"
               },
               "items": [
                 {
@@ -823,7 +830,7 @@
               "title": "${config.title.conditions}",
               "description": "${config.description.conditions}",
               "condition": {
-                "functionBody": "const type = model.accessories?.[arguments[1]]?.type; return type && type !== 'Thermostat'"
+                "functionBody": "const type = model.accessories?.[arguments[1]]?.type; return type && !['HumiditySensor','TemperatureSensor','Thermostat'].includes(type)"
               },
               "items": [
                 {
@@ -955,9 +962,15 @@
                   }
                 },
                 {
+                  "key": "accessories[].commandHumidity",
+                  "condition": {
+                    "functionBody": "return ['HumiditySensor'].includes(model.accessories?.[arguments[1]]?.type);"
+                  }
+                },
+                {
                   "key": "accessories[].commandTemperature",
                   "condition": {
-                    "functionBody": "return ['Thermostat'].includes(model.accessories?.[arguments[1]]?.type);"
+                    "functionBody": "return ['TemperatureSensor','Thermostat'].includes(model.accessories?.[arguments[1]]?.type);"
                   }
                 }
               ]

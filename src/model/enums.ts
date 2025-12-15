@@ -1,10 +1,12 @@
 export enum AccessoryType {
   Door = 'Door',
   GarageDoorOpener = 'GarageDoorOpener',
+  HumiditySensor = 'HumiditySensor',
   Lightbulb = 'Lightbulb',
   LockMechanism = 'LockMechanism',
   Outlet = 'Outlet',
   Switch = 'Switch',
+  TemperatureSensor = 'TemperatureSensor',
   Thermostat = 'Thermostat',
   Valve = 'Valve',
   Window = 'Window',
@@ -13,6 +15,8 @@ export enum AccessoryType {
 
 export enum CharacteristicKey {
   Brightness = 'Brightness',
+  CurrentRelativeHumidity = 'CurrentRelativeHumidity',
+  CurrentTemperature = 'CurrentTemperature',
   LockTargetState = 'LockTargetState',
   On = 'On',
   TargetHeatingCoolingState = 'TargetHeatingCoolingState',

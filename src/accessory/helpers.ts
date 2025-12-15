@@ -14,6 +14,8 @@ import { strings } from '../i18n/i18n.js';
 
 import { AccessoryType } from '../model/enums.js';
 import { DummyConfig } from '../model/types.js';
+import { HumiditySensorAccessory } from './sensor/humidity.js';
+import { TemperatureSensorAccessory } from './sensor/temperature.js';
 
 export function createDummyAccessory(dependency: DummyAccessoryDependency<DummyConfig>): DummyAccessory<DummyConfig> | null {
 
@@ -22,6 +24,8 @@ export function createDummyAccessory(dependency: DummyAccessoryDependency<DummyC
     return new DoorAccessory(dependency);
   case AccessoryType.GarageDoorOpener:
     return new GarageDoorAccessory(dependency);
+  case AccessoryType.HumiditySensor:
+    return new HumiditySensorAccessory(dependency);
   case AccessoryType.Lightbulb:
     return new LightbulbAccessory(dependency);
   case AccessoryType.LockMechanism:
@@ -30,6 +34,8 @@ export function createDummyAccessory(dependency: DummyAccessoryDependency<DummyC
     return new OutletAccessory(dependency);
   case AccessoryType.Switch:
     return new SwitchAccessory(dependency);
+  case AccessoryType.TemperatureSensor:
+    return new TemperatureSensorAccessory(dependency);
   case AccessoryType.Thermostat:
     return new ThermostatAccessory(dependency);
   case AccessoryType.Valve:

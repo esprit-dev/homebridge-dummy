@@ -61,6 +61,15 @@ export type SensorConfig = Assertable & {
   timerControlled?: boolean,
 }
 
+export type HumiditySensorConfig = DummyConfig & {
+  commandHumidity?: string,
+}
+
+export type TemperatureSensorConfig = DummyConfig & {
+  temperatureUnits?: TemperatureUnits
+  commandTemperature?: string,
+}
+
 export type LimiterConfig = Assertable & {
   id?: string,
   limit: number,

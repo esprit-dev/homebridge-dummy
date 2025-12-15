@@ -155,6 +155,7 @@ const en = {
       hour: 'Hour',
       hourly: 'Hourly',
       hours: 'Hours',
+      humiditySensor: 'Humidity Sensor',
       interval: 'Repeating Interval',
       irrigation: 'Irrigation',
       leakSensor: 'Leak',
@@ -187,6 +188,7 @@ const en = {
       sunset: 'Sunset',
       switch: 'Switch',
       timeout: 'After Delay',
+      temperatureSensor: 'Temperature Sensor',
       thermostat: 'Thermostat',
       unsecured: 'Unlocked',
       valve: 'Valve',
@@ -217,6 +219,7 @@ const en = {
       accessoryState: 'State',
       autoReset: 'Auto-Reset',
       commandClose: 'Close Command',
+      commandHumidity: 'Humidity Changed Command',
       commandOff: 'Off Command',
       commandOn: 'On Command',
       commandOpen: 'Open Command',
@@ -284,6 +287,8 @@ const en = {
       active: '%s detected contact', // accessory name
       inactive: '%s stopped detecting contact', // accessory name
     },
+
+    humidity: '%s humidity is %d%', // accessory name, number
 
     leak: {
       active: '%s detected a leak', // accessory name

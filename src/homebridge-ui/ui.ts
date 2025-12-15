@@ -161,7 +161,8 @@ async function updateConditionDropdowns(strings: Translation, configs?: DummyPla
   const newAccessories: DummyConfig[] = [];
 
   for (const config of configs) {
-    const populated = (config.accessories ?? []).filter( (accessory) => accessory.id && accessory.name && accessory.type !== AccessoryType.Thermostat);
+    const populated = (config.accessories ?? []).filter( (accessory) => accessory.id && accessory.name &&
+    ![AccessoryType.HumiditySensor, AccessoryType.TemperatureSensor, AccessoryType.Thermostat].includes(accessory.type));
     newAccessories.push(...populated);
   }
 
