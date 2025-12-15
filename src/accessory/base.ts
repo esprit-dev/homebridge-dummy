@@ -4,7 +4,7 @@ import { promisify } from 'util';
 
 import { PLATFORM_NAME, PLUGIN_ALIAS } from '../homebridge/settings.js';
 
-import { SensorAccessory } from './sensor.js';
+import { SensorAccessory } from './sensor/sensor.js';
 
 import { strings } from '../i18n/i18n.js';
 

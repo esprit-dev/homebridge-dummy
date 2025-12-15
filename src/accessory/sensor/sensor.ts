@@ -1,13 +1,13 @@
 import { CharacteristicValue, PlatformAccessory, Service } from 'homebridge';
 
-import { strings } from '../i18n/i18n.js';
+import { strings } from '../../i18n/i18n.js';
 
-import { SensorType, SensorCharacteristic, isValidSensorType, printableValues }  from '../model/enums.js';
-import { ServiceType, SensorConfig } from '../model/types.js';
+import { SensorType, SensorCharacteristic, isValidSensorType, printableValues }  from '../../model/enums.js';
+import { ServiceType, SensorConfig } from '../../model/types.js';
 
-import { Timeout } from '../timeout/timeout.js';
+import { Timeout } from '../../timeout/timeout.js';
 
-import { DummyAddonDependency } from './base.js';
+import { DummyAddonDependency } from '../base.js';
 
 type SensorStrings = { active: string, inactive: string };
 type SensorInfo = { characteristic: SensorCharacteristic, strings: SensorStrings };
