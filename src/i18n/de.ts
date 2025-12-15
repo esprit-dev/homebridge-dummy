@@ -67,7 +67,6 @@ const overrides = {
     off: '%s auf Aus gestellt',
     temperatureC: '%s auf %d°C gestellt',
     temperatureF: '%s auf %d°F gestellt',
-    unsupportedFunction: '%s wird für Thermostate nicht unterstützt',
   },
 
   timer: {

@@ -101,17 +101,12 @@ const en = {
     timeHours: '% will trigger in %s hours', // accessory name, number
   },
 
-  temperature: {
-    unsupportedFunction: '%s is unsupported for temperature sensors', // function name
-  },
-
   thermostat: {
     auto: '%s set to Auto', // accessory name
     badDefault: '%s has invalid default state %s. Must be one of: %s', // accessory name, input, list of state names
     cool: '%s set to Cool', // accessory name
     heat: '%s set to Heat', // accessory name
     off: '%s set to Off', // accessory name
-    unsupportedFunction: '%s is unsupported for thermostats', // function name
   },
 
   valve: {

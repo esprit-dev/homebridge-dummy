@@ -70,7 +70,6 @@ const overrides = {
     off: '%s configurado en Apagado',
     temperatureC: '%s configurado a %d°C',
     temperatureF: '%s configurado a %d°F',
-    unsupportedFunction: '%s no es compatible con termostatos',
   },
 
   timer: {

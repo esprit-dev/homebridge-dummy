@@ -226,11 +226,11 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
   }
 
   override async trigger(): Promise<void> {
-    throw new Error(strings.thermostat.unsupportedFunction.replace('%s', `${this.trigger.name}()`));
+    throw new Error(`${this.trigger.name} is unsupported for ${ThermostatAccessory.name}`);
   }
 
   override async reset(): Promise<void> {
-    throw new Error(strings.thermostat.unsupportedFunction.replace('%s', `${this.reset.name}()`));
+    throw new Error(`${this.reset.name} is unsupported for ${ThermostatAccessory.name}`);
   }
 
   private stateLogTemplateForCV(value: CharacteristicValue): string {

@@ -67,7 +67,6 @@ const overrides = {
     off: '%s установлен в режим Off',
     temperatureC: '%s установлен на %d °C',
     temperatureF: '%s установлен на %d °F',
-    unsupportedFunction: 'Функция %s не поддерживается термостатами',
   },
 
   timer: {
