@@ -38,7 +38,8 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
         (value, syncOnly) => {
           this.setOn(value, syncOnly);
           return this.logMessageForOnState(value).replace('%s', this.name);
-        }),
+        },
+        this.config.disableLogging),
     ];
   }
 

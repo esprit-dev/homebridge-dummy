@@ -63,7 +63,8 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
         (value, syncOnly) => {
           this.setState(value, syncOnly);
           return this.logTemplateForCV(value).replace('%s', this.name);
-        }),
+        },
+        this.config.disableLogging),
     ];
   }
 

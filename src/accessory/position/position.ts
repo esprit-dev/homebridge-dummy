@@ -74,7 +74,8 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
         (value, syncOnly) => {
           this.setPosition(value, syncOnly);
           return this.logTemplateForCV(value).replace('%s', this.name);
-        }),
+        },
+        this.config.disableLogging),
     ];
   }
 

@@ -62,7 +62,8 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
         (value) => {
           this.setBrightness(value);
           return strings.lightbulb.brightness.replace('%s', this.name).replace('%d', value.toString());
-        }),
+        },
+        this.config.disableLogging),
     ];
   }
 

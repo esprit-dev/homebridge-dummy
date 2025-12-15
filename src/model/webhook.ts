@@ -31,6 +31,7 @@ export class Webhook {
     public readonly validValues: Range | Values,
     public readonly getter: WebhookGetter,
     public readonly setter: WebhookSetter,
+    public readonly disableLogging: boolean | undefined,
   ){}
 }
 
@@ -56,7 +57,9 @@ export class WebhookManager {
   public registerWebhooks(webhooks: Webhook[]) {
     for (const webhook of webhooks) {
       this.webhooks.push(webhook);
-      this.log.ifVerbose(strings.webhook.register, `\`${webhook.id}\`` , `\`${webhook.characteristic}\``);
+      if (!webhook.disableLogging) {
+        this.log.always(strings.webhook.register, `\`${webhook.id}\`` , `\`${webhook.characteristic}\``);
+      }
     }
   }
 
@@ -83,7 +86,7 @@ export class WebhookManager {
     });
 
     this.server = exp.listen(this.port, () => {
-      this.log.ifVerbose(strings.webhook.started, this.port);
+      this.log.always(strings.webhook.started, this.port);
     });
   }
 

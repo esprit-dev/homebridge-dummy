@@ -130,7 +130,8 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
         (value, syncOnly) => {
           this.setState(value, syncOnly);
           return this.stateLogTemplateForCV(value).replace('%s', this.name);
-        }),
+        },
+        this.config.disableLogging),
 
       new Webhook(this.identifier, CharacteristicKey.TargetTemperature,
         new Range(fromCelsius(this.minTemp, this.units), fromCelsius(this.maxTemp, this.units)),
@@ -139,7 +140,8 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
           value = toCelsius(value as number, this.units);
           this.setTemperature(value, syncOnly);
           return this.temperatureLogTemplateForCV(value).replace('%s', this.name);
-        }),
+        },
+        this.config.disableLogging),
     ];
   }
 

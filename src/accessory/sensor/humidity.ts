@@ -34,7 +34,8 @@ export class HumiditySensorAccessory extends DummyAccessory<HumiditySensorConfig
         (value, syncOnly) => {
           this.setHumidity(value, syncOnly);
           return strings.sensor.humidity.replace('%s', this.name).replace('%d', value.toString());
-        }),
+        },
+        this.config.disableLogging),
     ];
   }
 

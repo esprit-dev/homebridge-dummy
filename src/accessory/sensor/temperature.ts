@@ -43,7 +43,8 @@ export class TemperatureSensorAccessory extends DummyAccessory<TemperatureSensor
           value = toCelsius(value as number, this.units);
           this.setTemperature(value, syncOnly);
           return this.temperatureLogTemplateForCV(value).replace('%s', this.name);
-        }),
+        },
+        this.config.disableLogging),
     ];
   }
 

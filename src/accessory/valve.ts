@@ -50,7 +50,8 @@ export class ValveAccessory extends DummyAccessory<ValveConfig> {
         (value, syncOnly) => {
           this.setState(value ? 1 : 0, syncOnly);
           return this.logMessageForState(value).replace('%s', this.name);
-        }),
+        },
+        this.config.disableLogging),
     ];
   }
 
