@@ -40,7 +40,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
     this.STATE_OFF = dependency.Characteristic.TargetHeatingCoolingState.OFF;
 
     if (!isValidTemperatureUnits(dependency.config.temperatureUnits)) {
-      this.log.warning(strings.thermostat.badUnits, this.name, `'${dependency.config.temperatureUnits}'`, printableValues(TemperatureUnits));
+      this.log.warning(strings.temperature.badUnits, this.name, `'${dependency.config.temperatureUnits}'`, printableValues(TemperatureUnits));
     }
 
     if (!isValidThermostatState(dependency.config.defaultThermostatState)) {
@@ -251,7 +251,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
   }
 
   private temperatureLogTemplateForCV(value: CharacteristicValue): string {
-    const message = this.units === TemperatureUnits.FAHRENHEIT ? strings.thermostat.temperatureF : strings.thermostat.temperatureC;
+    const message = this.units === TemperatureUnits.FAHRENHEIT ? strings.temperature.temperatureF : strings.temperature.temperatureC;
     const temperature = fromCelsius(value as number, this.config.temperatureUnits);
     return message.replace('%d', temperature.toString());
   }
