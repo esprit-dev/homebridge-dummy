@@ -13,7 +13,7 @@ All notable changes to homebridge-dummy will be documented in this file.
 - `HumiditySensor` and `TemperatureSensor` accessory types
 
 ### Changed
-- Webhooks respect per-accessory logging setttings
+- Webhooks respect per-accessory logging settings
 
 ### Notes
 Would you like to see Homebridge Dummy in your language? Please consider [getting involved](https://github.com/mpatfield/homebridge-dummy/issues/105). No coding experience required!
