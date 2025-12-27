@@ -13,6 +13,7 @@ import { Values, Webhook } from '../model/webhook.js';
 
 import { getDelay, SECOND } from '../timeout/timeout.js';
 
+const MIN_DURATION = 1;
 const MAX_DURATION = 3600;
 
 export class ValveAccessory extends DummyAccessory<ValveConfig> {
@@ -55,6 +56,7 @@ export class ValveAccessory extends DummyAccessory<ValveConfig> {
       this.initializeDuration(autoReset.time, autoReset.units);
 
       this.accessoryService.getCharacteristic(dependency.Characteristic.SetDuration)
+        .setProps({ minValue: MIN_DURATION, maxValue: MAX_DURATION })
         .onGet(this.getDuration.bind(this))
         .onSet(this.setDuration.bind(this));
     }
@@ -104,7 +106,10 @@ export class ValveAccessory extends DummyAccessory<ValveConfig> {
 
     duration = Math.round(getDelay(rawTime, units) / SECOND);
 
-    if (duration > MAX_DURATION) {
+    if (duration < MIN_DURATION) {
+      this.log.warning(strings.valve.minDuration, this.name);
+      duration = MIN_DURATION;
+    } else if (duration > MAX_DURATION) {
       this.log.warning(strings.valve.maxDuration, this.name);
       duration = MAX_DURATION;
     }
