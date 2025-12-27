@@ -111,6 +111,7 @@ const en = {
 
   valve: {
     badType: '%s has invalid valve type %s. Must be one of: %s', // accessory name, input, list of type names
+    maxDuration: '%s auto-reset cannot be more than 1 hour', // accessory name
   },
 
   config: {

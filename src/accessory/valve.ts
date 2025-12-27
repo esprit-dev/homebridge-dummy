@@ -4,9 +4,16 @@ import { DummyAccessory, DummyAccessoryDependency } from './base.js';
 
 import { strings } from '../i18n/i18n.js';
 
-import { AccessoryType, CharacteristicKey, isValidOnState, isValidValveType, OnState, printableValues, ValveType }  from '../model/enums.js';
+import {
+  AccessoryType, CharacteristicKey, isValidOnState, isValidValveType,
+  OnState, printableValues, ScheduleType, TimeUnits, ValveType,
+}  from '../model/enums.js';
 import { ValveConfig } from '../model/types.js';
 import { Values, Webhook } from '../model/webhook.js';
+
+import { getDelay, SECOND } from '../timeout/timeout.js';
+
+const MAX_DURATION = 3600;
 
 export class ValveAccessory extends DummyAccessory<ValveConfig> {
 
@@ -38,6 +45,19 @@ export class ValveAccessory extends DummyAccessory<ValveConfig> {
 
     this.accessoryService.getCharacteristic(dependency.Characteristic.InUse)
       .onGet(this.getState.bind(this));
+
+    this.accessoryService.getCharacteristic(dependency.Characteristic.IsConfigured)
+      .onGet(() => dependency.Characteristic.IsConfigured.CONFIGURED);
+
+    const autoReset = dependency.config.autoReset;
+    if (autoReset !== undefined && autoReset.type === ScheduleType.TIMEOUT && autoReset.time !== undefined && autoReset.units !== undefined) {
+
+      this.initializeDuration(autoReset.time, autoReset.units);
+
+      this.accessoryService.getCharacteristic(dependency.Characteristic.SetDuration)
+        .onGet(this.getDuration.bind(this))
+        .onSet(this.setDuration.bind(this));
+    }
 
     this.initializeValve();
   }
@@ -75,6 +95,23 @@ export class ValveAccessory extends DummyAccessory<ValveConfig> {
     await this.setState(state);
   }
 
+  private initializeDuration(rawTime: number, units: TimeUnits) {
+
+    let duration = this.getStoredProperty(CharacteristicKey.SetDuration);
+    if (duration !== undefined) {
+      return;
+    }
+
+    duration = Math.round(getDelay(rawTime, units) / SECOND);
+
+    if (duration > MAX_DURATION) {
+      this.log.warning(strings.valve.maxDuration, this.name);
+      duration = MAX_DURATION;
+    }
+
+    this.setStoredProperty(CharacteristicKey.SetDuration, duration);
+  }
+
   private get defaultState(): CharacteristicValue {
     return this.config.defaultState === OnState.ON ? 1 : 0;
   }
@@ -99,6 +136,15 @@ export class ValveAccessory extends DummyAccessory<ValveConfig> {
 
   protected async getState(): Promise<CharacteristicValue> {
     return this.state;
+  }
+
+  private async getDuration(): Promise<CharacteristicValue> {
+    return this.getStoredProperty(CharacteristicKey.SetDuration) ?? MAX_DURATION;
+  }
+
+  private async setDuration(value: CharacteristicValue): Promise<void> {
+    this.setStoredProperty(CharacteristicKey.SetDuration, value);
+    this.setAutoResetTimeout(value as number, TimeUnits.SECONDS);
   }
 
   private async setState(value: CharacteristicValue, syncOnly: boolean = false) {

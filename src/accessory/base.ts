@@ -9,7 +9,7 @@ import { SensorAccessory } from './sensor/sensor.js';
 import { strings } from '../i18n/i18n.js';
 
 import { ConditionManager } from '../model/conditions.js';
-import { AccessoryState, AccessoryType, CharacteristicKey, ScheduleType } from '../model/enums.js';
+import { AccessoryState, AccessoryType, CharacteristicKey, ScheduleType, TimeUnits } from '../model/enums.js';
 import { CharacteristicType, DummyConfig, ServiceType } from '../model/types.js';
 import { Webhook } from '../model/webhook.js';
 
@@ -167,6 +167,10 @@ export abstract class DummyAccessory<C extends DummyConfig> {
 
   protected setStoredProperty(key: CharacteristicKey, value: CharacteristicValue) {
     Storage.set(this.identifier, key, value);
+  }
+
+  protected setAutoResetTimeout(rawTime: number, units: TimeUnits) {
+    this._autoReset?.setTimeout(rawTime, units);
   }
 
   protected onTriggered() {

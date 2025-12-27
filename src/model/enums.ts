@@ -19,6 +19,7 @@ export enum CharacteristicKey {
   CurrentTemperature = 'CurrentTemperature',
   LockTargetState = 'LockTargetState',
   On = 'On',
+  SetDuration = 'SetDuration',
   TargetHeatingCoolingState = 'TargetHeatingCoolingState',
   TargetDoorState = 'TargetDoorState',
   TargetPosition = 'TargetPosition',

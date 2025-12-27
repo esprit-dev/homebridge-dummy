@@ -124,6 +124,11 @@ export class Schedule extends Timeout {
     }
   }
 
+  public setTimeout(rawTime: number, units: TimeUnits) {
+    this.config.time = rawTime;
+    this.config.units = units;
+  }
+
   public startTimeout(force: boolean = false): number | undefined {
 
     if (!force && this.config.type !== ScheduleType.TIMEOUT) {
