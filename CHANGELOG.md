@@ -2,7 +2,7 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-## 1.5.5-beta.2 (2025-12-28)
+## 1.5.5 (2025-12-29)
 
 ### ‼️ WARNING ‼️ — If upgrading from v0.9.2 or earlier, [READ THIS FIRST](https://github.com/mpatfield/homebridge-dummy/wiki/Migration).
 *There is now an [option](https://github.com/mpatfield/homebridge-dummy/wiki/Migration#migrating-gradually) to run both old and new versions of Homebridge Dummy in parallel if you want to migrate gradually*
@@ -10,7 +10,7 @@ All notable changes to homebridge-dummy will be documented in this file.
 -----
 
 ### Changed
-- Enable `Valve` automation when Auto-Reset timeout is defined
+- Enable set/remaining duration on `Valve` when Auto-Reset timeout is defined
 
 ### Notes
 Would you like to see Homebridge Dummy in your language? Please consider [getting involved](https://github.com/mpatfield/homebridge-dummy/issues/105). No coding experience required!
