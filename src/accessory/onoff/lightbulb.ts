@@ -121,6 +121,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
   }
 
   override onTimerStarted(delay: number) {
+    super.onTimerStarted(delay);
 
     if (this.config.fadeOut !== true) {
       return;

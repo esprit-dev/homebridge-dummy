@@ -24,6 +24,8 @@ export class ValveAccessory extends DummyAccessory<ValveConfig> {
 
   private state: CharacteristicValue;
 
+  private timerExpiration?: number;
+
   constructor(dependency: DummyAccessoryDependency<ValveConfig>) {
     super(dependency);
 
@@ -59,6 +61,9 @@ export class ValveAccessory extends DummyAccessory<ValveConfig> {
         .setProps({ minValue: MIN_DURATION, maxValue: MAX_DURATION })
         .onGet(this.getDuration.bind(this))
         .onSet(this.setDuration.bind(this));
+
+      this.accessoryService.getCharacteristic(dependency.Characteristic.RemainingDuration)
+        .onGet(this.getRemainingDuration.bind(this));
     }
 
     this.initializeValve();
@@ -152,6 +157,20 @@ export class ValveAccessory extends DummyAccessory<ValveConfig> {
     this.setAutoResetTimeout(value as number, TimeUnits.SECONDS);
   }
 
+  override onTimerStarted(delay: number) {
+    super.onTimerStarted(delay);
+    this.timerExpiration = Date.now() + delay;
+  }
+  private async getRemainingDuration(): Promise<CharacteristicValue> {
+
+    if (this.timerExpiration === undefined) {
+      return 0;
+    }
+
+    const remainingMillis = this.timerExpiration - Date.now();
+    return Math.round(remainingMillis / SECOND);
+  }
+
   private async setState(value: CharacteristicValue, syncOnly: boolean = false) {
 
     if (this.state !== value) {
@@ -173,6 +192,7 @@ export class ValveAccessory extends DummyAccessory<ValveConfig> {
     if (this.state !== this.defaultState) {
       this.onTriggered();
     } else {
+      this.timerExpiration = undefined;
       this.onReset();
     }
 
