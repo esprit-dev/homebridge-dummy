@@ -2,18 +2,24 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-## 1.5.5 (2025-12-29)
+## 1.5.6 (2026-01-08)
 
 ### ‼️ WARNING ‼️ — If upgrading from v0.9.2 or earlier, [READ THIS FIRST](https://github.com/mpatfield/homebridge-dummy/wiki/Migration).
 *There is now an [option](https://github.com/mpatfield/homebridge-dummy/wiki/Migration#migrating-gradually) to run both old and new versions of Homebridge Dummy in parallel if you want to migrate gradually*
 
 -----
 
-### Changed
-- Enable set/remaining duration on `Valve` when Auto-Reset timeout is defined
+### Added
+- [`CurrentTemperature`](https://github.com/mpatfield/homebridge-dummy/wiki/Webhooks) webhook for `Thermostat`
+- [`validStates`](https://github.com/mpatfield/homebridge-dummy/wiki/Additional-Options) option for `Thermostat` to restrict the selectable modes/states
 
 ### Notes
 Would you like to see Homebridge Dummy in your language? Please consider [getting involved](https://github.com/mpatfield/homebridge-dummy/issues/105). No coding experience required!
+
+## 1.5.5 (2025-12-29)
+
+### Changed
+- Enable set/remaining duration on `Valve` when Auto-Reset timeout is defined
 
 ## 1.5.4 (2025-12-23)
 

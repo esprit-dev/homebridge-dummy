@@ -110,15 +110,15 @@ export function getStateType(input: AccessoryState): typeof OnState | typeof Loc
   }
 }
 
-export enum DefaultThermostatState {
+export enum ThermostatState {
   AUTO = 'auto',
   COOL = 'cool',
   HEAT = 'heat',
   OFF = 'off',
 }
 
-export function isValidThermostatState(input?: DefaultThermostatState): boolean {
-  return input === undefined || Object.values(DefaultThermostatState).includes(input);
+export function isValidThermostatState(input?: ThermostatState): boolean {
+  return input === undefined || Object.values(ThermostatState).includes(input);
 }
 
 export enum TimePeriod {

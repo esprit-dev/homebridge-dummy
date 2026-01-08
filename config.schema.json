@@ -394,6 +394,14 @@
               "type": "number",
               "title": "${config.title.maximumTemperature}"
             },
+            "validStates": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": ["off", "heat", "cool", "auto"]
+              }
+            },
             "valveType": {
               "type": "string",
               "title": "${config.title.valveType}",

@@ -4,7 +4,7 @@ export type ServiceType = typeof import('homebridge').Service;
 export type CharacteristicType = typeof import('homebridge').Characteristic;
 
 import {
-  AccessoryState, AccessoryType, ConditionOperator, DefaultThermostatState, LockState, OnState, OperandType,
+  AccessoryState, AccessoryType, ConditionOperator, ThermostatState, LockState, OnState, OperandType,
   PingAvailability, Position, ScheduleType, SensorType, TemperatureUnits, TimePeriod, TimeUnits, ValveType,
 } from './enums.js';
 
@@ -141,10 +141,11 @@ export type LockConfig = DummyConfig & {
 
 export type ThermostatConfig = DummyConfig & {
   temperatureUnits?: TemperatureUnits
-  defaultThermostatState?: DefaultThermostatState;
+  defaultThermostatState?: ThermostatState;
   defaultTemperature?: number;
   minimumTemperature?: number,
   maximumTemperature?: number,
+  validStates?: [ThermostatState],
   commandOn?: string,
   commandOff?: string,
   commandTemperature?: string,
