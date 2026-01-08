@@ -1,17 +1,17 @@
 import { CharacteristicValue } from 'homebridge';
 
-import { DummyAccessory, DummyAccessoryDependency } from './base.js';
+import { DummyAccessory, DummyAccessoryDependency } from '../base.js';
 
-import { strings } from '../i18n/i18n.js';
+import { strings } from '../../i18n/i18n.js';
 
 import {
   AccessoryType, CharacteristicKey, ThermostatState, isValidTemperatureUnits, isValidThermostatState,
-  printableValues, TemperatureUnits }  from '../model/enums.js';
-import { ThermostatConfig } from '../model/types.js';
-import { Range, Values, Webhook } from '../model/webhook.js';
+  printableValues, TemperatureUnits }  from '../../model/enums.js';
+import { ThermostatConfig } from '../../model/types.js';
+import { Range, Values, Webhook } from '../../model/webhook.js';
 
-import { storageGet_Deprecated } from '../tools/storage.js';
-import { fromCelsius, toCelsius } from '../tools/temperature.js';
+import { storageGet_Deprecated } from '../../tools/storage.js';
+import { fromCelsius, toCelsius } from '../../tools/temperature.js';
 
 const DEFAULT_TEMPERATURE = 20;
 const DEFAULT_MINIMUM = 10;

@@ -6,7 +6,7 @@ import { LightbulbAccessory } from './onoff/lightbulb.js';
 import { LockAccessory } from './lock.js';
 import { OutletAccessory } from './onoff/outlet.js';
 import { SwitchAccessory } from './onoff/switch.js';
-import { ThermostatAccessory } from './thermostat.js';
+import { ThermostatAccessory } from './climate/thermostat.js';
 import { ValveAccessory } from './valve.js';
 import { WindowAccessory } from './position/window.js';
 
