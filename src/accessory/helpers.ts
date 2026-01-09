@@ -2,10 +2,13 @@ import { DummyAccessory, DummyAccessoryDependency } from './base.js';
 import { BlindAccessory } from './position/blind.js';
 import { DoorAccessory } from './position/door.js';
 import { GarageDoorAccessory } from './position/garage.js';
+import { HumidifierAccessory } from './climate/humidifier.js';
+import { HumiditySensorAccessory } from './sensor/humidity.js';
 import { LightbulbAccessory } from './onoff/lightbulb.js';
 import { LockAccessory } from './lock.js';
 import { OutletAccessory } from './onoff/outlet.js';
 import { SwitchAccessory } from './onoff/switch.js';
+import { TemperatureSensorAccessory } from './sensor/temperature.js';
 import { ThermostatAccessory } from './climate/thermostat.js';
 import { ValveAccessory } from './valve.js';
 import { WindowAccessory } from './position/window.js';
@@ -14,8 +17,6 @@ import { strings } from '../i18n/i18n.js';
 
 import { AccessoryType } from '../model/enums.js';
 import { DummyConfig } from '../model/types.js';
-import { HumiditySensorAccessory } from './sensor/humidity.js';
-import { TemperatureSensorAccessory } from './sensor/temperature.js';
 
 export function createDummyAccessory(dependency: DummyAccessoryDependency<DummyConfig>): DummyAccessory<DummyConfig> | null {
 
@@ -24,6 +25,8 @@ export function createDummyAccessory(dependency: DummyAccessoryDependency<DummyC
     return new DoorAccessory(dependency);
   case AccessoryType.GarageDoorOpener:
     return new GarageDoorAccessory(dependency);
+  case AccessoryType.HumidifierDehumidifier:
+    return new HumidifierAccessory(dependency);
   case AccessoryType.HumiditySensor:
     return new HumiditySensorAccessory(dependency);
   case AccessoryType.Lightbulb:

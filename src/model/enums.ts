@@ -1,6 +1,7 @@
 export enum AccessoryType {
   Door = 'Door',
   GarageDoorOpener = 'GarageDoorOpener',
+  HumidifierDehumidifier = 'HumidifierDehumidifier',
   HumiditySensor = 'HumiditySensor',
   Lightbulb = 'Lightbulb',
   LockMechanism = 'LockMechanism',
@@ -23,6 +24,7 @@ export enum CharacteristicKey {
   TargetHeatingCoolingState = 'TargetHeatingCoolingState',
   TargetDoorState = 'TargetDoorState',
   TargetPosition = 'TargetPosition',
+  TargetRelativeHumidity = 'TargetRelativeHumidity',
   TargetTemperature = 'TargetTemperature',
 }
 
@@ -108,6 +110,15 @@ export function getStateType(input: AccessoryState): typeof OnState | typeof Loc
   if (isValidLockState(input as LockState)) {
     return LockState;
   }
+}
+
+export enum HumidifierType {
+  DEHUMIDIFIER = 'dehumidifier',
+  HUMIDIFIER = 'humidifier',
+}
+
+export function isValidHumidifierType(input?: HumidifierType): boolean {
+  return input === undefined || Object.values(HumidifierType).includes(input);
 }
 
 export enum ThermostatState {

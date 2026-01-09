@@ -259,6 +259,7 @@ async function updateConditionDropdowns(strings: Translation, configs?: DummyPla
       unlockedOption.hidden = true;
 
       switch (accessory.type) {
+      case AccessoryType.HumidifierDehumidifier:
       case AccessoryType.Lightbulb:
       case AccessoryType.Outlet:
       case AccessoryType.Switch:

@@ -329,8 +329,8 @@
             "type": {
               "type": "string",
               "title": "${config.title.type}",
-              "enum": ["Door", "GarageDoorOpener", "HumiditySensor", "Lightbulb", "LockMechanism", "Outlet", "Switch", "TemperatureSensor", "Thermostat", "Valve", "Window", "WindowCovering"],
-              "enumNames": ["${config.enumNames.door}", "${config.enumNames.garageDoorOpener}", "${config.enumNames.humiditySensor}", "${config.enumNames.lightbulb}", "${config.enumNames.lockMechanism}", "${config.enumNames.outlet}", "${config.enumNames.switch}", "${config.enumNames.temperatureSensor}", "${config.enumNames.thermostat}", "${config.enumNames.valve}", "${config.enumNames.window}", "${config.enumNames.windowCovering}"]
+              "enum": ["Door", "GarageDoorOpener", "HumidifierDehumidifier", "HumiditySensor", "Lightbulb", "LockMechanism", "Outlet", "Switch", "TemperatureSensor", "Thermostat", "Valve", "Window", "WindowCovering"],
+              "enumNames": ["${config.enumNames.door}", "${config.enumNames.garageDoorOpener}", "${config.enumNames.humidifierDehumidifier}", "${config.enumNames.humiditySensor}", "${config.enumNames.lightbulb}", "${config.enumNames.lockMechanism}", "${config.enumNames.outlet}", "${config.enumNames.switch}", "${config.enumNames.temperatureSensor}", "${config.enumNames.thermostat}", "${config.enumNames.valve}", "${config.enumNames.window}", "${config.enumNames.windowCovering}"]
             },
             "groupName": {
               "type": "string",
@@ -401,6 +401,12 @@
                 "type": "string",
                 "enum": ["off", "heat", "cool", "auto"]
               }
+            },
+            "humidifierType": {
+              "type": "string",
+              "title": "${config.title.humidifierType}",
+              "enum": ["humidifier", "dehumidifier"],
+              "enumNames": ["${config.enumNames.humidifier}", "${config.enumNames.dehumidifier}"]
             },
             "valveType": {
               "type": "string",
@@ -600,6 +606,24 @@
                     },
                     {
                       "key": "accessories[].maximumTemperature",
+                      "flex": "0 0 33%"
+                    }
+                  ]
+                },
+                {
+                  "type": "div",
+                  "displayFlex": true,
+                  "flex-direction": "row",
+                  "condition": {
+                    "functionBody": "return ['HumidifierDehumidifier'].includes(model.accessories?.[arguments[1]]?.type);"
+                  },
+                  "items": [
+                    {
+                      "key": "accessories[].defaultState",
+                      "flex": "0 0 33%"
+                    },
+                    {
+                      "key": "accessories[].humidifierType",
                       "flex": "0 0 33%"
                     }
                   ]
@@ -936,13 +960,13 @@
                 {
                   "key": "accessories[].commandOn",
                   "condition": {
-                    "functionBody": "return ['Lightbulb','Outlet','Switch','Thermostat','Valve'].includes(model.accessories?.[arguments[1]]?.type);"
+                    "functionBody": "return ['HumidifierDehumidifier','Lightbulb','Outlet','Switch','Thermostat','Valve'].includes(model.accessories?.[arguments[1]]?.type);"
                   }
                 },
                 {
                   "key": "accessories[].commandOff",
                   "condition": {
-                    "functionBody": "return ['Lightbulb','Outlet','Switch','Thermostat','Valve'].includes(model.accessories?.[arguments[1]]?.type);"
+                    "functionBody": "return ['HumidifierDehumidifier','Lightbulb','Outlet','Switch','Thermostat','Valve'].includes(model.accessories?.[arguments[1]]?.type);"
                   }
                 },
                 {

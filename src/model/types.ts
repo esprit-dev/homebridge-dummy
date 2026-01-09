@@ -4,27 +4,27 @@ export type ServiceType = typeof import('homebridge').Service;
 export type CharacteristicType = typeof import('homebridge').Characteristic;
 
 import {
-  AccessoryState, AccessoryType, ConditionOperator, ThermostatState, LockState, OnState, OperandType,
-  PingAvailability, Position, ScheduleType, SensorType, TemperatureUnits, TimePeriod, TimeUnits, ValveType,
+  AccessoryState, AccessoryType, ConditionOperator, HumidifierType, LockState, OnState, OperandType, PingAvailability,
+  Position, ScheduleType, SensorType, ThermostatState, TemperatureUnits, TimePeriod, TimeUnits, ValveType,
 } from './enums.js';
 
 export type LegacyAccessoryConfig = AccessoryConfig & {
-  name: string;
-  dimmer?: boolean;
-  brightness?: number;
-  stateful?: boolean;
-  reverse?: boolean;
-  time?: number;
-  resettable?: boolean;
-  random?: boolean;
-  disableLogging?: boolean;
+  name: string,
+  dimmer?: boolean,
+  brightness?: number,
+  stateful?: boolean,
+  reverse?: boolean,
+  time?: number,
+  resettable?: boolean,
+  random?: boolean,
+  disableLogging?: boolean,
 }
 
 export type DummyPlatformConfig = PlatformConfig & {
-  accessories?: DummyConfig[];
-  migrationNeeded?: boolean;
+  accessories?: DummyConfig[],
+  migrationNeeded?: boolean,
   webhookPort?: number,
-  verbose?: boolean;
+  verbose?: boolean,
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
@@ -134,28 +134,29 @@ export type SwitchConfig = OnOffConfig & {
 }
 
 export type LockConfig = DummyConfig & {
-  defaultLockState?: LockState;
+  defaultLockState?: LockState,
   commandLock?: string,
   commandUnlock?: string,
 }
 
+export type HumidifierConfig = OnOffConfig & {
+  humidifierType?: HumidifierType,
+}
+
 export type ThermostatConfig = DummyConfig & {
-  temperatureUnits?: TemperatureUnits
-  defaultThermostatState?: ThermostatState;
+  temperatureUnits?: TemperatureUnits,
+  defaultThermostatState?: ThermostatState,
+  validStates?: [ThermostatState],
   defaultTemperature?: number;
   minimumTemperature?: number,
   maximumTemperature?: number,
-  validStates?: [ThermostatState],
   commandOn?: string,
   commandOff?: string,
   commandTemperature?: string,
 }
 
-export type ValveConfig = DummyConfig & {
+export type ValveConfig = OnOffConfig & {
   valveType?: ValveType,
-  defaultState?: OnState,
-  commandOn?: string,
-  commandOff?: string,
 }
 
 export type PositionConfig = DummyConfig & {
@@ -177,5 +178,5 @@ export type BlindConfig = PositionConfig & {
 }
 
 export type GroupConfig = {
-  accessories: DummyConfig[];
+  accessories: DummyConfig[],
 }

@@ -41,6 +41,11 @@ const en = {
     statesUnrelated: 'Desired condition state %s is being compared to current state %s. Was this a typo?', // state name, state name
   },
 
+  humidifier: {
+    badType: '%s has invalid humidifier type %s. Must be one of: %s', // accessory name, input, list of type names
+    targetHumidity: '%s humidity set to %d%', // accessory name, number
+  },
+
   lightbulb: {
     brightness: '%s brightness is %d%', // accessory name, number
     stateOn: '%s is on, brightness is %d%', // accessory name, number
@@ -150,6 +155,7 @@ const en = {
       daily: 'Daily',
       dawn: 'Dawn',
       day: 'Day',
+      dehumidifier: 'Dehumidifier',
       door: 'Door',
       dusk: 'Dusk',
       fahrenheit: '°F',
@@ -161,6 +167,8 @@ const en = {
       hour: 'Hour',
       hourly: 'Hourly',
       hours: 'Hours',
+      humidifier: 'Humidifier',
+      humidifierDehumidifier: 'Humidifier/Dehumidifier',
       humiditySensor: 'Humidity Sensor',
       interval: 'Repeating Interval',
       irrigation: 'Irrigation',
@@ -245,6 +253,7 @@ const en = {
       enableWebook: 'Enable Webhook',
       fadeOut: 'Fade Out',
       groupName: 'Group Name',
+      humidifierType: 'Type',
       interval: 'Interval',
       latitude: 'Latitude',
       limit: 'Limit',
