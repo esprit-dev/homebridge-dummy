@@ -1,3 +1,5 @@
+import { createHash } from 'crypto';
+
 import { DAY, getDelay, HOUR, MINUTE, SECOND, Timeout } from './timeout.js';
 
 import { DummyAddonDependency } from '../accessory/base.js';
@@ -7,7 +9,7 @@ import { strings } from '../i18n/i18n.js';
 import { isValidTimeUnits, printableValues, TimePeriod, TimeUnits } from '../model/enums.js';
 import { LimiterConfig } from '../model/types.js';
 
-import { Storage, Storage_Deprecated } from '../tools/storage.js';
+import { Storage } from '../tools/storage.js';
 import { assert } from '../tools/validation.js';
 
 type Limit = { timeRemaining: number, resetTimestamp: number, startTimestamp?: number };
@@ -55,10 +57,19 @@ export default class Limiter extends Timeout {
 
   private limit: Limit = { timeRemaining: -1, resetTimestamp: -1, startTimestamp: undefined };
 
+  private readonly identifier: string;
+
   private constructor(dependency: DummyAddonDependency, private readonly config: LimiterConfig) {
     super(dependency);
 
-    const cache = Storage.get(this.identifier, Limiter.name) ?? Storage_Deprecated.get(`${this.config.id ?? this.caller}:Limit`);
+    const seed = `${dependency.identifier}:${this.config.limit}:${this.config.units}:${this.config.period}`;
+    this.identifier = createHash('sha256').update(seed).digest('hex').slice(0, 32).replace(/^(.{8})(.{4})(.{4})(.{4})(.{12})$/, '$1-$2-$3-$4-$5');
+
+    if (config.resetOnRestart === true) {
+      return;
+    }
+
+    const cache = Storage.get(this.identifier, Limiter.name) ?? Storage.get(this.config.id ?? this.caller, Limiter.name);
     if (cache === undefined) {
       return;
     }
@@ -71,10 +82,6 @@ export default class Limiter extends Timeout {
 
     const elapsedTime = Date.now() - this.limit.startTimestamp;
     this.limit.timeRemaining = Math.max(0, this.limit.timeRemaining - elapsedTime);
-  }
-
-  private get identifier(): string {
-    return this.config.id ?? this.caller;
   }
 
   public start(callback:  () => Promise<void>) {

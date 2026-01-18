@@ -2,20 +2,28 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-## 1.5.6 (2026-01-16)
+## 1.5.7-beta.0 (2026-01-18)
 
 ### ‼️ WARNING ‼️ — If upgrading from v0.9.2 or earlier, [READ THIS FIRST](https://github.com/mpatfield/homebridge-dummy/wiki/Migration).
 *There is now an [option](https://github.com/mpatfield/homebridge-dummy/wiki/Migration#migrating-gradually) to run both old and new versions of Homebridge Dummy in parallel if you want to migrate gradually*
 
 -----
 
+### Fixed
+- Changing `Limiter` config resets any cached usage ([#316](https://github.com/mpatfield/homebridge-dummy/issues/316))
+
+### Changed
+- Deprecated `Limiter.id` — use `Limiter.resetOnRestart` to reset the limiter after a Homebridge restart
+
+### Notes
+Would you like to see Homebridge Dummy in your language? Please consider [getting involved](https://github.com/mpatfield/homebridge-dummy/issues/105). No coding experience required!
+
+## 1.5.6 (2026-01-16)
+
 ### Added
 - `HumidifierDehumidifier` accessory type
 - [`CurrentTemperature`](https://github.com/mpatfield/homebridge-dummy/wiki/Webhooks) webhook for `Thermostat`
 - [`validStates`](https://github.com/mpatfield/homebridge-dummy/wiki/Additional-Options) option for `Thermostat` to restrict the selectable modes/states
-
-### Notes
-Would you like to see Homebridge Dummy in your language? Please consider [getting involved](https://github.com/mpatfield/homebridge-dummy/issues/105). No coding experience required!
 
 ## 1.5.5 (2025-12-29)
 

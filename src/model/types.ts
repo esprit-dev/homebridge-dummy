@@ -71,10 +71,14 @@ export type TemperatureSensorConfig = DummyConfig & {
 }
 
 export type LimiterConfig = Assertable & {
+  /**
+   * @deprecated
+   */
   id?: string,
   limit: number,
   units: TimeUnits,
   period: TimePeriod,
+  resetOnRestart?: boolean,
 }
 
 export type Operand = Assertable & {

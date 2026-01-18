@@ -131,9 +131,6 @@
       "limiter": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string"
-          },
           "limit": {
             "type": "number",
             "title": "${config.title.limit}"
@@ -151,6 +148,9 @@
             "enum": [ "HOUR", "DAY", "WEEK", "MONTH"],
             "enumNames": ["${config.enumNames.hour}", "${config.enumNames.day}", "${config.enumNames.week}", "${config.enumNames.month}"],
             "required": true
+          },
+          "resetOnRestart": {
+            "type": "boolean"
           }
         },
         "allOf": [

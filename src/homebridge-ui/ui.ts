@@ -112,11 +112,6 @@ async function updateConfigsWithUUIDs(configs: DummyPlatformConfig[]) {
         accessoryConfig.id = generateUUID();
         changed = true;
       }
-
-      if (accessoryConfig.limiter !== undefined && accessoryConfig.limiter.id === undefined) {
-        accessoryConfig.limiter.id = generateUUID();
-        changed = true;
-      }
     });
   });
 
