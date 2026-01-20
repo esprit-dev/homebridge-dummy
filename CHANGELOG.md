@@ -2,6 +2,11 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
+## 1.6.0-alpha.0 (2026-01-19)
+
+### Added
+- Customizable [push notifications](https://github.com/mpatfield/homebridge-dummy/wiki/Push-Notification) using the [Notify!](https://notify.pingie.com/) app — Thank you, [@simplytoast1](https://github.com/sponsors/simplytoast1)!
+
 ## 1.5.7-beta.2 (2026-01-19)
 
 ### ‼️ WARNING ‼️ — If upgrading from v0.9.2 or earlier, [READ THIS FIRST](https://github.com/mpatfield/homebridge-dummy/wiki/Migration).
