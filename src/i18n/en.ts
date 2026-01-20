@@ -73,6 +73,12 @@ const en = {
     missingFile: 'Unable to find log file at path %s', // file path
   },
 
+  notification: {
+    badAPI: '%s has invalid api %s. Must be one of: %s', // accessory name, input, list of APIs
+    pushError: '%s was unable to send push notification', // accessory name
+    pushSuccess: '%s sent a push notification', // accessory name
+  },
+
   onOff: {
     badDefault: '%s has invalid default on state %s. Must be one of: %s', // accessory name, input, list of state names
     stateOff: '%s is off', // accessory name
@@ -135,6 +141,7 @@ const en = {
       conditions: 'Set the accessory to its opposite (non-default) value when the specified conditions are met',
       fadeOut: 'Lightbulb will count down rather than abruptly going from 100% to off',
       limiter: 'Restrict the total time this accessory can be set to its non-default value, for each specified period',
+      notification: 'Receive a notification when accessory is set to its opposite (non-default) value. See wiki for help.',
       random: 'Time will be randomized with the above value as a maximum',
       schedule: 'Sets the accessory to its opposite (non-default) value',
       timerControlled: 'Instead of mirroring accessory, sensor will be activated when accessory auto-resets',
@@ -188,6 +195,7 @@ const en = {
       operatorOr: 'ANY conditions are met', // proceeded by "Trigger when…"
       outlet: 'Outlet',
       ping: 'Reachability',
+      pingieNotify: 'Notify! (notify.pingie.com)',
       milliseconds: 'Milliseconds',
       minutes: 'Minutes',
       motionSensor: 'Motion',
@@ -231,6 +239,7 @@ const en = {
     title: {
       accessory: 'Accessory',
       accessoryState: 'State',
+      api: 'API',
       autoReset: 'Auto-Reset',
       commandClose: 'Close Command',
       commandHumidity: 'Humidity Changed Command',
@@ -262,6 +271,7 @@ const en = {
       minimumTemperature: 'Min Temperature',
       maximumTemperature: 'Max Temperature',
       name: 'Name',
+      notification: 'Notification',
       offset: 'Offset',
       operator: 'Trigger when…',
       pattern: 'Search String or RegEx',
@@ -269,6 +279,10 @@ const en = {
       pingAvailability: 'State',
       pingHost: 'Host',
       pingInterval: 'Interval',
+      pushId: 'Device or Group ID',
+      pushText: 'Text',
+      pushTitle: 'Title (Optional)',
+      pushToken: 'Token',
       preset: 'Preset',
       random: 'Randomize',
       resetOnRestart: 'Reset on Restart',

@@ -10,6 +10,7 @@ import { strings } from '../i18n/i18n.js';
 
 import { ConditionManager } from '../model/conditions.js';
 import { AccessoryState, AccessoryType, CharacteristicKey, ScheduleType, TimeUnits } from '../model/enums.js';
+import { NotificationManager } from '../model/notification.js';
 import { CharacteristicType, DummyConfig, ServiceType } from '../model/types.js';
 import { Webhook } from '../model/webhook.js';
 
@@ -52,6 +53,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
 
   private readonly _schedule?: Schedule;
   private readonly _autoReset?: Schedule;
+  private readonly _notification?: NotificationManager;
   private readonly _limiter?: Limiter;
 
   private readonly execAsync = promisify(exec);
@@ -79,6 +81,8 @@ export abstract class DummyAccessory<C extends DummyConfig> {
 
     this._autoReset = Schedule.new(addonDependency, dependency.config.autoReset ?? dependency.config.timer,
       strings.autoReset, 'AutoReset', this.reset.bind(this));
+
+    this._notification = NotificationManager.new(addonDependency, dependency.config.notification);
 
     this._limiter = Limiter.new(addonDependency, dependency.config.limiter);
 
@@ -179,6 +183,8 @@ export abstract class DummyAccessory<C extends DummyConfig> {
     if (delay !== undefined) {
       this.onTimerStarted(delay);
     }
+
+    this._notification?.notify();
 
     this._limiter?.start(this.reset.bind(this));
   }

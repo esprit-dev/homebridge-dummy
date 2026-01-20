@@ -52,6 +52,14 @@ export enum SensorCharacteristic {
   SmokeDetected = 'SmokeDetected',
 }
 
+export enum NotificationAPI {
+  PINGIE_NOTIFY = 'PINGIE_NOTIFY',
+}
+
+export function isValidNotificationAPI(input?: NotificationAPI): boolean {
+  return input === undefined || Object.values(NotificationAPI).includes(input);
+}
+
 export enum ConditionOperator {
   AND = 'and',
   OR = 'or'
