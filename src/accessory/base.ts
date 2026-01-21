@@ -9,7 +9,7 @@ import { SensorAccessory } from './sensor/sensor.js';
 import { strings } from '../i18n/i18n.js';
 
 import { ConditionManager } from '../model/conditions.js';
-import { AccessoryState, AccessoryType, CharacteristicKey, ScheduleType, TimeUnits } from '../model/enums.js';
+import { AccessoryState, AccessoryType, CharacteristicKey, TimeUnits } from '../model/enums.js';
 import { NotificationManager } from '../model/notification.js';
 import { CharacteristicType, DummyConfig, ServiceType } from '../model/types.js';
 import { Webhook } from '../model/webhook.js';
@@ -162,7 +162,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
   }
 
   protected get isStateful(): boolean {
-    return (this._schedule === undefined || this.config.schedule?.type === ScheduleType.TIMEOUT) && !this.config.resetOnRestart;
+    return this.config.resetOnRestart !== true;
   }
 
   protected getStoredProperty(key: CharacteristicKey): CharacteristicValue | undefined {

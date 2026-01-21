@@ -755,10 +755,7 @@
                     },
                     {
                       "key": "accessories[].resetOnRestart",
-                      "flex": "0 1 33%",
-                      "condition": {
-                        "functionBody": "const accessory = model.accessories?.[arguments[1]]; return accessory?.schedule?.type === undefined && accessory.autoReset?.type === undefined;"
-                      }
+                      "flex": "0 1 33%"
                     }
                   ]
                 }
