@@ -42,7 +42,7 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
       return;
     }
 
-    const state = this.getStoredProperty(HKCharacteristicKey.LockTargetState) ?? await storageGet_Deprecated(`${this.identifier}:DefaultState`);
+    const state = this.getProperty(HKCharacteristicKey.LockTargetState) ?? await storageGet_Deprecated(`${this.identifier}:DefaultState`);
     if (state === undefined) {
       await this.registerStateChange();
       return;
@@ -86,7 +86,7 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
     if (this.state !== value) {
       this.logLockState(value);
 
-      this.setStoredProperty(HKCharacteristicKey.LockTargetState, value);
+      this.setProperty(HKCharacteristicKey.LockTargetState, value);
 
       if (!syncOnly) {
         if (this.config.commandLock && value === this.Characteristic.LockTargetState.SECURED) {

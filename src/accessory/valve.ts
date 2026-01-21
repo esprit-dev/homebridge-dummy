@@ -93,7 +93,7 @@ export class ValveAccessory extends DummyAccessory<ValveConfig> {
       return;
     }
 
-    const state = this.getStoredProperty(HKCharacteristicKey.On);
+    const state = this.getProperty(HKCharacteristicKey.On);
     if (state === undefined) {
       await this.registerStateChange();
       return;
@@ -104,7 +104,7 @@ export class ValveAccessory extends DummyAccessory<ValveConfig> {
 
   private initializeDuration(rawTime: number, units: TimeUnits) {
 
-    let duration = this.getStoredProperty(HKCharacteristicKey.SetDuration);
+    let duration = this.getProperty(HKCharacteristicKey.SetDuration);
     if (duration !== undefined) {
       return;
     }
@@ -119,7 +119,7 @@ export class ValveAccessory extends DummyAccessory<ValveConfig> {
       duration = MAX_DURATION;
     }
 
-    this.setStoredProperty(HKCharacteristicKey.SetDuration, duration);
+    this.setProperty(HKCharacteristicKey.SetDuration, duration);
   }
 
   private get defaultState(): CharacteristicValue {
@@ -149,11 +149,11 @@ export class ValveAccessory extends DummyAccessory<ValveConfig> {
   }
 
   private async getDuration(): Promise<CharacteristicValue> {
-    return this.getStoredProperty(HKCharacteristicKey.SetDuration) ?? MAX_DURATION;
+    return this.getProperty(HKCharacteristicKey.SetDuration) ?? MAX_DURATION;
   }
 
   private async setDuration(value: CharacteristicValue): Promise<void> {
-    this.setStoredProperty(HKCharacteristicKey.SetDuration, value);
+    this.setProperty(HKCharacteristicKey.SetDuration, value);
     this.setAutoResetTimeout(value as number, TimeUnits.SECONDS);
   }
 
@@ -176,7 +176,7 @@ export class ValveAccessory extends DummyAccessory<ValveConfig> {
     if (this.state !== value) {
       this.logIfDesired(this.logMessageForState(value));
 
-      this.setStoredProperty(HKCharacteristicKey.On, value);
+      this.setProperty(HKCharacteristicKey.On, value);
 
       if (!syncOnly) {
         if (this.config.commandOn && value === 1) {

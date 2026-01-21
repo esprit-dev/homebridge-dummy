@@ -26,7 +26,7 @@ export class TemperatureSensorAccessory extends DummyAccessory<TemperatureSensor
     this.accessoryService.getCharacteristic(dependency.Characteristic.CurrentTemperature)
       .onGet(this.getTemperature.bind(this));
 
-    this.temperature = (this.isStateful && this.getStoredProperty(HKCharacteristicKey.CurrentTemperature)) ?? 0;
+    this.temperature = (this.isStateful && this.getProperty(HKCharacteristicKey.CurrentTemperature)) ?? 0;
   }
 
   override getAccessoryType(): AccessoryType {
@@ -61,7 +61,7 @@ export class TemperatureSensorAccessory extends DummyAccessory<TemperatureSensor
     if (this.temperature !== value) {
       this.logTemperature(value);
 
-      this.setStoredProperty(HKCharacteristicKey.CurrentTemperature, value);
+      this.setProperty(HKCharacteristicKey.CurrentTemperature, value);
 
       if (!syncOnly) {
         if (this.config.commandTemperature) {

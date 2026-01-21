@@ -165,11 +165,11 @@ export abstract class DummyAccessory<C extends DummyConfig> {
     return this.config.resetOnRestart !== true;
   }
 
-  protected getStoredProperty(key: CharacteristicKey): CharacteristicValue | undefined {
+  public getProperty(key: CharacteristicKey): CharacteristicValue | undefined {
     return Storage.get(this.identifier, key);
   }
 
-  protected setStoredProperty(key: CharacteristicKey, value: CharacteristicValue) {
+  public setProperty(key: CharacteristicKey, value: CharacteristicValue) {
     Storage.set(this.identifier, key, value);
   }
 

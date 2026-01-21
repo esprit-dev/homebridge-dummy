@@ -53,7 +53,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
       return;
     }
 
-    const on = this.getStoredProperty(HKCharacteristicKey.On) ?? await storageGet_Deprecated(`${this.identifier}:DefaultState`);
+    const on = this.getProperty(HKCharacteristicKey.On) ?? await storageGet_Deprecated(`${this.identifier}:DefaultState`);
     if (on === undefined) {
       await this.registerStateChange();
       return;
@@ -84,7 +84,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
     if (this.on !== value) {
       this.logIfDesired(this.logMessageForOnState(value));
 
-      this.setStoredProperty(HKCharacteristicKey.On, value);
+      this.setProperty(HKCharacteristicKey.On, value);
 
       if (!syncOnly) {
         if (this.config.commandOn && value) {

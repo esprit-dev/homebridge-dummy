@@ -88,7 +88,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
       return;
     }
 
-    const position = this.getStoredProperty(this.stateStorageKey) ?? await storageGet_Deprecated(`${this.identifier}:DefaultState`);
+    const position = this.getProperty(this.stateStorageKey) ?? await storageGet_Deprecated(`${this.identifier}:DefaultState`);
     if (position === undefined) {
       await this.registerStateChange();
       return;
@@ -120,7 +120,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
     if (this.position !== targetPosition) {
       this.logPosition(targetPosition);
 
-      this.setStoredProperty(this.stateStorageKey, targetPosition);
+      this.setProperty(this.stateStorageKey, targetPosition);
 
       if (!syncOnly) {
         if (this.config.commandOpen && targetPosition !== this.positionClosed) {

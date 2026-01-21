@@ -114,17 +114,17 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
       return;
     }
 
-    const state = this.getStoredProperty(HKCharacteristicKey.TargetHeatingCoolingState) ?? await storageGet_Deprecated(`${this.identifier}:DefaultState`);
+    const state = this.getProperty(HKCharacteristicKey.TargetHeatingCoolingState) ?? await storageGet_Deprecated(`${this.identifier}:DefaultState`);
     if (state !== undefined) {
       await this.setState(state);
     }
 
-    const currentTemperature = this.getStoredProperty(HKCharacteristicKey.CurrentTemperature);
+    const currentTemperature = this.getProperty(HKCharacteristicKey.CurrentTemperature);
     if (currentTemperature !== undefined) {
       await this.setCurrentTemperature(currentTemperature);
     }
 
-    const targetTemperature = this.getStoredProperty(HKCharacteristicKey.TargetTemperature) ?? await storageGet_Deprecated(`${this.identifier}:Temperature`);
+    const targetTemperature = this.getProperty(HKCharacteristicKey.TargetTemperature) ?? await storageGet_Deprecated(`${this.identifier}:Temperature`);
     if (targetTemperature !== undefined) {
       await this.setTargetTemperature(targetTemperature);
     }
@@ -223,7 +223,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
     if (this.targetState !== value) {
       this.logState(value);
 
-      this.setStoredProperty(HKCharacteristicKey.TargetHeatingCoolingState, value);
+      this.setProperty(HKCharacteristicKey.TargetHeatingCoolingState, value);
 
       if (!syncOnly) {
         if (this.config.commandOff && value === this.STATE_OFF) {
@@ -258,7 +258,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
 
     if (this._currentTemperature !== value) {
       this.logCurrentTemperature(value);
-      this.setStoredProperty(HKCharacteristicKey.CurrentTemperature, value);
+      this.setProperty(HKCharacteristicKey.CurrentTemperature, value);
     }
 
     this._currentTemperature = value;
@@ -271,7 +271,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
     if (this.targetTemperature !== value) {
       this.logTargetTemperature(value);
 
-      this.setStoredProperty(HKCharacteristicKey.TargetTemperature, value);
+      this.setProperty(HKCharacteristicKey.TargetTemperature, value);
 
       if (!syncOnly) {
         if (this.config.commandTemperature) {

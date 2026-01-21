@@ -74,7 +74,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
       return;
     }
 
-    const brightness = this.getStoredProperty(HKCharacteristicKey.Brightness) ?? await storageGet_Deprecated(`${this.identifier}:Brightness`);
+    const brightness = this.getProperty(HKCharacteristicKey.Brightness) ?? await storageGet_Deprecated(`${this.identifier}:Brightness`);
     if (brightness === undefined) {
       return;
     }
@@ -115,7 +115,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
 
     this.logIfDesired(strings.lightbulb.brightness, this.brightness.toString());
 
-    this.setStoredProperty(HKCharacteristicKey.Brightness, this.brightness);
+    this.setProperty(HKCharacteristicKey.Brightness, this.brightness);
 
     this.accessoryService.updateCharacteristic(this.Characteristic.Brightness, this.brightness);
   }

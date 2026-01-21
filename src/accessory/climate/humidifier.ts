@@ -70,17 +70,17 @@ export class HumidifierAccessory extends DummyAccessory<HumidifierConfig> {
       return;
     }
 
-    const state = this.getStoredProperty(HKCharacteristicKey.On);
+    const state = this.getProperty(HKCharacteristicKey.On);
     if (state !== undefined) {
       await this.setState(state);
     }
 
-    const currentHumidity = this.getStoredProperty(HKCharacteristicKey.CurrentRelativeHumidity);
+    const currentHumidity = this.getProperty(HKCharacteristicKey.CurrentRelativeHumidity);
     if (currentHumidity !== undefined) {
       await this.setCurrentHumidity(currentHumidity);
     }
 
-    const targetHumidity = this.getStoredProperty(HKCharacteristicKey.TargetRelativeHumidity);
+    const targetHumidity = this.getProperty(HKCharacteristicKey.TargetRelativeHumidity);
     if (targetHumidity !== undefined) {
       await this.setTargetHumidity(targetHumidity);
     }
@@ -164,7 +164,7 @@ export class HumidifierAccessory extends DummyAccessory<HumidifierConfig> {
     if (this.state !== value) {
       this.logIfDesired(this.logMessageForState(value));
 
-      this.setStoredProperty(HKCharacteristicKey.On, value);
+      this.setProperty(HKCharacteristicKey.On, value);
 
       if (!syncOnly) {
         if (this.config.commandOn && value === 1) {
@@ -193,7 +193,7 @@ export class HumidifierAccessory extends DummyAccessory<HumidifierConfig> {
 
     if (this._currentHumidity !== value) {
       this.logIfDesired(strings.sensor.humidity, value.toString());
-      this.setStoredProperty(HKCharacteristicKey.CurrentRelativeHumidity, value);
+      this.setProperty(HKCharacteristicKey.CurrentRelativeHumidity, value);
     }
 
     this._currentHumidity = value;
@@ -205,7 +205,7 @@ export class HumidifierAccessory extends DummyAccessory<HumidifierConfig> {
 
     if (this.targetHumidity !== value) {
       this.logIfDesired(strings.humidifier.targetHumidity, value.toString());
-      this.setStoredProperty(HKCharacteristicKey.TargetRelativeHumidity, value);
+      this.setProperty(HKCharacteristicKey.TargetRelativeHumidity, value);
     }
 
     this.targetHumidity = value;
