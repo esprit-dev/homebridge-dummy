@@ -14,7 +14,7 @@ export enum AccessoryType {
   WindowCovering = 'WindowCovering'
 }
 
-export type CharacteristicKey = HKCharacteristicKey;
+export type CharacteristicKey = HKCharacteristicKey | EveCharacteristicKey;
 
 export enum HKCharacteristicKey {
   Brightness = 'Brightness',
@@ -28,6 +28,10 @@ export enum HKCharacteristicKey {
   TargetPosition = 'TargetPosition',
   TargetRelativeHumidity = 'TargetRelativeHumidity',
   TargetTemperature = 'TargetTemperature',
+}
+
+export enum EveCharacteristicKey {
+  LastActivation = 'LastActivation',
 }
 
 export enum SensorType {
