@@ -41,6 +41,12 @@ const en = {
     statesUnrelated: 'Desired condition state %s is being compared to current state %s. Was this a typo?', // state name, state name
   },
 
+  history: {
+    cleanup: 'Removing history for %s', // accessory name
+    cleanupFailed: 'Unable to remove history for %s. Try manually removing the file %s from your Homebridge \'persist\' directory.', // accessory name, filename
+    entry: '%s logging history entry:', // accessory name
+  },
+
   humidifier: {
     badType: '%s has invalid humidifier type %s. Must be one of: %s', // accessory name, input, list of type names
     targetHumidity: '%s humidity set to %d%', // accessory name, number

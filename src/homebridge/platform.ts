@@ -9,6 +9,7 @@ import { GroupAccessory, GroupAccessoryDependency } from '../accessory/group.js'
 import { setLanguage, strings } from '../i18n/i18n.js';
 
 import { ConditionManager } from '../model/conditions.js';
+import { History } from '../model/history.js';
 import { DummyConfig, DummyPlatformConfig, GroupConfig } from '../model/types.js';
 import { WebhookManager } from '../model/webhook.js';
 
@@ -89,6 +90,8 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
 
     const groupAccessories = new Map<string, GroupConfig>();
 
+    const history = new History(this.api, this.log);
+
     for (const accessoryConfig of accessories) {
 
       if (accessoryConfig.groupName?.length) {
@@ -106,10 +109,11 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
       const dependency: DummyAccessoryDependency<DummyConfig> = {
         Service: this.Service,
         Characteristic: this.Characteristic,
-        platformAccessory: platformAccessory,
+        platformAccessory,
         config: accessoryConfig,
         conditionManager: this.conditionManager,
         log: this.log,
+        history,
         isGrouped: false,
       };
 
@@ -140,6 +144,7 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
         platformAccessory: platformAccessory,
         conditionManager: this.conditionManager,
         log: this.log,
+        history,
       };
 
       const groupAccessory = new GroupAccessory(dependency, groupConfig, this.webhookManager);

@@ -4,6 +4,7 @@ import { DummyAccessory, DummyAccessoryDependency } from './base.js';
 import { createDummyAccessory } from './helpers.js';
 
 import { ConditionManager } from '../model/conditions.js';
+import { History } from '../model/history.js';
 import { CharacteristicType, DummyConfig, GroupConfig, ServiceType } from '../model/types.js';
 import { WebhookManager } from '../model/webhook.js';
 
@@ -16,7 +17,8 @@ export type GroupAccessoryDependency = {
     Characteristic: CharacteristicType,
     platformAccessory: PlatformAccessory,
     conditionManager: ConditionManager,
-    log: Log
+    log: Log,
+    history: History
 }
 
 export class GroupAccessory {

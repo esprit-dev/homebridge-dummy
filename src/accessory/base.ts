@@ -10,6 +10,7 @@ import { strings } from '../i18n/i18n.js';
 
 import { ConditionManager } from '../model/conditions.js';
 import { AccessoryState, AccessoryType, CharacteristicKey, TimeUnits } from '../model/enums.js';
+import { History, HistoryEntry, HistoryType } from '../model/history.js';
 import { NotificationManager } from '../model/notification.js';
 import { CharacteristicType, DummyConfig, ServiceType } from '../model/types.js';
 import { Webhook } from '../model/webhook.js';
@@ -28,6 +29,7 @@ export type DummyAccessoryDependency<C extends DummyConfig> = {
   config: C,
   conditionManager: ConditionManager,
   log: Log,
+  history: History
   isGrouped: boolean,
 }
 
@@ -49,7 +51,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
     return config.id ?? `${PLATFORM_NAME}:${config.type}:${config.name.replace(/\s+/g,'')}`;
   }
 
-  protected readonly service: Service;
+  public readonly service: Service;
 
   private readonly _schedule?: Schedule;
   private readonly _autoReset?: Schedule;
@@ -145,12 +147,20 @@ export abstract class DummyAccessory<C extends DummyConfig> {
     return this.dependency.config;
   }
 
-  protected get identifier(): string {
+  public get historyEnabled(): boolean {
+    return false;
+  }
+
+  public get identifier(): string {
     return DummyAccessory.identifier(this.config);
   }
 
-  protected get name(): string {
+  public get name(): string {
     return this.config.name;
+  }
+
+  public get platformAccessory(): PlatformAccessory {
+    return this.dependency.platformAccessory;
   }
 
   protected get log(): Log {
@@ -261,6 +271,10 @@ export abstract class DummyAccessory<C extends DummyConfig> {
 
   protected async onStateChange(state: AccessoryState) {
     await this.dependency.conditionManager.onStateChange(this.identifier, state);
+  }
+
+  protected recordHistory(type: HistoryType, entry: HistoryEntry, updateLastActivation: boolean = false): boolean {
+    return this.dependency.history.record(this, type, entry, updateLastActivation);
   }
 
   protected logIfDesired(message: string, ...parameters: (string | number)[]) {
