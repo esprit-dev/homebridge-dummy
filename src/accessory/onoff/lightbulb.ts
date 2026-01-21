@@ -6,7 +6,7 @@ import { DummyAccessoryDependency } from '../base.js';
 
 import { strings } from '../../i18n/i18n.js';
 
-import { AccessoryType, CharacteristicKey } from '../../model/enums.js';
+import { AccessoryType, HKCharacteristicKey } from '../../model/enums.js';
 import { LightbulbConfig } from '../../model/types.js';
 import { Range, Webhook } from '../../model/webhook.js';
 
@@ -56,7 +56,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
   override get webhooks(): Webhook[] {
     return [
       ...super.webhooks,
-      new Webhook(this.identifier, CharacteristicKey.Brightness,
+      new Webhook(this.identifier, HKCharacteristicKey.Brightness,
         new Range(0, 100),
         () => this.brightness,
         (value) => {
@@ -74,7 +74,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
       return;
     }
 
-    const brightness = this.getStoredProperty(CharacteristicKey.Brightness) ?? await storageGet_Deprecated(`${this.identifier}:Brightness`);
+    const brightness = this.getStoredProperty(HKCharacteristicKey.Brightness) ?? await storageGet_Deprecated(`${this.identifier}:Brightness`);
     if (brightness === undefined) {
       return;
     }
@@ -115,7 +115,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
 
     this.logIfDesired(strings.lightbulb.brightness, this.brightness.toString());
 
-    this.setStoredProperty(CharacteristicKey.Brightness, this.brightness);
+    this.setStoredProperty(HKCharacteristicKey.Brightness, this.brightness);
 
     this.accessoryService.updateCharacteristic(this.Characteristic.Brightness, this.brightness);
   }

@@ -4,7 +4,7 @@ import { DummyAccessory, DummyAccessoryDependency } from './base.js';
 
 import { strings } from '../i18n/i18n.js';
 
-import { AccessoryType, LockState, isValidLockState, printableValues, CharacteristicKey }  from '../model/enums.js';
+import { AccessoryType, LockState, isValidLockState, printableValues, HKCharacteristicKey }  from '../model/enums.js';
 import { LockConfig } from '../model/types.js';
 import { Values, Webhook } from '../model/webhook.js';
 
@@ -42,7 +42,7 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
       return;
     }
 
-    const state = this.getStoredProperty(CharacteristicKey.LockTargetState) ?? await storageGet_Deprecated(`${this.identifier}:DefaultState`);
+    const state = this.getStoredProperty(HKCharacteristicKey.LockTargetState) ?? await storageGet_Deprecated(`${this.identifier}:DefaultState`);
     if (state === undefined) {
       await this.registerStateChange();
       return;
@@ -57,7 +57,7 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
 
   override get webhooks(): Webhook[] {
     return [
-      new Webhook(this.identifier, CharacteristicKey.LockTargetState,
+      new Webhook(this.identifier, HKCharacteristicKey.LockTargetState,
         new Values([this.Characteristic.LockTargetState.UNSECURED, this.Characteristic.LockTargetState.SECURED], '0 (UNSECURED), 1 (SECURED)'),
         () => this.state,
         (value, syncOnly) => {
@@ -86,7 +86,7 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
     if (this.state !== value) {
       this.logLockState(value);
 
-      this.setStoredProperty(CharacteristicKey.LockTargetState, value);
+      this.setStoredProperty(HKCharacteristicKey.LockTargetState, value);
 
       if (!syncOnly) {
         if (this.config.commandLock && value === this.Characteristic.LockTargetState.SECURED) {

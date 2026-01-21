@@ -4,7 +4,7 @@ import { DummyAccessory, DummyAccessoryDependency } from '../base.js';
 
 import { strings } from '../../i18n/i18n.js';
 
-import { CharacteristicKey, isValidOnState, OnState, printableValues } from '../../model/enums.js';
+import { HKCharacteristicKey, isValidOnState, OnState, printableValues } from '../../model/enums.js';
 import { OnOffConfig } from '../../model/types.js';
 import { Values, Webhook } from '../../model/webhook.js';
 
@@ -32,7 +32,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
 
   override get webhooks(): Webhook[] {
     return [
-      new Webhook(this.identifier, CharacteristicKey.On,
+      new Webhook(this.identifier, HKCharacteristicKey.On,
         new Values( [true, false], 'true, false'),
         () => this.on,
         (value, syncOnly) => {
@@ -53,7 +53,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
       return;
     }
 
-    const on = this.getStoredProperty(CharacteristicKey.On) ?? await storageGet_Deprecated(`${this.identifier}:DefaultState`);
+    const on = this.getStoredProperty(HKCharacteristicKey.On) ?? await storageGet_Deprecated(`${this.identifier}:DefaultState`);
     if (on === undefined) {
       await this.registerStateChange();
       return;
@@ -84,7 +84,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
     if (this.on !== value) {
       this.logIfDesired(this.logMessageForOnState(value));
 
-      this.setStoredProperty(CharacteristicKey.On, value);
+      this.setStoredProperty(HKCharacteristicKey.On, value);
 
       if (!syncOnly) {
         if (this.config.commandOn && value) {

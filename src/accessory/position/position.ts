@@ -4,7 +4,7 @@ import { DummyAccessory, DummyAccessoryDependency } from '../base.js';
 
 import { strings } from '../../i18n/i18n.js';
 
-import { Position, isValidPosition, printableValues, CharacteristicKey } from '../../model/enums.js';
+import { Position, isValidPosition, printableValues, HKCharacteristicKey } from '../../model/enums.js';
 import { PositionConfig } from '../../model/types.js';
 import { Range, Webhook } from '../../model/webhook.js';
 
@@ -51,7 +51,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
   }
 
   protected get stateStorageKey() {
-    return CharacteristicKey.TargetPosition;
+    return HKCharacteristicKey.TargetPosition;
   }
 
   protected get targetCharacteristic() {
@@ -63,7 +63,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
   }
 
   protected get webhookCommand() {
-    return CharacteristicKey.TargetPosition;
+    return HKCharacteristicKey.TargetPosition;
   }
 
   override get webhooks(): Webhook[] {

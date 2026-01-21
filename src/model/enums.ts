@@ -14,7 +14,9 @@ export enum AccessoryType {
   WindowCovering = 'WindowCovering'
 }
 
-export enum CharacteristicKey {
+export type CharacteristicKey = HKCharacteristicKey;
+
+export enum HKCharacteristicKey {
   Brightness = 'Brightness',
   CurrentRelativeHumidity = 'CurrentRelativeHumidity',
   CurrentTemperature = 'CurrentTemperature',

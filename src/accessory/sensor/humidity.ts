@@ -4,7 +4,7 @@ import { DummyAccessory, DummyAccessoryDependency } from '../base.js';
 
 import { strings } from '../../i18n/i18n.js';
 
-import { AccessoryType, CharacteristicKey } from '../../model/enums.js';
+import { AccessoryType, HKCharacteristicKey } from '../../model/enums.js';
 import { HumiditySensorConfig } from '../../model/types.js';
 import { Range, Webhook } from '../../model/webhook.js';
 
@@ -18,7 +18,7 @@ export class HumiditySensorAccessory extends DummyAccessory<HumiditySensorConfig
     this.accessoryService.getCharacteristic(dependency.Characteristic.CurrentRelativeHumidity)
       .onGet(this.getHumidity.bind(this));
 
-    this.humidity = (this.isStateful && this.getStoredProperty(CharacteristicKey.CurrentRelativeHumidity)) ?? 0;
+    this.humidity = (this.isStateful && this.getStoredProperty(HKCharacteristicKey.CurrentRelativeHumidity)) ?? 0;
   }
 
   override getAccessoryType(): AccessoryType {
@@ -28,7 +28,7 @@ export class HumiditySensorAccessory extends DummyAccessory<HumiditySensorConfig
   override get webhooks(): Webhook[] {
 
     return [
-      new Webhook(this.identifier, CharacteristicKey.CurrentRelativeHumidity,
+      new Webhook(this.identifier, HKCharacteristicKey.CurrentRelativeHumidity,
         new Range(0, 100),
         () => this.humidity,
         (value, syncOnly) => {
@@ -48,7 +48,7 @@ export class HumiditySensorAccessory extends DummyAccessory<HumiditySensorConfig
     if (this.humidity !== value) {
       this.logIfDesired(strings.sensor.humidity, value.toString());
 
-      this.setStoredProperty(CharacteristicKey.CurrentRelativeHumidity, value);
+      this.setStoredProperty(HKCharacteristicKey.CurrentRelativeHumidity, value);
 
       if (!syncOnly) {
         if (this.config.commandHumidity) {

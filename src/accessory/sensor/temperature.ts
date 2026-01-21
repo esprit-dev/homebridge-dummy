@@ -4,7 +4,7 @@ import { DummyAccessory, DummyAccessoryDependency } from '../base.js';
 
 import { strings } from '../../i18n/i18n.js';
 
-import { AccessoryType, CharacteristicKey, isValidTemperatureUnits, printableValues, TemperatureUnits } from '../../model/enums.js';
+import { AccessoryType, HKCharacteristicKey, isValidTemperatureUnits, printableValues, TemperatureUnits } from '../../model/enums.js';
 import { TemperatureSensorConfig } from '../../model/types.js';
 import { Range, Webhook } from '../../model/webhook.js';
 import { fromCelsius, toCelsius } from '../../tools/temperature.js';
@@ -26,7 +26,7 @@ export class TemperatureSensorAccessory extends DummyAccessory<TemperatureSensor
     this.accessoryService.getCharacteristic(dependency.Characteristic.CurrentTemperature)
       .onGet(this.getTemperature.bind(this));
 
-    this.temperature = (this.isStateful && this.getStoredProperty(CharacteristicKey.CurrentTemperature)) ?? 0;
+    this.temperature = (this.isStateful && this.getStoredProperty(HKCharacteristicKey.CurrentTemperature)) ?? 0;
   }
 
   override getAccessoryType(): AccessoryType {
@@ -36,7 +36,7 @@ export class TemperatureSensorAccessory extends DummyAccessory<TemperatureSensor
   override get webhooks(): Webhook[] {
 
     return [
-      new Webhook(this.identifier, CharacteristicKey.CurrentTemperature,
+      new Webhook(this.identifier, HKCharacteristicKey.CurrentTemperature,
         new Range(fromCelsius(MIN_TEMP, this.units), fromCelsius(MAX_TEMP, this.units)),
         () => this.temperature,
         (value, syncOnly) => {
@@ -61,7 +61,7 @@ export class TemperatureSensorAccessory extends DummyAccessory<TemperatureSensor
     if (this.temperature !== value) {
       this.logTemperature(value);
 
-      this.setStoredProperty(CharacteristicKey.CurrentTemperature, value);
+      this.setStoredProperty(HKCharacteristicKey.CurrentTemperature, value);
 
       if (!syncOnly) {
         if (this.config.commandTemperature) {

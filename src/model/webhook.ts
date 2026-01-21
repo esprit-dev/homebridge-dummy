@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import { CharacteristicValue } from 'homebridge';
 import { Server } from 'http';
 
-import { CharacteristicKey } from './enums.js';
+import { HKCharacteristicKey } from './enums.js';
 
 import { strings } from '../i18n/i18n.js';
 
@@ -27,7 +27,7 @@ export class Webhook {
 
   constructor(
     public readonly id: string,
-    public readonly characteristic: CharacteristicKey,
+    public readonly characteristic: HKCharacteristicKey,
     public readonly validValues: Range | Values,
     public readonly getter: WebhookGetter,
     public readonly setter: WebhookSetter,
@@ -114,7 +114,7 @@ export class WebhookManager {
       return;
     }
 
-    const characteristic: CharacteristicKey = data.set ?? data.sync ?? data.command;
+    const characteristic: HKCharacteristicKey = data.set ?? data.sync ?? data.command;
     if (characteristic === undefined) {
       this.onBadRequest(response, strings.webhook.missingCharacteristic);
       return;
@@ -129,7 +129,7 @@ export class WebhookManager {
     this.setValue(response, id, characteristic, value, characteristic === data.sync);
   }
 
-  private getValue(response: Response, id: string, characteristic: CharacteristicKey) {
+  private getValue(response: Response, id: string, characteristic: HKCharacteristicKey) {
 
     const webhook = this.getWebhook(response, id, characteristic);
     if (webhook === undefined) {
@@ -141,7 +141,7 @@ export class WebhookManager {
   }
 
   private setValue(
-    response: Response, id: string, characteristic: CharacteristicKey, value: CharacteristicValue, syncOnly: boolean) {
+    response: Response, id: string, characteristic: HKCharacteristicKey, value: CharacteristicValue, syncOnly: boolean) {
 
     const webhook = this.getWebhook(response, id, characteristic);
     if (webhook === undefined) {
@@ -168,7 +168,7 @@ export class WebhookManager {
     response.status(200).json({ success: message });
   }
 
-  private getWebhook(response: Response, id: string, characteristic: CharacteristicKey): Webhook | undefined {
+  private getWebhook(response: Response, id: string, characteristic: HKCharacteristicKey): Webhook | undefined {
 
     const byId = this.webhooks.filter( (webhook) => webhook.id === id);
     if (byId.length === 0) {

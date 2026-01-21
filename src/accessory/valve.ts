@@ -5,7 +5,7 @@ import { DummyAccessory, DummyAccessoryDependency } from './base.js';
 import { strings } from '../i18n/i18n.js';
 
 import {
-  AccessoryType, CharacteristicKey, isValidOnState, isValidValveType,
+  AccessoryType, HKCharacteristicKey, isValidOnState, isValidValveType,
   OnState, printableValues, ScheduleType, TimeUnits, ValveType,
 }  from '../model/enums.js';
 import { ValveConfig } from '../model/types.js';
@@ -71,7 +71,7 @@ export class ValveAccessory extends DummyAccessory<ValveConfig> {
 
   override get webhooks(): Webhook[] {
     return [
-      new Webhook(this.identifier, CharacteristicKey.On,
+      new Webhook(this.identifier, HKCharacteristicKey.On,
         new Values( [true, false], 'true, false'),
         () => this.state,
         (value, syncOnly) => {
@@ -93,7 +93,7 @@ export class ValveAccessory extends DummyAccessory<ValveConfig> {
       return;
     }
 
-    const state = this.getStoredProperty(CharacteristicKey.On);
+    const state = this.getStoredProperty(HKCharacteristicKey.On);
     if (state === undefined) {
       await this.registerStateChange();
       return;
@@ -104,7 +104,7 @@ export class ValveAccessory extends DummyAccessory<ValveConfig> {
 
   private initializeDuration(rawTime: number, units: TimeUnits) {
 
-    let duration = this.getStoredProperty(CharacteristicKey.SetDuration);
+    let duration = this.getStoredProperty(HKCharacteristicKey.SetDuration);
     if (duration !== undefined) {
       return;
     }
@@ -119,7 +119,7 @@ export class ValveAccessory extends DummyAccessory<ValveConfig> {
       duration = MAX_DURATION;
     }
 
-    this.setStoredProperty(CharacteristicKey.SetDuration, duration);
+    this.setStoredProperty(HKCharacteristicKey.SetDuration, duration);
   }
 
   private get defaultState(): CharacteristicValue {
@@ -149,11 +149,11 @@ export class ValveAccessory extends DummyAccessory<ValveConfig> {
   }
 
   private async getDuration(): Promise<CharacteristicValue> {
-    return this.getStoredProperty(CharacteristicKey.SetDuration) ?? MAX_DURATION;
+    return this.getStoredProperty(HKCharacteristicKey.SetDuration) ?? MAX_DURATION;
   }
 
   private async setDuration(value: CharacteristicValue): Promise<void> {
-    this.setStoredProperty(CharacteristicKey.SetDuration, value);
+    this.setStoredProperty(HKCharacteristicKey.SetDuration, value);
     this.setAutoResetTimeout(value as number, TimeUnits.SECONDS);
   }
 
@@ -176,7 +176,7 @@ export class ValveAccessory extends DummyAccessory<ValveConfig> {
     if (this.state !== value) {
       this.logIfDesired(this.logMessageForState(value));
 
-      this.setStoredProperty(CharacteristicKey.On, value);
+      this.setStoredProperty(HKCharacteristicKey.On, value);
 
       if (!syncOnly) {
         if (this.config.commandOn && value === 1) {

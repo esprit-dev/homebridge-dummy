@@ -5,7 +5,7 @@ import { DummyAccessory, DummyAccessoryDependency } from '../base.js';
 import { strings } from '../../i18n/i18n.js';
 
 import {
-  AccessoryType, CharacteristicKey, ThermostatState, isValidTemperatureUnits, isValidThermostatState,
+  AccessoryType, HKCharacteristicKey, ThermostatState, isValidTemperatureUnits, isValidThermostatState,
   printableValues, TemperatureUnits }  from '../../model/enums.js';
 import { ThermostatConfig } from '../../model/types.js';
 import { Range, Values, Webhook } from '../../model/webhook.js';
@@ -114,17 +114,17 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
       return;
     }
 
-    const state = this.getStoredProperty(CharacteristicKey.TargetHeatingCoolingState) ?? await storageGet_Deprecated(`${this.identifier}:DefaultState`);
+    const state = this.getStoredProperty(HKCharacteristicKey.TargetHeatingCoolingState) ?? await storageGet_Deprecated(`${this.identifier}:DefaultState`);
     if (state !== undefined) {
       await this.setState(state);
     }
 
-    const currentTemperature = this.getStoredProperty(CharacteristicKey.CurrentTemperature);
+    const currentTemperature = this.getStoredProperty(HKCharacteristicKey.CurrentTemperature);
     if (currentTemperature !== undefined) {
       await this.setCurrentTemperature(currentTemperature);
     }
 
-    const targetTemperature = this.getStoredProperty(CharacteristicKey.TargetTemperature) ?? await storageGet_Deprecated(`${this.identifier}:Temperature`);
+    const targetTemperature = this.getStoredProperty(HKCharacteristicKey.TargetTemperature) ?? await storageGet_Deprecated(`${this.identifier}:Temperature`);
     if (targetTemperature !== undefined) {
       await this.setTargetTemperature(targetTemperature);
     }
@@ -138,7 +138,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
 
     return [
 
-      new Webhook(this.identifier, CharacteristicKey.TargetHeatingCoolingState,
+      new Webhook(this.identifier, HKCharacteristicKey.TargetHeatingCoolingState,
         new Values(
           [
             this.Characteristic.TargetHeatingCoolingState.OFF,
@@ -155,7 +155,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
         },
         this.config.disableLogging),
 
-      new Webhook(this.identifier, CharacteristicKey.CurrentTemperature,
+      new Webhook(this.identifier, HKCharacteristicKey.CurrentTemperature,
         new Range(fromCelsius(this.minTemp, this.units), fromCelsius(this.maxTemp, this.units)),
         () => this.currentTemperature,
         (value) => {
@@ -165,7 +165,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
         },
         this.config.disableLogging),
 
-      new Webhook(this.identifier, CharacteristicKey.TargetTemperature,
+      new Webhook(this.identifier, HKCharacteristicKey.TargetTemperature,
         new Range(fromCelsius(this.minTemp, this.units), fromCelsius(this.maxTemp, this.units)),
         () => this.targetTemperature,
         (value, syncOnly) => {
@@ -223,7 +223,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
     if (this.targetState !== value) {
       this.logState(value);
 
-      this.setStoredProperty(CharacteristicKey.TargetHeatingCoolingState, value);
+      this.setStoredProperty(HKCharacteristicKey.TargetHeatingCoolingState, value);
 
       if (!syncOnly) {
         if (this.config.commandOff && value === this.STATE_OFF) {
@@ -258,7 +258,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
 
     if (this._currentTemperature !== value) {
       this.logCurrentTemperature(value);
-      this.setStoredProperty(CharacteristicKey.CurrentTemperature, value);
+      this.setStoredProperty(HKCharacteristicKey.CurrentTemperature, value);
     }
 
     this._currentTemperature = value;
@@ -271,7 +271,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
     if (this.targetTemperature !== value) {
       this.logTargetTemperature(value);
 
-      this.setStoredProperty(CharacteristicKey.TargetTemperature, value);
+      this.setStoredProperty(HKCharacteristicKey.TargetTemperature, value);
 
       if (!syncOnly) {
         if (this.config.commandTemperature) {

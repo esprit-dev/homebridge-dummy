@@ -4,7 +4,7 @@ import { DummyAccessory, DummyAccessoryDependency } from '../base.js';
 
 import { strings } from '../../i18n/i18n.js';
 
-import { AccessoryType, CharacteristicKey, HumidifierType, isValidHumidifierType, isValidOnState, OnState, printableValues }  from '../../model/enums.js';
+import { AccessoryType, HKCharacteristicKey, HumidifierType, isValidHumidifierType, isValidOnState, OnState, printableValues }  from '../../model/enums.js';
 import { HumidifierConfig } from '../../model/types.js';
 import { Range, Values, Webhook } from '../../model/webhook.js';
 
@@ -70,17 +70,17 @@ export class HumidifierAccessory extends DummyAccessory<HumidifierConfig> {
       return;
     }
 
-    const state = this.getStoredProperty(CharacteristicKey.On);
+    const state = this.getStoredProperty(HKCharacteristicKey.On);
     if (state !== undefined) {
       await this.setState(state);
     }
 
-    const currentHumidity = this.getStoredProperty(CharacteristicKey.CurrentRelativeHumidity);
+    const currentHumidity = this.getStoredProperty(HKCharacteristicKey.CurrentRelativeHumidity);
     if (currentHumidity !== undefined) {
       await this.setCurrentHumidity(currentHumidity);
     }
 
-    const targetHumidity = this.getStoredProperty(CharacteristicKey.TargetRelativeHumidity);
+    const targetHumidity = this.getStoredProperty(HKCharacteristicKey.TargetRelativeHumidity);
     if (targetHumidity !== undefined) {
       await this.setTargetHumidity(targetHumidity);
     }
@@ -94,7 +94,7 @@ export class HumidifierAccessory extends DummyAccessory<HumidifierConfig> {
 
     return [
 
-      new Webhook(this.identifier, CharacteristicKey.On,
+      new Webhook(this.identifier, HKCharacteristicKey.On,
         new Values( [true, false], 'true, false'),
         () => this.state,
         (value, syncOnly) => {
@@ -103,7 +103,7 @@ export class HumidifierAccessory extends DummyAccessory<HumidifierConfig> {
         },
         this.config.disableLogging),
 
-      new Webhook(this.identifier, CharacteristicKey.CurrentRelativeHumidity,
+      new Webhook(this.identifier, HKCharacteristicKey.CurrentRelativeHumidity,
         new Range(0, 100),
         () => this.currentHumidity,
         (value) => {
@@ -112,7 +112,7 @@ export class HumidifierAccessory extends DummyAccessory<HumidifierConfig> {
         },
         this.config.disableLogging),
 
-      new Webhook(this.identifier, CharacteristicKey.TargetRelativeHumidity,
+      new Webhook(this.identifier, HKCharacteristicKey.TargetRelativeHumidity,
         new Range(0, 100),
         () => this.targetHumidity,
         (value) => {
@@ -164,7 +164,7 @@ export class HumidifierAccessory extends DummyAccessory<HumidifierConfig> {
     if (this.state !== value) {
       this.logIfDesired(this.logMessageForState(value));
 
-      this.setStoredProperty(CharacteristicKey.On, value);
+      this.setStoredProperty(HKCharacteristicKey.On, value);
 
       if (!syncOnly) {
         if (this.config.commandOn && value === 1) {
@@ -193,7 +193,7 @@ export class HumidifierAccessory extends DummyAccessory<HumidifierConfig> {
 
     if (this._currentHumidity !== value) {
       this.logIfDesired(strings.sensor.humidity, value.toString());
-      this.setStoredProperty(CharacteristicKey.CurrentRelativeHumidity, value);
+      this.setStoredProperty(HKCharacteristicKey.CurrentRelativeHumidity, value);
     }
 
     this._currentHumidity = value;
@@ -205,7 +205,7 @@ export class HumidifierAccessory extends DummyAccessory<HumidifierConfig> {
 
     if (this.targetHumidity !== value) {
       this.logIfDesired(strings.humidifier.targetHumidity, value.toString());
-      this.setStoredProperty(CharacteristicKey.TargetRelativeHumidity, value);
+      this.setStoredProperty(HKCharacteristicKey.TargetRelativeHumidity, value);
     }
 
     this.targetHumidity = value;
