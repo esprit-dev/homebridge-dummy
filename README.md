@@ -34,6 +34,8 @@ Visit the [Wiki](https://github.com/mpatfield/homebridge-dummy/wiki) to learn mo
 
 ## Credits
 
+[@simplytoast1](https://github.com/sponsors/simplytoast1) for push notification service [Notify! (notify.pingie.com)](https://notify.pingie.com/)
+
 [@jotzet79](https://github.com/sponsors/jotzet79) for German translations
 
 [@kozmajanos](https://github.com/sponsors/kozmajanos) for Hungarian translations

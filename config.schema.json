@@ -29,6 +29,90 @@
           }
         }
       },
+      "notification": {
+        "type": "object",
+        "properties": {
+          "api": {
+            "type": "string",
+            "title": "${config.title.api}",
+            "enum": ["PINGIE_NOTIFY"],
+            "enumNames": ["${config.enumNames.pingieNotify}"]
+          },
+          "token": {
+            "type": "string",
+            "title": "${config.title.pushToken}"
+          },
+          "id": {
+            "type": "string",
+            "title": "${config.title.pushId}"
+          },
+          "title": {
+            "type": "string",
+            "title": "${config.title.pushTitle}"
+          },
+          "text": {
+            "type": "string",
+            "title": "${config.title.pushText}"
+          },
+          "groupType": {
+            "type": "string"
+          },
+          "iconURL": {
+            "type": "string"
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "api": {
+                  "enum": ["PINGIE_NOTIFY"]
+                }
+              },
+              "required": ["api"]
+            },
+            "then": {
+              "required": ["token", "id", "text"]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "token": {
+                }
+              },
+              "required": ["token"]
+            },
+            "then": {
+              "required": ["api", "id", "text"]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "id": {
+                }
+              },
+              "required": ["id"]
+            },
+            "then": {
+              "required": ["token"]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "title": {
+                }
+              },
+              "required": ["title"]
+            },
+            "then": {
+              "required": ["text"]
+            }
+          }
+        ]
+      },
       "schedule": {
         "type": "object",
         "properties": {
@@ -337,6 +421,7 @@
               "title": "${config.title.groupName}"
             },
             "sensor": { "$ref": "#/definitions/sensor" },
+            "notification": { "$ref": "#/definitions/notification" },
             "schedule": { "$ref": "#/definitions/schedule" },
             "autoReset": { "$ref": "#/definitions/schedule" },
             "limiter": { "$ref": "#/definitions/limiter" },
@@ -484,6 +569,7 @@
               "type": "div",
               "displayFlex": true,
               "flex-direction": "row",
+              "notitle": true,
               "items": [
                 {
                   "key": "accessories[].name",
@@ -510,6 +596,7 @@
                   "type": "div",
                   "displayFlex": true,
                   "flex-direction": "row",
+                  "notitle": true,
                   "condition": {
                     "functionBody": "return ['Lightbulb','Outlet','Switch'].includes(model.accessories?.[arguments[1]]?.type);"
                   },
@@ -535,6 +622,7 @@
                   "type": "div",
                   "displayFlex": true,
                   "flex-direction": "row",
+                  "notitle": true,
                   "condition": {
                     "functionBody": "return ['LockMechanism'].includes(model.accessories?.[arguments[1]]?.type);"
                   },
@@ -553,6 +641,7 @@
                   "type": "div",
                   "displayFlex": true,
                   "flex-direction": "row",
+                  "notitle": true,
                   "condition": {
                     "functionBody": "return ['Door', 'GarageDoorOpener', 'Window', 'WindowCovering'].includes(model.accessories?.[arguments[1]]?.type);"
                   },
@@ -571,6 +660,7 @@
                   "type": "div",
                   "displayFlex": true,
                   "flex-direction": "row",
+                  "notitle": true,
                   "items": [
                     {
                       "key": "accessories[].temperatureUnits",
@@ -592,6 +682,7 @@
                   "type": "div",
                   "displayFlex": true,
                   "flex-direction": "row",
+                  "notitle": true,
                   "condition": {
                     "functionBody": "return ['Thermostat'].includes(model.accessories?.[arguments[1]]?.type);"
                   },
@@ -614,6 +705,7 @@
                   "type": "div",
                   "displayFlex": true,
                   "flex-direction": "row",
+                  "notitle": true,
                   "condition": {
                     "functionBody": "return ['HumidifierDehumidifier'].includes(model.accessories?.[arguments[1]]?.type);"
                   },
@@ -632,6 +724,7 @@
                   "type": "div",
                   "displayFlex": true,
                   "flex-direction": "row",
+                  "notitle": true,
                   "condition": {
                     "functionBody": "return ['Valve'].includes(model.accessories?.[arguments[1]]?.type);"
                   },
@@ -650,6 +743,7 @@
                   "type": "div",
                   "displayFlex": true,
                   "flex-direction": "row",
+                  "notitle": true,
                   "items": [
                     {
                       "key": "accessories[].enableWebook",
@@ -661,10 +755,7 @@
                     },
                     {
                       "key": "accessories[].resetOnRestart",
-                      "flex": "0 1 33%",
-                      "condition": {
-                        "functionBody": "const accessory = model.accessories?.[arguments[1]]; return accessory?.schedule?.type === undefined && accessory.autoReset?.type === undefined;"
-                      }
+                      "flex": "0 1 33%"
                     }
                   ]
                 }
@@ -682,6 +773,7 @@
                   "type": "div",
                   "displayFlex": true,
                   "flex-direction": "row",
+                  "notitle": true,
                   "items": [
                     {
                       "key": "accessories[].schedule.type",
@@ -758,6 +850,7 @@
                   "type": "div",
                   "displayFlex": true,
                   "flex-direction": "row",
+                  "notitle": true,
                   "items": [
                     {
                       "key": "accessories[].autoReset.type",
@@ -819,6 +912,66 @@
                   "condition": {
                       "functionBody": "const autoReset = model.accessories?.[arguments[1]]?.autoReset; return ['TIMEOUT', 'INTERVAL'].includes(autoReset?.type) && autoReset?.time;"
                   }
+                }
+              ]
+            },
+            {
+              "type": "fieldset",
+              "title": "${config.title.notification}",
+              "description": "${config.description.notification}",
+              "condition": {
+                "functionBody": "const type = model.accessories?.[arguments[1]]?.type; return type && !['HumiditySensor','TemperatureSensor','Thermostat'].includes(type)"
+              },
+              "items": [
+                {
+                  "type": "fieldset",
+                  "items": [
+                    {
+                      "type": "div",
+                      "displayFlex": true,
+                      "flex-direction": "row",
+                      "notitle": true,
+                      "items": [
+                        {
+                          "key": "accessories[].notification.api",
+                          "flex": "0 0 auto"
+                        },
+                        {
+                          "key": "accessories[].notification.token",
+                          "flex": "0 0 auto",
+                          "condition": {
+                            "functionBody": "return model.accessories?.[arguments[1]]?.notification?.api"
+                          }
+                        },
+                        {
+                          "key": "accessories[].notification.id",
+                          "flex": "0 0 auto",
+                          "condition": {
+                            "functionBody": "return model.accessories?.[arguments[1]]?.notification?.api"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "div",
+                      "displayFlex": true,
+                      "flex-direction": "row",
+                      "notitle": true,
+                      "condition": {
+                        "functionBody": "return model.accessories?.[arguments[1]]?.notification?.token || model.accessories?.[arguments[1]]?.notification?.id"
+                      },
+                      "items": [
+                        {
+                          "key": "accessories[].notification.title",
+                          "flex": "0 0 30%"
+                        },
+                        {
+                          "key": "accessories[].notification.text",
+                          "flex": "0 0 70%"
+                        }
+                      ]
+                    }
+                  ]
                 }
               ]
             },
