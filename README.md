@@ -34,8 +34,6 @@ Visit the [Wiki](https://github.com/mpatfield/homebridge-dummy/wiki) to learn mo
 
 ## Credits
 
-[@simplytoast1](https://github.com/sponsors/simplytoast1) for push notification service [Notify! (notify.pingie.com)](https://notify.pingie.com/)
-
 [@jotzet79](https://github.com/sponsors/jotzet79) for German translations
 
 [@kozmajanos](https://github.com/sponsors/kozmajanos) for Hungarian translations
@@ -45,6 +43,8 @@ Visit the [Wiki](https://github.com/mpatfield/homebridge-dummy/wiki) to learn mo
 [@dcompane](https://github.com/sponsors/dcompane) for Spanish translations
 
 [Keryan Belahcene](https://www.instagram.com/keryan.me) for creating the [Flume](https://github.com/homebridge-plugins/homebridge-flume) banner image which was adapted for use with this plugin
+
+Push Notifications feature uses [Notify!](https://notify.pingie.com/) by [@simplytoast1](https://github.com/sponsors/simplytoast1)
 
 Schedule feature inspired by [Homebridge Schedule](https://github.com/kbrashears5/typescript-homebridge-schedule) by [@kbrashears5](https://github.com/sponsors/kbrashears5)
 
