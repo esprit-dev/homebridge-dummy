@@ -31,7 +31,7 @@ export class HumidifierAccessory extends DummyAccessory<HumidifierConfig> {
     this.state = this.defaultState;
     this.targetHumidity = DEFAULT_HUMIDITY;
 
-    this.accessoryService.getCharacteristic(dependency.Characteristic.TargetHumidifierDehumidifierState)
+    this.service.getCharacteristic(dependency.Characteristic.TargetHumidifierDehumidifierState)
       .setProps({
         minStep: 1,
         validValues: [this.targetState as number],
@@ -39,17 +39,17 @@ export class HumidifierAccessory extends DummyAccessory<HumidifierConfig> {
       .onGet(async () => this.targetState)
       .onSet(async () => undefined );
 
-    this.accessoryService.getCharacteristic(dependency.Characteristic.CurrentHumidifierDehumidifierState)
+    this.service.getCharacteristic(dependency.Characteristic.CurrentHumidifierDehumidifierState)
       .onGet(async () => this.currentState);
 
-    this.accessoryService.getCharacteristic(dependency.Characteristic.Active)
+    this.service.getCharacteristic(dependency.Characteristic.Active)
       .onGet(async () => this.state)
       .onSet(this.setState.bind(this));
 
-    this.accessoryService.getCharacteristic(dependency.Characteristic.CurrentRelativeHumidity)
+    this.service.getCharacteristic(dependency.Characteristic.CurrentRelativeHumidity)
       .onGet(async () => this.currentHumidity);
 
-    this.accessoryService.getCharacteristic(this.TargetHumidityCharacteristic)
+    this.service.getCharacteristic(this.TargetHumidityCharacteristic)
       .onGet(async () => this.targetHumidity)
       .onSet(this.setTargetHumidity.bind(this));
 
@@ -59,13 +59,13 @@ export class HumidifierAccessory extends DummyAccessory<HumidifierConfig> {
   private async initializeHumidifier() {
 
     if (!this.isStateful) {
-      this.accessoryService.updateCharacteristic(this.Characteristic.TargetHumidifierDehumidifierState, this.targetState);
-      this.accessoryService.updateCharacteristic(this.Characteristic.CurrentHumidifierDehumidifierState, this.currentState);
+      this.service.updateCharacteristic(this.Characteristic.TargetHumidifierDehumidifierState, this.targetState);
+      this.service.updateCharacteristic(this.Characteristic.CurrentHumidifierDehumidifierState, this.currentState);
 
-      this.accessoryService.updateCharacteristic(this.Characteristic.Active, this.state);
+      this.service.updateCharacteristic(this.Characteristic.Active, this.state);
 
-      this.accessoryService.updateCharacteristic(this.Characteristic.CurrentRelativeHumidity, this.currentHumidity);
-      this.accessoryService.updateCharacteristic(this.TargetHumidityCharacteristic, this.targetHumidity);
+      this.service.updateCharacteristic(this.Characteristic.CurrentRelativeHumidity, this.currentHumidity);
+      this.service.updateCharacteristic(this.TargetHumidityCharacteristic, this.targetHumidity);
 
       return;
     }
@@ -183,8 +183,8 @@ export class HumidifierAccessory extends DummyAccessory<HumidifierConfig> {
       this.onReset();
     }
 
-    this.accessoryService.updateCharacteristic(this.Characteristic.CurrentHumidifierDehumidifierState, this.currentState);
-    this.accessoryService.updateCharacteristic(this.Characteristic.Active, this.state);
+    this.service.updateCharacteristic(this.Characteristic.CurrentHumidifierDehumidifierState, this.currentState);
+    this.service.updateCharacteristic(this.Characteristic.Active, this.state);
 
     await this.registerStateChange();
   }
@@ -198,7 +198,7 @@ export class HumidifierAccessory extends DummyAccessory<HumidifierConfig> {
 
     this._currentHumidity = value;
 
-    this.accessoryService.updateCharacteristic(this.Characteristic.CurrentRelativeHumidity, this.currentHumidity);
+    this.service.updateCharacteristic(this.Characteristic.CurrentRelativeHumidity, this.currentHumidity);
   }
 
   private async setTargetHumidity(value: CharacteristicValue) {
@@ -210,8 +210,8 @@ export class HumidifierAccessory extends DummyAccessory<HumidifierConfig> {
 
     this.targetHumidity = value;
 
-    this.accessoryService.updateCharacteristic(this.TargetHumidityCharacteristic, this.targetHumidity);
-    this.accessoryService.updateCharacteristic(this.Characteristic.CurrentRelativeHumidity, this.currentHumidity);
+    this.service.updateCharacteristic(this.TargetHumidityCharacteristic, this.targetHumidity);
+    this.service.updateCharacteristic(this.Characteristic.CurrentRelativeHumidity, this.currentHumidity);
   }
 
   override async trigger(): Promise<void> {

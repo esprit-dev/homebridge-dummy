@@ -39,17 +39,17 @@ export class ValveAccessory extends DummyAccessory<ValveConfig> {
 
     this.state = this.defaultState;
 
-    this.accessoryService.getCharacteristic(dependency.Characteristic.ValveType)
+    this.service.getCharacteristic(dependency.Characteristic.ValveType)
       .onGet(this.getType.bind(this));
 
-    this.accessoryService.getCharacteristic(dependency.Characteristic.Active)
+    this.service.getCharacteristic(dependency.Characteristic.Active)
       .onGet(this.getState.bind(this))
       .onSet(this.setState.bind(this));
 
-    this.accessoryService.getCharacteristic(dependency.Characteristic.InUse)
+    this.service.getCharacteristic(dependency.Characteristic.InUse)
       .onGet(this.getState.bind(this));
 
-    this.accessoryService.getCharacteristic(dependency.Characteristic.IsConfigured)
+    this.service.getCharacteristic(dependency.Characteristic.IsConfigured)
       .onGet(() => dependency.Characteristic.IsConfigured.CONFIGURED);
 
     const autoReset = dependency.config.autoReset;
@@ -57,12 +57,12 @@ export class ValveAccessory extends DummyAccessory<ValveConfig> {
 
       this.initializeDuration(autoReset.time, autoReset.units);
 
-      this.accessoryService.getCharacteristic(dependency.Characteristic.SetDuration)
+      this.service.getCharacteristic(dependency.Characteristic.SetDuration)
         .setProps({ minValue: MIN_DURATION, maxValue: MAX_DURATION })
         .onGet(this.getDuration.bind(this))
         .onSet(this.setDuration.bind(this));
 
-      this.accessoryService.getCharacteristic(dependency.Characteristic.RemainingDuration)
+      this.service.getCharacteristic(dependency.Characteristic.RemainingDuration)
         .onGet(this.getRemainingDuration.bind(this));
     }
 
@@ -87,8 +87,8 @@ export class ValveAccessory extends DummyAccessory<ValveConfig> {
     await new Promise(resolve => setImmediate(resolve));
 
     if (!this.isStateful) {
-      this.accessoryService.updateCharacteristic(this.Characteristic.Active, this.state);
-      this.accessoryService.updateCharacteristic(this.Characteristic.InUse, this.state);
+      this.service.updateCharacteristic(this.Characteristic.Active, this.state);
+      this.service.updateCharacteristic(this.Characteristic.InUse, this.state);
       await this.registerStateChange();
       return;
     }
@@ -196,8 +196,8 @@ export class ValveAccessory extends DummyAccessory<ValveConfig> {
       this.onReset();
     }
 
-    this.accessoryService.updateCharacteristic(this.Characteristic.Active, this.state);
-    this.accessoryService.updateCharacteristic(this.Characteristic.InUse, this.state);
+    this.service.updateCharacteristic(this.Characteristic.Active, this.state);
+    this.service.updateCharacteristic(this.Characteristic.InUse, this.state);
 
     await this.registerStateChange();
   }

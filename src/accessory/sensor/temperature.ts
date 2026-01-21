@@ -23,7 +23,7 @@ export class TemperatureSensorAccessory extends DummyAccessory<TemperatureSensor
       this.log.warning(strings.sensor.badTemperatureUnits, this.name, `'${dependency.config.temperatureUnits}'`, printableValues(TemperatureUnits));
     }
 
-    this.accessoryService.getCharacteristic(dependency.Characteristic.CurrentTemperature)
+    this.service.getCharacteristic(dependency.Characteristic.CurrentTemperature)
       .onGet(this.getTemperature.bind(this));
 
     this.temperature = (this.isStateful && this.getProperty(HKCharacteristicKey.CurrentTemperature)) ?? 0;
@@ -72,7 +72,7 @@ export class TemperatureSensorAccessory extends DummyAccessory<TemperatureSensor
 
     this.temperature = value;
 
-    this.accessoryService.updateCharacteristic(this.Characteristic.CurrentTemperature, this.temperature);
+    this.service.updateCharacteristic(this.Characteristic.CurrentTemperature, this.temperature);
   }
 
   override async trigger(): Promise<void> {

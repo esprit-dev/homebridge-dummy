@@ -15,7 +15,7 @@ export class HumiditySensorAccessory extends DummyAccessory<HumiditySensorConfig
   constructor(dependency: DummyAccessoryDependency<HumiditySensorConfig>) {
     super(dependency);
 
-    this.accessoryService.getCharacteristic(dependency.Characteristic.CurrentRelativeHumidity)
+    this.service.getCharacteristic(dependency.Characteristic.CurrentRelativeHumidity)
       .onGet(this.getHumidity.bind(this));
 
     this.humidity = (this.isStateful && this.getProperty(HKCharacteristicKey.CurrentRelativeHumidity)) ?? 0;
@@ -59,7 +59,7 @@ export class HumiditySensorAccessory extends DummyAccessory<HumiditySensorConfig
 
     this.humidity = value;
 
-    this.accessoryService.updateCharacteristic(this.Characteristic.CurrentRelativeHumidity, this.humidity);
+    this.service.updateCharacteristic(this.Characteristic.CurrentRelativeHumidity, this.humidity);
   }
 
   override async trigger(): Promise<void> {

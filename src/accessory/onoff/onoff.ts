@@ -23,7 +23,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
 
     this.on = this.defaultState;
 
-    this.accessoryService.getCharacteristic(dependency.Characteristic.On)
+    this.service.getCharacteristic(dependency.Characteristic.On)
       .onGet(this.getOn.bind(this))
       .onSet(this.setOn.bind(this));
 
@@ -48,7 +48,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
     await new Promise(resolve => setImmediate(resolve));
 
     if (!this.isStateful) {
-      this.accessoryService.updateCharacteristic(this.Characteristic.On, this.on);
+      this.service.updateCharacteristic(this.Characteristic.On, this.on);
       await this.registerStateChange();
       return;
     }
@@ -103,7 +103,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
       this.onReset();
     }
 
-    this.accessoryService.updateCharacteristic(this.Characteristic.On, this.on);
+    this.service.updateCharacteristic(this.Characteristic.On, this.on);
 
     if (this.sensor) {
       if (!this.sensor.timerControlled) {

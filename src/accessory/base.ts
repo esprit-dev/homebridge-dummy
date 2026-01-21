@@ -49,7 +49,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
     return config.id ?? `${PLATFORM_NAME}:${config.type}:${config.name.replace(/\s+/g,'')}`;
   }
 
-  protected readonly accessoryService: Service;
+  protected readonly service: Service;
 
   private readonly _schedule?: Schedule;
   private readonly _autoReset?: Schedule;
@@ -100,7 +100,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
         accessoryService.setCharacteristic(dependency.Characteristic.ConfiguredName, name);
       }
 
-      this.accessoryService = accessoryService;
+      this.service = accessoryService;
 
       return;
     }
@@ -113,7 +113,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
       .setCharacteristic(dependency.Characteristic.SerialNumber, this.identifier)
       .setCharacteristic(dependency.Characteristic.FirmwareRevision, getVersion());
 
-    this.accessoryService = dependency.platformAccessory.getService(serviceInstance) || dependency.platformAccessory.addService(serviceInstance);
+    this.service = dependency.platformAccessory.getService(serviceInstance) || dependency.platformAccessory.addService(serviceInstance);
 
     for (const type of Object.values(AccessoryType)) {
       const existingService = dependency.platformAccessory.getService(dependency.Service[type]);
@@ -130,7 +130,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
   protected abstract reset(): Promise<void>;
 
   public get subtype(): string | undefined {
-    return this.accessoryService.subtype;
+    return this.service.subtype;
   }
 
   public teardown() {

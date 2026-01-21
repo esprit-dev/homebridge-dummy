@@ -23,11 +23,11 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
 
     this.state = this.defaultLockState;
 
-    this.accessoryService.getCharacteristic(dependency.Characteristic.LockTargetState)
+    this.service.getCharacteristic(dependency.Characteristic.LockTargetState)
       .onGet(this.getState.bind(this))
       .onSet(this.setState.bind(this));
 
-    this.accessoryService.getCharacteristic(dependency.Characteristic.LockCurrentState)
+    this.service.getCharacteristic(dependency.Characteristic.LockCurrentState)
       .onGet(this.getState.bind(this));
 
     this.initializeState();
@@ -36,8 +36,8 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
   private async initializeState() {
 
     if (!this.isStateful) {
-      this.accessoryService.updateCharacteristic(this.Characteristic.LockTargetState, this.state);
-      this.accessoryService.updateCharacteristic(this.Characteristic.LockCurrentState, this.state);
+      this.service.updateCharacteristic(this.Characteristic.LockTargetState, this.state);
+      this.service.updateCharacteristic(this.Characteristic.LockCurrentState, this.state);
       await this.registerStateChange();
       return;
     }
@@ -105,8 +105,8 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
       this.onReset();
     }
 
-    this.accessoryService.updateCharacteristic(this.Characteristic.LockTargetState, this.state);
-    this.accessoryService.updateCharacteristic(this.Characteristic.LockCurrentState, this.state);
+    this.service.updateCharacteristic(this.Characteristic.LockTargetState, this.state);
+    this.service.updateCharacteristic(this.Characteristic.LockCurrentState, this.state);
 
     if (this.sensor) {
       if (!this.sensor.timerControlled) {

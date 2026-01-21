@@ -10,7 +10,7 @@ export class GarageDoorAccessory extends PositionAccessory<GarageDoorConfig> {
   constructor(dependency: DummyAccessoryDependency<GarageDoorConfig>) {
     super(dependency);
 
-    this.accessoryService.getCharacteristic(dependency.Characteristic.ObstructionDetected)
+    this.service.getCharacteristic(dependency.Characteristic.ObstructionDetected)
       .onGet( async () => false );
   }
 

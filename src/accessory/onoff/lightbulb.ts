@@ -29,7 +29,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
 
     if (this.isDimmer) {
 
-      this.accessoryService.getCharacteristic(dependency.Characteristic.Brightness)
+      this.service.getCharacteristic(dependency.Characteristic.Brightness)
         .onGet(this.getBrightness.bind(this))
         .onSet(this.setBrightness.bind(this));
 
@@ -37,10 +37,10 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
 
     } else {
 
-      const brightnessCharacteristic = this.accessoryService.getCharacteristic(dependency.Characteristic.Brightness);
+      const brightnessCharacteristic = this.service.getCharacteristic(dependency.Characteristic.Brightness);
 
       if (brightnessCharacteristic) {
-        this.accessoryService.removeCharacteristic(brightnessCharacteristic);
+        this.service.removeCharacteristic(brightnessCharacteristic);
       }
     }
   }
@@ -70,7 +70,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
   private async initializeBrightness() {
 
     if (!this.isStateful) {
-      this.accessoryService.updateCharacteristic(this.Characteristic.Brightness, this.brightness);
+      this.service.updateCharacteristic(this.Characteristic.Brightness, this.brightness);
       return;
     }
 
@@ -94,7 +94,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
     super.setOn(value, syncOnly);
 
     if (this.isDimmer && !value) {
-      this.accessoryService.updateCharacteristic(this.Characteristic.Brightness, this.brightness);
+      this.service.updateCharacteristic(this.Characteristic.Brightness, this.brightness);
     }
   }
 
@@ -117,7 +117,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
 
     this.setProperty(HKCharacteristicKey.Brightness, this.brightness);
 
-    this.accessoryService.updateCharacteristic(this.Characteristic.Brightness, this.brightness);
+    this.service.updateCharacteristic(this.Characteristic.Brightness, this.brightness);
   }
 
   override onTimerStarted(delay: number) {
@@ -128,7 +128,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
     }
 
     this.fader.start(Number(this.brightness), delay, (value) => {
-      this.accessoryService.updateCharacteristic(this.Characteristic.Brightness, value);
+      this.service.updateCharacteristic(this.Characteristic.Brightness, value);
     });
   }
 

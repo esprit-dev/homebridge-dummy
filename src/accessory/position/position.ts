@@ -24,15 +24,15 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
     this.position = this.defaultPosition;
 
     if (this.hasPositionState) {
-      this.accessoryService.getCharacteristic(dependency.Characteristic.PositionState)
+      this.service.getCharacteristic(dependency.Characteristic.PositionState)
         .onGet(this.getState.bind(this));
     }
 
-    this.accessoryService.getCharacteristic(this.targetCharacteristic)
+    this.service.getCharacteristic(this.targetCharacteristic)
       .onGet(this.getPosition.bind(this))
       .onSet(this.setPosition.bind(this));
 
-    this.accessoryService.getCharacteristic(this.currentCharacteristic)
+    this.service.getCharacteristic(this.currentCharacteristic)
       .onGet(this.getPosition.bind(this));
 
     this.initializePosition();
@@ -82,8 +82,8 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
   private async initializePosition() {
 
     if (!this.isStateful) {
-      this.accessoryService.updateCharacteristic(this.targetCharacteristic, this.position);
-      this.accessoryService.updateCharacteristic(this.currentCharacteristic, this.position);
+      this.service.updateCharacteristic(this.targetCharacteristic, this.position);
+      this.service.updateCharacteristic(this.currentCharacteristic, this.position);
       await this.registerStateChange();
       return;
     }
@@ -139,8 +139,8 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
       this.onReset();
     }
 
-    this.accessoryService.updateCharacteristic(this.targetCharacteristic, this.position);
-    this.accessoryService.updateCharacteristic(this.currentCharacteristic, this.position);
+    this.service.updateCharacteristic(this.targetCharacteristic, this.position);
+    this.service.updateCharacteristic(this.currentCharacteristic, this.position);
 
     if (this.sensor) {
       if (!this.sensor.timerControlled) {
