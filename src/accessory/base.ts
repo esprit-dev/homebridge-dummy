@@ -43,6 +43,8 @@ export type DummyAddonDependency = {
   disableLogging: boolean,
 }
 
+export type OnRecordHistory = (type: HistoryType, entry: HistoryEntry, updateLastActivation: boolean) => void
+
 export abstract class DummyAccessory<C extends DummyConfig> {
 
   protected sensor?: SensorAccessory;
@@ -77,7 +79,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
       disableLogging: disableLogging,
     };
 
-    this.sensor = SensorAccessory.new(addonDependency, dependency.config.sensor);
+    this.sensor = SensorAccessory.new(addonDependency, this.recordHistory.bind(this), dependency.config.sensor);
 
     this._schedule = Schedule.new(addonDependency, dependency.config.schedule, strings.schedule, 'Schedule', this.trigger.bind(this));
 
@@ -273,8 +275,8 @@ export abstract class DummyAccessory<C extends DummyConfig> {
     await this.dependency.conditionManager.onStateChange(this.identifier, state);
   }
 
-  protected recordHistory(type: HistoryType, entry: HistoryEntry, updateLastActivation: boolean = false): boolean {
-    return this.dependency.history.record(this, type, entry, updateLastActivation);
+  protected recordHistory(type: HistoryType, entry: HistoryEntry, updateLastActivation: boolean = false) {
+    this.dependency.history.record(this, type, entry, updateLastActivation);
   }
 
   protected logIfDesired(message: string, ...parameters: (string | number)[]) {

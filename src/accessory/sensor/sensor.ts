@@ -7,7 +7,7 @@ import { ServiceType, SensorConfig } from '../../model/types.js';
 
 import { Timeout } from '../../timeout/timeout.js';
 
-import { DummyAddonDependency } from '../base.js';
+import { DummyAddonDependency, OnRecordHistory } from '../base.js';
 
 type SensorStrings = { active: string, inactive: string };
 type SensorInfo = { characteristic: SensorCharacteristic, strings: SensorStrings };
@@ -28,7 +28,7 @@ export class SensorAccessory extends Timeout {
 
   private _active: number = 0;
 
-  static new(dependency: DummyAddonDependency, sensor?: SensorConfig | SensorType): SensorAccessory | undefined {
+  static new(dependency: DummyAddonDependency, historyRecorder: OnRecordHistory, sensor?: SensorConfig | SensorType): SensorAccessory | undefined {
 
     if (sensor) {
 
@@ -43,7 +43,7 @@ export class SensorAccessory extends Timeout {
         return;
       }
 
-      return new SensorAccessory(sensor, dependency);
+      return new SensorAccessory(sensor, dependency, historyRecorder);
     }
 
     SensorAccessory.removeUnwantedServices(dependency.Service, dependency.platformAccessory);
@@ -64,7 +64,7 @@ export class SensorAccessory extends Timeout {
     }
   }
 
-  private constructor(private readonly config: SensorConfig, dependency: DummyAddonDependency) {
+  private constructor(private readonly config: SensorConfig, dependency: DummyAddonDependency, private readonly historyRecorder: OnRecordHistory) {
     super(dependency);
 
     this.service = dependency.platformAccessory.getService(dependency.Service[config.type]) ||
