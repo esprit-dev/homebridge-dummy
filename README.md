@@ -46,6 +46,8 @@ Visit the [Wiki](https://github.com/mpatfield/homebridge-dummy/wiki) to learn mo
 
 Push Notifications feature uses [Notify!](https://notify.pingie.com/) by [@simplytoast1](https://github.com/sponsors/simplytoast1)
 
+[fakegato-history](https://github.com/simont77/fakegato-history) by [@simont77](https://github.com/sponsors/simont77) *Copyright © 2017*
+
 Schedule feature inspired by [Homebridge Schedule](https://github.com/kbrashears5/typescript-homebridge-schedule) by [@kbrashears5](https://github.com/sponsors/kbrashears5)
 
 Scheduling based on sun times (sunrise, sunset, etc.) and reachability (ping) conditions inspired by [Homebridge Virtual Accessories](https://github.com/justjam2013/homebridge-virtual-accessories) by [@justjam2013](https://github.com/sponsors/justjam2013)

@@ -65,6 +65,7 @@
     "cron": "^4.3.2",
     "escape-html": "^1.0.3",
     "express": "^5.1.0",
+    "fakegato-history": "file:./lib/fakegato-history",
     "homebridge-lib": "^7.1.8",
     "lodash.merge": "^4.6.2",
     "node-persist": "^4.0.4",
