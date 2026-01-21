@@ -1,12 +1,13 @@
 import axios from 'axios';
 
+import { isValidNotificationAPI, NotificationAPI, printableValues } from './enums.js';
 import { Notification } from './types.js';
 
 import { DummyAddonDependency } from '../accessory/base.js';
 
-import { assert } from '../tools/validation.js';
 import { strings } from '../i18n/i18n.js';
-import { isValidNotificationAPI, NotificationAPI, printableValues } from './enums.js';
+
+import { assert } from '../tools/validation.js';
 
 const DEFAULT_PUSH_ICON_URL = 'https://github.com/mpatfield/homebridge-dummy/blob/latest/img/icon.png?raw=true';
 
