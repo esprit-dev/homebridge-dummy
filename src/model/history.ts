@@ -42,7 +42,7 @@ type Accessory = DummyAccessory<DummyConfig>;
 
 let ServiceProvider: HistoryServiceProvider | undefined;
 
-const HISTORY_UUID = 'bfc89fa1-78d8-4596-a2cc-cc8585ef0feb';
+const HISTORY_UUID = 'dbca6d94-6d1b-45e1-9feb-daf030819984';
 
 function HistoryService(type: HistoryType, accessory: PlatformAccessory, options?: HistoryOptions): HistoryService {
 
