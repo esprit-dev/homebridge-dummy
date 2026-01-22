@@ -9,7 +9,7 @@ import { strings } from '../i18n/i18n.js';
 
 import { assert } from '../tools/validation.js';
 
-const DEFAULT_PUSH_ICON_URL = 'https://github.com/mpatfield/homebridge-dummy/blob/latest/img/icon.png?raw=true';
+const DEFAULT_PUSH_ICON_URL = 'https://notifyicons.pingie.com/icons/mkpu3s46-6e8wy7gh.png';
 
 export class NotificationManager {
 
