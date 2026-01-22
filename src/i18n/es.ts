@@ -249,7 +249,6 @@ const overrides = {
     welcome: [
       'Por favor ★ (ponga una estrella) en este plugin en GitHub si lo encuentra útil! https://github.com/mpatfield/homebridge-dummy',
       '¿Le gustaría patrocinar este plugin? https://github.com/sponsors/mpatfield',
-      '¡Por favor califíquenos en HOOBS! https://plugins.hoobs.org/plugin/homebridge-dummy',
       '¿Quiere ver este plugin en otro idioma? Por favor visite https://github.com/mpatfield/homebridge-dummy/issues/105',
     ],
   },

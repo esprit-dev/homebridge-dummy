@@ -365,7 +365,6 @@ const en = {
     welcome: [
       'Please ★ this plugin on GitHub if you\'re finding it useful! https://github.com/mpatfield/homebridge-dummy',
       'Would you like to sponsor this plugin? https://github.com/sponsors/mpatfield',
-      'Please rate us on HOOBS! https://plugins.hoobs.org/plugin/homebridge-dummy',
       'Want to see this plugin in your own language? Please visit https://github.com/mpatfield/homebridge-dummy/issues/105',
     ],
   },
