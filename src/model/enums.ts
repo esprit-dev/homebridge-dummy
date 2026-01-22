@@ -31,7 +31,11 @@ export enum HKCharacteristicKey {
 }
 
 export enum EveCharacteristicKey {
+  ClosedDuration = 'ClosedDuration',
   LastActivation = 'LastActivation',
+  OpenDuration = 'OpenDuration',
+  ResetTotal = 'ResetTotal',
+  TimesOpened = 'TimesOpened',
 }
 
 export enum SensorType {

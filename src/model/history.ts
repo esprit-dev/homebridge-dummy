@@ -86,7 +86,7 @@ export class History {
       ...entry,
     };
 
-    this.log.ifVerbose(strings.history.entry, accessory.name, JSON.stringify(entry));
+    this.log.ifVerbose(`${accessory.name} ${History.name}.${this.record.name}(${type}) — `, JSON.stringify(entry));
 
     historyService.addEntry(entry);
 

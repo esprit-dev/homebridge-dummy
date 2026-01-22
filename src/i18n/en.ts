@@ -44,7 +44,6 @@ const en = {
   history: {
     cleanup: 'Removing history for %s', // accessory name
     cleanupFailed: 'Unable to remove history for %s. Try manually removing the file %s from your Homebridge \'persist\' directory.', // accessory name, filename
-    entry: '%s logging history entry:', // accessory name
   },
 
   humidifier: {
@@ -320,8 +319,9 @@ const en = {
     },
 
     contact: {
-      active: '%s detected contact', // accessory name
-      inactive: '%s stopped detecting contact', // accessory name
+      active: '%s stopped detecting contact', // accessory name
+      inactive: '%s detected contact', // accessory name
+      timesOpenedReset: '%s open count has been reset', // accessory name
     },
 
     humidity: '%s humidity is %d%', // accessory name, number

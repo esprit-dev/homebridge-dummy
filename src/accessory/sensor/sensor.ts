@@ -1,14 +1,18 @@
-import { CharacteristicValue, PlatformAccessory, Service } from 'homebridge';
+import { Characteristic, CharacteristicValue, Nullable, PlatformAccessory, Service } from 'homebridge';
+
+import { DummyAddonDependency, OnRecordHistory } from '../base.js';
+
+import { EVE_EPOCH, EveCharacteristic } from '../characteristic/eve.js';
 
 import { strings } from '../../i18n/i18n.js';
 
-import { SensorType, SensorCharacteristic, isValidSensorType, printableValues }  from '../../model/enums.js';
+import { EveCharacteristicKey, isValidSensorType, printableValues, SensorType, SensorCharacteristic }  from '../../model/enums.js';
 import { HistoryType } from '../../model/history.js';
 import { ServiceType, SensorConfig } from '../../model/types.js';
 
 import { Timeout } from '../../timeout/timeout.js';
 
-import { DummyAddonDependency, OnRecordHistory } from '../base.js';
+import { Storage } from '../../tools/storage.js';
 
 type SensorStrings = { active: string, inactive: string };
 type SensorInfo = { characteristic: SensorCharacteristic, strings: SensorStrings };
@@ -75,6 +79,15 @@ export class SensorAccessory extends Timeout {
     this.service.getCharacteristic(characteristicInstance)
       .onGet(this.onGet.bind(this));
 
+    if (this.sensorInfo.characteristic === SensorCharacteristic.ContactSensorState) {
+      this.setupEveCharacteristic(EveCharacteristicKey.OpenDuration, 0);
+      this.setupEveCharacteristic(EveCharacteristicKey.ClosedDuration, 0);
+      this.setupEveCharacteristic(EveCharacteristicKey.TimesOpened, 0);
+      this.setupEveCharacteristic(EveCharacteristicKey.ResetTotal, (Date.now() / 1000) - EVE_EPOCH, strings.sensor.contact.timesOpenedReset, () => {
+        this.setProperty(EveCharacteristicKey.TimesOpened, 0);
+      });
+    }
+
     SensorAccessory.removeUnwantedServices(dependency.Service, dependency.platformAccessory, config.type);
   }
 
@@ -104,7 +117,15 @@ export class SensorAccessory extends Timeout {
 
     this._active = isActive ? 1 : 0;
 
-    if (this.sensorInfo.characteristic === SensorCharacteristic.MotionDetected) {
+    if (this.sensorInfo.characteristic === SensorCharacteristic.ContactSensorState) {
+      this.historyRecorder(HistoryType.DOOR, { status: isActive ? 1 : 0 }, true);
+      if (isActive) {
+        const currentValue = this.getProperty(EveCharacteristicKey.TimesOpened) as number ?? 0;
+        const newValue = currentValue + 1;
+        this.setProperty(EveCharacteristicKey.TimesOpened, newValue);
+        this.service.updateCharacteristic(EveCharacteristic(EveCharacteristicKey.TimesOpened), newValue );
+      }
+    } else if (this.sensorInfo.characteristic === SensorCharacteristic.MotionDetected) {
       this.historyRecorder(HistoryType.MOTION, { status: isActive ? 1 : 0 }, true);
     }
 
@@ -118,5 +139,52 @@ export class SensorAccessory extends Timeout {
         this.active = false;
       }, 1000);
     }
+  }
+
+  private getProperty(key: EveCharacteristicKey): CharacteristicValue | undefined {
+    return Storage.get(this.dependency.identifier, key);
+  }
+
+  private setProperty(key: EveCharacteristicKey, value: CharacteristicValue) {
+    Storage.set(this.dependency.identifier, key, value);
+  }
+
+  private setupEveCharacteristic(key: EveCharacteristicKey, defaultValue: CharacteristicValue, logString?: string,
+    onSetCallback?: (value: CharacteristicValue) => (void)): Characteristic | undefined {
+
+    const startingValue = this.getProperty(key) ?? defaultValue;
+
+    this.service.addOptionalCharacteristic(EveCharacteristic(key));
+
+    const characteristic = this.service.getCharacteristic(EveCharacteristic(key));
+    characteristic.setValue(startingValue);
+
+    this.setProperty(key, startingValue);
+
+    characteristic.onGet( async (): Promise<Nullable<CharacteristicValue>> => {
+      return this.getProperty(key) ?? null;
+    });
+
+    if (onSetCallback === undefined) {
+      return;
+    }
+
+    characteristic.onSet( async (value: CharacteristicValue) => {
+      onSetCallback(value);
+
+      if (value === this.getProperty(key)) {
+        return;
+      }
+
+      this.setProperty(key, value);
+
+      this.service.updateCharacteristic(EveCharacteristic(key), value);
+
+      if (logString) {
+        this.logIfDesired(logString);
+      }
+    });
+
+    return characteristic;
   }
 }
