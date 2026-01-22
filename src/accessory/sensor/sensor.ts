@@ -3,6 +3,7 @@ import { CharacteristicValue, PlatformAccessory, Service } from 'homebridge';
 import { strings } from '../../i18n/i18n.js';
 
 import { SensorType, SensorCharacteristic, isValidSensorType, printableValues }  from '../../model/enums.js';
+import { HistoryType } from '../../model/history.js';
 import { ServiceType, SensorConfig } from '../../model/types.js';
 
 import { Timeout } from '../../timeout/timeout.js';
@@ -102,6 +103,10 @@ export class SensorAccessory extends Timeout {
     }
 
     this._active = isActive ? 1 : 0;
+
+    if (this.sensorInfo.characteristic === SensorCharacteristic.MotionDetected) {
+      this.historyRecorder(HistoryType.MOTION, { status: isActive ? 1 : 0 }, true);
+    }
 
     const characteristicInstance = this.dependency.Characteristic[this.sensorInfo.characteristic];
     this.service.updateCharacteristic(characteristicInstance, this._active);

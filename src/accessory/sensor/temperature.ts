@@ -5,6 +5,7 @@ import { DummyAccessory, DummyAccessoryDependency } from '../base.js';
 import { strings } from '../../i18n/i18n.js';
 
 import { AccessoryType, HKCharacteristicKey, isValidTemperatureUnits, printableValues, TemperatureUnits } from '../../model/enums.js';
+import { HistoryType } from '../../model/history.js';
 import { TemperatureSensorConfig } from '../../model/types.js';
 import { Range, Webhook } from '../../model/webhook.js';
 import { fromCelsius, toCelsius } from '../../tools/temperature.js';
@@ -68,6 +69,8 @@ export class TemperatureSensorAccessory extends DummyAccessory<TemperatureSensor
           this.executeCommand(this.config.commandTemperature);
         }
       }
+
+      this.recordHistory(HistoryType.WEATHER, { temp: value as number } );
     }
 
     this.temperature = value;

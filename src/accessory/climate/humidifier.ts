@@ -5,6 +5,7 @@ import { DummyAccessory, DummyAccessoryDependency } from '../base.js';
 import { strings } from '../../i18n/i18n.js';
 
 import { AccessoryType, HKCharacteristicKey, HumidifierType, isValidHumidifierType, isValidOnState, OnState, printableValues }  from '../../model/enums.js';
+import { HistoryType } from '../../model/history.js';
 import { HumidifierConfig } from '../../model/types.js';
 import { Range, Values, Webhook } from '../../model/webhook.js';
 
@@ -194,6 +195,7 @@ export class HumidifierAccessory extends DummyAccessory<HumidifierConfig> {
     if (this._currentHumidity !== value) {
       this.logIfDesired(strings.sensor.humidity, value.toString());
       this.setProperty(HKCharacteristicKey.CurrentRelativeHumidity, value);
+      this.recordHistory(HistoryType.WEATHER, { humidity: value as number } );
     }
 
     this._currentHumidity = value;

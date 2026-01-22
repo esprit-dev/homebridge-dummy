@@ -5,6 +5,7 @@ import { DummyAccessory, DummyAccessoryDependency } from '../base.js';
 import { strings } from '../../i18n/i18n.js';
 
 import { AccessoryType, HKCharacteristicKey } from '../../model/enums.js';
+import { HistoryType } from '../../model/history.js';
 import { HumiditySensorConfig } from '../../model/types.js';
 import { Range, Webhook } from '../../model/webhook.js';
 
@@ -55,6 +56,8 @@ export class HumiditySensorAccessory extends DummyAccessory<HumiditySensorConfig
           this.executeCommand(this.config.commandHumidity);
         }
       }
+
+      this.recordHistory(HistoryType.WEATHER, { humidity: value as number } );
     }
 
     this.humidity = value;

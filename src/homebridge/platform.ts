@@ -3,6 +3,7 @@ import { API, DynamicPlatformPlugin, Logger, PlatformAccessory } from 'homebridg
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings.js';
 
 import { DummyAccessory, DummyAccessoryDependency } from '../accessory/base.js';
+import { initEveCharacteristics } from '../accessory/characteristic/eve.js';
 import { createDummyAccessory } from '../accessory/helpers.js';
 import { GroupAccessory, GroupAccessoryDependency } from '../accessory/group.js';
 
@@ -54,6 +55,8 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
       api.serverVersion,
       api.hap.HAPLibraryVersion(),
     );
+
+    initEveCharacteristics(api);
 
     api.on('didFinishLaunching', () => {
       this.setup();

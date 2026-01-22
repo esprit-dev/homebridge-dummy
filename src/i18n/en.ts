@@ -265,6 +265,7 @@ const en = {
       defaultState: 'Default State',
       defaultTemperature: 'Default Temperature',
       disableLogging: 'Disable Logging',
+      enableHistory: 'Enable History',
       enableWebook: 'Enable Webhook',
       fadeOut: 'Fade Out',
       groupName: 'Group Name',

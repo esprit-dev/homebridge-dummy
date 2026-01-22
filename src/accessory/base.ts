@@ -150,7 +150,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
   }
 
   public get historyEnabled(): boolean {
-    return false;
+    return this.dependency.config.enableHistory === true;
   }
 
   public get identifier(): string {

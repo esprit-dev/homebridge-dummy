@@ -7,6 +7,7 @@ import { strings } from '../../i18n/i18n.js';
 import {
   AccessoryType, HKCharacteristicKey, ThermostatState, isValidTemperatureUnits, isValidThermostatState,
   printableValues, TemperatureUnits }  from '../../model/enums.js';
+import { HistoryType } from '../../model/history.js';
 import { ThermostatConfig } from '../../model/types.js';
 import { Range, Values, Webhook } from '../../model/webhook.js';
 
@@ -259,6 +260,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
     if (this._currentTemperature !== value) {
       this.logCurrentTemperature(value);
       this.setProperty(HKCharacteristicKey.CurrentTemperature, value);
+      this.recordHistory(HistoryType.WEATHER, { temp: value as number } );
     }
 
     this._currentTemperature = value;

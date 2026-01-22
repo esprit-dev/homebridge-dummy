@@ -5,6 +5,7 @@ import { DummyAccessory, DummyAccessoryDependency } from '../base.js';
 import { strings } from '../../i18n/i18n.js';
 
 import { HKCharacteristicKey, isValidOnState, OnState, printableValues } from '../../model/enums.js';
+import { HistoryType } from '../../model/history.js';
 import { OnOffConfig } from '../../model/types.js';
 import { Values, Webhook } from '../../model/webhook.js';
 
@@ -93,6 +94,8 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
           this.executeCommand(this.config.commandOff);
         }
       }
+
+      this.recordHistory(HistoryType.CUSTOM, { status: value ? 1 : 0 }, true);
     }
 
     this.on = value;
