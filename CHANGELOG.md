@@ -9,7 +9,7 @@ All notable changes to homebridge-dummy will be documented in this file.
 - [Eve App Support](https://github.com/mpatfield/homebridge-dummy/wiki/Eve-App-Support) including history and additional characteristics — choose "Enable History" in the config UI
     - `ContactSensor` opened/closed history and times opened count with option to reset
     - `MotionSensor` history
-    - Temperature history for `TemperatureSensor`, and `Thermostat`
+    - Temperature history for `TemperatureSensor` and `Thermostat`
     - Humidity history for `HumiditySensor` and `Thermostat`
     - On/off history for `Lightbulb`, `Outlet`, and `Switch`
 
