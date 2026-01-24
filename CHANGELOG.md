@@ -17,6 +17,9 @@ All notable changes to homebridge-dummy will be documented in this file.
 - States are persisted across restarts for all accessories with a `Schedule` defined
     - ⚠️ Use `Reset on Restart` option if you do not want state to be retained
 
+### Fixed
+- Issue with [Reachability Trigger Condition](https://github.com/mpatfield/homebridge-dummy/wiki/Trigger-Conditions#reachabilitypresence) where Auto-Reset timer wasn't getting reset ([#324](https://github.com/mpatfield/homebridge-dummy/issues/324))
+
 ## 1.5.7 (2026-01-20)
 
 ### ‼️ WARNING ‼️ — If upgrading from v0.9.2 or earlier, [READ THIS FIRST](https://github.com/mpatfield/homebridge-dummy/wiki/Migration).

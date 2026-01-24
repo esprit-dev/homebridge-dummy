@@ -61,10 +61,10 @@ export class Reachability {
 
     if (this._alive !== value) {
       this.log.ifVerbose(value ? strings.reachability.reachable : strings.reachability.unreachable, `'${this.macAddress ?? this.networkAddress}'`);
-      this.callback(value);
     }
 
     this._alive = value;
+    this.callback(value);
   }
 
   private async startInterval() {
