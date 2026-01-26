@@ -2,11 +2,11 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-## 1.6.0-beta.1 (2026-01-22)
+## 1.6.0 (2026-01-25)
 
 ### Added
-- Customizable [push notifications](https://github.com/mpatfield/homebridge-dummy/wiki/Push-Notification) using the [Notify!](https://notify.pingie.com/) app (Thank you, [@simplytoast1](https://github.com/sponsors/simplytoast1)!)
-- [Eve App Support](https://github.com/mpatfield/homebridge-dummy/wiki/Eve-App-Support) including history and additional characteristics — choose "Enable History" in the config UI
+- Customizable [push notifications](https://github.com/mpatfield/homebridge-dummy/wiki/Push-Notification) using the [Notify!](https://notify.pingie.com/) app (Thank you for the inspiration, [@simplytoast1](https://github.com/sponsors/simplytoast1)!)
+- [Eve App Support](https://github.com/mpatfield/homebridge-dummy/wiki/Eve-App-Support), including history and additional characteristics — choose "Enable History" in the config UI
     - `ContactSensor` opened/closed history and times opened count with option to reset
     - `MotionSensor` history
     - Temperature history for `TemperatureSensor` and `Thermostat`
@@ -15,10 +15,10 @@ All notable changes to homebridge-dummy will be documented in this file.
 
 ### Changed
 - States are persisted across restarts for all accessories with a `Schedule` defined
-    - ⚠️ Use `Reset on Restart` option if you do not want state to be retained
+    - ⚠️ Use `Reset on Restart` option if you do not want the state to be retained
 
 ### Fixed
-- Issue with [Reachability Trigger Condition](https://github.com/mpatfield/homebridge-dummy/wiki/Trigger-Conditions#reachabilitypresence) where Auto-Reset timer wasn't getting reset ([#324](https://github.com/mpatfield/homebridge-dummy/issues/324))
+- [Reachability/Presence Trigger Condition](https://github.com/mpatfield/homebridge-dummy/wiki/Trigger-Conditions#reachabilitypresence) with Auto-Reset timer wasn't working properly ([#324](https://github.com/mpatfield/homebridge-dummy/issues/324))
 
 ## 1.5.7 (2026-01-20)
 
