@@ -79,7 +79,7 @@ export class SensorAccessory extends Timeout implements EveCharacteristicHost {
     this.service.getCharacteristic(characteristicInstance)
       .onGet(this.onGet.bind(this));
 
-    if (this.sensorInfo.characteristic === SensorCharacteristic.ContactSensorState) {
+    if (dependency.historyEnabled && this.sensorInfo.characteristic === SensorCharacteristic.ContactSensorState) {
       setupEveCharacteristic(this, EveCharacteristicKey.OpenDuration, 0);
       setupEveCharacteristic(this, EveCharacteristicKey.ClosedDuration, 0);
       setupEveCharacteristic(this, EveCharacteristicKey.TimesOpened, 0);
@@ -119,7 +119,7 @@ export class SensorAccessory extends Timeout implements EveCharacteristicHost {
 
     if (this.sensorInfo.characteristic === SensorCharacteristic.ContactSensorState) {
       this.historyRecorder(HistoryType.DOOR, { status: isActive ? 1 : 0 }, true);
-      if (isActive) {
+      if (this.dependency.historyEnabled && isActive) {
         const currentValue = this.getProperty(EveCharacteristicKey.TimesOpened) as number ?? 0;
         const newValue = currentValue + 1;
         this.setProperty(EveCharacteristicKey.TimesOpened, newValue);

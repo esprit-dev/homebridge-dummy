@@ -40,6 +40,7 @@ export type DummyAddonDependency = {
   identifier: string,
   caller: string,
   log: Log,
+  historyEnabled: boolean,
   disableLogging: boolean,
 }
 
@@ -76,6 +77,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
       identifier: this.identifier,
       caller: name,
       log: dependency.log,
+      historyEnabled: dependency.config.enableHistory === true,
       disableLogging: disableLogging,
     };
 
