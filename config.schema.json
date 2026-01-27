@@ -545,6 +545,10 @@
             "enableHistory": {
               "type": "boolean",
               "title": "${config.title.enableHistory}"
+            },
+            "simulateOpenClose": {
+              "type": "boolean",
+              "title": "${config.title.simulateOpenClose}"
             }
           }
         }
@@ -764,6 +768,13 @@
                     },
                     {
                       "flex": "0 0 5%"
+                    },
+                    {
+                      "key": "accessories[].simulateOpenClose",
+                      "flex": "0 0 auto",
+                      "condition": {
+                        "functionBody": "return ['Door', 'GarageDoorOpener', 'Window', 'WindowCovering'].includes(model.accessories?.[arguments[1]]?.type);"
+                      }
                     },
                     {
                       "key": "accessories[].fadeOut",

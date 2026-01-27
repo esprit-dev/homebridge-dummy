@@ -2,12 +2,25 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-## 1.6.0 (2026-01-25)
+## 1.6.1-beta.0 (2026-01-27)
 
 ### ‼️ WARNING ‼️ — If upgrading from v0.9.2 or earlier, [READ THIS FIRST](https://github.com/mpatfield/homebridge-dummy/wiki/Migration).
 *There is now an [option](https://github.com/mpatfield/homebridge-dummy/wiki/Migration#migrating-gradually) to run both old and new versions of Homebridge Dummy in parallel if you want to migrate gradually*
 
 -----
+
+### Added
+- Simulate Open/Close option for Doors, Garage Doors, Windows, and and Window Coverings
+- Fade Out option for `Lightbulb` now visible in the config UI
+
+### Changed
+- Updated push notification dependencies
+- Eve "times opened" counter for `ContactSensor` requires history to be enabled
+
+### Notes
+Would you like to see Homebridge Dummy in your language? Please consider [getting involved](https://github.com/mpatfield/homebridge-dummy/issues/105). No coding experience required!
+
+## 1.6.0 (2026-01-25)
 
 ### Added
 - Customizable [push notifications](https://github.com/mpatfield/homebridge-dummy/wiki/Push-Notification) using the [Notify!](https://notify.pingie.com/) app (Thank you for the inspiration, [@simplytoast1](https://github.com/sponsors/simplytoast1)!)
@@ -24,9 +37,6 @@ All notable changes to homebridge-dummy will be documented in this file.
 
 ### Fixed
 - [Reachability/Presence Trigger Condition](https://github.com/mpatfield/homebridge-dummy/wiki/Trigger-Conditions#reachabilitypresence) with Auto-Reset timer wasn't working properly ([#324](https://github.com/mpatfield/homebridge-dummy/issues/324))
-
-### Notes
-Would you like to see Homebridge Dummy in your language? Please consider [getting involved](https://github.com/mpatfield/homebridge-dummy/issues/105). No coding experience required!
 
 ## 1.5.7 (2026-01-20)
 

@@ -293,6 +293,7 @@ const en = {
       resetOnRestart: 'Reset on Restart',
       schedule: 'Schedule',
       sensor: 'Attach Sensor',
+      simulateOpenClose: 'Simulate Open/Close',
       temperatureUnits: 'Temperature Units',
       time: 'Time',
       timerControlled: 'Activate Sensor on Auto-Reset',

@@ -121,6 +121,7 @@ export type DummyConfig = {
   resetOnRestart?: boolean,
   enableWebook?: boolean,
   enableHistory?: boolean,
+  simulateOpenClose?: boolean,
   disableLogging?: boolean,
   /**
    * @deprecated

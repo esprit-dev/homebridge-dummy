@@ -8,11 +8,18 @@ import { Position, isValidPosition, printableValues, HKCharacteristicKey } from 
 import { PositionConfig } from '../../model/types.js';
 import { Range, Webhook } from '../../model/webhook.js';
 
+import { Fader } from '../../timeout/fader.js';
+import { SECOND } from '../../timeout/timeout.js';
+
 import { storageGet_Deprecated } from '../../tools/storage.js';
+
+export const DEFAULT_OPEN_CLOSE_DURATION = 15 * SECOND;
 
 export abstract class PositionAccessory<C extends PositionConfig = PositionConfig> extends DummyAccessory<PositionConfig> {
 
-  private position: CharacteristicValue;
+  private targetPosition: CharacteristicValue;
+
+  private fader = new Fader();
 
   constructor(dependency: DummyAccessoryDependency<C>) {
     super(dependency);
@@ -21,7 +28,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
       this.log.warning(strings.position.badDefault, this.name, `'${dependency.config.defaultPosition}'`, printableValues(Position));
     }
 
-    this.position = this.defaultPosition;
+    this.targetPosition = this.defaultPosition;
 
     if (this.hasPositionState) {
       this.service.getCharacteristic(dependency.Characteristic.PositionState)
@@ -29,11 +36,11 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
     }
 
     this.service.getCharacteristic(this.targetCharacteristic)
-      .onGet(this.getPosition.bind(this))
-      .onSet(this.setPosition.bind(this));
+      .onGet(this.getTargetPosition.bind(this))
+      .onSet(this.setTargetPosition.bind(this));
 
     this.service.getCharacteristic(this.currentCharacteristic)
-      .onGet(this.getPosition.bind(this));
+      .onGet(this.getCurrentPosition.bind(this));
 
     this.initializePosition();
   }
@@ -48,6 +55,10 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
 
   protected get positionOpen() {
     return 100;
+  }
+
+  protected get currentPosition(): CharacteristicValue {
+    return this.fader.value ?? this.targetPosition;
   }
 
   protected get stateStorageKey() {
@@ -74,9 +85,9 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
     return [
       new Webhook(this.identifier, this.webhookCommand,
         this.webhookRange,
-        () => this.position,
+        () => this.targetPosition,
         (value, syncOnly) => {
-          this.setPosition(value, syncOnly);
+          this.setTargetPosition(value, syncOnly);
           return this.logTemplateForCV(value).replace('%s', this.name);
         },
         this.config.disableLogging),
@@ -86,8 +97,8 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
   private async initializePosition() {
 
     if (!this.isStateful) {
-      this.service.updateCharacteristic(this.targetCharacteristic, this.position);
-      this.service.updateCharacteristic(this.currentCharacteristic, this.position);
+      this.service.updateCharacteristic(this.targetCharacteristic, this.targetPosition);
+      this.service.updateCharacteristic(this.currentCharacteristic, this.currentPosition);
       await this.registerStateChange();
       return;
     }
@@ -98,7 +109,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
       return;
     }
 
-    await this.setPosition(position);
+    await this.setTargetPosition(position);
   }
 
   private get defaultPosition(): CharacteristicValue {
@@ -110,18 +121,18 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
   }
 
   private async registerStateChange() {
-    await this.onStateChange(this.position === this.positionClosed ? Position.CLOSED : Position.OPEN);
+    await this.onStateChange(this.targetPosition === this.positionClosed ? Position.CLOSED : Position.OPEN);
   }
 
-  private async getPosition(): Promise<CharacteristicValue> {
-    return this.position;
+  private async getTargetPosition(): Promise<CharacteristicValue> {
+    return this.targetPosition;
   }
 
-  private async setPosition(value: CharacteristicValue, syncOnly: boolean = false): Promise<void> {
+  private async setTargetPosition(value: CharacteristicValue, syncOnly: boolean = false): Promise<void> {
 
     const targetPosition = value === this.positionClosed ? this.positionClosed : this.positionOpen;
 
-    if (this.position !== targetPosition) {
+    if (this.targetPosition !== targetPosition) {
       this.logPosition(targetPosition);
 
       this.setProperty(this.stateStorageKey, targetPosition);
@@ -133,23 +144,24 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
           this.executeCommand(this.config.commandClose);
         }
       }
+      this.onTargetPositionChanged(this.targetPosition as number, targetPosition);
     }
 
-    this.position = targetPosition;
+    this.targetPosition = targetPosition;
 
-    if (this.position !== this.defaultPosition) {
+    if (this.targetPosition !== this.defaultPosition) {
       this.onTriggered();
     } else {
       this.onReset();
     }
 
-    this.service.updateCharacteristic(this.targetCharacteristic, this.position);
-    this.service.updateCharacteristic(this.currentCharacteristic, this.position);
+    this.service.updateCharacteristic(this.targetCharacteristic, this.targetPosition);
+    this.service.updateCharacteristic(this.currentCharacteristic, this.currentPosition);
 
     if (this.sensor) {
       if (!this.sensor.timerControlled) {
-        this.sensor.active = this.position !== this.defaultPosition;
-      } else if (this.position !== this.defaultPosition) {
+        this.sensor.active = this.targetPosition !== this.defaultPosition;
+      } else if (this.targetPosition !== this.defaultPosition) {
         this.sensor.active = false;
       }
     }
@@ -157,14 +169,31 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
     await this.registerStateChange();
   }
 
+  protected onTargetPositionChanged(oldValue: number, newValue: number) {
+
+    if (this.config.simulateOpenClose !== true) {
+      return;
+    }
+
+    this.fader.cancel();
+
+    this.fader.start(oldValue, newValue, DEFAULT_OPEN_CLOSE_DURATION, (value) => {
+      this.service.updateCharacteristic(this.currentCharacteristic, value);
+    });
+  }
+
+  private async getCurrentPosition(): Promise<CharacteristicValue> {
+    return this.currentPosition;
+  }
+
   override async trigger(): Promise<void> {
     const opposite = this.defaultPosition === this.positionClosed ? this.positionOpen : this.positionClosed;
-    await this.setPosition(opposite);
+    await this.setTargetPosition(opposite);
   }
 
   override async reset(): Promise<void> {
-    if (this.position !== this.defaultPosition) {
-      await this.setPosition(this.defaultPosition);
+    if (this.targetPosition !== this.defaultPosition) {
+      await this.setTargetPosition(this.defaultPosition);
       if (this.sensor?.timerControlled) {
         this.sensor.active = true;
       }
@@ -177,5 +206,10 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
 
   protected logPosition(value: CharacteristicValue) {
     this.logIfDesired(this.logTemplateForCV(value));
+  }
+
+  override teardown(): void {
+    this.fader.teardown();
+    super.teardown();
   }
 }
