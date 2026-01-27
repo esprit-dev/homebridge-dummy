@@ -279,7 +279,7 @@ export abstract class DummyAccessory<C extends DummyConfig> {
     this.dependency.history.record(this, type, entry, updateLastActivation);
   }
 
-  protected logIfDesired(message: string, ...parameters: (string | number)[]) {
+  public logIfDesired(message: string, ...parameters: (string | number)[]) {
 
     if (this.config.disableLogging) {
       return;

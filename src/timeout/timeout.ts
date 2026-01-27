@@ -125,7 +125,7 @@ export class Timeout {
     return getDelay(rawTime, units, random, logStrings, this.disableLogging ? undefined : this.log, this.caller);
   }
 
-  protected logIfDesired(message: string, ...parameters: (string | number)[]) {
+  public logIfDesired(message: string, ...parameters: (string | number)[]) {
 
     if (this.disableLogging) {
       return;

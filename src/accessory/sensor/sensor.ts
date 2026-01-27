@@ -1,8 +1,8 @@
-import { Characteristic, CharacteristicValue, Nullable, PlatformAccessory, Service } from 'homebridge';
+import { CharacteristicValue, PlatformAccessory, Service } from 'homebridge';
 
 import { DummyAddonDependency, OnRecordHistory } from '../base.js';
 
-import { EVE_EPOCH, EveCharacteristic } from '../characteristic/eve.js';
+import { EVE_EPOCH, EveCharacteristic, EveCharacteristicHost, setupEveCharacteristic } from '../characteristic/eve.js';
 
 import { strings } from '../../i18n/i18n.js';
 
@@ -27,9 +27,9 @@ const INFO_MAP: { [key in SensorType]: SensorInfo } = {
   [SensorType.SmokeSensor]: { characteristic: SensorCharacteristic.SmokeDetected, strings: strings.sensor.smoke },
 };
 
-export class SensorAccessory extends Timeout {
+export class SensorAccessory extends Timeout implements EveCharacteristicHost {
 
-  protected readonly service: Service;
+  public readonly service: Service;
 
   private _active: number = 0;
 
@@ -80,10 +80,10 @@ export class SensorAccessory extends Timeout {
       .onGet(this.onGet.bind(this));
 
     if (this.sensorInfo.characteristic === SensorCharacteristic.ContactSensorState) {
-      this.setupEveCharacteristic(EveCharacteristicKey.OpenDuration, 0);
-      this.setupEveCharacteristic(EveCharacteristicKey.ClosedDuration, 0);
-      this.setupEveCharacteristic(EveCharacteristicKey.TimesOpened, 0);
-      this.setupEveCharacteristic(EveCharacteristicKey.ResetTotal, (Date.now() / 1000) - EVE_EPOCH, strings.sensor.contact.timesOpenedReset, () => {
+      setupEveCharacteristic(this, EveCharacteristicKey.OpenDuration, 0);
+      setupEveCharacteristic(this, EveCharacteristicKey.ClosedDuration, 0);
+      setupEveCharacteristic(this, EveCharacteristicKey.TimesOpened, 0);
+      setupEveCharacteristic(this, EveCharacteristicKey.ResetTotal, (Date.now() / 1000) - EVE_EPOCH, strings.sensor.contact.timesOpenedReset, () => {
         this.setProperty(EveCharacteristicKey.TimesOpened, 0);
       });
     }
@@ -141,50 +141,11 @@ export class SensorAccessory extends Timeout {
     }
   }
 
-  private getProperty(key: EveCharacteristicKey): CharacteristicValue | undefined {
+  public getProperty(key: EveCharacteristicKey): CharacteristicValue | undefined {
     return Storage.get(this.dependency.identifier, key);
   }
 
-  private setProperty(key: EveCharacteristicKey, value: CharacteristicValue) {
+  public setProperty(key: EveCharacteristicKey, value: CharacteristicValue) {
     Storage.set(this.dependency.identifier, key, value);
-  }
-
-  private setupEveCharacteristic(key: EveCharacteristicKey, defaultValue: CharacteristicValue, logString?: string,
-    onSetCallback?: (value: CharacteristicValue) => (void)): Characteristic | undefined {
-
-    const startingValue = this.getProperty(key) ?? defaultValue;
-
-    this.service.addOptionalCharacteristic(EveCharacteristic(key));
-
-    const characteristic = this.service.getCharacteristic(EveCharacteristic(key));
-    characteristic.setValue(startingValue);
-
-    this.setProperty(key, startingValue);
-
-    characteristic.onGet( async (): Promise<Nullable<CharacteristicValue>> => {
-      return this.getProperty(key) ?? null;
-    });
-
-    if (onSetCallback === undefined) {
-      return;
-    }
-
-    characteristic.onSet( async (value: CharacteristicValue) => {
-      onSetCallback(value);
-
-      if (value === this.getProperty(key)) {
-        return;
-      }
-
-      this.setProperty(key, value);
-
-      this.service.updateCharacteristic(EveCharacteristic(key), value);
-
-      if (logString) {
-        this.logIfDesired(logString);
-      }
-    });
-
-    return characteristic;
   }
 }
