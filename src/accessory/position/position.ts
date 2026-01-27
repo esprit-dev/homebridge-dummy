@@ -2,6 +2,8 @@ import { CharacteristicValue } from 'homebridge';
 
 import { DummyAccessory, DummyAccessoryDependency } from '../base.js';
 
+import { EveCharacteristicHost, incrementTimesOpened, setupTimesOpened } from '../characteristic/eve.js';
+
 import { strings } from '../../i18n/i18n.js';
 
 import { Position, isValidPosition, printableValues, HKCharacteristicKey } from '../../model/enums.js';
@@ -15,7 +17,7 @@ import { storageGet_Deprecated } from '../../tools/storage.js';
 
 export const DEFAULT_OPEN_CLOSE_DURATION = 15 * SECOND;
 
-export abstract class PositionAccessory<C extends PositionConfig = PositionConfig> extends DummyAccessory<PositionConfig> {
+export abstract class PositionAccessory<C extends PositionConfig = PositionConfig> extends DummyAccessory<PositionConfig> implements EveCharacteristicHost {
 
   private targetPosition: CharacteristicValue;
 
@@ -41,6 +43,10 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
 
     this.service.getCharacteristic(this.currentCharacteristic)
       .onGet(this.getCurrentPosition.bind(this));
+
+    if (this.historyEnabled) {
+      setupTimesOpened(this);
+    }
 
     this.initializePosition();
   }
@@ -144,6 +150,11 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
           this.executeCommand(this.config.commandClose);
         }
       }
+
+      if (this.historyEnabled && targetPosition === this.positionOpen) {
+        incrementTimesOpened(this);
+      }
+
       this.onTargetPositionChanged(this.targetPosition as number, targetPosition);
     }
 

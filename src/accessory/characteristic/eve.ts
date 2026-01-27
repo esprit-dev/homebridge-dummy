@@ -1,6 +1,8 @@
 import { API, CharacteristicValue, Nullable, Service } from 'homebridge';
 import { EveHomeKitTypes } from 'homebridge-lib/EveHomeKitTypes';
 
+import { strings } from '../../i18n/i18n.js';
+
 import { EveCharacteristicKey, CharacteristicKey } from '../../model/enums.js';
 
 export const EVE_EPOCH = 978307200; // Seconds since Jan 1, 2001
@@ -42,7 +44,7 @@ export function isEveCharacteristic(key: CharacteristicKey): key is EveCharacter
   return EveCharacteristicKeys.has(key as EveCharacteristicKey);
 }
 
-export function setupEveCharacteristic(host: EveCharacteristicHost, key: EveCharacteristicKey, defaultValue: CharacteristicValue, logString?: string,
+function setupEveCharacteristic(host: EveCharacteristicHost, key: EveCharacteristicKey, defaultValue: CharacteristicValue, logString?: string,
   onSetCallback?: (value: CharacteristicValue) => (void)) {
 
   const startingValue = host.getProperty(key) ?? defaultValue;
@@ -79,4 +81,20 @@ export function setupEveCharacteristic(host: EveCharacteristicHost, key: EveChar
   });
 
   return characteristic;
+}
+
+export function setupTimesOpened(host: EveCharacteristicHost) {
+  setupEveCharacteristic(host, EveCharacteristicKey.OpenDuration, 0);
+  setupEveCharacteristic(host, EveCharacteristicKey.ClosedDuration, 0);
+  setupEveCharacteristic(host, EveCharacteristicKey.TimesOpened, 0);
+  setupEveCharacteristic(host, EveCharacteristicKey.ResetTotal, (Date.now() / 1000) - EVE_EPOCH, strings.accessory.timesOpenedReset, () => {
+    host.setProperty(EveCharacteristicKey.TimesOpened, 0);
+  });
+}
+
+export function incrementTimesOpened(host: EveCharacteristicHost) {
+  const currentValue = host.getProperty(EveCharacteristicKey.TimesOpened) as number ?? 0;
+  const newValue = currentValue + 1;
+  host.setProperty(EveCharacteristicKey.TimesOpened, newValue);
+  host.service.updateCharacteristic(EveCharacteristic(EveCharacteristicKey.TimesOpened), newValue );
 }

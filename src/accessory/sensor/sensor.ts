@@ -2,7 +2,7 @@ import { CharacteristicValue, PlatformAccessory, Service } from 'homebridge';
 
 import { DummyAddonDependency, OnRecordHistory } from '../base.js';
 
-import { EVE_EPOCH, EveCharacteristic, EveCharacteristicHost, setupEveCharacteristic } from '../characteristic/eve.js';
+import { EveCharacteristicHost, incrementTimesOpened, setupTimesOpened } from '../characteristic/eve.js';
 
 import { strings } from '../../i18n/i18n.js';
 
@@ -80,12 +80,7 @@ export class SensorAccessory extends Timeout implements EveCharacteristicHost {
       .onGet(this.onGet.bind(this));
 
     if (dependency.historyEnabled && this.sensorInfo.characteristic === SensorCharacteristic.ContactSensorState) {
-      setupEveCharacteristic(this, EveCharacteristicKey.OpenDuration, 0);
-      setupEveCharacteristic(this, EveCharacteristicKey.ClosedDuration, 0);
-      setupEveCharacteristic(this, EveCharacteristicKey.TimesOpened, 0);
-      setupEveCharacteristic(this, EveCharacteristicKey.ResetTotal, (Date.now() / 1000) - EVE_EPOCH, strings.sensor.contact.timesOpenedReset, () => {
-        this.setProperty(EveCharacteristicKey.TimesOpened, 0);
-      });
+      setupTimesOpened(this);
     }
 
     SensorAccessory.removeUnwantedServices(dependency.Service, dependency.platformAccessory, config.type);
@@ -120,10 +115,7 @@ export class SensorAccessory extends Timeout implements EveCharacteristicHost {
     if (this.sensorInfo.characteristic === SensorCharacteristic.ContactSensorState) {
       this.historyRecorder(HistoryType.DOOR, { status: isActive ? 1 : 0 }, true);
       if (this.dependency.historyEnabled && isActive) {
-        const currentValue = this.getProperty(EveCharacteristicKey.TimesOpened) as number ?? 0;
-        const newValue = currentValue + 1;
-        this.setProperty(EveCharacteristicKey.TimesOpened, newValue);
-        this.service.updateCharacteristic(EveCharacteristic(EveCharacteristicKey.TimesOpened), newValue );
+        incrementTimesOpened(this);
       }
     } else if (this.sensorInfo.characteristic === SensorCharacteristic.MotionDetected) {
       this.historyRecorder(HistoryType.MOTION, { status: isActive ? 1 : 0 }, true);

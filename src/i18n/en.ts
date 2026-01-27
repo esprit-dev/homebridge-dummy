@@ -3,6 +3,7 @@ const en = {
   accessory: {
     badValueType: '%s expected type %s but was %s', // accessory name, variable type, variable type
     missingRequired: '%s is missing required field %s', // accessory name, variable name
+    timesOpenedReset: '%s open count has been reset', // accessory name
   },
 
   autoReset: {
@@ -321,7 +322,6 @@ const en = {
     contact: {
       active: '%s stopped detecting contact', // accessory name
       inactive: '%s detected contact', // accessory name
-      timesOpenedReset: '%s open count has been reset', // accessory name
     },
 
     humidity: '%s humidity is %d%', // accessory name, number
