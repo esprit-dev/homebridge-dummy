@@ -763,7 +763,7 @@
                       "key": "accessories[].enableHistory",
                       "flex": "0 0 auto",
                       "condition": {
-                        "functionBody": "return ['HumidifierDehumidifier', 'HumiditySensor', 'Outlet', 'Lightbulb', 'Switch', 'TemperatureSensor', 'Thermostat'].includes(model.accessories?.[arguments[1]]?.type);"
+                        "functionBody": "return ['Door', 'GarageDoorOpener', 'HumidifierDehumidifier', 'HumiditySensor', 'Outlet', 'Lightbulb', 'Switch', 'TemperatureSensor', 'Thermostat', 'Window', 'WindowCovering'].includes(model.accessories?.[arguments[1]]?.type);"
                       }
                     },
                     {
