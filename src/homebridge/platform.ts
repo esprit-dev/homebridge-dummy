@@ -109,6 +109,10 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
 
       const platformAccessory = this.platformAccessories.get(id) ?? this.createPlatformAccessory(id, accessoryConfig.name);
 
+      if (platformAccessory.displayName !== accessoryConfig.name) {
+        platformAccessory.updateDisplayName(accessoryConfig.name);
+      }
+
       const dependency: DummyAccessoryDependency<DummyConfig> = {
         Service: this.Service,
         Characteristic: this.Characteristic,
