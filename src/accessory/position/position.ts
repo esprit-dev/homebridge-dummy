@@ -66,10 +66,14 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
     return HKCharacteristicKey.TargetPosition;
   }
 
+  protected get webhookRange(): Range {
+    return new Range(0, 100);
+  }
+
   override get webhooks(): Webhook[] {
     return [
       new Webhook(this.identifier, this.webhookCommand,
-        new Range(0, 100),
+        this.webhookRange,
         () => this.position,
         (value, syncOnly) => {
           this.setPosition(value, syncOnly);

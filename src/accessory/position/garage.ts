@@ -4,6 +4,7 @@ import { DummyAccessoryDependency } from '../base.js';
 
 import { AccessoryType, HKCharacteristicKey } from '../../model/enums.js';
 import { GarageDoorConfig } from '../../model/types.js';
+import { Range } from '../../model/webhook.js';
 
 export class GarageDoorAccessory extends PositionAccessory<GarageDoorConfig> {
 
@@ -44,5 +45,9 @@ export class GarageDoorAccessory extends PositionAccessory<GarageDoorConfig> {
 
   override get webhookCommand() {
     return HKCharacteristicKey.TargetDoorState;
+  }
+
+  override get webhookRange(): Range {
+    return new Range(0, 1);
   }
 }
