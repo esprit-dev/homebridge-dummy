@@ -7,12 +7,14 @@ export class Fader {
     return this.value !== undefined;
   }
 
-  public start(startingValue: number, delay: number, tick: (value: number) => void) {
+  public start(startingValue: number, endingValue: number, delay: number, tick: (value: number) => void) {
 
     this.clearTimeout();
 
-    const interval = delay / startingValue;
+    const interval = delay / Math.abs(endingValue - startingValue);
     this.value = startingValue;
+
+    const delta = startingValue < endingValue ? 1 : -1;
 
     this.intervalTimeout = setInterval( () => {
 
@@ -20,9 +22,10 @@ export class Fader {
         return;
       }
 
-      tick(--this.value);
+      this.value += delta;
+      tick(this.value);
 
-      if (this.value <= 0) {
+      if (this.value === endingValue) {
         this.clearTimeout();
       }
 

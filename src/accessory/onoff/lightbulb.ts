@@ -127,7 +127,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
       return;
     }
 
-    this.fader.start(Number(this.brightness), delay, (value) => {
+    this.fader.start(Number(this.brightness), 0, delay, (value) => {
       this.service.updateCharacteristic(this.Characteristic.Brightness, value);
     });
   }
