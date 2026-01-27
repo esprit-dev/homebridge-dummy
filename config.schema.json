@@ -440,8 +440,7 @@
             },
             "fadeOut": {
               "type": "boolean",
-              "title": "${config.title.fadeOut}",
-              "description": "${config.description.fadeOut}"
+              "title": "${config.title.fadeOut}"
             },
             "defaultState": {
               "type": "string",
@@ -751,22 +750,46 @@
                   "items": [
                     {
                       "key": "accessories[].enableWebook",
-                      "flex": "0 0 25%"
+                      "flex": "0 0 auto"
                     },
                     {
-                      "key": "accessories[].disableLogging",
-                      "flex": "0 0 25%"
-                    },
-                    {
-                      "key": "accessories[].resetOnRestart",
-                      "flex": "0 0 25%"
+                      "flex": "0 0 5%"
                     },
                     {
                       "key": "accessories[].enableHistory",
-                      "flex": "0 0 25%",
+                      "flex": "0 0 auto",
                       "condition": {
                         "functionBody": "return ['HumidifierDehumidifier', 'HumiditySensor', 'Outlet', 'Lightbulb', 'Switch', 'TemperatureSensor', 'Thermostat'].includes(model.accessories?.[arguments[1]]?.type);"
                       }
+                    },
+                    {
+                      "flex": "0 0 5%"
+                    },
+                    {
+                      "key": "accessories[].fadeOut",
+                      "flex": "0 0 auto",
+                      "condition": {
+                        "functionBody": "return model.accessories?.[arguments[1]]?.defaultBrightness !== undefined;"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "div",
+                  "displayFlex": true,
+                  "flex-direction": "row",
+                  "notitle": true,
+                  "items": [
+                    {
+                      "key": "accessories[].resetOnRestart",
+                      "flex": "0 0 auto"
+                    },
+                    {
+                      "flex": "0 0 5%"
+                    },
+                    {
+                      "key": "accessories[].disableLogging",
+                      "flex": "0 0 auto"
                     }
                   ]
                 }

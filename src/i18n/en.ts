@@ -144,7 +144,6 @@ const en = {
       commands: 'Execute arbitrary commands (e.g. curl) when the accessory changes state',
       cron: 'Visit crontab.guru for help',
       conditions: 'Set the accessory to its opposite (non-default) value when the specified conditions are met',
-      fadeOut: 'Lightbulb will count down rather than abruptly going from 100% to off',
       limiter: 'Restrict the total time this accessory can be set to its non-default value, for each specified period',
       notification: 'Receive a notification when accessory is set to its opposite (non-default) value. See wiki for help.',
       random: 'Time will be randomized with the above value as a maximum',
