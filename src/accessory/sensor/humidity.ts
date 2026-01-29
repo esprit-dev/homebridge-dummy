@@ -19,7 +19,7 @@ export class HumiditySensorAccessory extends DummyAccessory<HumiditySensorConfig
     this.service.getCharacteristic(dependency.Characteristic.CurrentRelativeHumidity)
       .onGet(this.getHumidity.bind(this));
 
-    this.humidity = (this.isStateful && this.getProperty(HKCharacteristicKey.CurrentRelativeHumidity)) ?? 0;
+    this.humidity = (this.isStateful ? this.getProperty(HKCharacteristicKey.CurrentRelativeHumidity) : 0) ?? 0;
   }
 
   override getAccessoryType(): AccessoryType {

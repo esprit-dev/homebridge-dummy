@@ -27,7 +27,7 @@ export class TemperatureSensorAccessory extends DummyAccessory<TemperatureSensor
     this.service.getCharacteristic(dependency.Characteristic.CurrentTemperature)
       .onGet(this.getTemperature.bind(this));
 
-    this.temperature = (this.isStateful && this.getProperty(HKCharacteristicKey.CurrentTemperature)) ?? 0;
+    this.temperature = (this.isStateful ? this.getProperty(HKCharacteristicKey.CurrentTemperature) : 0) ?? 0;
   }
 
   override getAccessoryType(): AccessoryType {
