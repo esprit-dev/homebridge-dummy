@@ -2,7 +2,7 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-## 1.6.1-beta.1 (2026-01-28)
+## 1.6.1-beta.2 (2026-02-01)
 
 ### ‼️ WARNING ‼️ — If upgrading from v0.9.2 or earlier, [READ THIS FIRST](https://github.com/mpatfield/homebridge-dummy/wiki/Migration).
 *There is now an [option](https://github.com/mpatfield/homebridge-dummy/wiki/Migration#migrating-gradually) to run both old and new versions of Homebridge Dummy in parallel if you want to migrate gradually*
@@ -10,7 +10,7 @@ All notable changes to homebridge-dummy will be documented in this file.
 -----
 
 ### Added
-- Simulate Open/Close option for Doors, Garage Doors, Windows, and and Window Coverings
+- [Simulate Open/Close](https://github.com/mpatfield/homebridge-dummy/wiki/Additional-Options/_edit#door--garagedooropener--window--windowcovering) option for Doors, Garage Doors, Windows, and and Window Coverings
 - Fade Out option for `Lightbulb` now visible in the config UI
 
 ### Changed

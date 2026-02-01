@@ -107,6 +107,12 @@ export type ConditionsConfig = Assertable & {
   operands: Operand[],
 }
 
+export type SimulationConfig = Assertable & {
+  enabled: boolean,
+  time?: number,
+  units?: TimeUnits,
+}
+
 export type DummyConfig = {
   id: string,
   name: string,
@@ -118,10 +124,10 @@ export type DummyConfig = {
   notification?: Notification,
   limiter?: LimiterConfig,
   conditions?: ConditionsConfig,
+  simulation?: SimulationConfig,
   resetOnRestart?: boolean,
   enableWebook?: boolean,
   enableHistory?: boolean,
-  simulateOpenClose?: boolean,
   disableLogging?: boolean,
   /**
    * @deprecated

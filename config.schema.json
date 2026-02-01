@@ -390,6 +390,19 @@
             }
           }
         ]
+      },
+      "simulation": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "time": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "units": { "$ref": "#/definitions/units" }
+        }
       }
     },
     "properties": {
@@ -426,6 +439,7 @@
             "autoReset": { "$ref": "#/definitions/schedule" },
             "limiter": { "$ref": "#/definitions/limiter" },
             "conditions": { "$ref": "#/definitions/conditions" },
+            "simulation": { "$ref": "#/definitions/simulation" },
             "temperatureUnits": {
               "type": "string",
               "title": "${config.title.temperatureUnits}",
@@ -545,10 +559,6 @@
             "enableHistory": {
               "type": "boolean",
               "title": "${config.title.enableHistory}"
-            },
-            "simulateOpenClose": {
-              "type": "boolean",
-              "title": "${config.title.simulateOpenClose}"
             }
           }
         }
@@ -770,7 +780,8 @@
                       "flex": "0 0 5%"
                     },
                     {
-                      "key": "accessories[].simulateOpenClose",
+                      "key": "accessories[].simulation.enabled",
+                      "title": "${config.title.simulateOpenClose}",
                       "flex": "0 0 auto",
                       "condition": {
                         "functionBody": "return ['Door', 'GarageDoorOpener', 'Window', 'WindowCovering'].includes(model.accessories?.[arguments[1]]?.type);"

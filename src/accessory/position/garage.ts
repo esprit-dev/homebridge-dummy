@@ -4,9 +4,13 @@ import { DEFAULT_OPEN_CLOSE_DURATION, PositionAccessory } from './position.js';
 
 import { DummyAccessoryDependency } from '../base.js';
 
-import { AccessoryType, HKCharacteristicKey } from '../../model/enums.js';
+import { AccessoryType, HKCharacteristicKey, TimeUnits } from '../../model/enums.js';
 import { GarageDoorConfig } from '../../model/types.js';
 import { Range } from '../../model/webhook.js';
+
+import { getDelay } from '../../timeout/timeout.js';
+
+import { assert } from '../../tools/validation.js';
 
 export class GarageDoorAccessory extends PositionAccessory<GarageDoorConfig> {
 
@@ -63,7 +67,7 @@ export class GarageDoorAccessory extends PositionAccessory<GarageDoorConfig> {
 
   override onTargetPositionChanged(_oldValue: number, newValue: number) {
 
-    if (this.config.simulateOpenClose !== true) {
+    if (this.config.simulation === undefined || !assert(this.log, this.name, this.config.simulation, 'enabled') || this.config.simulation.enabled !== true) {
       return;
     }
 
@@ -71,10 +75,11 @@ export class GarageDoorAccessory extends PositionAccessory<GarageDoorConfig> {
 
     this._currentPosition = newValue === this.positionClosed ? this.currentCharacteristic.CLOSING : this.currentCharacteristic.OPENING;
 
+    const delay = getDelay(this.config.simulation.time ?? DEFAULT_OPEN_CLOSE_DURATION, this.config.simulation.units ?? TimeUnits.SECONDS);
     this.intervalTimeout = setInterval( () => {
       this.clearTimeout();
       this.service.updateCharacteristic(this.currentCharacteristic, this.currentPosition);
-    }, DEFAULT_OPEN_CLOSE_DURATION);
+    }, delay);
   }
 
   override teardown(): void {

@@ -6,16 +6,17 @@ import { EveCharacteristicHost, incrementTimesOpened, setupTimesOpened } from '.
 
 import { strings } from '../../i18n/i18n.js';
 
-import { Position, isValidPosition, printableValues, HKCharacteristicKey } from '../../model/enums.js';
+import { Position, isValidPosition, printableValues, HKCharacteristicKey, TimeUnits } from '../../model/enums.js';
 import { PositionConfig } from '../../model/types.js';
 import { Range, Webhook } from '../../model/webhook.js';
 
 import { Fader } from '../../timeout/fader.js';
-import { SECOND } from '../../timeout/timeout.js';
+import { getDelay } from '../../timeout/timeout.js';
 
 import { storageGet_Deprecated } from '../../tools/storage.js';
+import { assert } from '../../tools/validation.js';
 
-export const DEFAULT_OPEN_CLOSE_DURATION = 15 * SECOND;
+export const DEFAULT_OPEN_CLOSE_DURATION = 15;
 
 export abstract class PositionAccessory<C extends PositionConfig = PositionConfig> extends DummyAccessory<PositionConfig> implements EveCharacteristicHost {
 
@@ -182,13 +183,14 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
 
   protected onTargetPositionChanged(oldValue: number, newValue: number) {
 
-    if (this.config.simulateOpenClose !== true) {
+    if (this.config.simulation === undefined || !assert(this.log, this.name, this.config.simulation, 'enabled') || this.config.simulation.enabled !== true) {
       return;
     }
 
     this.fader.cancel();
 
-    this.fader.start(oldValue, newValue, DEFAULT_OPEN_CLOSE_DURATION, (value) => {
+    const delay = getDelay(this.config.simulation.time ?? DEFAULT_OPEN_CLOSE_DURATION, this.config.simulation.units ?? TimeUnits.SECONDS);
+    this.fader.start(oldValue, newValue, delay, (value) => {
       this.service.updateCharacteristic(this.currentCharacteristic, value);
     });
   }
