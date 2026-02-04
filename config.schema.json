@@ -976,7 +976,7 @@
               "title": "${config.title.notification}",
               "description": "${config.description.notification}",
               "condition": {
-                "functionBody": "const type = model.accessories?.[arguments[1]]?.type; return type && !['HumiditySensor','TemperatureSensor','Thermostat'].includes(type)"
+                "functionBody": "const type = model.accessories?.[arguments[1]]?.type; return type && !['HumiditySensor','TemperatureSensor','Thermostat'].includes(type);"
               },
               "items": [
                 {
@@ -996,14 +996,14 @@
                           "key": "accessories[].notification.token",
                           "flex": "0 0 auto",
                           "condition": {
-                            "functionBody": "return model.accessories?.[arguments[1]]?.notification?.api"
+                            "functionBody": "return model.accessories?.[arguments[1]]?.notification?.api;"
                           }
                         },
                         {
                           "key": "accessories[].notification.id",
                           "flex": "0 0 auto",
                           "condition": {
-                            "functionBody": "return model.accessories?.[arguments[1]]?.notification?.api"
+                            "functionBody": "return model.accessories?.[arguments[1]]?.notification?.api;"
                           }
                         }
                       ]
@@ -1014,7 +1014,7 @@
                       "flex-direction": "row",
                       "notitle": true,
                       "condition": {
-                        "functionBody": "return model.accessories?.[arguments[1]]?.notification?.token || model.accessories?.[arguments[1]]?.notification?.id"
+                        "functionBody": "return model.accessories?.[arguments[1]]?.notification?.token || model.accessories?.[arguments[1]]?.notification?.id;"
                       },
                       "items": [
                         {
@@ -1071,7 +1071,7 @@
               "title": "${config.title.conditions}",
               "description": "${config.description.conditions}",
               "condition": {
-                "functionBody": "const type = model.accessories?.[arguments[1]]?.type; return type && !['HumiditySensor','TemperatureSensor','Thermostat'].includes(type)"
+                "functionBody": "const type = model.accessories?.[arguments[1]]?.type; return type && !['HumiditySensor','TemperatureSensor','Thermostat'].includes(type);"
               },
               "items": [
                 {
