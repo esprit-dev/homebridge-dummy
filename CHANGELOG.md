@@ -14,8 +14,9 @@ All notable changes to homebridge-dummy will be documented in this file.
 - Fade Out option for `Lightbulb` now visible in the config UI
 
 ### Changed
-- Updated push notification dependencies
+- Updated push notification dependency (axios)
 - Eve "times opened" counter for `ContactSensor` requires history to be enabled
+- Translated config UI schemas are generated at build rather than runtime ([open a ticket](https://github.com/mpatfield/homebridge-dummy/issues/new/choose) if you have issues)
 
 ### Notes
 Would you like to see Homebridge Dummy in your language? Please consider [getting involved](https://github.com/mpatfield/homebridge-dummy/issues/105). No coding experience required!
