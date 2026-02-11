@@ -10,7 +10,7 @@ All notable changes to homebridge-dummy will be documented in this file.
 -----
 
 ### Added
-- [Simulate Open/Close](https://github.com/mpatfield/homebridge-dummy/wiki/Additional-Options/_edit#door--garagedooropener--window--windowcovering) option for Doors, Garage Doors, Windows, and and Window Coverings
+- [Simulate Open/Close](https://github.com/mpatfield/homebridge-dummy/wiki/Additional-Options/_edit#door--garagedooropener--window--windowcovering) option for Doors, Garage Doors, Windows, and Window Coverings
 - Fade Out option for `Lightbulb` now visible in the config UI
 
 ### Changed
