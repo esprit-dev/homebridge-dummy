@@ -37,7 +37,7 @@ export class GroupAccessory {
       .setCharacteristic(dependency.Characteristic.SerialNumber, dependency.platformAccessory.UUID)
       .setCharacteristic(dependency.Characteristic.FirmwareRevision, getVersion());
 
-    const keepSubtypes = new Set<string>();
+    const servicesToKeep = new Map<string, string>();
 
     for (const dummyConfig of config.accessories) {
 
@@ -56,12 +56,12 @@ export class GroupAccessory {
         webhookManager.registerWebhooks(dummyAccessory.webhooks);
       }
 
-      keepSubtypes.add(dummyAccessory.subtype!);
+      servicesToKeep.set(dummyAccessory.subtype!, dummyAccessory.service.UUID);
       this.accessories.push(dummyAccessory);
     };
 
     for (const service of [...dependency.platformAccessory.services]) {
-      if (service.subtype && !keepSubtypes.has(service.subtype)) {
+      if (service.subtype !== undefined && servicesToKeep.get(service.subtype) !== service.UUID) {
         dependency.platformAccessory.removeService(service);
       }
     }
