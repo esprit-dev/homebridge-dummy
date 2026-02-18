@@ -162,7 +162,7 @@ const en = {
       accessory: 'Accessory',
       available: 'Available',
       auto: 'Auto',
-      button: 'Button (Stateless Switch)',
+      button: 'Stateless Switch',
       carbonDioxideSensor:'Carbon Dioxide',
       carbonMonoxideSensor: 'Carbon Monoxide',
       celsius: '°C',
