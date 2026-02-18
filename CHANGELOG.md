@@ -2,12 +2,15 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-## 1.6.2-beta.0 (2026-02-13)
+## 1.6.2-beta.1 (2026-02-17)
 
 ### ‼️ WARNING ‼️ — If upgrading from v0.9.2 or earlier, [READ THIS FIRST](https://github.com/mpatfield/homebridge-dummy/wiki/Migration).
 *There is now an [option](https://github.com/mpatfield/homebridge-dummy/wiki/Migration#migrating-gradually) to run both old and new versions of Homebridge Dummy in parallel if you want to migrate gradually*
 
 -----
+
+### Added
+- `StatelessProgrammableSwitch` — a Button / Stateless Switch, useful for automations that just need a trigger but don't care about state
 
 ### Fixed
 - Changing accessory type within a Group removes stale sub-accessories

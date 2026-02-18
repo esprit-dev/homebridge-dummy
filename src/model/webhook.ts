@@ -12,7 +12,7 @@ import { assert } from '../tools/validation.js';
 
 const DEFAULT_PORT = 63743;
 
-type WebhookGetter = () => (CharacteristicValue);
+type WebhookGetter = () => (CharacteristicValue | undefined);
 type WebhookSetter = (value: CharacteristicValue, syncOnly: boolean) => (string);
 
 export class Range {

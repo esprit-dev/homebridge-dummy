@@ -426,8 +426,8 @@
             "type": {
               "type": "string",
               "title": "${config.title.type}",
-              "enum": ["Door", "GarageDoorOpener", "HumidifierDehumidifier", "HumiditySensor", "Lightbulb", "LockMechanism", "Outlet", "Switch", "TemperatureSensor", "Thermostat", "Valve", "Window", "WindowCovering"],
-              "enumNames": ["${config.enumNames.door}", "${config.enumNames.garageDoorOpener}", "${config.enumNames.humidifierDehumidifier}", "${config.enumNames.humiditySensor}", "${config.enumNames.lightbulb}", "${config.enumNames.lockMechanism}", "${config.enumNames.outlet}", "${config.enumNames.switch}", "${config.enumNames.temperatureSensor}", "${config.enumNames.thermostat}", "${config.enumNames.valve}", "${config.enumNames.window}", "${config.enumNames.windowCovering}"]
+              "enum": ["StatelessProgrammableSwitch", "Door", "GarageDoorOpener", "HumidifierDehumidifier", "HumiditySensor", "Lightbulb", "LockMechanism", "Outlet", "Switch", "TemperatureSensor", "Thermostat", "Valve", "Window", "WindowCovering"],
+              "enumNames": ["${config.enumNames.button}", "${config.enumNames.door}", "${config.enumNames.garageDoorOpener}", "${config.enumNames.humidifierDehumidifier}", "${config.enumNames.humiditySensor}", "${config.enumNames.lightbulb}", "${config.enumNames.lockMechanism}", "${config.enumNames.outlet}", "${config.enumNames.switch}", "${config.enumNames.temperatureSensor}", "${config.enumNames.thermostat}", "${config.enumNames.valve}", "${config.enumNames.window}", "${config.enumNames.windowCovering}"]
             },
             "groupName": {
               "type": "string",
@@ -899,7 +899,7 @@
               "title": "${config.title.autoReset}",
               "description": "${config.description.autoReset}",
               "condition": {
-                "functionBody": "const type = model.accessories?.[arguments[1]]?.type; return type && !['HumiditySensor','TemperatureSensor','Thermostat'].includes(type);"
+                "functionBody": "const type = model.accessories?.[arguments[1]]?.type; return type && !['HumiditySensor','StatelessProgrammableSwitch','TemperatureSensor','Thermostat'].includes(type);"
               },
               "items": [
                 {
@@ -1036,7 +1036,7 @@
               "title": "${config.title.limiter}",
               "description": "${config.description.limiter}",
               "condition": {
-                "functionBody": "const type = model.accessories?.[arguments[1]]?.type; return type && !['HumiditySensor','TemperatureSensor','Thermostat'].includes(type);"
+                "functionBody": "const type = model.accessories?.[arguments[1]]?.type; return type && !['HumiditySensor','StatelessProgrammableSwitch','TemperatureSensor','Thermostat'].includes(type);"
               },
               "items": [
                 {
@@ -1169,7 +1169,7 @@
                 {
                   "key": "accessories[].commandOn",
                   "condition": {
-                    "functionBody": "return ['HumidifierDehumidifier','Lightbulb','Outlet','Switch','Thermostat','Valve'].includes(model.accessories?.[arguments[1]]?.type);"
+                    "functionBody": "return ['HumidifierDehumidifier','Lightbulb','Outlet','StatelessProgrammableSwitch','Switch','Thermostat','Valve'].includes(model.accessories?.[arguments[1]]?.type);"
                   }
                 },
                 {

@@ -156,6 +156,10 @@ export type LightbulbConfig = OnOffConfig & {
 export type SwitchConfig = OnOffConfig & {
 }
 
+export type ButtonConfig = DummyConfig & {
+  commandOn?: string,
+}
+
 export type LockConfig = DummyConfig & {
   defaultLockState?: LockState,
   commandLock?: string,

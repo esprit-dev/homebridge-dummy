@@ -21,6 +21,12 @@ const en = {
     timeHours: '%s will reset in %s hours', // accessory name, number
   },
 
+  button: {
+    doublePress: '%s was double pressed', // accessory name
+    longPress: '%s was long pressed', // accessory name
+    singlePress: '%s was single pressed', // accessory name
+  },
+
   command: {
     error: '%s failed to execute command', // accessory name
     executed: '%s executed command', // accessory name
@@ -156,6 +162,7 @@ const en = {
       accessory: 'Accessory',
       available: 'Available',
       auto: 'Auto',
+      button: 'Button (Stateless Switch)',
       carbonDioxideSensor:'Carbon Dioxide',
       carbonMonoxideSensor: 'Carbon Monoxide',
       celsius: '°C',
