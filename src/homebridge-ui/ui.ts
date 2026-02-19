@@ -317,6 +317,12 @@ async function migrateDeprecatedFields(configs: DummyPlatformConfig[]) {
         accessoryConfig.timer = undefined;
         changed = true;
       }
+
+      if (accessoryConfig.enableWebook !== undefined) {
+        accessoryConfig.enableWebhook = accessoryConfig.enableWebook;
+        accessoryConfig.enableWebook = undefined;
+        changed = true;
+      }
     });
   });
 

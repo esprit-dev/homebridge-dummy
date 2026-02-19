@@ -172,7 +172,7 @@ const overrides = {
       defaultTemperature: 'Standardtemperatur',
       delay: 'Verzögerung',
       disableLogging: 'Protokollierung deaktivieren',
-      enableWebook: 'Webhook aktivieren',
+      enableWebhook: 'Webhook aktivieren',
       groupName: 'Gruppenname',
       interval: 'Intervall',
       limit: 'Limit',

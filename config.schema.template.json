@@ -548,9 +548,9 @@
               "type": "boolean",
               "title": "${config.title.resetOnRestart}"
             },
-            "enableWebook": {
+            "enableWebhook": {
               "type": "boolean",
-              "title": "${config.title.enableWebook}"
+              "title": "${config.title.enableWebhook}"
             },
             "disableLogging": {
               "type": "boolean",
@@ -763,7 +763,7 @@
                   "notitle": true,
                   "items": [
                     {
-                      "key": "accessories[].enableWebook",
+                      "key": "accessories[].enableWebhook",
                       "flex": "0 0 auto"
                     },
                     {

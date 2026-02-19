@@ -171,7 +171,7 @@ const overrides = {
       defaultTemperature: 'Температура по умолчанию',
       delay: 'Задержка',
       disableLogging: 'Отключить логирование',
-      enableWebook: 'Включить вебхук',
+      enableWebhook: 'Включить вебхук',
       groupName: 'Имя группы',
       interval: 'Интервал',
       limit: 'Лимит',

@@ -126,7 +126,11 @@ export type DummyConfig = {
   conditions?: ConditionsConfig,
   simulation?: SimulationConfig,
   resetOnRestart?: boolean,
-  enableWebook?: boolean,
+  /**
+   * @deprecated
+   */
+  enableWebook?: boolean
+  enableWebhook?: boolean,
   enableHistory?: boolean,
   disableLogging?: boolean,
   /**

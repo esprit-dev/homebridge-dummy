@@ -175,7 +175,7 @@ const overrides = {
       defaultTemperature: 'Temperatura predeterminada',
       delay: 'Retraso',
       disableLogging: 'Desactivar registro',
-      enableWebook: 'Activar webhook',
+      enableWebhook: 'Activar webhook',
       groupName: 'Nombre del grupo',
       interval: 'Intervalo',
       limit: 'Límite',

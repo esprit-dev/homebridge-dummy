@@ -272,7 +272,7 @@ const en = {
       defaultTemperature: 'Default Temperature',
       disableLogging: 'Disable Logging',
       enableHistory: 'Enable History',
-      enableWebook: 'Enable Webhook',
+      enableWebhook: 'Enable Webhook',
       fadeOut: 'Fade Out',
       groupName: 'Group Name',
       humidifierType: 'Type',
