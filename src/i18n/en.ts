@@ -378,6 +378,8 @@ const en = {
 
   webhook: {
     badPort: 'Port for the webhook server must be a number. Falling back to default %d', // number
+    badSSL: 'Failed to load SSL credentials. Falling back to http…',
+    badSSLParameter: 'SSL parameter %s should be %s, but was %s', // parameter name, type, type
     badUnits: 'The %s webhook command has invalid temperature units %s. Must be one of:', // accessory name, input, list of unit names
     missingId: 'Request is missing id',
     missingCharacteristic: 'Request is missing a get or set command, e.g. `set=Brightness`',

@@ -566,8 +566,22 @@
       "verbose": {
         "type": "boolean"
       },
-      "webhookPort": {
-        "type": "number"
+      "webhookConfig": {
+        "type": "object",
+        "properties": {
+          "port": {
+            "type": "number"
+          },
+          "keyPath": {
+            "type": "string"
+          },
+          "certPath": {
+            "type": "string"
+          },
+          "passphrase": {
+            "type": "string"
+          }
+        }
       }
     }
   },

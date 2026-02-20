@@ -20,9 +20,22 @@ export type LegacyAccessoryConfig = AccessoryConfig & {
   disableLogging?: boolean,
 }
 
+export type WebhookConfig = {
+  port?: number
+  disableSSL?: boolean,
+  key?: string,
+  cert?: string,
+  pfx?: string,
+  passphrase?: string,
+}
+
 export type DummyPlatformConfig = PlatformConfig & {
   accessories?: DummyConfig[],
   migrationNeeded?: boolean,
+  webhookConfig?: WebhookConfig,
+  /**
+   * @deprecated
+   */
   webhookPort?: number,
   verbose?: boolean,
 }

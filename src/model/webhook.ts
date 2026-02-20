@@ -1,8 +1,12 @@
 import express, { Request, Response } from 'express';
+import { readFileSync } from 'fs';
 import { CharacteristicValue } from 'homebridge';
 import { Server } from 'http';
+import { createServer, ServerOptions } from 'https';
+import path from 'path';
 
 import { HKCharacteristicKey } from './enums.js';
+import { WebhookConfig } from './types.js';
 
 import { strings } from '../i18n/i18n.js';
 
@@ -43,14 +47,41 @@ export class WebhookManager {
 
   constructor(
     private readonly log: Log,
-    private readonly port: number | undefined,
+    configPath: string,
+    private readonly config: WebhookConfig = {},
   ) {
 
-    this.port = port ?? DEFAULT_PORT;
+    try {
+      const systemConfig = readFileSync(configPath, { encoding: 'utf8' });
+      const systemSSLConfig = JSON.parse(systemConfig).platforms.filter( (c: Record<string, string>) => c.platform === 'config')[0].ssl;
 
-    if (typeof this.port !== 'number') {
+      if (systemSSLConfig !== undefined) {
+
+        if (systemSSLConfig.selfSigned === true) {
+          systemSSLConfig.key = systemSSLConfig.key ?? path.join(configPath, '../ssl-certs/private-key.pem');
+          systemSSLConfig.cert = systemSSLConfig.cert ?? path.join(configPath, '../ssl-certs/certificate.pem');
+        }
+
+        this.config = { ...systemSSLConfig , ...this.config };
+      }
+
+    } catch {
+      // Nothing
+    }
+
+    this.config.port = this.config.port ?? DEFAULT_PORT;
+
+    if (typeof this.config.port !== 'number') {
       log.error(strings.webhook.badPort, DEFAULT_PORT);
-      this.port = DEFAULT_PORT;
+      this.config.port = DEFAULT_PORT;
+    }
+
+    for (const keyString of ['key', 'cert', 'pfx', 'passphrase']) {
+      const key = keyString as keyof WebhookConfig;
+      if (this.config[key] !== undefined && typeof this.config[key] !== 'string') {
+        log.error(strings.webhook.badSSLParameter, `'${key}'`, '\'string\'', `'${typeof this.config[key]}'`);
+        this.config[key] = undefined;
+      }
     }
   }
 
@@ -85,8 +116,34 @@ export class WebhookManager {
       this.onRequest(request, response);
     });
 
-    this.server = exp.listen(this.port, () => {
-      this.log.always(strings.webhook.started, this.port);
+    if (this.config.disableSSL !== true) {
+
+      try {
+
+        let credentials: ServerOptions | undefined;
+        if (this.config.pfx !== undefined) {
+          credentials = { pfx: readFileSync(this.config.pfx), passphrase: this.config.passphrase };
+        } else if (this.config.key !== undefined && this.config.cert !== undefined) {
+          credentials = { key: readFileSync(this.config.key), cert: readFileSync(this.config.cert) };
+        }
+
+        if (credentials !== undefined) {
+
+          this.server = createServer(credentials, exp).listen(this.config.port, () => {
+            this.log.always(`${strings.webhook.started} (https)`, this.config.port);
+          });
+
+          return;
+        }
+
+      } catch (err) {
+        this.log.error(strings.webhook.badSSL);
+      }
+
+    }
+
+    this.server = exp.listen(this.config.port, () => {
+      this.log.always(`${strings.webhook.started} (http)`, this.config.port);
     });
   }
 

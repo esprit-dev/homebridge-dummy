@@ -274,6 +274,14 @@ async function migrateDeprecatedFields(configs: DummyPlatformConfig[]) {
   let changed = false;
 
   configs.forEach( (config) => {
+
+    if (config.webhookPort !== undefined) {
+      config.webhookConfig = config.webhookConfig ?? {};
+      config.webhookConfig.port = config.webhookConfig.port ?? config.webhookPort;
+      config.webhookPort = undefined;
+      changed = true;
+    }
+
     config.accessories?.forEach( (accessoryConfig) => {
 
       if ('defaultOn' in accessoryConfig) {

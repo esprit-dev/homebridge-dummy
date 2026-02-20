@@ -2,12 +2,18 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-## 1.6.2-beta.3 (2026-02-18)
+## 1.6.2-beta.4 (2026-02-19)
 
 ### ‼️ WARNING ‼️ — If upgrading from v0.9.2 or earlier, [READ THIS FIRST](https://github.com/mpatfield/homebridge-dummy/wiki/Migration).
 *There is now an [option](https://github.com/mpatfield/homebridge-dummy/wiki/Migration#migrating-gradually) to run both old and new versions of Homebridge Dummy in parallel if you want to migrate gradually*
 
 -----
+
+### Changed
+- ⚠️ [`Webhooks`](https://github.com/mpatfield/homebridge-dummy/wiki/Webhooks) now use Homebridge UI SSL (https) settings by default
+    - Use `webhookConfig` to `disableSSL`, change the `port`, or override SSL (https) `key`/`cert`
+    - `webhookPort` is deprecated
+- Deprecated `enableWebook` (spelling) in favor of `enableWebhook`
 
 ### Added
 - `StatelessProgrammableSwitch` — useful for triggering automations or push notifications on a schedule or via webhook
