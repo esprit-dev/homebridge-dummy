@@ -69,6 +69,7 @@
     "@homebridge/plugin-ui-utils": "^2.0.2",
     "arpping": "^4.0.0",
     "axios": "^1.13.2",
+    "build": "^0.1.4",
     "cron": "^4.3.2",
     "escape-html": "^1.0.3",
     "express": "^5.1.0",
