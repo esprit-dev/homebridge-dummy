@@ -139,7 +139,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
 
     return [
 
-      new Webhook(this.identifier, HKCharacteristicKey.TargetHeatingCoolingState,
+      new Webhook(this, HKCharacteristicKey.TargetHeatingCoolingState,
         new Values(
           [
             this.Characteristic.TargetHeatingCoolingState.OFF,
@@ -156,7 +156,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
         },
         this.config.disableLogging),
 
-      new Webhook(this.identifier, HKCharacteristicKey.CurrentTemperature,
+      new Webhook(this, HKCharacteristicKey.CurrentTemperature,
         new Range(fromCelsius(this.minTemp, this.units), fromCelsius(this.maxTemp, this.units)),
         () => this.currentTemperature,
         (value) => {
@@ -166,7 +166,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
         },
         this.config.disableLogging),
 
-      new Webhook(this.identifier, HKCharacteristicKey.TargetTemperature,
+      new Webhook(this, HKCharacteristicKey.TargetTemperature,
         new Range(fromCelsius(this.minTemp, this.units), fromCelsius(this.maxTemp, this.units)),
         () => this.targetTemperature,
         (value, syncOnly) => {

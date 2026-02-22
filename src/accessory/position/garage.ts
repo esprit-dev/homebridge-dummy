@@ -6,7 +6,7 @@ import { DummyAccessoryDependency } from '../base.js';
 
 import { AccessoryType, HKCharacteristicKey, TimeUnits } from '../../model/enums.js';
 import { GarageDoorConfig } from '../../model/types.js';
-import { Range } from '../../model/webhook.js';
+import { Values } from '../../model/webhook.js';
 
 import { getDelay } from '../../timeout/timeout.js';
 
@@ -57,8 +57,8 @@ export class GarageDoorAccessory extends PositionAccessory<GarageDoorConfig> {
     return HKCharacteristicKey.TargetDoorState;
   }
 
-  override get webhookRange(): Range {
-    return new Range(0, 1);
+  override get webhookValidValues(): Values {
+    return new Values([this.Characteristic.TargetDoorState.OPEN, this.Characteristic.TargetDoorState.CLOSED], '0 (OPEN), 1 (CLOSED)');
   }
 
   protected get currentPosition(): CharacteristicValue {

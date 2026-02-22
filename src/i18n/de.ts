@@ -253,7 +253,6 @@ const overrides = {
   webhook: {
     badUnits: 'Dieser %s Webhook-Befehl weist ungültige Temperatureinheiten %s auf. Muss eine der folgenden sein:',
     received: 'Webhook-Befehl empfangen',
-    register: 'Registriere Gerät mit ID %s für Webhook-Befehl %s',
     started: 'Webhook-Server läuft und lauscht auf Port %s',
     stopped: 'Webhook-Server gestoppt',
     stopping: 'Fahre Webhook-Server herunter...',

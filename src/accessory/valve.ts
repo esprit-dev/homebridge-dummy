@@ -71,7 +71,7 @@ export class ValveAccessory extends DummyAccessory<ValveConfig> {
 
   override get webhooks(): Webhook[] {
     return [
-      new Webhook(this.identifier, HKCharacteristicKey.On,
+      new Webhook(this, HKCharacteristicKey.On,
         new Values( [true, false], 'true, false'),
         () => this.state,
         (value, syncOnly) => {

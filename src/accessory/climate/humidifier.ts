@@ -95,7 +95,7 @@ export class HumidifierAccessory extends DummyAccessory<HumidifierConfig> {
 
     return [
 
-      new Webhook(this.identifier, HKCharacteristicKey.On,
+      new Webhook(this, HKCharacteristicKey.On,
         new Values( [true, false], 'true, false'),
         () => this.state,
         (value, syncOnly) => {
@@ -104,7 +104,7 @@ export class HumidifierAccessory extends DummyAccessory<HumidifierConfig> {
         },
         this.config.disableLogging),
 
-      new Webhook(this.identifier, HKCharacteristicKey.CurrentRelativeHumidity,
+      new Webhook(this, HKCharacteristicKey.CurrentRelativeHumidity,
         new Range(0, 100),
         () => this.currentHumidity,
         (value) => {
@@ -113,7 +113,7 @@ export class HumidifierAccessory extends DummyAccessory<HumidifierConfig> {
         },
         this.config.disableLogging),
 
-      new Webhook(this.identifier, HKCharacteristicKey.TargetRelativeHumidity,
+      new Webhook(this, HKCharacteristicKey.TargetRelativeHumidity,
         new Range(0, 100),
         () => this.targetHumidity,
         (value) => {

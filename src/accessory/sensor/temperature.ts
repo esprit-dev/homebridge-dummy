@@ -37,7 +37,7 @@ export class TemperatureSensorAccessory extends DummyAccessory<TemperatureSensor
   override get webhooks(): Webhook[] {
 
     return [
-      new Webhook(this.identifier, HKCharacteristicKey.CurrentTemperature,
+      new Webhook(this, HKCharacteristicKey.CurrentTemperature,
         new Range(fromCelsius(MIN_TEMP, this.units), fromCelsius(MAX_TEMP, this.units)),
         () => this.temperature,
         (value, syncOnly) => {

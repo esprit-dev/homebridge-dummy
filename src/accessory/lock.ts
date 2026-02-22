@@ -57,7 +57,7 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
 
   override get webhooks(): Webhook[] {
     return [
-      new Webhook(this.identifier, HKCharacteristicKey.LockTargetState,
+      new Webhook(this, HKCharacteristicKey.LockTargetState,
         new Values([this.Characteristic.LockTargetState.UNSECURED, this.Characteristic.LockTargetState.SECURED], '0 (UNSECURED), 1 (SECURED)'),
         () => this.state,
         (value, syncOnly) => {

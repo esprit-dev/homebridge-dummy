@@ -56,7 +56,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
   override get webhooks(): Webhook[] {
     return [
       ...super.webhooks,
-      new Webhook(this.identifier, HKCharacteristicKey.Brightness,
+      new Webhook(this, HKCharacteristicKey.Brightness,
         new Range(0, 100),
         () => this.brightness,
         (value) => {

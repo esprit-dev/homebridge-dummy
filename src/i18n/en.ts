@@ -2,6 +2,7 @@ const en = {
 
   accessory: {
     badValueType: '%s expected type %s but was %s', // accessory name, variable type, variable type
+    identifier: 'ID',
     missingRequired: '%s is missing required field %s', // accessory name, variable name
     timesOpenedReset: '%s open count has been reset', // accessory name
   },
@@ -381,16 +382,21 @@ const en = {
     badSSL: 'Failed to load SSL credentials. Falling back to http…',
     badSSLParameter: 'SSL parameter %s should be %s, but was %s', // parameter name, type, type
     badUnits: 'The %s webhook command has invalid temperature units %s. Must be one of:', // accessory name, input, list of unit names
+    command: 'Command',
+    example: 'Example',
+    link: 'Link',
     missingId: 'Request is missing id',
     missingCharacteristic: 'Request is missing a get or set command, e.g. `set=Brightness`',
     missingValue: '`set` requests require a `value`',
     received: 'Webhook command received',
-    register: 'Registering accessory with id %s for webhook command %s', // id, command
+    register: '%s adding webhook with id %s and command %s', // accessory name, id, command
     started: 'Webhook server listening on port %s', // port number
     stopped: 'Webhook server stopped',
     stopping: 'Shutting down webhook server…',
+    title: 'Available Webhooks',
     validRange: 'The %s webhook command expects a number value between %s and %s', // command name, number, number
     validValues: 'Valid values for the %s webhook command are:', // command name
+    values: 'Values',
     unregisteredCharacteristic: 'There are no accessories registered for %s. Did you `Enable Webhook` for this accessory?', // command name
     unsupportedCharacteristic: 'The webhook command %s is not supported', // value
     unregisteredId: 'There is no accessory registered for webhooks with the id %s. You can find the correct id in the JSON config.', // id

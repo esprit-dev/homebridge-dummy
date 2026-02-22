@@ -24,7 +24,7 @@ export class ButtonAccessory extends DummyAccessory<ButtonConfig> {
   public get webhooks(): Webhook[] {
 
     return [
-      new Webhook(this.identifier, HKCharacteristicKey.ProgrammableSwitchEvent,
+      new Webhook(this, HKCharacteristicKey.ProgrammableSwitchEvent,
         new Values(
           [
             this.Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS,

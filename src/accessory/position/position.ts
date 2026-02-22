@@ -8,7 +8,7 @@ import { strings } from '../../i18n/i18n.js';
 
 import { Position, isValidPosition, printableValues, HKCharacteristicKey, TimeUnits } from '../../model/enums.js';
 import { PositionConfig } from '../../model/types.js';
-import { Range, Webhook } from '../../model/webhook.js';
+import { Range, Values, Webhook } from '../../model/webhook.js';
 
 import { Fader } from '../../timeout/fader.js';
 import { getDelay } from '../../timeout/timeout.js';
@@ -84,14 +84,14 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
     return HKCharacteristicKey.TargetPosition;
   }
 
-  protected get webhookRange(): Range {
+  protected get webhookValidValues(): Range | Values {
     return new Range(0, 100);
   }
 
   override get webhooks(): Webhook[] {
     return [
-      new Webhook(this.identifier, this.webhookCommand,
-        this.webhookRange,
+      new Webhook(this, this.webhookCommand,
+        this.webhookValidValues,
         () => this.targetPosition,
         (value, syncOnly) => {
           this.setTargetPosition(value, syncOnly);

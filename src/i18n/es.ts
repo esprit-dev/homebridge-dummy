@@ -256,7 +256,6 @@ const overrides = {
   webhook: {
     badUnits: 'El comando del webhook de %s tiene unidades de temperatura inválidas %s. Debe ser uno de:',
     received: 'Comando webhook recibido',
-    register: 'Registrando accesorio con id %s para el comando webhook %s',
     started: 'Servidor webhook en ejecución y escuchando en el puerto %s',
     stopped: 'Servidor webhook se ha detenido',
     stopping: 'Deteniendo el servidor webhook…',

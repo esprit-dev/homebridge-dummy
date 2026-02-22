@@ -5,8 +5,10 @@ import { Server } from 'http';
 import { createServer, ServerOptions } from 'https';
 import path from 'path';
 
+import { DummyAccessory } from '../accessory/base.js';
+
 import { HKCharacteristicKey } from './enums.js';
-import { WebhookConfig } from './types.js';
+import { DummyConfig, WebhookConfig } from './types.js';
 
 import { strings } from '../i18n/i18n.js';
 
@@ -30,7 +32,7 @@ export class Values {
 export class Webhook {
 
   constructor(
-    public readonly id: string,
+    public readonly accessory: DummyAccessory<DummyConfig>,
     public readonly characteristic: HKCharacteristicKey,
     public readonly validValues: Range | Values,
     public readonly getter: WebhookGetter,
@@ -89,7 +91,7 @@ export class WebhookManager {
     for (const webhook of webhooks) {
       this.webhooks.push(webhook);
       if (!webhook.disableLogging) {
-        this.log.always(strings.webhook.register, `\`${webhook.id}\`` , `\`${webhook.characteristic}\``);
+        this.log.always(strings.webhook.register, webhook.accessory.name, `\`${webhook.accessory.identifier}\`` , `\`${webhook.characteristic}\``);
       }
     }
   }
@@ -157,6 +159,12 @@ export class WebhookManager {
   private onRequest(request: Request, response: Response) {
 
     const data = { ...request.query, ...request.body };
+
+    if (Object.keys(data).length === 0) {
+      this.onList(response);
+      return;
+    }
+
     this.log.ifVerbose(`${strings.webhook.received}\n${JSON.stringify(data)}`);
 
     if (!assert(this.log, 'Webhook', data, 'id')) {
@@ -197,6 +205,11 @@ export class WebhookManager {
     response.status(200).json({ value: value });
   }
 
+  private onList(response: Response) {
+    const html = this.generateTableHTML();
+    response.status(200).contentType('html').send(html);
+  }
+
   private setValue(
     response: Response, id: string, characteristic: HKCharacteristicKey, value: CharacteristicValue, syncOnly: boolean) {
 
@@ -227,7 +240,7 @@ export class WebhookManager {
 
   private getWebhook(response: Response, id: string, characteristic: HKCharacteristicKey): Webhook | undefined {
 
-    const byId = this.webhooks.filter( (webhook) => webhook.id === id);
+    const byId = this.webhooks.filter( (webhook) => webhook.accessory.identifier === id);
     if (byId.length === 0) {
       this.onBadRequest(response, strings.webhook.unregisteredId.replace('%s', `\`${id}\``));
       return;
@@ -253,5 +266,64 @@ export class WebhookManager {
     if(alsoLog) {
       this.log.error(errorMessage);
     }
+  }
+
+  private generateTableHTML(): string {
+
+    return  `
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<title>${strings.webhook.title}</title>
+
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+}
+
+td, th {
+  border: 1px solid #bbbbbb;
+  text-align: left;
+  padding: 8px 32px 8px 16px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
+
+</head>
+<body>
+
+<h2>${strings.webhook.title}</h2>
+<table>
+  <tr>
+    <th>${strings.config.title.name}</th>
+    <th>${strings.accessory.identifier}</th>
+    <th>${strings.webhook.command}</th>
+    <th>${strings.webhook.values}</th>
+    <th>${strings.webhook.example}</th>
+  </tr>
+  ${this.webhooks.map(webhook => {
+    const exampleValue = webhook.validValues instanceof Range ? webhook.validValues.min : webhook.validValues.values[0];
+    return `
+  <tr>
+    <td>${webhook.accessory.name}</td>
+    <td>${webhook.accessory.identifier}</td>
+    <td>${webhook.characteristic}</td>
+    <td>${webhook.validValues instanceof Range ? `${webhook.validValues.min} - ${webhook.validValues.max}` : webhook.validValues.asString}</td>
+    <td><a target="_blank" href=?id=${webhook.accessory.identifier}&command=${webhook.characteristic}&value=${exampleValue}>${strings.webhook.link}</td>
+  </tr>
+  `;
+  }).join('')}
+</table>
+
+</body>
+</html>
+`;
   }
 }

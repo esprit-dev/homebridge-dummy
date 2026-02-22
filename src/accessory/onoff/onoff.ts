@@ -33,7 +33,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
 
   override get webhooks(): Webhook[] {
     return [
-      new Webhook(this.identifier, HKCharacteristicKey.On,
+      new Webhook(this, HKCharacteristicKey.On,
         new Values( [true, false], 'true, false'),
         () => this.on,
         (value, syncOnly) => {

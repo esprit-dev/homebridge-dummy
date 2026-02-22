@@ -76,6 +76,7 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
     this.dummyAccessories.forEach( accessory => {
       accessory.teardown();
     });
+    this.webhookManager.teardown();
     this.conditionManager.teardown();
   }
 
