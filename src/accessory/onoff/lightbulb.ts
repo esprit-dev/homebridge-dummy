@@ -14,7 +14,7 @@ import { Fader } from '../../timeout/fader.js';
 
 import { storageGet_Deprecated } from '../../tools/storage.js';
 
-const NO_BRIGHTNESS = -1;
+const DEFAULT_BRIGHTNESS = 100;
 
 export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
 
@@ -25,7 +25,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
   constructor(dependency: DummyAccessoryDependency<LightbulbConfig>) {
     super(dependency);
 
-    this.brightness = this.config.defaultBrightness ?? NO_BRIGHTNESS;
+    this.brightness = DEFAULT_BRIGHTNESS;
 
     if (this.isDimmer) {
 
@@ -46,7 +46,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
   }
 
   private get isDimmer(): boolean {
-    return this.config.defaultBrightness !== undefined;
+    return this.config.isDimmer ?? this.config.defaultBrightness !== undefined;
   }
 
   override getAccessoryType(): AccessoryType {

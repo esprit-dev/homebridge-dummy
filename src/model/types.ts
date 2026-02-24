@@ -166,7 +166,11 @@ export type OutletConfig = OnOffConfig & {
 }
 
 export type LightbulbConfig = OnOffConfig & {
+  /**
+   * @deprecated
+   */
   defaultBrightness?: CharacteristicValue,
+  isDimmer?: boolean,
   fadeOut?: boolean,
 }
 

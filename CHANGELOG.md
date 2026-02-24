@@ -14,6 +14,7 @@ All notable changes to homebridge-dummy will be documented in this file.
     - Use `webhookConfig` to `disableSSL`, change the `port`, or override `key`/`cert` paths
     - `webhookPort` is deprecated
 - Deprecated `enableWebook` (spelling) in favor of `enableWebhook`
+- Deprecated `defaultBrightness` for Lightbulbs — use `isDimmer` to enable brightness control
 
 ### Added
 - `StatelessProgrammableSwitch` — useful for triggering automations or push notifications on a schedule or via webhook

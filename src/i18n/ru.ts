@@ -165,7 +165,6 @@ const overrides = {
       commandUnlock: 'Команда разблокировки',
       cron: 'Cron',
       cronCustom: 'Произвольный Cron',
-      defaultBrightness: 'Яркость по умолчанию',
       defaultPosition: 'Положение по умолчанию',
       defaultState: 'Состояние по умолчанию',
       defaultTemperature: 'Температура по умолчанию',

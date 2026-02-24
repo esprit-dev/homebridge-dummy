@@ -446,11 +446,9 @@
               "enum": ["C", "F"],
               "enumNames": ["${config.enumNames.celsius}", "${config.enumNames.fahrenheit}"]
             },
-            "defaultBrightness": {
-              "type": "number",
-              "title": "${config.title.defaultBrightness}",
-              "minimum": 0,
-              "maximum": 100
+            "isDimmer": {
+              "type": "boolean",
+              "title": "${config.title.isDimmer}"
             },
             "fadeOut": {
               "type": "boolean",
@@ -639,13 +637,6 @@
                     {
                       "key": "accessories[].sensor.type",
                       "flex": "0 0 33%"
-                    },
-                    {
-                      "key": "accessories[].defaultBrightness",
-                      "flex": "0 0 33%",
-                      "condition": {
-                        "functionBody": "return model.accessories?.[arguments[1]]?.type === 'Lightbulb';"
-                      }
                     }
                   ]
                 },
@@ -802,10 +793,17 @@
                       }
                     },
                     {
+                      "key": "accessories[].isDimmer",
+                      "flex": "0 0 auto",
+                      "condition": {
+                        "functionBody": "return model.accessories?.[arguments[1]]?.type === 'Lightbulb';"
+                      }
+                    },
+                    {
                       "key": "accessories[].fadeOut",
                       "flex": "0 0 auto",
                       "condition": {
-                        "functionBody": "return model.accessories?.[arguments[1]]?.defaultBrightness !== undefined;"
+                        "functionBody": "return model.accessories?.[arguments[1]]?.isDimmer !== undefined;"
                       }
                     }
                   ]

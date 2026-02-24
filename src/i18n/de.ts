@@ -166,7 +166,6 @@ const overrides = {
       commandUnlock: 'Befehl zum Entriegeln',
       cron: 'Cron',
       cronCustom: 'Benutzerdefinierter Cron',
-      defaultBrightness: 'Standardhelligkeit',
       defaultPosition: 'Standardposition',
       defaultState: 'Standardzustand',
       defaultTemperature: 'Standardtemperatur',

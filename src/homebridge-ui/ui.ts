@@ -4,7 +4,7 @@ import { Translation } from '../i18n/i18n.js';
 
 import { PLUGIN_ALIAS } from '../homebridge/settings.js';
 
-import { DummyConfig, DummyPlatformConfig, OnOffConfig } from '../model/types.js';
+import { DummyConfig, DummyPlatformConfig, LightbulbConfig, OnOffConfig } from '../model/types.js';
 import { AccessoryType, OnState, ScheduleType } from '../model/enums.js';
 
 declare const homebridge: IHomebridgePluginUi;
@@ -329,6 +329,13 @@ async function migrateDeprecatedFields(configs: DummyPlatformConfig[]) {
       if (accessoryConfig.enableWebook !== undefined) {
         accessoryConfig.enableWebhook = accessoryConfig.enableWebook;
         accessoryConfig.enableWebook = undefined;
+        changed = true;
+      }
+
+      const lightbulbConfig = accessoryConfig as LightbulbConfig;
+      if (lightbulbConfig.defaultBrightness !== undefined) {
+        lightbulbConfig.isDimmer = true;
+        lightbulbConfig.defaultBrightness = undefined;
         changed = true;
       }
     });

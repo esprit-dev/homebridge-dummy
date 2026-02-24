@@ -28,7 +28,7 @@ function migrateAccessory(legacyConfig: LegacyAccessoryConfig): DummyConfig {
   if (legacyConfig.dimmer) {
     const lightbulbConfig = dummyConfig as LightbulbConfig;
     lightbulbConfig.type = AccessoryType.Lightbulb;
-    lightbulbConfig.defaultBrightness = legacyConfig.brightness ?? 0;
+    lightbulbConfig.isDimmer = true;
   }
 
   if (!legacyConfig.stateful && legacyConfig.time) {

@@ -169,7 +169,6 @@ const overrides = {
       commandUnlock: 'Comando de desbloqueo',
       cron: 'Cron',
       cronCustom: 'Cron personalizado',
-      defaultBrightness: 'Brillo predeterminado',
       defaultPosition: 'Posición predeterminada',
       defaultState: 'Estado predeterminado',
       defaultTemperature: 'Temperatura predeterminada',
