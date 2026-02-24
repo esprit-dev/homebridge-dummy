@@ -4,7 +4,7 @@ export type ServiceType = typeof import('homebridge').Service;
 export type CharacteristicType = typeof import('homebridge').Characteristic;
 
 import {
-  AccessoryState, AccessoryType, ConditionOperator, HumidifierType, LockState, NotificationAPI, OnState, OperandType,
+  AccessoryState, AccessoryType, ConditionOperator, FadeOutType, HumidifierType, LockState, NotificationAPI, OnState, OperandType,
   PingAvailability, Position, ScheduleType, SensorType, ThermostatState, TemperatureUnits, TimePeriod, TimeUnits, ValveType,
 } from './enums.js';
 
@@ -126,6 +126,12 @@ export type SimulationConfig = Assertable & {
   units?: TimeUnits,
 }
 
+export type FadeOutConfig = Assertable & {
+  type: FadeOutType
+  time: number,
+  units: TimeUnits,
+}
+
 export type DummyConfig = {
   id: string,
   name: string,
@@ -171,7 +177,7 @@ export type LightbulbConfig = OnOffConfig & {
    */
   defaultBrightness?: CharacteristicValue,
   isDimmer?: boolean,
-  fadeOut?: boolean,
+  fadeOut?: FadeOutConfig,
 }
 
 export type SwitchConfig = OnOffConfig & {

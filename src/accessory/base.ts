@@ -68,32 +68,20 @@ export abstract class DummyAccessory<C extends DummyConfig> {
   ) {
 
     const name = dependency.config.name;
-    const disableLogging = dependency.config.disableLogging === true;
 
-    const addonDependency: DummyAddonDependency =  {
-      Service: dependency.Service,
-      Characteristic: dependency.Characteristic,
-      platformAccessory: dependency.platformAccessory,
-      identifier: this.identifier,
-      caller: name,
-      log: dependency.log,
-      historyEnabled: dependency.config.enableHistory === true,
-      disableLogging: disableLogging,
-    };
+    this.sensor = SensorAccessory.new(this.addonDependency, this.recordHistory.bind(this), dependency.config.sensor);
 
-    this.sensor = SensorAccessory.new(addonDependency, this.recordHistory.bind(this), dependency.config.sensor);
+    this._schedule = Schedule.new(this.addonDependency, dependency.config.schedule, strings.schedule, 'Schedule', this.trigger.bind(this));
 
-    this._schedule = Schedule.new(addonDependency, dependency.config.schedule, strings.schedule, 'Schedule', this.trigger.bind(this));
-
-    this._autoReset = Schedule.new(addonDependency, dependency.config.autoReset ?? dependency.config.timer,
+    this._autoReset = Schedule.new(this.addonDependency, dependency.config.autoReset ?? dependency.config.timer,
       strings.autoReset, 'AutoReset', this.reset.bind(this));
 
-    this._notification = NotificationManager.new(addonDependency, dependency.config.notification);
+    this._notification = NotificationManager.new(this.addonDependency, dependency.config.notification);
 
-    this._limiter = Limiter.new(addonDependency, dependency.config.limiter);
+    this._limiter = Limiter.new(this.addonDependency, dependency.config.limiter);
 
     dependency.conditionManager.register(name, this.identifier, dependency.config.conditions,
-      this.trigger.bind(this), this._autoReset ? undefined : this.reset.bind(this), disableLogging);
+      this.trigger.bind(this), this._autoReset ? undefined : this.reset.bind(this), dependency.config.disableLogging === true);
 
     const serviceInstance = dependency.Service[this.getAccessoryType()];
 
@@ -149,6 +137,19 @@ export abstract class DummyAccessory<C extends DummyConfig> {
 
   protected get config(): C {
     return this.dependency.config;
+  }
+
+  protected get addonDependency(): DummyAddonDependency {
+    return {
+      Service: this.dependency.Service,
+      Characteristic: this.dependency.Characteristic,
+      platformAccessory: this.dependency.platformAccessory,
+      identifier: this.identifier,
+      caller: this.dependency.config.name,
+      log: this.dependency.log,
+      historyEnabled: this.dependency.config.enableHistory === true,
+      disableLogging: this.dependency.config.disableLogging === true,
+    };
   }
 
   public get historyEnabled(): boolean {

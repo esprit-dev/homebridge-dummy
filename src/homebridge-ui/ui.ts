@@ -4,8 +4,8 @@ import { Translation } from '../i18n/i18n.js';
 
 import { PLUGIN_ALIAS } from '../homebridge/settings.js';
 
+import { AccessoryType, FadeOutType, OnState, ScheduleType } from '../model/enums.js';
 import { DummyConfig, DummyPlatformConfig, LightbulbConfig, OnOffConfig } from '../model/types.js';
-import { AccessoryType, OnState, ScheduleType } from '../model/enums.js';
 
 declare const homebridge: IHomebridgePluginUi;
 
@@ -336,6 +336,21 @@ async function migrateDeprecatedFields(configs: DummyPlatformConfig[]) {
       if (lightbulbConfig.defaultBrightness !== undefined) {
         lightbulbConfig.isDimmer = true;
         lightbulbConfig.defaultBrightness = undefined;
+        changed = true;
+      }
+
+      if (typeof lightbulbConfig.fadeOut === 'boolean' && lightbulbConfig.fadeOut === true) {
+        const autoReset = lightbulbConfig.autoReset;
+        if (autoReset?.type === ScheduleType.TIMEOUT && autoReset?.time !== undefined && autoReset.units !== undefined) {
+          lightbulbConfig.fadeOut = {
+            type: FadeOutType.FIXED,
+            time: autoReset.time,
+            units: autoReset.units,
+          };
+          lightbulbConfig.autoReset = undefined;
+        } else {
+          lightbulbConfig.fadeOut = undefined;
+        }
         changed = true;
       }
     });

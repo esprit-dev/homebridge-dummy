@@ -2,7 +2,7 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-## 1.6.2-beta.5 (2026-02-22)
+## 1.7.0-beta.0 (2026-02-24)
 
 ### ‼️ WARNING ‼️ — If upgrading from v0.9.2 or earlier, [READ THIS FIRST](https://github.com/mpatfield/homebridge-dummy/wiki/Migration).
 *There is now an [option](https://github.com/mpatfield/homebridge-dummy/wiki/Migration#migrating-gradually) to run both old and new versions of Homebridge Dummy in parallel if you want to migrate gradually*
@@ -15,8 +15,12 @@ All notable changes to homebridge-dummy will be documented in this file.
     - `webhookPort` is deprecated
 - Deprecated `enableWebook` (spelling) in favor of `enableWebhook`
 - Deprecated `defaultBrightness` for Lightbulbs — use `isDimmer` to enable brightness control
+- `fadeOut` for `Lightbulb` is now an object instead of a boolean with [selectable behaviors](https://github.com/mpatfield/homebridge-dummy/wiki/Additional-Options#lightbulb)
 
 ### Added
+- Different behavior options for `Lightbulb` [fade out](https://github.com/mpatfield/homebridge-dummy/wiki/Additional-Options#lightbulb)
+    - `FIXED` — Always takes the same amount of time to fade, regardless of brightness
+    - `INCREMENTAL` - Each 1% takes the amount of time defined ("egg timer")
 - `StatelessProgrammableSwitch` — useful for triggering automations or push notifications on a schedule or via webhook
 - View all currently available webhooks in a browser (e.g. [http://localhost:63743/](http://localhost:63743/)) when at least one accessory has a webhook enabled
 

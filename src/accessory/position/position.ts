@@ -22,7 +22,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
 
   private targetPosition: CharacteristicValue;
 
-  private fader = new Fader();
+  private fader?: Fader;
 
   constructor(dependency: DummyAccessoryDependency<C>) {
     super(dependency);
@@ -32,6 +32,14 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
     }
 
     this.targetPosition = this.defaultPosition;
+
+    if (this.config.simulation !== undefined) {
+      if (!assert(this.log, this.name, this.config.simulation, 'enabled')) {
+        this.config.simulation = undefined;
+      } else {
+        this.fader = new Fader(this.addonDependency);
+      }
+    }
 
     if (this.hasPositionState) {
       this.service.getCharacteristic(dependency.Characteristic.PositionState)
@@ -65,7 +73,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
   }
 
   protected get currentPosition(): CharacteristicValue {
-    return this.fader.value ?? this.targetPosition;
+    return this.fader?.value ?? this.targetPosition;
   }
 
   protected get stateStorageKey() {
@@ -183,7 +191,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
 
   protected onTargetPositionChanged(oldValue: number, newValue: number) {
 
-    if (this.config.simulation === undefined || !assert(this.log, this.name, this.config.simulation, 'enabled') || this.config.simulation.enabled !== true) {
+    if (this.fader === undefined || this.config.simulation === undefined) {
       return;
     }
 
@@ -222,7 +230,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
   }
 
   override teardown(): void {
-    this.fader.teardown();
+    this.fader?.teardown();
     super.teardown();
   }
 }

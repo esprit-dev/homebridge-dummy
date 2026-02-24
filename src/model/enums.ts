@@ -170,6 +170,11 @@ export function isValidTimeUnits(input: TimeUnits): boolean {
   return Object.values(TimeUnits).includes(input);
 }
 
+export enum FadeOutType {
+  INCREMENTAL = 'INCREMENTAL',
+  FIXED = 'FIXED',
+}
+
 export enum ScheduleType {
   TIMEOUT = 'TIMEOUT',
   INTERVAL = 'INTERVAL',

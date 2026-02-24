@@ -62,6 +62,10 @@ const en = {
   lightbulb: {
     brightness: '%s brightness is %d%', // accessory name, number
     stateOn: '%s is on, brightness is %d%', // accessory name, number
+    fadeMilliseconds: '%s fading out over %s milliseconds', // accessory name, number
+    fadeSeconds: '%s fading out over %s seconds', // accessory name, number
+    fadeMinutes: '%s fading out over %s minutes', // accessory name, number
+    fadeHours: '%s fading out over %s hours', // accessory name, number
   },
 
   limiter: {
@@ -152,6 +156,7 @@ const en = {
       commands: 'Execute arbitrary commands (e.g. curl) when the accessory changes state',
       cron: 'Visit crontab.guru for help',
       conditions: 'Set the accessory to its opposite (non-default) value when the specified conditions are met',
+      fadeOut: 'Reduce brightness over a fixed duration, or decrease by 1% incrementally per each time duration',
       limiter: 'Restrict the total time this accessory can be set to its non-default value, for each specified period',
       notification: 'Receive a notification when accessory is set to its opposite (non-default) value. See wiki for help.',
       random: 'Time will be randomized with the above value as a maximum',
@@ -180,6 +185,7 @@ const en = {
       dusk: 'Dusk',
       fahrenheit: '°F',
       faucet: 'Faucet',
+      fixed: 'Fixed',
       garageDoorOpener: 'Garage Door',
       generic: 'Generic',
       goldenHour: 'Golden Hour',
@@ -190,6 +196,7 @@ const en = {
       humidifier: 'Humidifier',
       humidifierDehumidifier: 'Humidifier/Dehumidifier',
       humiditySensor: 'Humidity Sensor',
+      incremental: 'Incremental',
       interval: 'Repeating Interval',
       irrigation: 'Irrigation',
       leakSensor: 'Leak',

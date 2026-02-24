@@ -403,6 +403,61 @@
           },
           "units": { "$ref": "#/definitions/units" }
         }
+      },
+      "fadeOut": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "title": "${config.title.type}",
+            "enum": [ "INCREMENTAL", "FIXED"],
+            "enumNames": ["${config.enumNames.incremental}", "${config.enumNames.fixed}"]
+          },
+          "time": {
+            "title": "${config.title.time}",
+            "type": "integer",
+            "minimum": 1
+          },
+          "units": { "$ref": "#/definitions/units" }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "type": {
+                }
+              },
+              "required": ["type"]
+            },
+            "then": {
+              "required": ["time", "units"]
+            }
+          },
+          {
+            "if": {
+                "properties": {
+                  "time": {
+                  }
+                },
+                "required": ["time"]
+            },
+            "then": {
+                "required": ["type"]
+            }
+          },
+          {
+            "if": {
+                "properties": {
+                  "units": {
+                  }
+                },
+                "required": ["units"]
+            },
+            "then": {
+                "required": ["type"]
+            }
+          }
+        ]
       }
     },
     "properties": {
@@ -436,6 +491,7 @@
             "sensor": { "$ref": "#/definitions/sensor" },
             "notification": { "$ref": "#/definitions/notification" },
             "schedule": { "$ref": "#/definitions/schedule" },
+            "fadeOut": { "$ref": "#/definitions/fadeOut" },
             "autoReset": { "$ref": "#/definitions/schedule" },
             "limiter": { "$ref": "#/definitions/limiter" },
             "conditions": { "$ref": "#/definitions/conditions" },
@@ -449,10 +505,6 @@
             "isDimmer": {
               "type": "boolean",
               "title": "${config.title.isDimmer}"
-            },
-            "fadeOut": {
-              "type": "boolean",
-              "title": "${config.title.fadeOut}"
             },
             "defaultState": {
               "type": "string",
@@ -798,13 +850,6 @@
                       "condition": {
                         "functionBody": "return model.accessories?.[arguments[1]]?.type === 'Lightbulb';"
                       }
-                    },
-                    {
-                      "key": "accessories[].fadeOut",
-                      "flex": "0 0 auto",
-                      "condition": {
-                        "functionBody": "return model.accessories?.[arguments[1]]?.isDimmer !== undefined;"
-                      }
                     }
                   ]
                 },
@@ -911,10 +956,46 @@
             },
             {
               "type": "fieldset",
+              "title": "${config.title.fadeOut}",
+              "description": "${config.description.fadeOut}",
+              "condition": {
+                "functionBody": "const accessory = model.accessories?.[arguments[1]]; return accessory?.isDimmer === true && !accessory?.autoReset;"
+              },
+              "items": [
+                {
+                  "type": "div",
+                  "displayFlex": true,
+                  "flex-direction": "row",
+                  "notitle": true,
+                  "items": [
+                    {
+                      "key": "accessories[].fadeOut.type",
+                      "flex": "0 0 auto"
+                    },
+                    {
+                      "key": "accessories[].fadeOut.time",
+                      "flex": "0 0 auto",
+                      "condition": {
+                          "functionBody": "return model.accessories?.[arguments[1]]?.fadeOut?.type;"
+                      }
+                    },
+                    {
+                      "key": "accessories[].fadeOut.units",
+                      "flex": "0 0 auto",
+                      "condition": {
+                          "functionBody": "return model.accessories?.[arguments[1]]?.fadeOut?.type;"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "fieldset",
               "title": "${config.title.autoReset}",
               "description": "${config.description.autoReset}",
               "condition": {
-                "functionBody": "const type = model.accessories?.[arguments[1]]?.type; return type && !['HumiditySensor','StatelessProgrammableSwitch','TemperatureSensor','Thermostat'].includes(type);"
+                "functionBody": "const accessory = model.accessories?.[arguments[1]]; const type = accessory?.type; return !accessory?.fadeOut && type && !['HumiditySensor','StatelessProgrammableSwitch','TemperatureSensor','Thermostat'].includes(type);"
               },
               "items": [
                 {

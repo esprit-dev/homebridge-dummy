@@ -60,6 +60,8 @@ Log watch trigger feature inspired by [Homebridge Virtual Switches](https://gith
 
 Network presence condition inspired by [homebridge-network-presence](https://github.com/nitaybz/homebridge-network-presence) by [nitaybz](https://github.com/sponsors/nitaybz)
 
+Egg timer feature inspired by [homebridge-eggtimer-plugin](https://github.com/teh-hippo/homebridge-eggtimer-plugin) by [teh-hippo](https://github.com/sponsors/teh-hippo)
+
 Special thanks to [@nfarina](https://github.com/sponsors/nfarina) for creating the original version of this plugin and maintaining it for almost 10 (!!!) years
 
 And to the amazing creators/contributors of [Homebridge](https://homebridge.io) who made this plugin possible!
