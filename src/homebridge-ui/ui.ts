@@ -15,6 +15,15 @@ const i18n_replacements = {
   dummy: PLUGIN_ALIAS,
 };
 
+function getParentDocument(): Document | undefined {
+  try {
+    return window.parent.document;
+  } catch (err) {
+    console.warn('Unable to access parent document (cross-origin). Some UI features disabled.');
+    return undefined;
+  }
+}
+
 function translateHtml(strings: Translation) {
   document.querySelectorAll('[i18n]').forEach(element => {
 
@@ -31,7 +40,12 @@ function translateHtml(strings: Translation) {
 
 function updateAccessoryNames(strings: Translation) {
 
-  const legends = Array.from(window.parent.document.querySelectorAll('fieldset legend'));
+  const parentDocument = getParentDocument();
+  if (!parentDocument) {
+    return;
+  }
+
+  const legends = Array.from(parentDocument.querySelectorAll('fieldset legend'));
 
   for(const legend of legends) {
     const fieldset = legend.closest('fieldset');
@@ -91,8 +105,14 @@ async function updateConfigsWithUUIDs(configs: DummyPlatformConfig[]) {
   }
 }
 
-function findNextByName(element: Element, name: string): Element | null {
-  const walker = window.parent.document.createTreeWalker(window.parent.document.body, NodeFilter.SHOW_ELEMENT);
+function findNextByName(element: Element, name: string): Element | undefined {
+
+  const parentDocument = getParentDocument();
+  if (!parentDocument) {
+    return undefined;
+  }
+
+  const walker = parentDocument.createTreeWalker(parentDocument.body, NodeFilter.SHOW_ELEMENT);
 
   let found = false;
   while (walker.nextNode()) {
@@ -109,13 +129,18 @@ function findNextByName(element: Element, name: string): Element | null {
     }
   }
 
-  return null;
+  return undefined;
 }
 
 let accessories: DummyConfig[] = [];
 async function updateConditionDropdowns(strings: Translation, configs?: DummyPlatformConfig[]) {
 
-  const accessoryIdInputs = window.parent.document.querySelectorAll('[name="accessoryId"]');
+  const parentDocument = getParentDocument();
+  if (!parentDocument) {
+    return;
+  }
+
+  const accessoryIdInputs = parentDocument.querySelectorAll('[name="accessoryId"]');
   if (accessoryIdInputs.length === 0) {
     return;
   }
@@ -366,15 +391,19 @@ function showSettings(strings: Translation) {
   document.getElementById('migration')!.style.display = 'none';
   document.getElementById('support')!.style.display = 'block';
 
-  const observer = new MutationObserver(() => {
-    updateAccessoryNames(strings);
-    updateConditionDropdowns(strings);
-  });
+  const parentDocument = getParentDocument();
+  if (parentDocument) {
 
-  observer.observe(
-    window.parent.document.body,
-    { childList: true, subtree: true },
-  );
+    const observer = new MutationObserver(() => {
+      updateAccessoryNames(strings);
+      updateConditionDropdowns(strings);
+    });
+
+    observer.observe(
+      parentDocument,
+      { childList: true, subtree: true },
+    );
+  }
 
   homebridge.addEventListener('configChanged', async (evt: Event) => {
     const configs = (evt as MessageEvent).data as DummyPlatformConfig[];
