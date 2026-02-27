@@ -2,12 +2,20 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-## 1.7.0 (2026-02-27)
+## 1.7.1-beta.0 (2026-02-27)
 
 ### ‼️ WARNING ‼️ — If upgrading from v0.9.2 or earlier, [READ THIS FIRST](https://github.com/mpatfield/homebridge-dummy/wiki/Migration).
 *There is now an [option](https://github.com/mpatfield/homebridge-dummy/wiki/Migration#migrating-gradually) to run both old and new versions of Homebridge Dummy in parallel if you want to migrate gradually*
 
 -----
+
+### Changed
+- Reworked translation system for easier maintenance — please [open a ticket](https://github.com/mpatfield/homebridge-dummy/issues/new/choose) if you have issues
+
+### Notes
+Would you like to see Homebridge Dummy in your language? Please consider [getting involved](https://github.com/mpatfield/homebridge-dummy/issues/105). No coding experience required!
+
+## 1.7.0 (2026-02-27)
 
 ### Added
 - Different behavior options for `Lightbulb` [fade out](https://github.com/mpatfield/homebridge-dummy/wiki/Additional-Options#lightbulb)
@@ -27,9 +35,6 @@ All notable changes to homebridge-dummy will be documented in this file.
 
 ### Fixed
 - Changing accessory type within a Group removes stale sub-accessories
-
-### Notes
-Would you like to see Homebridge Dummy in your language? Please consider [getting involved](https://github.com/mpatfield/homebridge-dummy/issues/105). No coding experience required!
 
 ## 1.6.1 (2026-02-10)
 

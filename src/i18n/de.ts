@@ -1,12 +1,7 @@
-import merge from 'lodash.merge';
-
-import en from './en.js';
-
-const overrides = {
+const de = {
 
   accessory: {
     badValueType: '%s erwartet den Typ %s, hat aber den Typ %s erhalten',
-    invalidCron: '%s hat einen ungültigen Cron-Ausdruck: %s',
     missingRequired: 'Für %s fehlt das erforderliche Feld %s',
   },
 
@@ -52,32 +47,14 @@ const overrides = {
     badType: '%s weist einen ungültigen Typen für den Zeitplan %s auf. Muss einer der folgenden sein: %s',
     badUnits: 'Zeitplan für %s hat ungültige Zeiteinheiten %s. Muss eine der folgenden sein: %s',
     cron: '%s startet Zeitplan-Cronjob',
-    intervalMilliseconds: '%s geplant für %s Millisekunden',
-    intervalSeconds: '%s geplant für %s Sekunden',
-    intervalMinutes: '%s geplant für %s Minuten',
-    intervalHours: '%s geplant für %s Stunden',
   },
 
   thermostat: {
     auto: '%s auf \'Auto\' gestellt',
     badDefault: '%s weist einen ungültigen Standardzustand %s auf. Muss einer der folgenden sein: %s',
-    badUnits: '%s weist ungültige Temperatureinheiten %s auf. Muss eine der folgenden sein: %s',
     cool: '%s auf Kühlen gestellt',
     heat: '%s auf Heizen gestellt',
     off: '%s auf Aus gestellt',
-    temperatureC: '%s auf %d°C gestellt',
-    temperatureF: '%s auf %d°F gestellt',
-  },
-
-  timer: {
-    badUnits: 'Timer weist für %s ungültige Zeiteinheiten %s auf. Muss eine der folgenden sein: %s',
-    cancel: 'Timer für %s abgebrochen',
-    expired: 'Timer für %s ist während des Neustarts abgelaufen. Kehre zum Standardzustand zurück...',
-    resume: '%s setzt Timer fort',
-    setMilliseconds: '%s wartet %s Millisekunden',
-    setSeconds: '%s wartet %s Sekunden',
-    setMinutes: '%s wartet %s Minuten',
-    setHours: '%s wartet %s Stunden',
   },
 
   config: {
@@ -88,7 +65,6 @@ const overrides = {
       limiter: 'Beschränkt die Gesamtzeit, in der dieses Gerät für jede angegebene Periode auf seinen Nicht-Standardwert eingestellt werden kann',
       random: 'Die Zeit wird zufällig mit dem obigen Wert als Maximum gewählt',
       schedule: 'Setzt das Gerät in bestimmten Intervallen oder zu bestimmten Zeiten auf seinen entgegengesetzten (Nicht-Standard-) Wert',
-      timer: 'Setzt das Gerät nach der angegebenen Verzögerung auf seinen Standardwert zurück',
       timerControlled: 'Anstatt das Gerät zu spiegeln, wird der Sensor aktiviert, wenn das Gerät automatisch zurückgesetzt wird',
     },
 
@@ -141,12 +117,6 @@ const overrides = {
       yearly: 'Jährlich',
     },
 
-    migrate: 'Führen Sie ein Upgrade von einer früheren Version aus?',
-    migrationDetails1: 'HomeKit-Szenen und -Automationen, die %s-Geräte verwenden, müssen neu konfiguriert werden!',
-    migrationDetails2: 'Bitte führen Sie ein Downgrade auf v0.9.2 oder früher durch, wenn Sie Ihr aktuelles Setup beibehalten möchten.',
-    migrationDetails3: '%s kann versuchen, Ihre Geräte neu zu erstellen, aber Sie müssen Ihre HomeKit-Szenen und -Automationen trotzdem neu konfigurieren.',
-    migrationDetails4: 'Möchten Sie Ihre Geräte jetzt neu erstellen?',
-    migrationDetails5: 'Für weitere Details besuchen Sie bitte %s',
     migrationRestartDescription: 'Bitte starten Sie Homebridge neu, um die %s-Migration zu beginnen',
     migrationRestartTitle: 'Homebridge neu starten',
     no: 'Nein',
@@ -169,7 +139,6 @@ const overrides = {
       defaultPosition: 'Standardposition',
       defaultState: 'Standardzustand',
       defaultTemperature: 'Standardtemperatur',
-      delay: 'Verzögerung',
       disableLogging: 'Protokollierung deaktivieren',
       enableWebhook: 'Webhook aktivieren',
       groupName: 'Gruppenname',
@@ -183,7 +152,6 @@ const overrides = {
       resetOnRestart: 'Bei Neustart zurücksetzen',
       schedule: 'Zeitplan',
       sensor: 'Sensor hinzufügen',
-      timer: 'Auto-Reset-Timer',
       timerControlled: 'Sensor bei Auto-Reset aktivieren',
       type: 'Typ',
       units: 'Einheiten',
@@ -262,7 +230,5 @@ const overrides = {
     unregisteredId: 'Es ist kein Gerät für Webhooks mit der ID %s registriert. Die korrekte ID finden Sie in der JSON-Konfiguration.',
   },
 };
-
-const de = merge({}, en, overrides);
 
 export default de;

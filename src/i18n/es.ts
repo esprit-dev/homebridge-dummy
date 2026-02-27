@@ -1,15 +1,7 @@
-import merge from 'lodash.merge';
-
-// Translation into Spanish by Daniel Companeetz
-// Traduccion al español hecha por Daniel Companeetz
-
-import en from './en.js';
-
-const overrides = {
+const es = {
 
   accessory: {
     badValueType: '%s debía ser de tipo %s pero era %s',
-    invalidCron: '%s tiene una expresión de cron inválida %s',
     missingRequired: '%s le falta el campo obligatorio %s',
   },
 
@@ -55,32 +47,14 @@ const overrides = {
     badType: '%s tiene un tipo de programación inválido %s. Debe ser uno de: %s',
     badUnits: '%s la programación tiene unidades de tiempo inválidas %s. Debe ser uno de: %s',
     cron: '%s iniciando tarea programada cron',
-    intervalMilliseconds: '%s comenenzará en %s milisegundos',
-    intervalSeconds: '%s programado por %s segundos',
-    intervalMinutes: '%s programado por %s minutos',
-    intervalHours: '% programado por %s horas',
   },
 
   thermostat: {
     auto: '%s configurado en Automático',
     badDefault: '%s tiene un estado predeterminado inválido %s. Debe ser uno de: %s',
-    badUnits: '%s tiene unidades de temperatura inválidas %s. Debe ser uno de: %s',
     cool: '%s configurado en Frío',
     heat: '%s configurado en Calor',
     off: '%s configurado en Apagado',
-    temperatureC: '%s configurado a %d°C',
-    temperatureF: '%s configurado a %d°F',
-  },
-
-  timer: {
-    badUnits: 'El temporizador de %s tiene unidades de tiempo inválidas %s. Debe ser uno de: %s',
-    cancel: 'El temporizador de %s ha sido cancelado',
-    expired: 'El temporizador de %s expiró durante el reinicio. Volviendo al estado predeterminado…',
-    resume: 'Reanudando el temporizador de %s ',
-    setMilliseconds: '%s esperando %s milisegundos',
-    setSeconds: '%s esperando %s segundos',
-    setMinutes: '%s esperando %s minutos',
-    setHours: '%s esperando %s horas',
   },
 
   config: {
@@ -91,7 +65,6 @@ const overrides = {
       limiter: 'Restringir el tiempo total que este accesorio puede estar en su valor no predeterminado, para cada período especificado',
       random: 'El tiempo se aleatorizará con el valor indicado como máximo',
       schedule: 'Establecer el accesorio en su valor opuesto (no predeterminado) en intervalos o momentos especificados',
-      timer: 'Restablecer el accesorio a su valor predeterminado después del retraso especificado',
       timerControlled: 'En lugar de reflejar el accesorio, el sensor se activará cuando el accesorio se reinicie automáticamente',
     },
 
@@ -144,12 +117,6 @@ const overrides = {
       yearly: 'Anual',
     },
 
-    migrate: '¿Está actualizando desde una versión anterior?',
-    migrationDetails1: '¡Las escenas y automatizaciones de HomeKit que usan accesorios %s deberán ser reconfiguradas!',
-    migrationDetails2: 'Por favor, degrade a la versión v0.9.2 o anterior si desea mantener su configuración actual.',
-    migrationDetails3: '%s puede intentar recrear sus accesorios, pero igualmente deberá reconfigurar las escenas y automatizaciones de HomeKit.',
-    migrationDetails4: '¿Le gustaría recrear sus accesorios ahora?',
-    migrationDetails5: 'Para más detalles, por favor visite %s',
     migrationRestartDescription: 'Por favor reinicie Homebridge para comenzar la migración de %s',
     migrationRestartTitle: 'Reiniciar Homebridge',
     no: 'No',
@@ -172,7 +139,6 @@ const overrides = {
       defaultPosition: 'Posición predeterminada',
       defaultState: 'Estado predeterminado',
       defaultTemperature: 'Temperatura predeterminada',
-      delay: 'Retraso',
       disableLogging: 'Desactivar registro',
       enableWebhook: 'Activar webhook',
       groupName: 'Nombre del grupo',
@@ -186,7 +152,6 @@ const overrides = {
       resetOnRestart: 'Restablecer al reiniciar',
       schedule: 'Programación',
       sensor: 'Adjuntar sensor',
-      timer: 'Temporizador de reinicio automático',
       timerControlled: 'Activar sensor en reinicio automático',
       type: 'Tipo',
       units: 'Unidades',
@@ -265,7 +230,5 @@ const overrides = {
     unregisteredId: 'No hay ningún accesorio registrado para webhooks con el id %s. Puede encontrar el id correcto en la configuración JSON.',
   },
 };
-
-const es = merge({}, en, overrides);
 
 export default es;

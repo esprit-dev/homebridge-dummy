@@ -37,8 +37,7 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
     private readonly api: API,
   ) {
 
-    const userLang = Intl.DateTimeFormat().resolvedOptions().locale.split('-')[0];
-    setLanguage(userLang);
+    setLanguage(api.user.configPath());
 
     this.Service = api.hap.Service;
     this.Characteristic = api.hap.Characteristic;
