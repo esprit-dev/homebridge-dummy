@@ -14,7 +14,6 @@ import { History } from '../model/history.js';
 import { DummyConfig, DummyPlatformConfig, GroupConfig } from '../model/types.js';
 import { WebhookManager } from '../model/webhook.js';
 
-import { migrateAccessories } from '../tools/configMigration.js';
 import { Log } from '../tools/log.js';
 import { Storage } from '../tools/storage.js';
 import getVersion from '../tools/version.js';
@@ -86,11 +85,6 @@ export class HomebridgeDummyPlatform implements DynamicPlatformPlugin {
     const keepIdentifiers = new Set<string>();
 
     const accessories: DummyConfig[] = this.config.accessories || [];
-    if (this.config.migrationNeeded) {
-      const migratedAccessories = await migrateAccessories(this.log, this.api.user.configPath()) ?? [];
-      accessories.push(...migratedAccessories);
-    }
-
     const groupAccessories = new Map<string, GroupConfig>();
 
     const history = new History(this.api, this.log);

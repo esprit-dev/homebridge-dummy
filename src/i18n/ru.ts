@@ -116,8 +116,6 @@ const ru = {
       yearly: 'Ежегодно',
     },
 
-    migrationRestartDescription: 'Пожалуйста, перезапустите Homebridge, чтобы начать миграцию %s',
-    migrationRestartTitle: 'Перезапустить Homebridge',
     no: 'Нет',
     support: 'Документация и поддержка: %s',
     thankYou: 'Спасибо за установку %s',
@@ -197,12 +195,6 @@ const ru = {
   },
 
   startup: {
-    migrationBridge: '‼️ Пожалуйста, перезапустите Homebridge ещё раз, чтобы миграция полностью вступила в силу ‼️',
-    migrationComplete: 'Успешно мигрировано аксессуаров: %s!',
-    migrationFailed: 'К сожалению, при миграции аксессуаров произошла ошибка',
-    migrationIgnore: 'Сообщения «Плагин не найден…» можно игнорировать — они исчезнут при следующем перезапуске Homebridge',
-    migrationNoAccessories: 'Не удалось найти аксессуары для миграции',
-    migrationRevert: 'Если возникнут проблемы, резервную копию config.json.bak можно найти в каталоге Homebridge',
     newAccessory: 'Добавление нового аксессуара:',
     removeAccessory: 'Удаление аксессуара:',
     restoringAccessory: 'Восстановление аксессуара:',

@@ -31,7 +31,6 @@ export type WebhookConfig = {
 
 export type DummyPlatformConfig = PlatformConfig & {
   accessories?: DummyConfig[],
-  migrationNeeded?: boolean,
   webhookConfig?: WebhookConfig,
   /**
    * @deprecated

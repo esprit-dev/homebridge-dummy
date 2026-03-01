@@ -117,8 +117,6 @@ const es = {
       yearly: 'Anual',
     },
 
-    migrationRestartDescription: 'Por favor reinicie Homebridge para comenzar la migración de %s',
-    migrationRestartTitle: 'Reiniciar Homebridge',
     no: 'No',
     support: 'Para documentación y soporte, por favor visite %s',
     thankYou: 'Gracias por instalar %s',
@@ -199,12 +197,6 @@ const es = {
   },
 
   startup: {
-    migrationBridge: '‼️ Por favor reinicie Homebridge una vez más para que la migración tenga efecto completo ‼️',
-    migrationComplete: '¡Migración exitosa de %s accesorios!',
-    migrationFailed: 'Lo sentimos, algo salió mal con la migración del accesorio',
-    migrationIgnore: 'Puede ignorar el errores indicando \'No plugin was found…\' — deberían desaparecer la próxima vez que reinicie Homebridge',
-    migrationNoAccessories: 'No se pudieron encontrar accesorios para migrar',
-    migrationRevert: 'Si encuentra problemas, puede encontrar una copia de seguridad del archivo config.json.bak en su directorio de Homebridge',
     newAccessory: 'Agregando nuevo accesorio:',
     removeAccessory: 'Eliminando accesorio:',
     restoringAccessory: 'Restaurando accesorio:',

@@ -51,7 +51,7 @@ const en = {
 
   config: {
 
-    automatically: 'Automatically',
+    continue: 'Continue %s', // arrow symbol
 
     description: {
       autoReset: 'Returns the accessory to its default value',
@@ -145,14 +145,11 @@ const en = {
       yearly: 'Annually',
     },
 
-    manually: 'Manually',
     migrating: 'Are you upgrading from v0.9.2 or earlier?',
-    migrationInstructions1: 'STOP',
-    migrationInstructions2: 'READ THIS FIRST',
-    migrationInstructions3: 'Would you like to migrate accessories Automatically, or do it yourself Manually?',
-    migrationInstructions4: 'If you choose Automatically, you will still need reconfigure HomeKit scenes and automations.', // plugin name
-    migrationRestartDescription: 'Please restart Homebridge to begin %s migration', // plugin name
-    migrationRestartTitle: 'Restart Homebridge',
+    migrationAlert: 'STOP',
+    migrationReadme: 'READ THIS FIRST',
+    migrationAcknowledge: 'By continuing, you understand that you must install %s to keep your existing accessories.', // plugin name
+    migrationReconfigure: 'Otherwise, you will need to reconfigure all HomeKit scenes and automations associated with %s.', // plugin name
     no: 'No',
     support: 'For documentation and support please visit %s', // url
     thankYou: 'Thank you for installing %s', // plugin name
@@ -349,12 +346,6 @@ const en = {
   },
 
   startup: {
-    migrationBridge: '‼️ Please restart Homebridge one more time for migration to take full effect ‼️',
-    migrationComplete: 'Successfully migrated %s accessories!', // number
-    migrationFailed: 'Sorry, something went wrong with the accessory migration',
-    migrationIgnore: 'You may safely ignore \'No plugin was found…\' errors — they should go away the next time you restart Homebridge',
-    migrationNoAccessories: 'Unable to find any accessories to migrate',
-    migrationRevert: 'If you encounter problems, you can find a backup config.json.bak in your Homebridge directory',
     newAccessory: 'Adding new accessory:',
     removeAccessory: 'Removing accessory:',
     restoringAccessory: 'Restoring accessory:',

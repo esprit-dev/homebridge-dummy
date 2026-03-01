@@ -117,8 +117,6 @@ const de = {
       yearly: 'Jährlich',
     },
 
-    migrationRestartDescription: 'Bitte starten Sie Homebridge neu, um die %s-Migration zu beginnen',
-    migrationRestartTitle: 'Homebridge neu starten',
     no: 'Nein',
     support: 'Für Dokumentation und Support besuchen Sie bitte %s',
     thankYou: 'Vielen Dank für die Installation von %s',
@@ -199,12 +197,6 @@ const de = {
   },
 
   startup: {
-    migrationBridge: '‼️ Bitte starten Sie Homebridge noch einmal neu, damit die Migration vollständig wirksam wird ‼️',
-    migrationComplete: '%s Geräte erfolgreich migriert!',
-    migrationFailed: 'Entschuldigung, bei der Gerätemigration ist etwas schiefgegangen',
-    migrationIgnore: 'Sie können \'Kein Plugin gefunden…\'-Fehler gefahrlos ignorieren - sie sollten beim nächsten Neustart von Homebridge verschwinden',
-    migrationNoAccessories: 'Keine zu migrierenden Geräte gefunden',
-    migrationRevert: 'Wenn Probleme auftreten, finden Sie eine Sicherungsdatei config.json.bak in Ihrem Homebridge-Verzeichnis',
     newAccessory: 'Neues Gerät wird hinzugefügt:',
     removeAccessory: 'Gerät wird entfernt:',
     restoringAccessory: 'Gerät wird wiederhergestellt:',

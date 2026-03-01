@@ -44,7 +44,7 @@ const es = {
 
   config: {
 
-    automatically: 'Automatically',
+    continue: 'Continue %s', // arrow symbol
 
     description: {
       autoReset: 'Returns the accessory to its default value',
@@ -86,12 +86,11 @@ const es = {
       valve: 'Valve',
     },
 
-    manually: 'Manually',
     migrating: 'Are you upgrading from v0.9.2 or earlier?',
-    migrationInstructions1: 'STOP',
-    migrationInstructions2: 'READ THIS FIRST',
-    migrationInstructions3: 'Would you like to migrate accessories Automatically, or do it yourself Manually?',
-    migrationInstructions4: 'If you choose Automatically, you will still need reconfigure HomeKit scenes and automations.', // plugin name
+    migrationAlert: 'STOP',
+    migrationReadme: 'READ THIS FIRST',
+    migrationAcknowledge: 'By continuing, you understand that you must install %s to keep your existing accessories.', // plugin name
+    migrationReconfigure: 'Otherwise, you will need to reconfigure all HomeKit scenes and automations associated with %s.', // plugin name
 
     title: {
       accessoryState: 'State',

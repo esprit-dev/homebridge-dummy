@@ -10,9 +10,10 @@ import { DummyConfig, DummyPlatformConfig, LightbulbConfig, OnOffConfig } from '
 declare const homebridge: IHomebridgePluginUi;
 
 const i18n_replacements = {
-  github: '<a target="_blank" href="https://github.com/mpatfield/homebridge-dummy/">GitHub</a>',
-  migration: '<a target="_blank" href="https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#v10-migration">GitHub</a>',
+  arrow: '&rarr;',
   dummy: PLUGIN_ALIAS,
+  github: '<a target="_blank" href="https://github.com/mpatfield/homebridge-dummy/">GitHub</a>',
+  legacy: '<a target="_blank" href="https://github.com/mpatfield/homebridge-dummy-legacy">homebridge-dummy-legacy</a>',
 };
 
 function getParentDocument(): Document | undefined {
@@ -389,6 +390,8 @@ async function migrateDeprecatedFields(configs: DummyPlatformConfig[]) {
 function showSettings(strings: Translation) {
   document.getElementById('intro')!.style.display = 'none';
   document.getElementById('migration')!.style.display = 'none';
+
+  document.getElementById('header')!.style.display = 'block';
   document.getElementById('support')!.style.display = 'block';
 
   const parentDocument = getParentDocument();
@@ -421,23 +424,16 @@ function showMigration(strings: Translation) {
     document.getElementById('intro')!.style.display = 'none';
     document.getElementById('migration')!.style.display = 'block';
 
-    const noButton = document.getElementById('skipMigration') as HTMLButtonElement;
-    noButton.addEventListener('click', async () => {
+    const continueButton = document.getElementById('continue') as HTMLButtonElement;
+    continueButton.addEventListener('click', async () => {
       await homebridge.updatePluginConfig([{ name: PLUGIN_ALIAS }]);
-      await homebridge.savePluginConfig();
       showSettings(strings);
-    });
-
-    const yesButton = document.getElementById('doMigration') as HTMLButtonElement;
-    yesButton.addEventListener('click', async () => {
-      await homebridge.updatePluginConfig([{ name: PLUGIN_ALIAS, migrationNeeded: true }]);
-      await homebridge.savePluginConfig();
-      homebridge.closeSettings();
-      homebridge.toast.info(strings.config.migrationRestartDescription.replace('%s', PLUGIN_ALIAS), strings.config.migrationRestartTitle);
     });
 }
 
 function showIntro(strings: Translation) {
+
+  document.getElementById('header')!.style.display = 'block';
 
   const noButton = document.getElementById('showSettings') as HTMLButtonElement;
   noButton.addEventListener('click', async () => {
