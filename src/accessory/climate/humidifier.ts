@@ -10,6 +10,8 @@ import { HumidifierConfig } from '../../model/types.js';
 import { Range, Values, Webhook } from '../../model/webhook.js';
 
 const DEFAULT_HUMIDITY = 50;
+const MAX_HUMIDITY = 81;
+const MINUTES_FOR_ONE_PERCENT = 17;
 
 export class HumidifierAccessory extends DummyAccessory<HumidifierConfig> {
 
@@ -17,6 +19,7 @@ export class HumidifierAccessory extends DummyAccessory<HumidifierConfig> {
 
   private _currentHumidity?: CharacteristicValue;
   private targetHumidity: CharacteristicValue;
+  private humidityTimeout?: NodeJS.Timeout;
 
   constructor(dependency: DummyAccessoryDependency<HumidifierConfig>) {
     super(dependency);
@@ -205,6 +208,9 @@ export class HumidifierAccessory extends DummyAccessory<HumidifierConfig> {
 
   private async setTargetHumidity(value: CharacteristicValue) {
 
+    const numericValue = Number(value);
+    value = Math.min(numericValue, MAX_HUMIDITY);
+
     if (this.targetHumidity !== value) {
       this.logIfDesired(strings.humidifier.targetHumidity, value.toString());
       this.setProperty(HKCharacteristicKey.TargetRelativeHumidity, value);
@@ -214,6 +220,22 @@ export class HumidifierAccessory extends DummyAccessory<HumidifierConfig> {
 
     this.service.updateCharacteristic(this.TargetHumidityCharacteristic, this.targetHumidity);
     this.service.updateCharacteristic(this.Characteristic.CurrentRelativeHumidity, this.currentHumidity);
+
+    this.setState(true);
+    this.setCurrentHumidity(value);
+
+    // Clear previous scheduled increment
+    if (this.humidityTimeout) {
+      clearTimeout(this.humidityTimeout);
+      this.humidityTimeout = undefined;
+    }
+
+    this.humidityTimeout = setTimeout(() => {
+      if (value < MAX_HUMIDITY) {
+        const newValue = value + 1;
+        this.setTargetHumidity(newValue);
+      }
+    }, MINUTES_FOR_ONE_PERCENT * 60 * 1000);
   }
 
   override async trigger(): Promise<void> {

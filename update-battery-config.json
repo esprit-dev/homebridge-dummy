@@ -1,0 +1,32 @@
+{
+  "bridge": {
+    "name": "Homebridge 85A3",
+    "username": "0E:33:24:AF:85:A3",
+    "port": 51722,
+    "pin": "136-03-971",
+    "advertiser": "avahi"
+  },
+  "accessories": [],
+  "platforms": [
+    {
+      "name": "Config",
+      "port": 8581,
+      "platform": "config"
+    },
+    {
+      "name": "Homebridge Dummy",
+      "accessories": [
+        {
+          "id": "battery",
+          "name": "Battery",
+          "type": "HumidifierDehumidifier",
+          "resetOnRestart": false,
+          "enableWebook": false,
+          "disableLogging": false,
+          "enableHistory": false
+        }
+      ],
+      "platform": "HomebridgeDummy"
+    }
+  ]
+}
