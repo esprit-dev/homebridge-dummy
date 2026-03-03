@@ -59,6 +59,8 @@ const de = {
 
   config: {
 
+    accessory: 'Gerät',
+
     description: {
       commands: 'Führt beliebige Befehle (z. B. curl) aus, wenn das Gerät seinen Zustand ändert',
       cron: 'Besuchen Sie crontab.guru für Hilfe',

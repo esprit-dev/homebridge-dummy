@@ -58,6 +58,8 @@ const ru = {
   },
 
   config: {
+    accessory: 'Аксессуар',
+
     description: {
       commands: 'Выполнять произвольные команды (например, curl) при изменении состояния аксессуара',
       cron: 'Посетите crontab.guru для справки',

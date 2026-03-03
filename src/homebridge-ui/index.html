@@ -16,11 +16,11 @@
 </div>
 
 <div id="support" class="text-center" style="display: none;">
-  <p i18n="support" i18n_replace="github"></p>
+  <p i18n="support"></p>
 </div>
 
 <div id="intro" class="text-center" style="display: none;">
-  <p class="lead" i18n="thankYou" i18n_replace="dummy"></p>
+  <p class="lead" i18n="thankYou"></p>
   <p class="lead" i18n="migrating"></p>
   <button type="button" class="btn btn-secondary" id="showSettings" i18n="no"></button>&nbsp;&nbsp;
   <button type="button" class="btn btn-secondary" id="showMigration" i18n="yes"></button>
@@ -33,10 +33,12 @@
   <h1><a target="_blank" href="https://github.com/mpatfield/homebridge-dummy/wiki/Migration" i18n="migrationReadme"><p></p></a></h1>
   <hr/>
   <br/>
-  <p class="lead" i18n="migrationAcknowledge" i18n_replace="legacy"></p>
-  <p class="lead" i18n="migrationReconfigure" i18n_replace="dummy"></p>
+  <p class="lead" i18n="migrationAcknowledge"></p>
+  <p class="lead" i18n="migrationReconfigure"></p>
   <br/>
-  <button type="button" class="btn btn-primary" id="continue" i18n="continue" i18n_replace="arrow"></button>&nbsp;&nbsp;
+  <button type="button" class="btn btn-primary" id="continue" i18n="continue"></button>&nbsp;&nbsp;
 </div>
 
-<script src="ui.js?v=__VERSION__"></script>
+<script>
+__UI_SCRIPT__
+</script>

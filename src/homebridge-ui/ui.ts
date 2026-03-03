@@ -1,7 +1,5 @@
 import { IHomebridgePluginUi } from '@homebridge/plugin-ui-utils/ui.interface';
 
-import { Translation } from '../i18n/i18n.js';
-
 import { PLUGIN_ALIAS } from '../homebridge/settings.js';
 
 import { AccessoryType, FadeOutType, OnState, ScheduleType } from '../model/enums.js';
@@ -9,12 +7,8 @@ import { DummyConfig, DummyPlatformConfig, LightbulbConfig, OnOffConfig } from '
 
 declare const homebridge: IHomebridgePluginUi;
 
-const i18n_replacements = {
-  arrow: '&rarr;',
-  dummy: PLUGIN_ALIAS,
-  github: '<a target="_blank" href="https://github.com/mpatfield/homebridge-dummy/">GitHub</a>',
-  legacy: '<a target="_blank" href="https://github.com/mpatfield/homebridge-dummy-legacy">homebridge-dummy-legacy</a>',
-};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let strings: any = { __I18N_REPLACE__ : '' };
 
 function getParentDocument(): Document | undefined {
   try {
@@ -25,21 +19,14 @@ function getParentDocument(): Document | undefined {
   }
 }
 
-function translateHtml(strings: Translation) {
+function translateHtml() {
   document.querySelectorAll('[i18n]').forEach(element => {
-
-    const key = element.getAttribute('i18n') as keyof typeof strings.config;
-    let string = strings.config[key] as string;
-
-    const token = element.getAttribute('i18n_replace') as keyof typeof i18n_replacements;
-    if (token) {
-      string = string.replace('%s', i18n_replacements[token]);
-    }
-    element.innerHTML = string;
+    const key = element.getAttribute('i18n') as string;
+    element.innerHTML = strings[key];
   });
-}
+};
 
-function updateAccessoryNames(strings: Translation) {
+function updateAccessoryNames() {
 
   const parentDocument = getParentDocument();
   if (!parentDocument) {
@@ -51,12 +38,12 @@ function updateAccessoryNames(strings: Translation) {
   for(const legend of legends) {
     const fieldset = legend.closest('fieldset');
     const input = fieldset?.querySelector('input[type="text"][name="name"]') as HTMLInputElement | null;
-    if (input && legend.textContent !== (input.value || strings.config.title.accessory)) {
-      legend.textContent = input.value !== '' ? input.value : strings.config.title.accessory;
+    if (input && legend.textContent !== (input.value || strings.accessory)) {
+      legend.textContent = input.value !== '' ? input.value : strings.accessory;
     }
 
     if (input && !input.dataset.accessoryNameListener) {
-      input.addEventListener('input', () => updateAccessoryNames(strings));
+      input.addEventListener('input', () => updateAccessoryNames());
       input.dataset.accessoryNameListener = 'true';
     }
   }
@@ -134,7 +121,7 @@ function findNextByName(element: Element, name: string): Element | undefined {
 }
 
 let accessories: DummyConfig[] = [];
-async function updateConditionDropdowns(strings: Translation, configs?: DummyPlatformConfig[]) {
+async function updateConditionDropdowns(configs?: DummyPlatformConfig[]) {
 
   const parentDocument = getParentDocument();
   if (!parentDocument) {
@@ -387,7 +374,7 @@ async function migrateDeprecatedFields(configs: DummyPlatformConfig[]) {
   }
 }
 
-function showSettings(strings: Translation) {
+async function showSettings() {
   document.getElementById('intro')!.style.display = 'none';
   document.getElementById('migration')!.style.display = 'none';
 
@@ -398,8 +385,8 @@ function showSettings(strings: Translation) {
   if (parentDocument) {
 
     const observer = new MutationObserver(() => {
-      updateAccessoryNames(strings);
-      updateConditionDropdowns(strings);
+      updateAccessoryNames();
+      updateConditionDropdowns();
     });
 
     observer.observe(
@@ -411,39 +398,39 @@ function showSettings(strings: Translation) {
   homebridge.addEventListener('configChanged', async (evt: Event) => {
     const configs = (evt as MessageEvent).data as DummyPlatformConfig[];
     await updateConfigsWithUUIDs(configs);
-    await updateConditionDropdowns(strings, configs);
+    await updateConditionDropdowns(configs);
   });
+
+  await homebridge.updatePluginConfig([{ name: PLUGIN_ALIAS }]);
 
   homebridge.showSchemaForm();
   homebridge.hideSpinner();
   homebridge.enableSaveButton();
 }
 
-function showMigration(strings: Translation) {
+function showMigration() {
     document.getElementById('header')!.style.display = 'none';
     document.getElementById('intro')!.style.display = 'none';
     document.getElementById('migration')!.style.display = 'block';
 
     const continueButton = document.getElementById('continue') as HTMLButtonElement;
     continueButton.addEventListener('click', async () => {
-      await homebridge.updatePluginConfig([{ name: PLUGIN_ALIAS }]);
-      showSettings(strings);
+      showSettings();
     });
 }
 
-function showIntro(strings: Translation) {
+function showIntro() {
 
   document.getElementById('header')!.style.display = 'block';
 
   const noButton = document.getElementById('showSettings') as HTMLButtonElement;
   noButton.addEventListener('click', async () => {
-    await homebridge.updatePluginConfig([{ name: PLUGIN_ALIAS }]);
-    showSettings(strings);
+    showSettings();
   });
 
   const yesButton = document.getElementById('showMigration') as HTMLButtonElement;
   yesButton.addEventListener('click', () => {
-    showMigration(strings);
+    showMigration();
   });
 
   document.getElementById('intro')!.style.display = 'block';
@@ -457,15 +444,16 @@ function showIntro(strings: Translation) {
 })();
 
 (async () => {
+
   const language = await homebridge.i18nCurrentLang();
-  const strings = await homebridge.request('i18n', language);
-  translateHtml(strings);
+  strings = (language in strings) ? strings[language] : strings.en;
+  translateHtml();
 
   const configs = await homebridge.getPluginConfig() as DummyPlatformConfig[];
   if (configs.length) {
     await migrateDeprecatedFields(configs);
-    showSettings(strings);
+    showSettings();
   } else {
-    showIntro(strings);
+    showIntro();
   }
 })();

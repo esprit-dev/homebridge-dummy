@@ -51,6 +51,7 @@ const en = {
 
   config: {
 
+    accessory: 'Accessory',
     continue: 'Continue %s', // arrow symbol
 
     description: {

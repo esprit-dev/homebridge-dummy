@@ -59,6 +59,8 @@ const es = {
 
   config: {
 
+    accessory: 'Accesorio',
+
     description: {
       commands: 'Ejecutar comandos arbitrarios (por ejemplo, curl) cuando el accesorio cambia de estado',
       cron: 'Visite crontab.guru para obtener ayuda (https://crontab.guru/)',
