@@ -401,8 +401,6 @@ async function showSettings() {
     await updateConditionDropdowns(configs);
   });
 
-  await homebridge.updatePluginConfig([{ name: PLUGIN_ALIAS }]);
-
   homebridge.showSchemaForm();
   homebridge.hideSpinner();
   homebridge.enableSaveButton();
@@ -454,6 +452,7 @@ function showIntro() {
     await migrateDeprecatedFields(configs);
     showSettings();
   } else {
+    await homebridge.updatePluginConfig([{ name: PLUGIN_ALIAS }]);
     showIntro();
   }
 })();
