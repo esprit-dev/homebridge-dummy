@@ -2,12 +2,14 @@ import { readFileSync } from 'fs';
 import merge from 'lodash.merge';
 
 import de from './de.js';
+import el from './el.js';
 import en from './en.js';
 import es from './es.js';
 import ru from './ru.js';
 
 export enum Language {
   DE = 'de',
+  EL = 'el',
   EN = 'en',
   ES = 'es',
   RU = 'ru',
@@ -15,6 +17,7 @@ export enum Language {
 
 const Translations = {
   [Language.DE]: de,
+  [Language.EL]: el,
   [Language.EN]: en,
   [Language.ES]: es,
   [Language.RU]: ru,
