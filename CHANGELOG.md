@@ -2,7 +2,7 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-## 1.7.1-beta.3 (2026-03-10)
+## 1.7.1-beta.4 (2026-03-11)
 
 ### ‼️ WARNING ‼️ — If upgrading from v0.9.2 or earlier, [READ THIS FIRST](https://github.com/mpatfield/homebridge-dummy/wiki/Migration).
 
@@ -15,6 +15,9 @@ All notable changes to homebridge-dummy will be documented in this file.
 - Reworked translation system for easier maintenance — please [open a ticket](https://github.com/mpatfield/homebridge-dummy/issues/new/choose) if you have issues
 - Removed [auto-migration option](https://github.com/mpatfield/homebridge-dummy/wiki/Migration) for users upgrading from v0.9.2 or earlier
 - Обновлены русские переводы. Спасибо, [@Silverdragon122](https://github.com/sponsors/Silverdragon122)!
+
+### Fixed
+- Potential infinite loop in config UI
 
 ### Notes
 Would you like to see Homebridge Dummy in your language? Please consider [getting involved](https://github.com/mpatfield/homebridge-dummy/issues/105). No coding experience required!

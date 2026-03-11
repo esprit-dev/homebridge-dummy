@@ -26,27 +26,36 @@ function translateHtml() {
   });
 };
 
-function updateAccessoryNames() {
+function updateAccessoryNames(): boolean {
 
   const parentDocument = getParentDocument();
   if (!parentDocument) {
-    return;
+    return false;
   }
 
   const legends = Array.from(parentDocument.querySelectorAll('fieldset legend'));
+
+  let listenerAdded = false;
 
   for(const legend of legends) {
     const fieldset = legend.closest('fieldset');
     const input = fieldset?.querySelector('input[type="text"][name="name"]') as HTMLInputElement | null;
     if (input && legend.textContent !== (input.value || strings.accessory)) {
-      legend.textContent = input.value !== '' ? input.value : strings.accessory;
+      const textNode = Array.from(legend.childNodes).find(n => n.nodeType === Node.TEXT_NODE) as Text | undefined;
+      const name = input.value !== '' ? input.value : strings.accessory;
+      if (textNode && textNode.nodeValue !== name) {
+        textNode.nodeValue = name;
+      }
     }
 
     if (input && !input.dataset.accessoryNameListener) {
       input.addEventListener('input', () => updateAccessoryNames());
       input.dataset.accessoryNameListener = 'true';
+      listenerAdded = true;
     }
   }
+
+  return listenerAdded;
 }
 
 function generateUUID() {
@@ -385,8 +394,10 @@ async function showSettings() {
   if (parentDocument) {
 
     const observer = new MutationObserver(() => {
-      updateAccessoryNames();
-      updateConditionDropdowns();
+      if (updateAccessoryNames()) {
+        updateConditionDropdowns();
+        observer.disconnect();
+      }
     });
 
     observer.observe(
@@ -396,6 +407,8 @@ async function showSettings() {
   }
 
   homebridge.addEventListener('configChanged', async (evt: Event) => {
+    updateAccessoryNames();
+
     const configs = (evt as MessageEvent).data as DummyPlatformConfig[];
     await updateConfigsWithUUIDs(configs);
     await updateConditionDropdowns(configs);
