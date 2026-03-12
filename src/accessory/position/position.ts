@@ -36,7 +36,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
     if (this.config.simulation !== undefined) {
       if (!assert(this.log, this.name, this.config.simulation, 'enabled')) {
         this.config.simulation = undefined;
-      } else {
+      } else if (this.config.simulation.enabled === true) {
         this.fader = new Fader(this.addonDependency);
       }
     }
