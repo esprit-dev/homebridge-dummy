@@ -36,7 +36,7 @@ Visit the [Wiki](https://github.com/mpatfield/homebridge-dummy/wiki) to learn mo
 
 [@jotzet79](https://github.com/sponsors/jotzet79) for German translations
 
-[@kozmajanos](https://github.com/sponsors/kozmajanos) for Hungarian translations
+[@loveisfoss](https://github.com/sponsors/loveisfoss) for Greek translations
 
 [@Silverdragon122](https://github.com/sponsors/Silverdragon122) for Russian translations
 
