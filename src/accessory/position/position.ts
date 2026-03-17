@@ -6,7 +6,7 @@ import { EveCharacteristicHost, incrementTimesOpened, setupTimesOpened } from '.
 
 import { strings } from '../../i18n/i18n.js';
 
-import { Position, isValidPosition, printableValues, HKCharacteristicKey, TimeUnits, SensorBehavior } from '../../model/enums.js';
+import { Position, HKCharacteristicKey, TimeUnits, SensorBehavior } from '../../model/enums.js';
 import { PositionConfig } from '../../model/types.js';
 import { Range, Values, Webhook } from '../../model/webhook.js';
 
@@ -14,7 +14,7 @@ import { Fader } from '../../timeout/fader.js';
 import { getDelay } from '../../timeout/timeout.js';
 
 import { storageGet_Deprecated } from '../../tools/storage.js';
-import { assert } from '../../tools/validation.js';
+import { assert, isValid, printableValues } from '../../tools/validation.js';
 
 export const DEFAULT_OPEN_CLOSE_DURATION = 15;
 
@@ -27,7 +27,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
   constructor(dependency: DummyAccessoryDependency<C>) {
     super(dependency);
 
-    if (!isValidPosition(dependency.config.defaultPosition)) {
+    if (!isValid(Position, dependency.config.defaultPosition)) {
       this.log.warning(strings.position.badDefault, this.name, `'${dependency.config.defaultPosition}'`, printableValues(Position));
     }
 

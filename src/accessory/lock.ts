@@ -4,11 +4,12 @@ import { DummyAccessory, DummyAccessoryDependency } from './base.js';
 
 import { strings } from '../i18n/i18n.js';
 
-import { AccessoryType, LockState, isValidLockState, printableValues, HKCharacteristicKey, SensorBehavior }  from '../model/enums.js';
+import { AccessoryType, LockState, HKCharacteristicKey, SensorBehavior }  from '../model/enums.js';
 import { LockConfig } from '../model/types.js';
 import { Values, Webhook } from '../model/webhook.js';
 
 import { storageGet_Deprecated } from '../tools/storage.js';
+import { isValid, printableValues } from '../tools/validation.js';
 
 export class LockAccessory extends DummyAccessory<LockConfig> {
 
@@ -17,7 +18,7 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
   constructor(dependency: DummyAccessoryDependency<LockConfig>) {
     super(dependency);
 
-    if (!isValidLockState(this.config.defaultLockState)) {
+    if (!isValid(LockState, this.config.defaultLockState)) {
       this.log.warning(strings.lock.badDefault, this.name, `'${dependency.config.defaultLockState}'`, printableValues(LockState));
     }
 

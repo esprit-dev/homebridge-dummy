@@ -4,11 +4,12 @@ import { DummyAccessory, DummyAccessoryDependency } from '../base.js';
 
 import { strings } from '../../i18n/i18n.js';
 
-import { AccessoryType, HKCharacteristicKey, isValidTemperatureUnits, printableValues, TemperatureUnits } from '../../model/enums.js';
+import { AccessoryType, HKCharacteristicKey, TemperatureUnits } from '../../model/enums.js';
 import { HistoryType } from '../../model/history.js';
 import { TemperatureSensorConfig } from '../../model/types.js';
 import { Range, Webhook } from '../../model/webhook.js';
 import { fromCelsius, toCelsius } from '../../tools/temperature.js';
+import { isValid, printableValues } from '../../tools/validation.js';
 
 const MIN_TEMP = -270;
 const MAX_TEMP = 100;
@@ -20,7 +21,7 @@ export class TemperatureSensorAccessory extends DummyAccessory<TemperatureSensor
   constructor(dependency: DummyAccessoryDependency<TemperatureSensorConfig>) {
     super(dependency);
 
-    if (!isValidTemperatureUnits(dependency.config.temperatureUnits)) {
+    if (!isValid(TemperatureUnits, dependency.config.temperatureUnits)) {
       this.log.warning(strings.sensor.badTemperatureUnits, this.name, `'${dependency.config.temperatureUnits}'`, printableValues(TemperatureUnits));
     }
 

@@ -4,12 +4,13 @@ import { DummyAccessory, DummyAccessoryDependency } from '../base.js';
 
 import { strings } from '../../i18n/i18n.js';
 
-import { HKCharacteristicKey, isValidOnState, OnState, printableValues, SensorBehavior } from '../../model/enums.js';
+import { HKCharacteristicKey, OnState, SensorBehavior } from '../../model/enums.js';
 import { HistoryType } from '../../model/history.js';
 import { OnOffConfig } from '../../model/types.js';
 import { Values, Webhook } from '../../model/webhook.js';
 
 import { storageGet_Deprecated } from '../../tools/storage.js';
+import { isValid, printableValues } from '../../tools/validation.js';
 
 export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extends DummyAccessory<C> {
 
@@ -18,7 +19,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
   constructor(dependency: DummyAccessoryDependency<C>) {
     super(dependency);
 
-    if (!isValidOnState(this.config.defaultState)) {
+    if (!isValid(OnState, this.config.defaultState)) {
       this.log.warning(strings.onOff.badDefault, this.name, `'${dependency.config.defaultState}'`, printableValues(OnState));
     }
 

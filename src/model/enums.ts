@@ -1,3 +1,5 @@
+import { isValid } from '../tools/validation.js';
+
 export enum AccessoryType {
   Door = 'Door',
   GarageDoorOpener = 'GarageDoorOpener',
@@ -50,17 +52,9 @@ export enum SensorType {
   SmokeSensor = 'SmokeSensor',
 }
 
-export function isValidSensorType(input: SensorType): boolean {
-  return Object.values(SensorType).includes(input);
-}
-
 export enum SensorBehavior {
   MIRROR = 'MIRROR',
   TIMER = 'TIMER',
-}
-
-export function isValidSensorBehavior(input: SensorBehavior): boolean {
-  return Object.values(SensorBehavior).includes(input);
 }
 
 export enum SensorCharacteristic {
@@ -75,10 +69,6 @@ export enum SensorCharacteristic {
 
 export enum NotificationAPI {
   PINGIE_NOTIFY = 'PINGIE_NOTIFY',
-}
-
-export function isValidNotificationAPI(input?: NotificationAPI): boolean {
-  return input === undefined || Object.values(NotificationAPI).includes(input);
 }
 
 export enum ConditionOperator {
@@ -102,17 +92,9 @@ export enum OnState {
   OFF = 'off',
 }
 
-export function isValidOnState(input?: OnState): boolean {
-  return input === undefined || Object.values(OnState).includes(input);
-}
-
 export enum LockState {
   LOCKED = 'locked',
   UNLOCKED = 'unlocked',
-}
-
-export function isValidLockState(input?: LockState): boolean {
-  return input === undefined || Object.values(LockState).includes(input);
 }
 
 export enum Position {
@@ -120,23 +102,20 @@ export enum Position {
   CLOSED = 'closed',
 }
 
-export function isValidPosition(input?: Position): boolean {
-  return input === undefined || Object.values(Position).includes(input);
-}
-
 export type AccessoryState = OnState | Position | LockState;
 
-export function getStateType(input: AccessoryState): typeof OnState | typeof LockState | typeof Position | undefined {
+type StringEnum = { [s: string]: string; }
+export function getStateType(input: AccessoryState): StringEnum | undefined {
 
-  if (isValidOnState(input as OnState)) {
+  if (isValid(OnState, input as OnState)) {
     return OnState;
   }
 
-  if (isValidPosition(input as Position)) {
+  if (isValid(Position, input as Position)) {
     return Position;
   }
 
-  if (isValidLockState(input as LockState)) {
+  if (isValid(LockState, input as LockState)) {
     return LockState;
   }
 }
@@ -146,19 +125,11 @@ export enum HumidifierType {
   HUMIDIFIER = 'humidifier',
 }
 
-export function isValidHumidifierType(input?: HumidifierType): boolean {
-  return input === undefined || Object.values(HumidifierType).includes(input);
-}
-
 export enum ThermostatState {
   AUTO = 'auto',
   COOL = 'cool',
   HEAT = 'heat',
   OFF = 'off',
-}
-
-export function isValidThermostatState(input?: ThermostatState): boolean {
-  return input === undefined || Object.values(ThermostatState).includes(input);
 }
 
 export enum TimePeriod {
@@ -173,10 +144,6 @@ export enum TimeUnits {
   SECONDS = 'SECONDS',
   MINUTES = 'MINUTES',
   HOURS = 'HOURS',
-}
-
-export function isValidTimeUnits(input: TimeUnits): boolean {
-  return Object.values(TimeUnits).includes(input);
 }
 
 export enum FadeOutType {
@@ -201,21 +168,9 @@ export enum TemperatureUnits {
   FAHRENHEIT = 'F',
 }
 
-export function isValidTemperatureUnits(input?: TemperatureUnits): boolean {
-  return input === undefined || Object.values(TemperatureUnits).includes(input);
-}
-
 export enum ValveType {
   FAUCET = 'faucet',
   GENERIC = 'generic',
   IRRIGATION = 'irrigation',
   SHOWER = 'shower',
-}
-
-export function isValidValveType(input?: ValveType): boolean {
-  return input === undefined || Object.values(ValveType).includes(input);
-}
-
-export function printableValues<T>(o: { [s: string]: T; } | ArrayLike<T>): string {
-  return Object.values(o).map(value => `'${value}'`).join(', ');
 }

@@ -6,16 +6,14 @@ import { EveCharacteristicHost, incrementTimesOpened, setupTimesOpened } from '.
 
 import { strings } from '../../i18n/i18n.js';
 
-import {
-  EveCharacteristicKey, isValidSensorBehavior, isValidSensorType,
-  printableValues, SensorType, SensorCharacteristic, SensorBehavior,
-}  from '../../model/enums.js';
+import { EveCharacteristicKey, SensorType, SensorCharacteristic, SensorBehavior }  from '../../model/enums.js';
 import { HistoryType } from '../../model/history.js';
 import { ServiceType, SensorConfig } from '../../model/types.js';
 
 import { Timeout } from '../../timeout/timeout.js';
 
 import { Storage } from '../../tools/storage.js';
+import { assert, isValid, printableValues } from '../../tools/validation.js';
 
 type SensorStrings = { active: string, inactive: string };
 type SensorInfo = { characteristic: SensorCharacteristic, strings: SensorStrings };
@@ -46,12 +44,16 @@ export class SensorAccessory extends Timeout implements EveCharacteristicHost {
         };
       }
 
-      if (!isValidSensorType(sensor.type)) {
+      if (!assert(dependency.log, `${dependency.caller} \`sensor\``, sensor, 'type')) {
+        return;
+      }
+
+      if (!isValid(SensorType, sensor.type)) {
         dependency.log.error(strings.sensor.badType, dependency.caller, `'${sensor.type}'`, printableValues(SensorType));
         return;
       }
 
-      if (sensor.behavior !== undefined && !isValidSensorBehavior(sensor.behavior)) {
+      if (!isValid(SensorBehavior, sensor.behavior)) {
         dependency.log.error(strings.sensor.badBehavior, dependency.caller, `'${sensor.behavior}'`, printableValues(SensorBehavior));
         return;
       }

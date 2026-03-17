@@ -1,13 +1,13 @@
 import axios from 'axios';
 
-import { isValidNotificationAPI, NotificationAPI, printableValues } from './enums.js';
+import { NotificationAPI } from './enums.js';
 import { Notification } from './types.js';
 
 import { DummyAddonDependency } from '../accessory/base.js';
 
 import { strings } from '../i18n/i18n.js';
 
-import { assert } from '../tools/validation.js';
+import { assert, isValid, printableValues } from '../tools/validation.js';
 
 const DEFAULT_PUSH_ICON_URL = 'https://notifyicons.pingie.com/icons/mkpu3s46-6e8wy7gh.png';
 
@@ -19,7 +19,7 @@ export class NotificationManager {
       return;
     }
 
-    if (!isValidNotificationAPI(notification.api)) {
+    if (!isValid(NotificationAPI, notification.api)) {
       dependency.log.warning(strings.notification.badAPI, this.name, `'${notification.api}'`, printableValues(NotificationAPI));
     }
 

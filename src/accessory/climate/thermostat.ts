@@ -4,15 +4,14 @@ import { DummyAccessory, DummyAccessoryDependency } from '../base.js';
 
 import { strings } from '../../i18n/i18n.js';
 
-import {
-  AccessoryType, HKCharacteristicKey, ThermostatState, isValidTemperatureUnits, isValidThermostatState,
-  printableValues, TemperatureUnits }  from '../../model/enums.js';
+import { AccessoryType, HKCharacteristicKey, ThermostatState, TemperatureUnits }  from '../../model/enums.js';
 import { HistoryType } from '../../model/history.js';
 import { ThermostatConfig } from '../../model/types.js';
 import { Range, Values, Webhook } from '../../model/webhook.js';
 
 import { storageGet_Deprecated } from '../../tools/storage.js';
 import { fromCelsius, toCelsius } from '../../tools/temperature.js';
+import { isValid, printableValues } from '../../tools/validation.js';
 
 const DEFAULT_TEMPERATURE = 20;
 const DEFAULT_MINIMUM = 10;
@@ -42,11 +41,11 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
     this.STATE_HEAT = dependency.Characteristic.TargetHeatingCoolingState.HEAT;
     this.STATE_OFF = dependency.Characteristic.TargetHeatingCoolingState.OFF;
 
-    if (!isValidTemperatureUnits(dependency.config.temperatureUnits)) {
+    if (!isValid(TemperatureUnits, dependency.config.temperatureUnits)) {
       this.log.warning(strings.sensor.badTemperatureUnits, this.name, `'${dependency.config.temperatureUnits}'`, printableValues(TemperatureUnits));
     }
 
-    if (!isValidThermostatState(dependency.config.defaultThermostatState)) {
+    if (!isValid(ThermostatState, dependency.config.defaultThermostatState)) {
       this.log.warning(strings.thermostat.badDefault, this.name, `'${dependency.config.defaultThermostatState}'`, printableValues(ThermostatState));
     }
 

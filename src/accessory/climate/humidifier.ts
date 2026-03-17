@@ -4,10 +4,12 @@ import { DummyAccessory, DummyAccessoryDependency } from '../base.js';
 
 import { strings } from '../../i18n/i18n.js';
 
-import { AccessoryType, HKCharacteristicKey, HumidifierType, isValidHumidifierType, isValidOnState, OnState, printableValues }  from '../../model/enums.js';
+import { AccessoryType, HKCharacteristicKey, HumidifierType, OnState }  from '../../model/enums.js';
 import { HistoryType } from '../../model/history.js';
 import { HumidifierConfig } from '../../model/types.js';
 import { Range, Values, Webhook } from '../../model/webhook.js';
+
+import { isValid, printableValues } from '../../tools/validation.js';
 
 const DEFAULT_HUMIDITY = 50;
 
@@ -21,11 +23,11 @@ export class HumidifierAccessory extends DummyAccessory<HumidifierConfig> {
   constructor(dependency: DummyAccessoryDependency<HumidifierConfig>) {
     super(dependency);
 
-    if (!isValidHumidifierType(dependency.config.humidifierType)) {
+    if (!isValid(HumidifierType, dependency.config.humidifierType)) {
       this.log.warning(strings.humidifier.badType, this.name, `'${dependency.config.humidifierType}'`, printableValues(HumidifierType));
     }
 
-    if (!isValidOnState(this.config.defaultState)) {
+    if (!isValid(OnState, this.config.defaultState)) {
       this.log.warning(strings.onOff.badDefault, this.name, `'${dependency.config.defaultState}'`, printableValues(OnState));
     }
 

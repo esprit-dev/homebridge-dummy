@@ -6,11 +6,11 @@ import { DummyAddonDependency } from '../accessory/base.js';
 
 import { strings } from '../i18n/i18n.js';
 
-import { isValidTimeUnits, printableValues, TimePeriod, TimeUnits } from '../model/enums.js';
+import { TimePeriod, TimeUnits } from '../model/enums.js';
 import { LimiterConfig } from '../model/types.js';
 
 import { Storage } from '../tools/storage.js';
-import { assert } from '../tools/validation.js';
+import { assert, isValid, printableValues } from '../tools/validation.js';
 
 type Limit = { timeRemaining: number, resetTimestamp: number, startTimestamp?: number };
 
@@ -22,7 +22,7 @@ export default class Limiter extends Timeout {
       return;
     }
 
-    if (!isValidTimeUnits(config.units)) {
+    if (!isValid(TimeUnits, config.units)) {
       dependency.log.error(strings.limiter.badUnits, dependency.caller, `'${config.units}'`, printableValues(TimeUnits));
       return;
     }

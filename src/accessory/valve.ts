@@ -4,14 +4,13 @@ import { DummyAccessory, DummyAccessoryDependency } from './base.js';
 
 import { strings } from '../i18n/i18n.js';
 
-import {
-  AccessoryType, HKCharacteristicKey, isValidOnState, isValidValveType,
-  OnState, printableValues, ScheduleType, TimeUnits, ValveType,
-}  from '../model/enums.js';
+import { AccessoryType, HKCharacteristicKey, OnState, ScheduleType, TimeUnits, ValveType }  from '../model/enums.js';
 import { ValveConfig } from '../model/types.js';
 import { Values, Webhook } from '../model/webhook.js';
 
 import { getDelay, SECOND } from '../timeout/timeout.js';
+
+import { isValid, printableValues } from '../tools/validation.js';
 
 const MIN_DURATION = 1;
 const MAX_DURATION = 3600;
@@ -29,11 +28,11 @@ export class ValveAccessory extends DummyAccessory<ValveConfig> {
   constructor(dependency: DummyAccessoryDependency<ValveConfig>) {
     super(dependency);
 
-    if (!isValidValveType(dependency.config.valveType)) {
+    if (!isValid(ValveType, dependency.config.valveType)) {
       this.log.warning(strings.valve.badType, this.name, `'${dependency.config.valveType}'`, printableValues(ValveType));
     }
 
-    if (!isValidOnState(this.config.defaultState)) {
+    if (!isValid(OnState, this.config.defaultState)) {
       this.log.warning(strings.onOff.badDefault, this.name, `'${dependency.config.defaultState}'`, printableValues(OnState));
     }
 
