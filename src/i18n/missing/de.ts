@@ -181,6 +181,7 @@ const de = {
 
   sensor: {
 
+    badBehavior: '%s has invalid sensor behavior %s. Must be one of: %s', // accessory name, input, list of type names
     badTemperatureUnits: '%s has invalid temperature units %s. Must be one of: %s', // accessory name, input, list of unit names
 
     humidity: '%s humidity is %d%', // accessory name, number

@@ -1,4 +1,4 @@
-const ru = {
+const vi = {
 
   config: {
 
@@ -21,4 +21,4 @@ const ru = {
 
 };
 
-export default ru;
+export default vi;

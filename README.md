@@ -42,6 +42,8 @@ Visit the [Wiki](https://github.com/mpatfield/homebridge-dummy/wiki) to learn mo
 
 [@dcompane](https://github.com/sponsors/dcompane) for Spanish translations
 
+[@khanhnd88](https://github.com/sponsors/khanhnd88) for Vietnamese translations
+
 [Keryan Belahcene](https://www.instagram.com/keryan.me) for creating the [Flume](https://github.com/homebridge-plugins/homebridge-flume) banner image which was adapted for use with this plugin
 
 Push Notifications feature uses [Notify!](https://notify.pingie.com/) by [@simplytoast1](https://github.com/sponsors/simplytoast1)

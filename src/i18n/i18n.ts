@@ -6,6 +6,7 @@ import el from './el.js';
 import en from './en.js';
 import es from './es.js';
 import ru from './ru.js';
+import vi from './vi.js';
 
 export enum Language {
   DE = 'de',
@@ -13,6 +14,7 @@ export enum Language {
   EN = 'en',
   ES = 'es',
   RU = 'ru',
+  VI = 'vi',
 }
 
 const Translations = {
@@ -21,6 +23,7 @@ const Translations = {
   [Language.EN]: en,
   [Language.ES]: es,
   [Language.RU]: ru,
+  [Language.VI]: vi,
 };
 
 let currentLanguage = Language.EN;
