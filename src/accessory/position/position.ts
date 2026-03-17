@@ -6,7 +6,7 @@ import { EveCharacteristicHost, incrementTimesOpened, setupTimesOpened } from '.
 
 import { strings } from '../../i18n/i18n.js';
 
-import { Position, isValidPosition, printableValues, HKCharacteristicKey, TimeUnits } from '../../model/enums.js';
+import { Position, isValidPosition, printableValues, HKCharacteristicKey, TimeUnits, SensorBehavior } from '../../model/enums.js';
 import { PositionConfig } from '../../model/types.js';
 import { Range, Values, Webhook } from '../../model/webhook.js';
 
@@ -179,9 +179,9 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
     this.service.updateCharacteristic(this.currentCharacteristic, this.currentPosition);
 
     if (this.sensor) {
-      if (!this.sensor.timerControlled) {
+      if (this.sensor.behavior === SensorBehavior.MIRROR) {
         this.sensor.active = this.targetPosition !== this.defaultPosition;
-      } else if (this.targetPosition !== this.defaultPosition) {
+      } else if (this.sensor.behavior === SensorBehavior.TIMER && this.targetPosition !== this.defaultPosition) {
         this.sensor.active = false;
       }
     }
@@ -215,7 +215,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
   override async reset(): Promise<void> {
     if (this.targetPosition !== this.defaultPosition) {
       await this.setTargetPosition(this.defaultPosition);
-      if (this.sensor?.timerControlled) {
+      if (this.sensor?.behavior === SensorBehavior.TIMER) {
         this.sensor.active = true;
       }
     }

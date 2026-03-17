@@ -2,7 +2,7 @@ import { IHomebridgePluginUi } from '@homebridge/plugin-ui-utils/ui.interface';
 
 import { PLUGIN_ALIAS } from '../homebridge/settings.js';
 
-import { AccessoryType, FadeOutType, OnState, ScheduleType } from '../model/enums.js';
+import { AccessoryType, FadeOutType, OnState, ScheduleType, SensorBehavior } from '../model/enums.js';
 import { DummyConfig, DummyPlatformConfig, LightbulbConfig, OnOffConfig } from '../model/types.js';
 
 declare const homebridge: IHomebridgePluginUi;
@@ -317,6 +317,12 @@ async function migrateDeprecatedFields(configs: DummyPlatformConfig[]) {
         accessoryConfig.sensor = {
           type: currentSensor,
         };
+        changed = true;
+      } else if (currentSensor?.timerControlled !== undefined) {
+        if (currentSensor.behavior === undefined) {
+          currentSensor.behavior = currentSensor.timerControlled ? SensorBehavior.TIMER : SensorBehavior.MIRROR;
+        }
+        currentSensor.timerControlled = undefined;
         changed = true;
       }
 

@@ -22,10 +22,11 @@
             "enum": ["CarbonDioxideSensor", "CarbonMonoxideSensor", "ContactSensor", "LeakSensor", "MotionSensor", "OccupancySensor", "SmokeSensor"],
             "enumNames": ["${config.enumNames.carbonDioxideSensor}", "${config.enumNames.carbonMonoxideSensor}", "${config.enumNames.contactSensor}", "${config.enumNames.leakSensor}", "${config.enumNames.motionSensor}", "${config.enumNames.occupancySensor}", "${config.enumNames.smokeSensor}"]
           },
-          "timerControlled": {
-            "type": "boolean",
-            "title": "${config.title.timerControlled}",
-            "description": "${config.description.timerControlled}"
+          "behavior": {
+            "type": "string",
+            "title": "${config.title.sensorBehavior}",
+            "enum": ["MIRROR", "TIMER"],
+            "enumNames": ["${config.enumNames.sensorMirror}", "${config.enumNames.sensorTimer}"]
           }
         }
       },
@@ -689,6 +690,13 @@
                     {
                       "key": "accessories[].sensor.type",
                       "flex": "0 0 33%"
+                    },
+                    {
+                      "key": "accessories[].sensor.behavior",
+                      "flex": "0 0 33%",
+                      "condition": {
+                        "functionBody": "return model.accessories?.[arguments[1]]?.sensor.type !== undefined;"
+                      }
                     }
                   ]
                 },
@@ -708,6 +716,13 @@
                     {
                       "key": "accessories[].sensor.type",
                       "flex": "0 0 33%"
+                    },
+                    {
+                      "key": "accessories[].sensor.behavior",
+                      "flex": "0 0 33%",
+                      "condition": {
+                        "functionBody": "return model.accessories?.[arguments[1]]?.sensor.type !== undefined;"
+                      }
                     }
                   ]
                 },
@@ -727,6 +742,13 @@
                     {
                       "key": "accessories[].sensor.type",
                       "flex": "0 0 33%"
+                    },
+                    {
+                      "key": "accessories[].sensor.behavior",
+                      "flex": "0 0 33%",
+                      "condition": {
+                        "functionBody": "return model.accessories?.[arguments[1]]?.sensor.type !== undefined;"
+                      }
                     }
                   ]
                 },

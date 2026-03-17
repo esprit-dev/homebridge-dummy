@@ -5,7 +5,7 @@ export type CharacteristicType = typeof import('homebridge').Characteristic;
 
 import {
   AccessoryState, AccessoryType, ConditionOperator, FadeOutType, HumidifierType, LockState, NotificationAPI, OnState, OperandType,
-  PingAvailability, Position, ScheduleType, SensorType, ThermostatState, TemperatureUnits, TimePeriod, TimeUnits, ValveType,
+  PingAvailability, Position, ScheduleType, SensorBehavior, SensorType, ThermostatState, TemperatureUnits, TimePeriod, TimeUnits, ValveType,
 } from './enums.js';
 
 export type LegacyAccessoryConfig = AccessoryConfig & {
@@ -70,7 +70,11 @@ export type TimerConfig = Assertable & {
 
 export type SensorConfig = Assertable & {
   type: SensorType,
+  /**
+   * @deprecated
+   */
   timerControlled?: boolean,
+  behavior?: SensorBehavior,
 }
 
 export type HumiditySensorConfig = DummyConfig & {

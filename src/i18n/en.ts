@@ -64,7 +64,6 @@ const en = {
       notification: 'Receive a notification when accessory is set to its opposite (non-default) value. See wiki for help.',
       random: 'Time will be randomized with the above value as a maximum',
       schedule: 'Sets the accessory to its opposite (non-default) value',
-      timerControlled: 'Instead of mirroring accessory, sensor will be activated when accessory auto-resets',
     },
 
     enumNames: {
@@ -127,6 +126,8 @@ const en = {
       secondly: 'Every Second',
       seconds: 'Seconds',
       secured: 'Locked',
+      sensorMirror: 'Mirror Accessory',
+      sensorTimer: 'Timer Controlled',
       shower: 'Shower',
       smokeSensor: 'Smoke',
       sunrise: 'Sunrise',
@@ -208,10 +209,10 @@ const en = {
       resetOnRestart: 'Reset on Restart',
       schedule: 'Schedule',
       sensor: 'Attach Sensor',
+      sensorBehavior: 'Sensor Behavior',
       simulateOpenClose: 'Simulate Open/Close',
       temperatureUnits: 'Temperature Units',
       time: 'Time',
-      timerControlled: 'Activate Sensor on Auto-Reset',
       type: 'Type',
       units: 'Units',
       valveType: 'Valve Type',
@@ -302,6 +303,7 @@ const en = {
 
   sensor: {
 
+    badBehavior: '%s has invalid sensor behavior %s. Must be one of: %s', // accessory name, input, list of type names
     badTemperatureUnits: '%s has invalid temperature units %s. Must be one of: %s', // accessory name, input, list of unit names
     badType: '%s has invalid sensor type %s. Must be one of: %s', // accessory name, input, list of type names
 

@@ -4,7 +4,7 @@ import { DummyAccessory, DummyAccessoryDependency } from './base.js';
 
 import { strings } from '../i18n/i18n.js';
 
-import { AccessoryType, LockState, isValidLockState, printableValues, HKCharacteristicKey }  from '../model/enums.js';
+import { AccessoryType, LockState, isValidLockState, printableValues, HKCharacteristicKey, SensorBehavior }  from '../model/enums.js';
 import { LockConfig } from '../model/types.js';
 import { Values, Webhook } from '../model/webhook.js';
 
@@ -109,9 +109,9 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
     this.service.updateCharacteristic(this.Characteristic.LockCurrentState, this.state);
 
     if (this.sensor) {
-      if (!this.sensor.timerControlled) {
+      if (this.sensor.behavior === SensorBehavior.MIRROR) {
         this.sensor.active = this.state !== this.defaultLockState;
-      } else if (this.state !== this.defaultLockState) {
+      } else if (this.sensor.behavior === SensorBehavior.TIMER && this.state !== this.defaultLockState) {
         this.sensor.active = false;
       }
     }
@@ -128,7 +128,7 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
   override async reset(): Promise<void> {
     if (this.state !== this.defaultLockState) {
       await this.setState(this.defaultLockState);
-      if (this.sensor?.timerControlled) {
+      if (this.sensor?.behavior === SensorBehavior.TIMER) {
         this.sensor.active = true;
       }
     }

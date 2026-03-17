@@ -67,7 +67,6 @@ const de = {
       limiter: 'Beschränkt die Gesamtzeit, in der dieses Gerät für jede angegebene Periode auf seinen Nicht-Standardwert eingestellt werden kann',
       random: 'Die Zeit wird zufällig mit dem obigen Wert als Maximum gewählt',
       schedule: 'Setzt das Gerät in bestimmten Intervallen oder zu bestimmten Zeiten auf seinen entgegengesetzten (Nicht-Standard-) Wert',
-      timerControlled: 'Anstatt das Gerät zu spiegeln, wird der Sensor aktiviert, wenn das Gerät automatisch zurückgesetzt wird',
     },
 
     enumNames: {
@@ -152,7 +151,6 @@ const de = {
       resetOnRestart: 'Bei Neustart zurücksetzen',
       schedule: 'Zeitplan',
       sensor: 'Sensor hinzufügen',
-      timerControlled: 'Sensor bei Auto-Reset aktivieren',
       type: 'Typ',
       units: 'Einheiten',
     },

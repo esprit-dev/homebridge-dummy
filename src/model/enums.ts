@@ -54,6 +54,15 @@ export function isValidSensorType(input: SensorType): boolean {
   return Object.values(SensorType).includes(input);
 }
 
+export enum SensorBehavior {
+  MIRROR = 'MIRROR',
+  TIMER = 'TIMER',
+}
+
+export function isValidSensorBehavior(input: SensorBehavior): boolean {
+  return Object.values(SensorBehavior).includes(input);
+}
+
 export enum SensorCharacteristic {
   CarbonDioxideDetected = 'CarbonDioxideDetected',
   CarbonMonoxideDetected = 'CarbonMonoxideDetected',

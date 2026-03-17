@@ -67,7 +67,6 @@ const es = {
       limiter: 'Restringir el tiempo total que este accesorio puede estar en su valor no predeterminado, para cada período especificado',
       random: 'El tiempo se aleatorizará con el valor indicado como máximo',
       schedule: 'Establecer el accesorio en su valor opuesto (no predeterminado) en intervalos o momentos especificados',
-      timerControlled: 'En lugar de reflejar el accesorio, el sensor se activará cuando el accesorio se reinicie automáticamente',
     },
 
     enumNames: {
@@ -152,7 +151,6 @@ const es = {
       resetOnRestart: 'Restablecer al reiniciar',
       schedule: 'Programación',
       sensor: 'Adjuntar sensor',
-      timerControlled: 'Activar sensor en reinicio automático',
       type: 'Tipo',
       units: 'Unidades',
     },

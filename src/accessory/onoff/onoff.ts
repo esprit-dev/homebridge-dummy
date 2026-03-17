@@ -4,7 +4,7 @@ import { DummyAccessory, DummyAccessoryDependency } from '../base.js';
 
 import { strings } from '../../i18n/i18n.js';
 
-import { HKCharacteristicKey, isValidOnState, OnState, printableValues } from '../../model/enums.js';
+import { HKCharacteristicKey, isValidOnState, OnState, printableValues, SensorBehavior } from '../../model/enums.js';
 import { HistoryType } from '../../model/history.js';
 import { OnOffConfig } from '../../model/types.js';
 import { Values, Webhook } from '../../model/webhook.js';
@@ -109,9 +109,9 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
     this.service.updateCharacteristic(this.Characteristic.On, this.on);
 
     if (this.sensor) {
-      if (!this.sensor.timerControlled) {
+      if (this.sensor.behavior === SensorBehavior.MIRROR) {
         this.sensor.active = this.on !== this.defaultState;
-      } else if (this.on !== this.defaultState) {
+      } else if (this.sensor.behavior === SensorBehavior.TIMER && this.on !== this.defaultState) {
         this.sensor.active = false;
       }
     }
@@ -126,7 +126,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
   override async reset(): Promise<void> {
     if (this.on !== this.defaultState) {
       await this.setOn(this.defaultState);
-      if (this.sensor?.timerControlled) {
+      if (this.sensor?.behavior === SensorBehavior.TIMER) {
         this.sensor.active = true;
       }
     }
