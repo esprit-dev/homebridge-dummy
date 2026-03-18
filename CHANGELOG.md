@@ -9,7 +9,7 @@ All notable changes to homebridge-dummy will be documented in this file.
 -----
 
 ### Fixed
-- Open/Close will now only simulate when explicitly enabled (`Door`/`GarageDoorOpener`/`Window`/`WindowCovering`)
+- Open/Close will now only simulate when explicitly enabled (`Door` / `GarageDoorOpener` / `Window` / `WindowCovering`)
 - Potential infinite loop in config UI
 
 ### Changed
