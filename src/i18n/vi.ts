@@ -125,6 +125,8 @@ const vi = {
       secondly: 'Mỗi giây',
       seconds: 'Giây',
       secured: 'Đã khóa',
+      sensorMirror: 'Phản chiếu phụ kiện',
+      sensorTimer: 'Kích hoạt theo hẹn giờ',
       shower: 'Vòi sen',
       smokeSensor: 'Cảm biến khói',
       sunrise: 'Mặt trời mọc',
@@ -205,6 +207,7 @@ const vi = {
       resetOnRestart: 'Đặt lại khi khởi động lại',
       schedule: 'Lịch',
       sensor: 'Gắn cảm biến',
+      sensorBehavior: 'Hành vi cảm biến',
       simulateOpenClose: 'Mô phỏng mở/đóng',
       temperatureUnits: 'Đơn vị nhiệt độ',
       time: 'Thời gian',
@@ -296,6 +299,7 @@ const vi = {
   },
 
   sensor: {
+    badBehavior: '%s có hành vi cảm biến không hợp lệ: %s. Phải là một trong các giá trị: %s',
     badTemperatureUnits: '%s có đơn vị nhiệt độ không hợp lệ %s. Phải là một trong các giá trị: %s',
     badType: '%s có loại cảm biến không hợp lệ %s. Phải là một trong các giá trị: %s',
 
