@@ -2,7 +2,7 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-## 1.7.1-beta.9 (2026-03-17)
+## 1.7.1 (2026-03-18)
 
 ### ‼️ WARNING ‼️ — If upgrading from v0.9.2 or earlier, [READ THIS FIRST](https://github.com/mpatfield/homebridge-dummy/wiki/Migration).
 
@@ -13,9 +13,9 @@ All notable changes to homebridge-dummy will be documented in this file.
 - Potential infinite loop in config UI
 
 ### Changed
-- Reworked translation system for easier maintenance — please [open a ticket](https://github.com/mpatfield/homebridge-dummy/issues/new/choose) if you have issues
 - Deprecated `sensor.timerControlled` in favor of [`sensor.behavior`](https://github.com/mpatfield/homebridge-dummy/wiki/Sensors)
-- Removed [auto-migration option](https://github.com/mpatfield/homebridge-dummy/wiki/Migration) for users upgrading from v0.9.2 or earlier
+- Reworked translation system for easier maintenance
+- Removed auto-migration option for users [upgrading from v0.9.2](https://github.com/mpatfield/homebridge-dummy/wiki/Migration) or earlier
 - Обновлены русские переводы. Спасибо, [@Silverdragon122](https://github.com/sponsors/Silverdragon122)!
 
 ### Added
