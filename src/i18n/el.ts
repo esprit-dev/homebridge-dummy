@@ -347,7 +347,6 @@ const el = {
     welcome: [
       'Παρακαλούμε βαθμολογήστε με ★ αυτό το πρόσθετο στο GitHub αν το βρίσκετε χρήσιμο! https://github.com/mpatfield/homebridge-dummy',
       'Θα θέλατε να υποστηρίξετε αυτό το πρόσθετο; https://github.com/sponsors/mpatfield',
-      'Θέλετε να δείτε αυτό το πρόσθετο στη δική σας γλώσσα; Παρακαλούμε επισκεφθείτε τη διεύθυνση https://github.com/mpatfield/homebridge-dummy/issues/105',
     ],
   },
 

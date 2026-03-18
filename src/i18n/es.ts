@@ -205,7 +205,6 @@ const es = {
     welcome: [
       'Por favor ★ (ponga una estrella) en este plugin en GitHub si lo encuentra útil! https://github.com/mpatfield/homebridge-dummy',
       '¿Le gustaría patrocinar este plugin? https://github.com/sponsors/mpatfield',
-      '¿Quiere ver este plugin en otro idioma? Por favor visite https://github.com/mpatfield/homebridge-dummy/issues/105',
     ],
   },
 
