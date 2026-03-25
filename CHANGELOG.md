@@ -2,11 +2,20 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-## 1.7.1 (2026-03-18)
+## 1.7.2-beta.0 (2026-03-25)
 
 ### ‼️ WARNING ‼️ — If upgrading from v0.9.2 or earlier, [READ THIS FIRST](https://github.com/mpatfield/homebridge-dummy/wiki/Migration).
 
 -----
+
+### Changed
+- Cleanup unnecessary dependencies
+- Cleanup deprecated code older than 6 months
+
+### Notes
+Would you like to see Homebridge Dummy in your language? Please consider [getting involved](https://github.com/mpatfield/homebridge-dummy/issues/105). No coding experience required!
+
+## 1.7.1 (2026-03-18)
 
 ### Fixed
 - Open/Close will now only simulate when explicitly enabled (`Door` / `GarageDoorOpener` / `Window` / `WindowCovering`)
@@ -21,9 +30,6 @@ All notable changes to homebridge-dummy will be documented in this file.
 ### Added
 - Ελληνικές μεταφράσεις. Ευχαριστώ, [@loveisfoss](https://github.com/sponsors/loveisfoss)!
 - Bản dịch tiếng Việt. Cảm ơn [@khanhnd88](https://github.com/sponsors/khanhnd88)!
-
-### Notes
-Would you like to see Homebridge Dummy in your language? Please consider [getting involved](https://github.com/mpatfield/homebridge-dummy/issues/105). No coding experience required!
 
 ## 1.7.0 (2026-02-27)
 

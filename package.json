@@ -4,7 +4,7 @@
   "displayName": "Homebridge Dummy",
   "description": "Create accessories to help with HomeKit automation and control — scheduling, delays, sensors, commands, conditions, webhooks, and more",
   "type": "module",
-  "version": "1.7.1",
+  "version": "1.7.2-beta.0",
   "homepage": "https://github.com/mpatfield/homebridge-dummy#readme",
   "repository": {
     "type": "git",
@@ -69,11 +69,9 @@
     "node": "^20 || ^22 || ^24"
   },
   "dependencies": {
-    "@homebridge/plugin-ui-utils": "^2.0.2",
     "arpping": "^4.0.0",
     "axios": "^1.13.2",
     "cron": "^4.3.2",
-    "escape-html": "^1.0.3",
     "express": "^5.1.0",
     "fakegato-history": "file:./lib/fakegato-history",
     "homebridge-lib": "^7.1.8",
@@ -82,21 +80,18 @@
     "ping": "^1.0.0",
     "suncalc": "^1.9.0",
     "tail-file": "^1.4.16"
-  },
+    },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@types/escape-html": "^1.0.4",
     "@types/express": "^5.0.3",
     "@types/lodash.merge": "^4.6.9",
     "@types/node-persist": "^3.1.8",
     "@types/suncalc": "^1.9.2",
-    "esbuild": "^0.27.0",
-    "eslint": "^10.0.2",
     "homebridge": "^2.0.0-beta.30",
     "jiti": "^2.5.1",
     "rimraf": "^6.0.1",
     "tsx": "^4.21.0",
-    "typescript-eslint": "^8.44.0"
+    "typescript-eslint": "^8.46.4"
   },
   "homebridge": {
     "platform": "HomebridgeDummy",
