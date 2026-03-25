@@ -140,7 +140,7 @@ export type DummyConfig = {
   name: string,
   type: AccessoryType,
   groupName?: string,
-  sensor?: SensorType | SensorConfig,
+  sensor?: SensorConfig,
   schedule?: ScheduleConfig,
   autoReset?: ScheduleConfig,
   notification?: Notification,

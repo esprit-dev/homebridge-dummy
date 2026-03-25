@@ -313,12 +313,7 @@ async function migrateDeprecatedFields(configs: DummyPlatformConfig[]) {
       }
 
       const currentSensor = accessoryConfig.sensor;
-      if (typeof currentSensor === 'string') {
-        accessoryConfig.sensor = {
-          type: currentSensor,
-        };
-        changed = true;
-      } else if (currentSensor?.timerControlled !== undefined) {
+      if (currentSensor?.timerControlled !== undefined) {
         if (currentSensor.behavior === undefined) {
           currentSensor.behavior = currentSensor.timerControlled ? SensorBehavior.TIMER : SensorBehavior.MIRROR;
         }

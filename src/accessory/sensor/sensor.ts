@@ -34,15 +34,9 @@ export class SensorAccessory extends Timeout implements EveCharacteristicHost {
 
   private _active: number = 0;
 
-  static new(dependency: DummyAddonDependency, historyRecorder: OnRecordHistory, sensor?: SensorConfig | SensorType): SensorAccessory | undefined {
+  static new(dependency: DummyAddonDependency, historyRecorder: OnRecordHistory, sensor?: SensorConfig): SensorAccessory | undefined {
 
     if (sensor) {
-
-      if (typeof sensor === 'string') {
-        sensor = {
-          type: sensor,
-        };
-      }
 
       if (!assert(dependency.log, `${dependency.caller} \`sensor\``, sensor, 'type')) {
         return;
