@@ -322,15 +322,6 @@ async function migrateDeprecatedFields(configs: DummyPlatformConfig[]) {
       }
 
       const schedule = accessoryConfig.schedule;
-      if (schedule?.type === ScheduleType.CRON && schedule.cron !== 'CRON_CUSTOM' && !schedule.cron?.startsWith('@')) {
-        accessoryConfig.schedule = {
-          ...schedule,
-          cron: 'CRON_CUSTOM',
-          cronCustom: schedule.cron,
-        };
-        changed = true;
-      }
-
       if (schedule?.interval !== undefined) {
         schedule.time = schedule?.interval;
         schedule.interval = undefined;
