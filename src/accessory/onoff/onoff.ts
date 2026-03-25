@@ -9,7 +9,6 @@ import { HistoryType } from '../../model/history.js';
 import { OnOffConfig } from '../../model/types.js';
 import { Values, Webhook } from '../../model/webhook.js';
 
-import { storageGet_Deprecated } from '../../tools/storage.js';
 import { isValid, printableValues } from '../../tools/validation.js';
 
 export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extends DummyAccessory<C> {
@@ -55,7 +54,7 @@ export abstract class OnOffAccessory<C extends OnOffConfig = OnOffConfig> extend
       return;
     }
 
-    const on = this.getProperty(HKCharacteristicKey.On) ?? await storageGet_Deprecated(`${this.identifier}:DefaultState`);
+    const on = this.getProperty(HKCharacteristicKey.On);
     if (on === undefined) {
       await this.registerStateChange();
       return;

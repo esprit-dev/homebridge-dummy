@@ -8,7 +8,6 @@ import { AccessoryType, LockState, HKCharacteristicKey, SensorBehavior }  from '
 import { LockConfig } from '../model/types.js';
 import { Values, Webhook } from '../model/webhook.js';
 
-import { storageGet_Deprecated } from '../tools/storage.js';
 import { isValid, printableValues } from '../tools/validation.js';
 
 export class LockAccessory extends DummyAccessory<LockConfig> {
@@ -43,7 +42,7 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
       return;
     }
 
-    const state = this.getProperty(HKCharacteristicKey.LockTargetState) ?? await storageGet_Deprecated(`${this.identifier}:DefaultState`);
+    const state = this.getProperty(HKCharacteristicKey.LockTargetState);
     if (state === undefined) {
       await this.registerStateChange();
       return;

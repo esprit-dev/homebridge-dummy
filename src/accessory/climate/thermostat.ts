@@ -9,7 +9,6 @@ import { HistoryType } from '../../model/history.js';
 import { ThermostatConfig } from '../../model/types.js';
 import { Range, Values, Webhook } from '../../model/webhook.js';
 
-import { storageGet_Deprecated } from '../../tools/storage.js';
 import { fromCelsius, toCelsius } from '../../tools/temperature.js';
 import { isValid, printableValues } from '../../tools/validation.js';
 
@@ -114,7 +113,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
       return;
     }
 
-    const state = this.getProperty(HKCharacteristicKey.TargetHeatingCoolingState) ?? await storageGet_Deprecated(`${this.identifier}:DefaultState`);
+    const state = this.getProperty(HKCharacteristicKey.TargetHeatingCoolingState);
     if (state !== undefined) {
       await this.setState(state);
     }
@@ -124,7 +123,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
       await this.setCurrentTemperature(currentTemperature);
     }
 
-    const targetTemperature = this.getProperty(HKCharacteristicKey.TargetTemperature) ?? await storageGet_Deprecated(`${this.identifier}:Temperature`);
+    const targetTemperature = this.getProperty(HKCharacteristicKey.TargetTemperature);
     if (targetTemperature !== undefined) {
       await this.setTargetTemperature(targetTemperature);
     }

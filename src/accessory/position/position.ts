@@ -13,7 +13,6 @@ import { Range, Values, Webhook } from '../../model/webhook.js';
 import { Fader } from '../../timeout/fader.js';
 import { getDelay } from '../../timeout/timeout.js';
 
-import { storageGet_Deprecated } from '../../tools/storage.js';
 import { assert, isValid, printableValues } from '../../tools/validation.js';
 
 export const DEFAULT_OPEN_CLOSE_DURATION = 15;
@@ -118,7 +117,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
       return;
     }
 
-    const position = this.getProperty(this.stateStorageKey) ?? await storageGet_Deprecated(`${this.identifier}:DefaultState`);
+    const position = this.getProperty(this.stateStorageKey);
     if (position === undefined) {
       await this.registerStateChange();
       return;

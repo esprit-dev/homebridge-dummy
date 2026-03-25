@@ -12,7 +12,6 @@ import { Range, Webhook } from '../../model/webhook.js';
 
 import { Fader } from '../../timeout/fader.js';
 
-import { storageGet_Deprecated } from '../../tools/storage.js';
 import { DelayLogStrings, getDelay } from '../../timeout/timeout.js';
 import { assert } from '../../tools/validation.js';
 
@@ -99,7 +98,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
       return;
     }
 
-    const brightness = this.getProperty(HKCharacteristicKey.Brightness) ?? await storageGet_Deprecated(`${this.identifier}:Brightness`);
+    const brightness = this.getProperty(HKCharacteristicKey.Brightness);
     if (brightness === undefined) {
       return;
     }

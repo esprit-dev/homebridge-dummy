@@ -12,8 +12,6 @@ export class Storage {
   public static async init(persistPath: string) {
     await storage.init({ dir: persistPath, forgiveParseErrors: true });
 
-    await Storage_Deprecated.init();
-
     const storageJson = await storage.get(PLATFORM_NAME);
     if (storageJson === undefined) {
       return;
@@ -59,46 +57,5 @@ export class Storage {
 
     const storageJson = JSON.stringify(storageArray);
     await storage.set(PLATFORM_NAME, storageJson);
-  }
-}
-
-/**
- * @deprecated
- */
-export async function storageGet_Deprecated(key: string): Promise<Storable | undefined> {
-  return Storage_Deprecated.get(key) ?? await storage.get(key);
-}
-
-/**
- * @deprecated
- */
-export class Storage_Deprecated {
-
-  private static readonly bucket = new Map<string, Storable>();
-
-  /**
-   * @deprecated
-   */
-  static async init() {
-    const bucketJson = await storage.get('Storage.bucket');
-    if (bucketJson === undefined) {
-      return;
-    }
-
-    try {
-      const bucketArray = JSON.parse(bucketJson) as [string, Storable][];
-      for (const entry of bucketArray) {
-        Storage_Deprecated.bucket.set(entry[0], entry[1]);
-      }
-    } catch {
-    // ignore
-    }
-  }
-
-  /**
-   * @deprecated
-   */
-  public static get(key: string): Storable | undefined {
-    return Storage_Deprecated.bucket.get(key);
   }
 }
