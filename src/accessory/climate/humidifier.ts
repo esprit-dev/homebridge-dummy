@@ -11,7 +11,7 @@ import { Range, Values, Webhook } from '../../model/webhook.js';
 
 const DEFAULT_HUMIDITY = 50;
 const MAX_HUMIDITY = 81;
-const MINUTES_FOR_ONE_PERCENT = 17;
+const MINUTES_FOR_ONE_PERCENT = 18;
 
 export class HumidifierAccessory extends DummyAccessory<HumidifierConfig> {
 
