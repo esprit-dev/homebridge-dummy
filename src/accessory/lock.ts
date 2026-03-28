@@ -4,11 +4,11 @@ import { DummyAccessory, DummyAccessoryDependency } from './base.js';
 
 import { strings } from '../i18n/i18n.js';
 
-import { AccessoryType, LockState, isValidLockState, printableValues, HKCharacteristicKey }  from '../model/enums.js';
+import { AccessoryType, LockState, HKCharacteristicKey, SensorBehavior }  from '../model/enums.js';
 import { LockConfig } from '../model/types.js';
 import { Values, Webhook } from '../model/webhook.js';
 
-import { storageGet_Deprecated } from '../tools/storage.js';
+import { isValid, printableValues } from '../tools/validation.js';
 
 export class LockAccessory extends DummyAccessory<LockConfig> {
 
@@ -17,7 +17,7 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
   constructor(dependency: DummyAccessoryDependency<LockConfig>) {
     super(dependency);
 
-    if (!isValidLockState(this.config.defaultLockState)) {
+    if (!isValid(LockState, this.config.defaultLockState)) {
       this.log.warning(strings.lock.badDefault, this.name, `'${dependency.config.defaultLockState}'`, printableValues(LockState));
     }
 
@@ -42,7 +42,7 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
       return;
     }
 
-    const state = this.getProperty(HKCharacteristicKey.LockTargetState) ?? await storageGet_Deprecated(`${this.identifier}:DefaultState`);
+    const state = this.getProperty(HKCharacteristicKey.LockTargetState);
     if (state === undefined) {
       await this.registerStateChange();
       return;
@@ -57,7 +57,7 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
 
   override get webhooks(): Webhook[] {
     return [
-      new Webhook(this.identifier, HKCharacteristicKey.LockTargetState,
+      new Webhook(this, HKCharacteristicKey.LockTargetState,
         new Values([this.Characteristic.LockTargetState.UNSECURED, this.Characteristic.LockTargetState.SECURED], '0 (UNSECURED), 1 (SECURED)'),
         () => this.state,
         (value, syncOnly) => {
@@ -109,9 +109,9 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
     this.service.updateCharacteristic(this.Characteristic.LockCurrentState, this.state);
 
     if (this.sensor) {
-      if (!this.sensor.timerControlled) {
+      if (this.sensor.behavior === SensorBehavior.MIRROR) {
         this.sensor.active = this.state !== this.defaultLockState;
-      } else if (this.state !== this.defaultLockState) {
+      } else if (this.sensor.behavior === SensorBehavior.TIMER && this.state !== this.defaultLockState) {
         this.sensor.active = false;
       }
     }
@@ -128,7 +128,7 @@ export class LockAccessory extends DummyAccessory<LockConfig> {
   override async reset(): Promise<void> {
     if (this.state !== this.defaultLockState) {
       await this.setState(this.defaultLockState);
-      if (this.sensor?.timerControlled) {
+      if (this.sensor?.behavior === SensorBehavior.TIMER) {
         this.sensor.active = true;
       }
     }

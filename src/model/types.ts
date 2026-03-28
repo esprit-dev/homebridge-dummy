@@ -4,8 +4,8 @@ export type ServiceType = typeof import('homebridge').Service;
 export type CharacteristicType = typeof import('homebridge').Characteristic;
 
 import {
-  AccessoryState, AccessoryType, ConditionOperator, HumidifierType, LockState, NotificationAPI, OnState, OperandType,
-  PingAvailability, Position, ScheduleType, SensorType, ThermostatState, TemperatureUnits, TimePeriod, TimeUnits, ValveType,
+  AccessoryState, AccessoryType, ConditionOperator, FadeOutType, HumidifierType, LockState, NotificationAPI, OnState, OperandType,
+  PingAvailability, Position, ScheduleType, SensorBehavior, SensorType, ThermostatState, TemperatureUnits, TimePeriod, TimeUnits, ValveType,
 } from './enums.js';
 
 export type LegacyAccessoryConfig = AccessoryConfig & {
@@ -20,9 +20,21 @@ export type LegacyAccessoryConfig = AccessoryConfig & {
   disableLogging?: boolean,
 }
 
+export type WebhookConfig = {
+  port?: number
+  disableSSL?: boolean,
+  key?: string,
+  cert?: string,
+  pfx?: string,
+  passphrase?: string,
+}
+
 export type DummyPlatformConfig = PlatformConfig & {
   accessories?: DummyConfig[],
-  migrationNeeded?: boolean,
+  webhookConfig?: WebhookConfig,
+  /**
+   * @deprecated
+   */
   webhookPort?: number,
   verbose?: boolean,
 }
@@ -58,7 +70,11 @@ export type TimerConfig = Assertable & {
 
 export type SensorConfig = Assertable & {
   type: SensorType,
+  /**
+   * @deprecated
+   */
   timerControlled?: boolean,
+  behavior?: SensorBehavior,
 }
 
 export type HumiditySensorConfig = DummyConfig & {
@@ -113,12 +129,18 @@ export type SimulationConfig = Assertable & {
   units?: TimeUnits,
 }
 
+export type FadeOutConfig = Assertable & {
+  type: FadeOutType
+  time: number,
+  units: TimeUnits,
+}
+
 export type DummyConfig = {
   id: string,
   name: string,
   type: AccessoryType,
   groupName?: string,
-  sensor?: SensorType | SensorConfig,
+  sensor?: SensorConfig,
   schedule?: ScheduleConfig,
   autoReset?: ScheduleConfig,
   notification?: Notification,
@@ -126,7 +148,11 @@ export type DummyConfig = {
   conditions?: ConditionsConfig,
   simulation?: SimulationConfig,
   resetOnRestart?: boolean,
-  enableWebook?: boolean,
+  /**
+   * @deprecated
+   */
+  enableWebook?: boolean
+  enableWebhook?: boolean,
   enableHistory?: boolean,
   disableLogging?: boolean,
   /**
@@ -149,11 +175,19 @@ export type OutletConfig = OnOffConfig & {
 }
 
 export type LightbulbConfig = OnOffConfig & {
+  /**
+   * @deprecated
+   */
   defaultBrightness?: CharacteristicValue,
-  fadeOut?: boolean,
+  isDimmer?: boolean,
+  fadeOut?: FadeOutConfig,
 }
 
 export type SwitchConfig = OnOffConfig & {
+}
+
+export type ButtonConfig = DummyConfig & {
+  commandOn?: string,
 }
 
 export type LockConfig = DummyConfig & {

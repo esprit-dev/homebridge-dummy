@@ -6,15 +6,14 @@ import { EveCharacteristicHost, incrementTimesOpened, setupTimesOpened } from '.
 
 import { strings } from '../../i18n/i18n.js';
 
-import { Position, isValidPosition, printableValues, HKCharacteristicKey, TimeUnits } from '../../model/enums.js';
+import { Position, HKCharacteristicKey, TimeUnits, SensorBehavior } from '../../model/enums.js';
 import { PositionConfig } from '../../model/types.js';
-import { Range, Webhook } from '../../model/webhook.js';
+import { Range, Values, Webhook } from '../../model/webhook.js';
 
 import { Fader } from '../../timeout/fader.js';
 import { getDelay } from '../../timeout/timeout.js';
 
-import { storageGet_Deprecated } from '../../tools/storage.js';
-import { assert } from '../../tools/validation.js';
+import { assert, isValid, printableValues } from '../../tools/validation.js';
 
 export const DEFAULT_OPEN_CLOSE_DURATION = 15;
 
@@ -22,16 +21,24 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
 
   private targetPosition: CharacteristicValue;
 
-  private fader = new Fader();
+  private fader?: Fader;
 
   constructor(dependency: DummyAccessoryDependency<C>) {
     super(dependency);
 
-    if (!isValidPosition(dependency.config.defaultPosition)) {
+    if (!isValid(Position, dependency.config.defaultPosition)) {
       this.log.warning(strings.position.badDefault, this.name, `'${dependency.config.defaultPosition}'`, printableValues(Position));
     }
 
     this.targetPosition = this.defaultPosition;
+
+    if (this.config.simulation !== undefined) {
+      if (!assert(this.log, this.name, this.config.simulation, 'enabled')) {
+        this.config.simulation = undefined;
+      } else if (this.config.simulation.enabled === true) {
+        this.fader = new Fader(this.addonDependency);
+      }
+    }
 
     if (this.hasPositionState) {
       this.service.getCharacteristic(dependency.Characteristic.PositionState)
@@ -65,7 +72,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
   }
 
   protected get currentPosition(): CharacteristicValue {
-    return this.fader.value ?? this.targetPosition;
+    return this.fader?.value ?? this.targetPosition;
   }
 
   protected get stateStorageKey() {
@@ -84,14 +91,14 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
     return HKCharacteristicKey.TargetPosition;
   }
 
-  protected get webhookRange(): Range {
+  protected get webhookValidValues(): Range | Values {
     return new Range(0, 100);
   }
 
   override get webhooks(): Webhook[] {
     return [
-      new Webhook(this.identifier, this.webhookCommand,
-        this.webhookRange,
+      new Webhook(this, this.webhookCommand,
+        this.webhookValidValues,
         () => this.targetPosition,
         (value, syncOnly) => {
           this.setTargetPosition(value, syncOnly);
@@ -110,7 +117,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
       return;
     }
 
-    const position = this.getProperty(this.stateStorageKey) ?? await storageGet_Deprecated(`${this.identifier}:DefaultState`);
+    const position = this.getProperty(this.stateStorageKey);
     if (position === undefined) {
       await this.registerStateChange();
       return;
@@ -171,9 +178,9 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
     this.service.updateCharacteristic(this.currentCharacteristic, this.currentPosition);
 
     if (this.sensor) {
-      if (!this.sensor.timerControlled) {
+      if (this.sensor.behavior === SensorBehavior.MIRROR) {
         this.sensor.active = this.targetPosition !== this.defaultPosition;
-      } else if (this.targetPosition !== this.defaultPosition) {
+      } else if (this.sensor.behavior === SensorBehavior.TIMER && this.targetPosition !== this.defaultPosition) {
         this.sensor.active = false;
       }
     }
@@ -183,7 +190,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
 
   protected onTargetPositionChanged(oldValue: number, newValue: number) {
 
-    if (this.config.simulation === undefined || !assert(this.log, this.name, this.config.simulation, 'enabled') || this.config.simulation.enabled !== true) {
+    if (this.fader === undefined || this.config.simulation === undefined) {
       return;
     }
 
@@ -207,7 +214,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
   override async reset(): Promise<void> {
     if (this.targetPosition !== this.defaultPosition) {
       await this.setTargetPosition(this.defaultPosition);
-      if (this.sensor?.timerControlled) {
+      if (this.sensor?.behavior === SensorBehavior.TIMER) {
         this.sensor.active = true;
       }
     }
@@ -222,7 +229,7 @@ export abstract class PositionAccessory<C extends PositionConfig = PositionConfi
   }
 
   override teardown(): void {
-    this.fader.teardown();
+    this.fader?.teardown();
     super.teardown();
   }
 }

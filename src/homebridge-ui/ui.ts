@@ -1,50 +1,61 @@
 import { IHomebridgePluginUi } from '@homebridge/plugin-ui-utils/ui.interface';
 
-import { Translation } from '../i18n/i18n.js';
-
 import { PLUGIN_ALIAS } from '../homebridge/settings.js';
 
-import { DummyConfig, DummyPlatformConfig, OnOffConfig } from '../model/types.js';
-import { AccessoryType, OnState, ScheduleType } from '../model/enums.js';
+import { AccessoryType, FadeOutType, OnState, ScheduleType, SensorBehavior } from '../model/enums.js';
+import { DummyConfig, DummyPlatformConfig, LightbulbConfig, OnOffConfig } from '../model/types.js';
 
 declare const homebridge: IHomebridgePluginUi;
 
-const i18n_replacements = {
-  github: '<a target="_blank" href="https://github.com/mpatfield/homebridge-dummy/">GitHub</a>',
-  migration: '<a target="_blank" href="https://github.com/mpatfield/homebridge-dummy?tab=readme-ov-file#v10-migration">GitHub</a>',
-  dummy: PLUGIN_ALIAS,
-};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let strings: any = { __I18N_REPLACE__ : '' };
 
-function translateHtml(strings: Translation) {
-  document.querySelectorAll('[i18n]').forEach(element => {
-
-    const key = element.getAttribute('i18n') as keyof typeof strings.config;
-    let string = strings.config[key] as string;
-
-    const token = element.getAttribute('i18n_replace') as keyof typeof i18n_replacements;
-    if (token) {
-      string = string.replace('%s', i18n_replacements[token]);
-    }
-    element.innerHTML = string;
-  });
+function getParentDocument(): Document | undefined {
+  try {
+    return window.parent.document;
+  } catch (err) {
+    console.warn('Unable to access parent document (cross-origin). Some UI features disabled.');
+    return undefined;
+  }
 }
 
-function updateAccessoryNames(strings: Translation) {
+function translateHtml() {
+  document.querySelectorAll('[i18n]').forEach(element => {
+    const key = element.getAttribute('i18n') as string;
+    element.innerHTML = strings[key];
+  });
+};
 
-  const legends = Array.from(window.parent.document.querySelectorAll('fieldset legend'));
+function updateAccessoryNames(): boolean {
+
+  const parentDocument = getParentDocument();
+  if (!parentDocument) {
+    return false;
+  }
+
+  const legends = Array.from(parentDocument.querySelectorAll('fieldset legend'));
+
+  let listenerAdded = false;
 
   for(const legend of legends) {
     const fieldset = legend.closest('fieldset');
     const input = fieldset?.querySelector('input[type="text"][name="name"]') as HTMLInputElement | null;
-    if (input && legend.textContent !== (input.value || strings.config.title.accessory)) {
-      legend.textContent = input.value !== '' ? input.value : strings.config.title.accessory;
+    if (input && legend.textContent !== (input.value || strings.accessory)) {
+      const textNode = Array.from(legend.childNodes).find(n => n.nodeType === Node.TEXT_NODE) as Text | undefined;
+      const name = input.value !== '' ? input.value : strings.accessory;
+      if (textNode && textNode.nodeValue !== name) {
+        textNode.nodeValue = name;
+      }
     }
 
     if (input && !input.dataset.accessoryNameListener) {
-      input.addEventListener('input', () => updateAccessoryNames(strings));
+      input.addEventListener('input', () => updateAccessoryNames());
       input.dataset.accessoryNameListener = 'true';
+      listenerAdded = true;
     }
   }
+
+  return listenerAdded;
 }
 
 function generateUUID() {
@@ -91,8 +102,14 @@ async function updateConfigsWithUUIDs(configs: DummyPlatformConfig[]) {
   }
 }
 
-function findNextByName(element: Element, name: string): Element | null {
-  const walker = window.parent.document.createTreeWalker(window.parent.document.body, NodeFilter.SHOW_ELEMENT);
+function findNextByName(element: Element, name: string): Element | undefined {
+
+  const parentDocument = getParentDocument();
+  if (!parentDocument) {
+    return undefined;
+  }
+
+  const walker = parentDocument.createTreeWalker(parentDocument.body, NodeFilter.SHOW_ELEMENT);
 
   let found = false;
   while (walker.nextNode()) {
@@ -109,13 +126,18 @@ function findNextByName(element: Element, name: string): Element | null {
     }
   }
 
-  return null;
+  return undefined;
 }
 
 let accessories: DummyConfig[] = [];
-async function updateConditionDropdowns(strings: Translation, configs?: DummyPlatformConfig[]) {
+async function updateConditionDropdowns(configs?: DummyPlatformConfig[]) {
 
-  const accessoryIdInputs = window.parent.document.querySelectorAll('[name="accessoryId"]');
+  const parentDocument = getParentDocument();
+  if (!parentDocument) {
+    return;
+  }
+
+  const accessoryIdInputs = parentDocument.querySelectorAll('[name="accessoryId"]');
   if (accessoryIdInputs.length === 0) {
     return;
   }
@@ -128,7 +150,12 @@ async function updateConditionDropdowns(strings: Translation, configs?: DummyPla
 
   for (const config of configs) {
     const populated = (config.accessories ?? []).filter( (accessory) => accessory.id && accessory.name &&
-    ![AccessoryType.HumiditySensor, AccessoryType.TemperatureSensor, AccessoryType.Thermostat].includes(accessory.type));
+    ![
+      AccessoryType.HumiditySensor,
+      AccessoryType.StatelessProgrammableSwitch,
+      AccessoryType.TemperatureSensor,
+      AccessoryType.Thermostat,
+    ].includes(accessory.type));
     newAccessories.push(...populated);
   }
 
@@ -269,6 +296,14 @@ async function migrateDeprecatedFields(configs: DummyPlatformConfig[]) {
   let changed = false;
 
   configs.forEach( (config) => {
+
+    if (config.webhookPort !== undefined) {
+      config.webhookConfig = config.webhookConfig ?? {};
+      config.webhookConfig.port = config.webhookConfig.port ?? config.webhookPort;
+      config.webhookPort = undefined;
+      changed = true;
+    }
+
     config.accessories?.forEach( (accessoryConfig) => {
 
       if ('defaultOn' in accessoryConfig) {
@@ -278,23 +313,15 @@ async function migrateDeprecatedFields(configs: DummyPlatformConfig[]) {
       }
 
       const currentSensor = accessoryConfig.sensor;
-      if (typeof currentSensor === 'string') {
-        accessoryConfig.sensor = {
-          type: currentSensor,
-        };
+      if (currentSensor?.timerControlled !== undefined) {
+        if (currentSensor.behavior === undefined) {
+          currentSensor.behavior = currentSensor.timerControlled ? SensorBehavior.TIMER : SensorBehavior.MIRROR;
+        }
+        currentSensor.timerControlled = undefined;
         changed = true;
       }
 
       const schedule = accessoryConfig.schedule;
-      if (schedule?.type === ScheduleType.CRON && schedule.cron !== 'CRON_CUSTOM' && !schedule.cron?.startsWith('@')) {
-        accessoryConfig.schedule = {
-          ...schedule,
-          cron: 'CRON_CUSTOM',
-          cronCustom: schedule.cron,
-        };
-        changed = true;
-      }
-
       if (schedule?.interval !== undefined) {
         schedule.time = schedule?.interval;
         schedule.interval = undefined;
@@ -312,6 +339,34 @@ async function migrateDeprecatedFields(configs: DummyPlatformConfig[]) {
         accessoryConfig.timer = undefined;
         changed = true;
       }
+
+      if (accessoryConfig.enableWebook !== undefined) {
+        accessoryConfig.enableWebhook = accessoryConfig.enableWebook;
+        accessoryConfig.enableWebook = undefined;
+        changed = true;
+      }
+
+      const lightbulbConfig = accessoryConfig as LightbulbConfig;
+      if (lightbulbConfig.defaultBrightness !== undefined) {
+        lightbulbConfig.isDimmer = true;
+        lightbulbConfig.defaultBrightness = undefined;
+        changed = true;
+      }
+
+      if (typeof lightbulbConfig.fadeOut === 'boolean' && lightbulbConfig.fadeOut === true) {
+        const autoReset = lightbulbConfig.autoReset;
+        if (autoReset?.type === ScheduleType.TIMEOUT && autoReset?.time !== undefined && autoReset.units !== undefined) {
+          lightbulbConfig.fadeOut = {
+            type: FadeOutType.FIXED,
+            time: autoReset.time,
+            units: autoReset.units,
+          };
+          lightbulbConfig.autoReset = undefined;
+        } else {
+          lightbulbConfig.fadeOut = undefined;
+        }
+        changed = true;
+      }
     });
   });
 
@@ -320,25 +375,35 @@ async function migrateDeprecatedFields(configs: DummyPlatformConfig[]) {
   }
 }
 
-function showSettings(strings: Translation) {
+async function showSettings() {
   document.getElementById('intro')!.style.display = 'none';
   document.getElementById('migration')!.style.display = 'none';
+
+  document.getElementById('header')!.style.display = 'block';
   document.getElementById('support')!.style.display = 'block';
 
-  const observer = new MutationObserver(() => {
-    updateAccessoryNames(strings);
-    updateConditionDropdowns(strings);
-  });
+  const parentDocument = getParentDocument();
+  if (parentDocument) {
 
-  observer.observe(
-    window.parent.document.body,
-    { childList: true, subtree: true },
-  );
+    const observer = new MutationObserver(() => {
+      if (updateAccessoryNames()) {
+        updateConditionDropdowns();
+        observer.disconnect();
+      }
+    });
+
+    observer.observe(
+      parentDocument,
+      { childList: true, subtree: true },
+    );
+  }
 
   homebridge.addEventListener('configChanged', async (evt: Event) => {
+    updateAccessoryNames();
+
     const configs = (evt as MessageEvent).data as DummyPlatformConfig[];
     await updateConfigsWithUUIDs(configs);
-    await updateConditionDropdowns(strings, configs);
+    await updateConditionDropdowns(configs);
   });
 
   homebridge.showSchemaForm();
@@ -346,38 +411,29 @@ function showSettings(strings: Translation) {
   homebridge.enableSaveButton();
 }
 
-function showMigration(strings: Translation) {
+function showMigration() {
     document.getElementById('header')!.style.display = 'none';
     document.getElementById('intro')!.style.display = 'none';
     document.getElementById('migration')!.style.display = 'block';
 
-    const noButton = document.getElementById('skipMigration') as HTMLButtonElement;
-    noButton.addEventListener('click', async () => {
-      await homebridge.updatePluginConfig([{ name: PLUGIN_ALIAS }]);
-      await homebridge.savePluginConfig();
-      showSettings(strings);
-    });
-
-    const yesButton = document.getElementById('doMigration') as HTMLButtonElement;
-    yesButton.addEventListener('click', async () => {
-      await homebridge.updatePluginConfig([{ name: PLUGIN_ALIAS, migrationNeeded: true }]);
-      await homebridge.savePluginConfig();
-      homebridge.closeSettings();
-      homebridge.toast.info(strings.config.migrationRestartDescription.replace('%s', PLUGIN_ALIAS), strings.config.migrationRestartTitle);
+    const continueButton = document.getElementById('continue') as HTMLButtonElement;
+    continueButton.addEventListener('click', async () => {
+      showSettings();
     });
 }
 
-function showIntro(strings: Translation) {
+function showIntro() {
+
+  document.getElementById('header')!.style.display = 'block';
 
   const noButton = document.getElementById('showSettings') as HTMLButtonElement;
   noButton.addEventListener('click', async () => {
-    await homebridge.updatePluginConfig([{ name: PLUGIN_ALIAS }]);
-    showSettings(strings);
+    showSettings();
   });
 
   const yesButton = document.getElementById('showMigration') as HTMLButtonElement;
   yesButton.addEventListener('click', () => {
-    showMigration(strings);
+    showMigration();
   });
 
   document.getElementById('intro')!.style.display = 'block';
@@ -391,15 +447,17 @@ function showIntro(strings: Translation) {
 })();
 
 (async () => {
+
   const language = await homebridge.i18nCurrentLang();
-  const strings = await homebridge.request('i18n', language);
-  translateHtml(strings);
+  strings = (language in strings) ? strings[language] : strings.en;
+  translateHtml();
 
   const configs = await homebridge.getPluginConfig() as DummyPlatformConfig[];
   if (configs.length) {
     await migrateDeprecatedFields(configs);
-    showSettings(strings);
+    showSettings();
   } else {
-    showIntro(strings);
+    await homebridge.updatePluginConfig([{ name: PLUGIN_ALIAS }]);
+    showIntro();
   }
 })();

@@ -4,15 +4,13 @@ import { DummyAccessory, DummyAccessoryDependency } from '../base.js';
 
 import { strings } from '../../i18n/i18n.js';
 
-import {
-  AccessoryType, HKCharacteristicKey, ThermostatState, isValidTemperatureUnits, isValidThermostatState,
-  printableValues, TemperatureUnits }  from '../../model/enums.js';
+import { AccessoryType, HKCharacteristicKey, ThermostatState, TemperatureUnits }  from '../../model/enums.js';
 import { HistoryType } from '../../model/history.js';
 import { ThermostatConfig } from '../../model/types.js';
 import { Range, Values, Webhook } from '../../model/webhook.js';
 
-import { storageGet_Deprecated } from '../../tools/storage.js';
 import { fromCelsius, toCelsius } from '../../tools/temperature.js';
+import { isValid, printableValues } from '../../tools/validation.js';
 
 const DEFAULT_TEMPERATURE = 20;
 const DEFAULT_MINIMUM = 10;
@@ -42,11 +40,11 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
     this.STATE_HEAT = dependency.Characteristic.TargetHeatingCoolingState.HEAT;
     this.STATE_OFF = dependency.Characteristic.TargetHeatingCoolingState.OFF;
 
-    if (!isValidTemperatureUnits(dependency.config.temperatureUnits)) {
+    if (!isValid(TemperatureUnits, dependency.config.temperatureUnits)) {
       this.log.warning(strings.sensor.badTemperatureUnits, this.name, `'${dependency.config.temperatureUnits}'`, printableValues(TemperatureUnits));
     }
 
-    if (!isValidThermostatState(dependency.config.defaultThermostatState)) {
+    if (!isValid(ThermostatState, dependency.config.defaultThermostatState)) {
       this.log.warning(strings.thermostat.badDefault, this.name, `'${dependency.config.defaultThermostatState}'`, printableValues(ThermostatState));
     }
 
@@ -115,7 +113,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
       return;
     }
 
-    const state = this.getProperty(HKCharacteristicKey.TargetHeatingCoolingState) ?? await storageGet_Deprecated(`${this.identifier}:DefaultState`);
+    const state = this.getProperty(HKCharacteristicKey.TargetHeatingCoolingState);
     if (state !== undefined) {
       await this.setState(state);
     }
@@ -125,7 +123,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
       await this.setCurrentTemperature(currentTemperature);
     }
 
-    const targetTemperature = this.getProperty(HKCharacteristicKey.TargetTemperature) ?? await storageGet_Deprecated(`${this.identifier}:Temperature`);
+    const targetTemperature = this.getProperty(HKCharacteristicKey.TargetTemperature);
     if (targetTemperature !== undefined) {
       await this.setTargetTemperature(targetTemperature);
     }
@@ -139,7 +137,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
 
     return [
 
-      new Webhook(this.identifier, HKCharacteristicKey.TargetHeatingCoolingState,
+      new Webhook(this, HKCharacteristicKey.TargetHeatingCoolingState,
         new Values(
           [
             this.Characteristic.TargetHeatingCoolingState.OFF,
@@ -156,7 +154,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
         },
         this.config.disableLogging),
 
-      new Webhook(this.identifier, HKCharacteristicKey.CurrentTemperature,
+      new Webhook(this, HKCharacteristicKey.CurrentTemperature,
         new Range(fromCelsius(this.minTemp, this.units), fromCelsius(this.maxTemp, this.units)),
         () => this.currentTemperature,
         (value) => {
@@ -166,7 +164,7 @@ export class ThermostatAccessory extends DummyAccessory<ThermostatConfig> {
         },
         this.config.disableLogging),
 
-      new Webhook(this.identifier, HKCharacteristicKey.TargetTemperature,
+      new Webhook(this, HKCharacteristicKey.TargetTemperature,
         new Range(fromCelsius(this.minTemp, this.units), fromCelsius(this.maxTemp, this.units)),
         () => this.targetTemperature,
         (value, syncOnly) => {

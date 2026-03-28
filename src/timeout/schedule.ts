@@ -7,11 +7,11 @@ import { DelayLogStrings, SECOND, Timeout } from './timeout.js';
 
 import { strings as i18n } from '../i18n/i18n.js';
 
-import { isValidTimeUnits, printableValues, ScheduleType, TimeUnits }  from '../model/enums.js';
+import { ScheduleType, TimeUnits }  from '../model/enums.js';
 import { ScheduleConfig, TimerConfig } from '../model/types.js';
 
 import { Storage } from '../tools/storage.js';
-import { assert } from '../tools/validation.js';
+import { assert, isValid, printableValues } from '../tools/validation.js';
 
 const CRON_CUSTOM = 'CRON_CUSTOM';
 
@@ -56,7 +56,7 @@ export class Schedule extends Timeout {
         return;
       }
 
-      if (!isValidTimeUnits(config.units!)) {
+      if (!isValid(TimeUnits, config.units!)) {
         dependency.log.error(strings.badUnits, dependency.caller, `'${config.units}'`, printableValues(TimeUnits));
         return;
       }

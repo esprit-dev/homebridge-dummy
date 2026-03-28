@@ -2,12 +2,57 @@
 
 All notable changes to homebridge-dummy will be documented in this file.
 
-## 1.6.1 (2026-02-10)
+## 1.7.2-beta.0 (2026-03-25)
 
 ### ‼️ WARNING ‼️ — If upgrading from v0.9.2 or earlier, [READ THIS FIRST](https://github.com/mpatfield/homebridge-dummy/wiki/Migration).
-*There is now an [option](https://github.com/mpatfield/homebridge-dummy/wiki/Migration#migrating-gradually) to run both old and new versions of Homebridge Dummy in parallel if you want to migrate gradually*
 
 -----
+
+### Changed
+- Cleanup unnecessary dependencies
+- Cleanup deprecated code older than 6 months
+
+### Notes
+Would you like to see Homebridge Dummy in your language? Please consider [getting involved](https://github.com/mpatfield/homebridge-dummy/issues/105). No coding experience required!
+
+## 1.7.1 (2026-03-18)
+
+### Fixed
+- Open/Close will now only simulate when explicitly enabled (`Door` / `GarageDoorOpener` / `Window` / `WindowCovering`)
+- Potential infinite loop in config UI
+
+### Changed
+- Deprecated `sensor.timerControlled` in favor of [`sensor.behavior`](https://github.com/mpatfield/homebridge-dummy/wiki/Sensors)
+- Reworked translation system for easier maintenance
+- Removed auto-migration option for users [upgrading from v0.9.2](https://github.com/mpatfield/homebridge-dummy/wiki/Migration) or earlier
+- Обновлены русские переводы. Спасибо, [@Silverdragon122](https://github.com/sponsors/Silverdragon122)!
+
+### Added
+- Ελληνικές μεταφράσεις. Ευχαριστώ, [@loveisfoss](https://github.com/sponsors/loveisfoss)!
+- Bản dịch tiếng Việt. Cảm ơn [@khanhnd88](https://github.com/sponsors/khanhnd88)!
+
+## 1.7.0 (2026-02-27)
+
+### Added
+- Different behavior options for `Lightbulb` [fade out](https://github.com/mpatfield/homebridge-dummy/wiki/Additional-Options#lightbulb)
+    - `FIXED` — Always takes the same amount of time to fade, regardless of brightness
+    - `INCREMENTAL` - Each 1% takes the amount of time defined ("egg timer")
+- `StatelessProgrammableSwitch` — useful for triggering automations or push notifications on a schedule or via webhook
+- View all currently available webhooks in a browser (e.g. [http://localhost:63743/](http://localhost:63743/)) when at least one accessory has a webhook enabled
+
+### Changed
+- ⚠️ [`Webhooks`](https://github.com/mpatfield/homebridge-dummy/wiki/Webhooks) now use Homebridge UI SSL (https) settings by default
+    - Use `webhookConfig` to `disableSSL`, change the `port`, or override `key`/`cert` paths
+    - `webhookPort` is deprecated
+- Deprecated `enableWebook` (spelling) in favor of `enableWebhook`
+- Deprecated `defaultBrightness` for Lightbulbs — use `isDimmer` to enable brightness control
+- `fadeOut` for `Lightbulb` is now an object instead of a boolean with [selectable behaviors](https://github.com/mpatfield/homebridge-dummy/wiki/Additional-Options#lightbulb)
+- Updated push notification dependency (axios)
+
+### Fixed
+- Changing accessory type within a Group removes stale sub-accessories
+
+## 1.6.1 (2026-02-10)
 
 ### Added
 - [Simulate Open/Close](https://github.com/mpatfield/homebridge-dummy/wiki/Additional-Options/#door--garagedooropener--window--windowcovering) option for Doors, Garage Doors, Windows, and Window Coverings
@@ -17,9 +62,6 @@ All notable changes to homebridge-dummy will be documented in this file.
 - Eve "times opened" counter for `ContactSensor` requires history to be enabled
 - Translated config UI schemas are generated at build rather than runtime ([open a ticket](https://github.com/mpatfield/homebridge-dummy/issues/new/choose) if you have issues)
 - Updated push notification dependency (axios)
-
-### Notes
-Would you like to see Homebridge Dummy in your language? Please consider [getting involved](https://github.com/mpatfield/homebridge-dummy/issues/105). No coding experience required!
 
 ## 1.6.0 (2026-01-25)
 
