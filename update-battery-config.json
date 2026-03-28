@@ -15,18 +15,18 @@
     },
     {
       "name": "Homebridge Dummy",
+      "platform": "HomebridgeDummy",
       "accessories": [
         {
           "id": "battery",
-          "name": "Battery",
+          "name": "Niveau",
           "type": "HumidifierDehumidifier",
           "resetOnRestart": false,
           "enableWebook": false,
           "disableLogging": false,
           "enableHistory": false
         }
-      ],
-      "platform": "HomebridgeDummy"
+      ]
     }
   ]
 }
