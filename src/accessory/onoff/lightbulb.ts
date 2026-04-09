@@ -6,28 +6,52 @@ import { DummyAccessoryDependency } from '../base.js';
 
 import { strings } from '../../i18n/i18n.js';
 
-import { AccessoryType, HKCharacteristicKey } from '../../model/enums.js';
+import { AccessoryType, FadeOutType, HKCharacteristicKey, ScheduleType } from '../../model/enums.js';
 import { LightbulbConfig } from '../../model/types.js';
 import { Range, Webhook } from '../../model/webhook.js';
 
 import { Fader } from '../../timeout/fader.js';
 
-import { storageGet_Deprecated } from '../../tools/storage.js';
+import { DelayLogStrings, getDelay } from '../../timeout/timeout.js';
+import { assert } from '../../tools/validation.js';
 
-const NO_BRIGHTNESS = -1;
+const DEFAULT_BRIGHTNESS = 100;
 
 export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
 
   private brightness: CharacteristicValue;
 
-  private fader = new Fader();
+  private fader?: Fader;
 
   constructor(dependency: DummyAccessoryDependency<LightbulbConfig>) {
+
+    if (typeof dependency.config.fadeOut === 'boolean') {
+      const autoReset = dependency.config.autoReset;
+      if (autoReset?.type === ScheduleType.TIMEOUT && autoReset?.time !== undefined && autoReset.units !== undefined) {
+        dependency.config.fadeOut = {
+          type: FadeOutType.FIXED,
+          time: autoReset.time,
+          units: autoReset.units,
+        };
+        dependency.config.autoReset = undefined;
+      } else {
+        dependency.config.fadeOut = undefined;
+      }
+    }
+
     super(dependency);
 
-    this.brightness = this.config.defaultBrightness ?? NO_BRIGHTNESS;
+    this.brightness = this.getProperty(HKCharacteristicKey.Brightness) ?? DEFAULT_BRIGHTNESS;
 
     if (this.isDimmer) {
+
+      if (dependency.config.fadeOut !== undefined) {
+        if (!assert(dependency.log, dependency.config.name, dependency.config.fadeOut, 'type', 'time', 'units')) {
+          dependency.config.fadeOut = undefined;
+        } else {
+          this.fader = new Fader(this.addonDependency);
+        }
+      }
 
       this.service.getCharacteristic(dependency.Characteristic.Brightness)
         .onGet(this.getBrightness.bind(this))
@@ -46,7 +70,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
   }
 
   private get isDimmer(): boolean {
-    return this.config.defaultBrightness !== undefined;
+    return this.config.isDimmer ?? this.config.defaultBrightness !== undefined;
   }
 
   override getAccessoryType(): AccessoryType {
@@ -56,7 +80,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
   override get webhooks(): Webhook[] {
     return [
       ...super.webhooks,
-      new Webhook(this.identifier, HKCharacteristicKey.Brightness,
+      new Webhook(this, HKCharacteristicKey.Brightness,
         new Range(0, 100),
         () => this.brightness,
         (value) => {
@@ -74,7 +98,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
       return;
     }
 
-    const brightness = this.getProperty(HKCharacteristicKey.Brightness) ?? await storageGet_Deprecated(`${this.identifier}:Brightness`);
+    const brightness = this.getProperty(HKCharacteristicKey.Brightness);
     if (brightness === undefined) {
       return;
     }
@@ -99,7 +123,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
   }
 
   private async getBrightness(): Promise<CharacteristicValue> {
-    return this.fader.value ?? this.brightness;
+    return this.fader?.value ?? this.brightness;
   }
 
   private async setBrightness(value: CharacteristicValue) {
@@ -109,7 +133,7 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
     }
 
     this.brightness = value;
-    if (this.fader.isFading) {
+    if (this.fader?.isFading === true) {
       this.onTriggered();
     }
 
@@ -120,25 +144,48 @@ export class LightbulbAccessory extends OnOffAccessory<LightbulbConfig> {
     this.service.updateCharacteristic(this.Characteristic.Brightness, this.brightness);
   }
 
-  override onTimerStarted(delay: number) {
-    super.onTimerStarted(delay);
+  override onTriggered() {
+    super.onTriggered();
 
-    if (this.config.fadeOut !== true) {
+    if (this.config.fadeOut === undefined) {
       return;
     }
 
-    this.fader.start(Number(this.brightness), 0, delay, (value) => {
-      this.service.updateCharacteristic(this.Characteristic.Brightness, value);
+    let rawTime: number;
+    switch (this.config.fadeOut.type) {
+    case FadeOutType.INCREMENTAL:
+      rawTime = this.config.fadeOut.time * Number(this.brightness);
+      break;
+    case FadeOutType.FIXED:
+      rawTime = this.config.fadeOut.time;
+      break;
+    }
+
+    const logStrings = DelayLogStrings(
+      strings.lightbulb.fadeMilliseconds,
+      strings.lightbulb.fadeSeconds,
+      strings.lightbulb.fadeMinutes,
+      strings.lightbulb.fadeHours,
+    );
+
+    const delay: number = getDelay(rawTime, this.config.fadeOut.units, undefined, logStrings, this.log, this.name);
+
+    this.fader?.start(Number(this.brightness), 0, delay, (value) => {
+      if (value === 0) {
+        this.setOn(false);
+      } else {
+        this.service.updateCharacteristic(this.Characteristic.Brightness, value);
+      }
     });
   }
 
   override onReset() {
-    this.fader.cancel();
+    this.fader?.cancel();
     super.onReset();
   }
 
   override teardown(): void {
-    this.fader.teardown();
+    this.fader?.teardown();
     super.teardown();
   }
 }

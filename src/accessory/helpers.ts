@@ -1,17 +1,19 @@
 import { DummyAccessory, DummyAccessoryDependency } from './base.js';
-import { BlindAccessory } from './position/blind.js';
-import { DoorAccessory } from './position/door.js';
-import { GarageDoorAccessory } from './position/garage.js';
+
+import { ButtonAccessory } from './button.js';
 import { HumidifierAccessory } from './climate/humidifier.js';
-import { HumiditySensorAccessory } from './sensor/humidity.js';
-import { LightbulbAccessory } from './onoff/lightbulb.js';
+import { ThermostatAccessory } from './climate/thermostat.js';
 import { LockAccessory } from './lock.js';
+import { LightbulbAccessory } from './onoff/lightbulb.js';
 import { OutletAccessory } from './onoff/outlet.js';
 import { SwitchAccessory } from './onoff/switch.js';
-import { TemperatureSensorAccessory } from './sensor/temperature.js';
-import { ThermostatAccessory } from './climate/thermostat.js';
-import { ValveAccessory } from './valve.js';
+import { BlindAccessory } from './position/blind.js';
+import { DoorAccessory } from './position/door.js';
 import { WindowAccessory } from './position/window.js';
+import { GarageDoorAccessory } from './position/garage.js';
+import { HumiditySensorAccessory } from './sensor/humidity.js';
+import { TemperatureSensorAccessory } from './sensor/temperature.js';
+import { ValveAccessory } from './valve.js';
 
 import { strings } from '../i18n/i18n.js';
 
@@ -35,6 +37,8 @@ export function createDummyAccessory(dependency: DummyAccessoryDependency<DummyC
     return new LockAccessory(dependency);
   case AccessoryType.Outlet:
     return new OutletAccessory(dependency);
+  case AccessoryType.StatelessProgrammableSwitch:
+    return new ButtonAccessory(dependency);
   case AccessoryType.Switch:
     return new SwitchAccessory(dependency);
   case AccessoryType.TemperatureSensor:

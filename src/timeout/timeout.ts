@@ -94,7 +94,7 @@ export class Timeout {
 
   protected timeout?: NodeJS.Timeout;
 
-  protected constructor(protected readonly dependency: DummyAddonDependency) { }
+  public constructor(protected readonly dependency: DummyAddonDependency) { }
 
   public cancel() {
     this.reset();

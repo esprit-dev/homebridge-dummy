@@ -1,7 +1,8 @@
-export class Fader {
+import { Timeout } from './timeout.js';
+
+export class Fader extends Timeout {
 
   public value: number | undefined;
-  private intervalTimeout?: NodeJS.Timeout;
 
   public get isFading(): boolean {
     return this.value !== undefined;
@@ -9,14 +10,14 @@ export class Fader {
 
   public start(startingValue: number, endingValue: number, delay: number, tick: (value: number) => void) {
 
-    this.clearTimeout();
+    this.reset();
 
     const interval = delay / Math.abs(endingValue - startingValue);
     this.value = startingValue;
 
     const delta = startingValue < endingValue ? 1 : -1;
 
-    this.intervalTimeout = setInterval( () => {
+    this.timeout = setInterval( () => {
 
       if (this.value === undefined) {
         return;
@@ -26,24 +27,14 @@ export class Fader {
       tick(this.value);
 
       if (this.value === endingValue) {
-        this.clearTimeout();
+        this.reset();
       }
 
     }, interval);
   }
 
-  public cancel() {
-    this.clearTimeout();
-  }
-
-  public teardown(): void {
-    this.clearTimeout();
-  }
-
-  private clearTimeout() {
+  override reset() {
     this.value = undefined;
-
-    clearInterval(this.intervalTimeout);
-    this.intervalTimeout = undefined;
+    super.reset();
   }
 }

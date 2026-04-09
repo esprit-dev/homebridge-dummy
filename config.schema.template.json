@@ -22,10 +22,11 @@
             "enum": ["CarbonDioxideSensor", "CarbonMonoxideSensor", "ContactSensor", "LeakSensor", "MotionSensor", "OccupancySensor", "SmokeSensor"],
             "enumNames": ["${config.enumNames.carbonDioxideSensor}", "${config.enumNames.carbonMonoxideSensor}", "${config.enumNames.contactSensor}", "${config.enumNames.leakSensor}", "${config.enumNames.motionSensor}", "${config.enumNames.occupancySensor}", "${config.enumNames.smokeSensor}"]
           },
-          "timerControlled": {
-            "type": "boolean",
-            "title": "${config.title.timerControlled}",
-            "description": "${config.description.timerControlled}"
+          "behavior": {
+            "type": "string",
+            "title": "${config.title.sensorBehavior}",
+            "enum": ["MIRROR", "TIMER"],
+            "enumNames": ["${config.enumNames.sensorMirror}", "${config.enumNames.sensorTimer}"]
           }
         }
       },
@@ -403,6 +404,61 @@
           },
           "units": { "$ref": "#/definitions/units" }
         }
+      },
+      "fadeOut": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "title": "${config.title.type}",
+            "enum": [ "INCREMENTAL", "FIXED"],
+            "enumNames": ["${config.enumNames.incremental}", "${config.enumNames.fixed}"]
+          },
+          "time": {
+            "title": "${config.title.time}",
+            "type": "integer",
+            "minimum": 1
+          },
+          "units": { "$ref": "#/definitions/units" }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "type": {
+                }
+              },
+              "required": ["type"]
+            },
+            "then": {
+              "required": ["time", "units"]
+            }
+          },
+          {
+            "if": {
+                "properties": {
+                  "time": {
+                  }
+                },
+                "required": ["time"]
+            },
+            "then": {
+                "required": ["type"]
+            }
+          },
+          {
+            "if": {
+                "properties": {
+                  "units": {
+                  }
+                },
+                "required": ["units"]
+            },
+            "then": {
+                "required": ["type"]
+            }
+          }
+        ]
       }
     },
     "properties": {
@@ -426,8 +482,8 @@
             "type": {
               "type": "string",
               "title": "${config.title.type}",
-              "enum": ["Door", "GarageDoorOpener", "HumidifierDehumidifier", "HumiditySensor", "Lightbulb", "LockMechanism", "Outlet", "Switch", "TemperatureSensor", "Thermostat", "Valve", "Window", "WindowCovering"],
-              "enumNames": ["${config.enumNames.door}", "${config.enumNames.garageDoorOpener}", "${config.enumNames.humidifierDehumidifier}", "${config.enumNames.humiditySensor}", "${config.enumNames.lightbulb}", "${config.enumNames.lockMechanism}", "${config.enumNames.outlet}", "${config.enumNames.switch}", "${config.enumNames.temperatureSensor}", "${config.enumNames.thermostat}", "${config.enumNames.valve}", "${config.enumNames.window}", "${config.enumNames.windowCovering}"]
+              "enum": ["Door", "GarageDoorOpener", "HumidifierDehumidifier", "HumiditySensor", "Lightbulb", "LockMechanism", "Outlet", "StatelessProgrammableSwitch", "Switch", "TemperatureSensor", "Thermostat", "Valve", "Window", "WindowCovering"],
+              "enumNames": ["${config.enumNames.door}", "${config.enumNames.garageDoorOpener}", "${config.enumNames.humidifierDehumidifier}", "${config.enumNames.humiditySensor}", "${config.enumNames.lightbulb}", "${config.enumNames.lockMechanism}", "${config.enumNames.outlet}", "${config.enumNames.button}", "${config.enumNames.switch}", "${config.enumNames.temperatureSensor}", "${config.enumNames.thermostat}", "${config.enumNames.valve}", "${config.enumNames.window}", "${config.enumNames.windowCovering}"]
             },
             "groupName": {
               "type": "string",
@@ -436,6 +492,7 @@
             "sensor": { "$ref": "#/definitions/sensor" },
             "notification": { "$ref": "#/definitions/notification" },
             "schedule": { "$ref": "#/definitions/schedule" },
+            "fadeOut": { "$ref": "#/definitions/fadeOut" },
             "autoReset": { "$ref": "#/definitions/schedule" },
             "limiter": { "$ref": "#/definitions/limiter" },
             "conditions": { "$ref": "#/definitions/conditions" },
@@ -446,15 +503,9 @@
               "enum": ["C", "F"],
               "enumNames": ["${config.enumNames.celsius}", "${config.enumNames.fahrenheit}"]
             },
-            "defaultBrightness": {
-              "type": "number",
-              "title": "${config.title.defaultBrightness}",
-              "minimum": 0,
-              "maximum": 100
-            },
-            "fadeOut": {
+            "isDimmer": {
               "type": "boolean",
-              "title": "${config.title.fadeOut}"
+              "title": "${config.title.isDimmer}"
             },
             "defaultState": {
               "type": "string",
@@ -548,9 +599,9 @@
               "type": "boolean",
               "title": "${config.title.resetOnRestart}"
             },
-            "enableWebook": {
+            "enableWebhook": {
               "type": "boolean",
-              "title": "${config.title.enableWebook}"
+              "title": "${config.title.enableWebhook}"
             },
             "disableLogging": {
               "type": "boolean",
@@ -566,8 +617,22 @@
       "verbose": {
         "type": "boolean"
       },
-      "webhookPort": {
-        "type": "number"
+      "webhookConfig": {
+        "type": "object",
+        "properties": {
+          "port": {
+            "type": "number"
+          },
+          "keyPath": {
+            "type": "string"
+          },
+          "certPath": {
+            "type": "string"
+          },
+          "passphrase": {
+            "type": "string"
+          }
+        }
       }
     }
   },
@@ -627,10 +692,10 @@
                       "flex": "0 0 33%"
                     },
                     {
-                      "key": "accessories[].defaultBrightness",
+                      "key": "accessories[].sensor.behavior",
                       "flex": "0 0 33%",
                       "condition": {
-                        "functionBody": "return model.accessories?.[arguments[1]]?.type === 'Lightbulb';"
+                        "functionBody": "return model.accessories?.[arguments[1]]?.sensor.type !== undefined;"
                       }
                     }
                   ]
@@ -651,6 +716,13 @@
                     {
                       "key": "accessories[].sensor.type",
                       "flex": "0 0 33%"
+                    },
+                    {
+                      "key": "accessories[].sensor.behavior",
+                      "flex": "0 0 33%",
+                      "condition": {
+                        "functionBody": "return model.accessories?.[arguments[1]]?.sensor.type !== undefined;"
+                      }
                     }
                   ]
                 },
@@ -670,6 +742,13 @@
                     {
                       "key": "accessories[].sensor.type",
                       "flex": "0 0 33%"
+                    },
+                    {
+                      "key": "accessories[].sensor.behavior",
+                      "flex": "0 0 33%",
+                      "condition": {
+                        "functionBody": "return model.accessories?.[arguments[1]]?.sensor.type !== undefined;"
+                      }
                     }
                   ]
                 },
@@ -763,7 +842,7 @@
                   "notitle": true,
                   "items": [
                     {
-                      "key": "accessories[].enableWebook",
+                      "key": "accessories[].enableWebhook",
                       "flex": "0 0 auto"
                     },
                     {
@@ -788,10 +867,10 @@
                       }
                     },
                     {
-                      "key": "accessories[].fadeOut",
+                      "key": "accessories[].isDimmer",
                       "flex": "0 0 auto",
                       "condition": {
-                        "functionBody": "return model.accessories?.[arguments[1]]?.defaultBrightness !== undefined;"
+                        "functionBody": "return model.accessories?.[arguments[1]]?.type === 'Lightbulb';"
                       }
                     }
                   ]
@@ -803,15 +882,18 @@
                   "notitle": true,
                   "items": [
                     {
-                      "key": "accessories[].resetOnRestart",
+                      "key": "accessories[].disableLogging",
                       "flex": "0 0 auto"
                     },
                     {
                       "flex": "0 0 5%"
                     },
                     {
-                      "key": "accessories[].disableLogging",
-                      "flex": "0 0 auto"
+                      "key": "accessories[].resetOnRestart",
+                      "flex": "0 0 auto",
+                      "condition": {
+                        "functionBody": "return model.accessories?.[arguments[1]]?.type !== 'StatelessProgrammableSwitch';"
+                      }
                     }
                   ]
                 }
@@ -896,10 +978,46 @@
             },
             {
               "type": "fieldset",
+              "title": "${config.title.fadeOut}",
+              "description": "${config.description.fadeOut}",
+              "condition": {
+                "functionBody": "const accessory = model.accessories?.[arguments[1]]; return accessory?.isDimmer === true && !accessory?.autoReset;"
+              },
+              "items": [
+                {
+                  "type": "div",
+                  "displayFlex": true,
+                  "flex-direction": "row",
+                  "notitle": true,
+                  "items": [
+                    {
+                      "key": "accessories[].fadeOut.type",
+                      "flex": "0 0 auto"
+                    },
+                    {
+                      "key": "accessories[].fadeOut.time",
+                      "flex": "0 0 auto",
+                      "condition": {
+                          "functionBody": "return model.accessories?.[arguments[1]]?.fadeOut?.type;"
+                      }
+                    },
+                    {
+                      "key": "accessories[].fadeOut.units",
+                      "flex": "0 0 auto",
+                      "condition": {
+                          "functionBody": "return model.accessories?.[arguments[1]]?.fadeOut?.type;"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "fieldset",
               "title": "${config.title.autoReset}",
               "description": "${config.description.autoReset}",
               "condition": {
-                "functionBody": "const type = model.accessories?.[arguments[1]]?.type; return type && !['HumiditySensor','TemperatureSensor','Thermostat'].includes(type);"
+                "functionBody": "const accessory = model.accessories?.[arguments[1]]; const type = accessory?.type; return !accessory?.fadeOut && type && !['HumiditySensor','StatelessProgrammableSwitch','TemperatureSensor','Thermostat'].includes(type);"
               },
               "items": [
                 {
@@ -1036,7 +1154,7 @@
               "title": "${config.title.limiter}",
               "description": "${config.description.limiter}",
               "condition": {
-                "functionBody": "const type = model.accessories?.[arguments[1]]?.type; return type && !['HumiditySensor','TemperatureSensor','Thermostat'].includes(type);"
+                "functionBody": "const type = model.accessories?.[arguments[1]]?.type; return type && !['HumiditySensor','StatelessProgrammableSwitch','TemperatureSensor','Thermostat'].includes(type);"
               },
               "items": [
                 {
@@ -1169,7 +1287,7 @@
                 {
                   "key": "accessories[].commandOn",
                   "condition": {
-                    "functionBody": "return ['HumidifierDehumidifier','Lightbulb','Outlet','Switch','Thermostat','Valve'].includes(model.accessories?.[arguments[1]]?.type);"
+                    "functionBody": "return ['HumidifierDehumidifier','Lightbulb','Outlet','StatelessProgrammableSwitch','Switch','Thermostat','Valve'].includes(model.accessories?.[arguments[1]]?.type);"
                   }
                 },
                 {

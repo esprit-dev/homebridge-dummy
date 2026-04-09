@@ -6,13 +6,14 @@ import { EveCharacteristicHost, incrementTimesOpened, setupTimesOpened } from '.
 
 import { strings } from '../../i18n/i18n.js';
 
-import { EveCharacteristicKey, isValidSensorType, printableValues, SensorType, SensorCharacteristic }  from '../../model/enums.js';
+import { EveCharacteristicKey, SensorType, SensorCharacteristic, SensorBehavior }  from '../../model/enums.js';
 import { HistoryType } from '../../model/history.js';
 import { ServiceType, SensorConfig } from '../../model/types.js';
 
 import { Timeout } from '../../timeout/timeout.js';
 
 import { Storage } from '../../tools/storage.js';
+import { assert, isValid, printableValues } from '../../tools/validation.js';
 
 type SensorStrings = { active: string, inactive: string };
 type SensorInfo = { characteristic: SensorCharacteristic, strings: SensorStrings };
@@ -33,18 +34,21 @@ export class SensorAccessory extends Timeout implements EveCharacteristicHost {
 
   private _active: number = 0;
 
-  static new(dependency: DummyAddonDependency, historyRecorder: OnRecordHistory, sensor?: SensorConfig | SensorType): SensorAccessory | undefined {
+  static new(dependency: DummyAddonDependency, historyRecorder: OnRecordHistory, sensor?: SensorConfig): SensorAccessory | undefined {
 
     if (sensor) {
 
-      if (typeof sensor === 'string') {
-        sensor = {
-          type: sensor,
-        };
+      if (!assert(dependency.log, `${dependency.caller} \`sensor\``, sensor, 'type')) {
+        return;
       }
 
-      if (!isValidSensorType(sensor.type)) {
+      if (!isValid(SensorType, sensor.type)) {
         dependency.log.error(strings.sensor.badType, dependency.caller, `'${sensor.type}'`, printableValues(SensorType));
+        return;
+      }
+
+      if (!isValid(SensorBehavior, sensor.behavior)) {
+        dependency.log.error(strings.sensor.badBehavior, dependency.caller, `'${sensor.behavior}'`, printableValues(SensorBehavior));
         return;
       }
 
@@ -94,8 +98,13 @@ export class SensorAccessory extends Timeout implements EveCharacteristicHost {
     return INFO_MAP[this.config.type];
   }
 
-  public get timerControlled(): boolean {
-    return this.config.timerControlled === true;
+  public get behavior(): SensorBehavior {
+
+    if (this.config.timerControlled === true) {
+      return SensorBehavior.TIMER;
+    }
+
+    return this.config.behavior ?? SensorBehavior.MIRROR;
   }
 
   public get active(): boolean {
@@ -126,7 +135,7 @@ export class SensorAccessory extends Timeout implements EveCharacteristicHost {
 
     this.logIfDesired(isActive ? this.sensorInfo.strings.active :this.sensorInfo.strings.inactive);
 
-    if (this.timerControlled && this.active) {
+    if (this.behavior === SensorBehavior.TIMER && this.active) {
       this.timeout = setTimeout( () => {
         this.active = false;
       }, 1000);

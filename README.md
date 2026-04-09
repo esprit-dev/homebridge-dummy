@@ -36,11 +36,13 @@ Visit the [Wiki](https://github.com/mpatfield/homebridge-dummy/wiki) to learn mo
 
 [@jotzet79](https://github.com/sponsors/jotzet79) for German translations
 
-[@kozmajanos](https://github.com/sponsors/kozmajanos) for Hungarian translations
+[@loveisfoss](https://github.com/sponsors/loveisfoss) for Greek translations
 
 [@Silverdragon122](https://github.com/sponsors/Silverdragon122) for Russian translations
 
 [@dcompane](https://github.com/sponsors/dcompane) for Spanish translations
+
+[@khanhnd88](https://github.com/sponsors/khanhnd88) for Vietnamese translations
 
 [Keryan Belahcene](https://www.instagram.com/keryan.me) for creating the [Flume](https://github.com/homebridge-plugins/homebridge-flume) banner image which was adapted for use with this plugin
 
@@ -59,6 +61,8 @@ Command feature inspired by [Cmd Trigger Plugin](https://github.com/hallos/homeb
 Log watch trigger feature inspired by [Homebridge Virtual Switches](https://github.com/Plankske/hb-virtual-switch/) by [@Plankske](https://github.com/sponsors/Plankske)
 
 Network presence condition inspired by [homebridge-network-presence](https://github.com/nitaybz/homebridge-network-presence) by [nitaybz](https://github.com/sponsors/nitaybz)
+
+Egg timer feature inspired by [homebridge-eggtimer-plugin](https://github.com/teh-hippo/homebridge-eggtimer-plugin) by [teh-hippo](https://github.com/sponsors/teh-hippo)
 
 Special thanks to [@nfarina](https://github.com/sponsors/nfarina) for creating the original version of this plugin and maintaining it for almost 10 (!!!) years
 

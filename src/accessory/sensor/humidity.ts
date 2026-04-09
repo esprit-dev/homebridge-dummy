@@ -29,7 +29,7 @@ export class HumiditySensorAccessory extends DummyAccessory<HumiditySensorConfig
   override get webhooks(): Webhook[] {
 
     return [
-      new Webhook(this.identifier, HKCharacteristicKey.CurrentRelativeHumidity,
+      new Webhook(this, HKCharacteristicKey.CurrentRelativeHumidity,
         new Range(0, 100),
         () => this.humidity,
         (value, syncOnly) => {
